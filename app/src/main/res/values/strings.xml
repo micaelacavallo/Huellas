@@ -2,4 +2,8 @@
     <string name="app_name">Huellas</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="perdidos_titulo">Perdidos</string>
+    <string name="encontrados_titulo">Encontrados</string>
+    <string name="donaciones_titulo">Donaciones</string>
+    <string name="informacion_util_titulo">Info. útil</string>
 </resources>
