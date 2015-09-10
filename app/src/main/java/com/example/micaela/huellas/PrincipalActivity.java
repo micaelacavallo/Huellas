@@ -29,7 +29,7 @@ public class PrincipalActivity extends BaseActivity {
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setPageTransformer(false, new ZoomOutPageTransformer());
-        mPager.setOffscreenPageLimit(4);
+        mPager.setOffscreenPageLimit(3);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mPager);
@@ -68,9 +68,6 @@ public class PrincipalActivity extends BaseActivity {
                     fragment = new PerdidosFragment();
                     break;
                 case 1:
-                    fragment = new EncontradosFragment();
-                    break;
-                case 2:
                     fragment = new DonacionesFragment();
                     break;
                 default:
@@ -89,9 +86,6 @@ public class PrincipalActivity extends BaseActivity {
                     title = getString(R.string.perdidos_titulo);
                     break;
                 case 1:
-                    title = getString(R.string.encontrados_titulo);
-                    break;
-                case 2:
                     title = getString(R.string.donaciones_titulo);
                     break;
                 default:
@@ -103,7 +97,7 @@ public class PrincipalActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return 4;
+            return 3;
         }
     }
 
@@ -118,11 +112,9 @@ public class PrincipalActivity extends BaseActivity {
             TextView txtTab1 = (TextView) ((ViewGroup) slidingTabLayout.getChildAt(0)).getChildAt(1);
             TextView txtTab2 = (TextView) ((ViewGroup) slidingTabLayout.getChildAt(1)).getChildAt(1);
             TextView txtTab3 = (TextView) ((ViewGroup) slidingTabLayout.getChildAt(2)).getChildAt(1);
-            TextView txtTab4 = (TextView) ((ViewGroup) slidingTabLayout.getChildAt(3)).getChildAt(1);
-            txtTab1.setTextAppearance(this, R.style.condensed_normal_small_14);
-            txtTab2.setTextAppearance(this, R.style.condensed_normal_small_14);
-            txtTab3.setTextAppearance(this, R.style.condensed_normal_small_14);
-            txtTab4.setTextAppearance(this, R.style.condensed_normal_small_14);
+            txtTab1.setTextAppearance(this, R.style.condensed_normal_small_15);
+            txtTab2.setTextAppearance(this, R.style.condensed_normal_small_15);
+            txtTab3.setTextAppearance(this, R.style.condensed_normal_small_15);
             tabLayout.invalidate();
         } catch (Exception e) {
             Log.e(getClass().getSimpleName(), e.getMessage());
