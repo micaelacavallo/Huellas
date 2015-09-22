@@ -2,8 +2,6 @@ package com.example.micaela.huellas;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +21,8 @@ public class PerdidosFragment extends BaseFragment {
         RecyclerAdapter mAdapter = new RecyclerAdapter("PASAR LISTA");
         recyclerView.setAdapter(mAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());*/
+
+
         return view;
     }
 
@@ -35,22 +35,20 @@ public class PerdidosFragment extends BaseFragment {
 
     }
 
-    public abstract class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
-
+    private class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
+        List<String> mAnimales;
         private Context mContext;
 
         public RecyclerAdapter(List<String> animales, Context context) {
             mContext = context;
-
+            mAnimales = animales;
         }
-
-        protected abstract ViewHolder getViewHolder(View view);
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View view = LayoutInflater.from(viewGroup.getContext())
-                    .inflate(R.layout.recycler_datos_item, viewGroup, false);
-            return getViewHolder(view);
+                    .inflate(R.layout.recycler_perdidos_item, viewGroup, false);
+            return new ViewHolder(view);
         }
 
         @Override
@@ -61,7 +59,7 @@ public class PerdidosFragment extends BaseFragment {
 
         @Override
         public int getItemCount() {
-            return 0;
+            return mAnimales.size();
         }
     }
 }
