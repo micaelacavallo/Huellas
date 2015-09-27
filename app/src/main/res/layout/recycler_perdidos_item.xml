@@ -1,78 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+
+<android.support.v7.widget.CardView
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    card_view:cardElevation="2dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
+    <LinearLayout
         android:layout_height="wrap_content"
-        card_view:cardElevation="2dp">
+        android:layout_width="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <FrameLayout
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_width="match_parent">
 
-            <FrameLayout
+            <ImageView
+                android:id="@+id/imageView_foto"
+                android:layout_height="200dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:scaleType="centerCrop"
+                android:src="@mipmap/dog" />
 
-                <android.support.v7.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top|end"
-                    card_view:cardElevation="2dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/condensed_bold_17"
-                        android:padding="15dp"
-                        android:background="@color/primary_light"
-                        android:text="BUSCADO"
-                        android:textColor="@color/primary_text"
-                        android:id="@+id/textView_estado" />
-
-                </android.support.v7.widget.CardView>
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/dog" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="bottom"
-                    android:background="@color/black_40_transparency">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        style="@style/condensed_bold_22"
-                        android:padding="10dp"
-                        android:text="Golden mediano marron"
-                        android:textColor="@color/white"
-                        android:id="@+id/textView_titulo" />
-                </LinearLayout>
-            </FrameLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
+            <android.support.v7.widget.CardView
+                android:layout_gravity="top|end"
                 android:layout_height="wrap_content"
-                style="@style/condensed_normal_small_15"
-                android:padding="10dp"
-                android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s. "
-                android:textColor="@color/primary_text"
-                android:id="@+id/textView_descripcion" />
-        </LinearLayout>
+                android:layout_width="wrap_content"
+                card_view:cardElevation="2dp">
+
+                <TextView
+                    style="@style/condensed_bold_15"
+                    android:background="@color/blue_light"
+                    android:id="@+id/textView_estado"
+                    android:layout_height="wrap_content"
+                    android:layout_width="120dp"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="BUSCADO"
+                    android:textColor="@color/primary_text" />
+
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:background="@color/black_40_transparency"
+                android:layout_gravity="bottom"
+                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/condensed_bold_20"
+                    android:id="@+id/textView_titulo"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:padding="10dp"
+                    android:text="Golden mediano marron"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <TextView
+            style="@style/condensed_normal_small_15"
+            android:id="@+id/textView_descripcion"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:padding="10dp"
+            android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s. "
+            android:textColor="@color/primary_text" />
+    </LinearLayout>
 
 
-    </android.support.v7.widget.CardView>
+</android.support.v7.widget.CardView>
 
-</LinearLayout>

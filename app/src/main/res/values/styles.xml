@@ -24,12 +24,6 @@
     </style>
 
 
-    <style name="condensed_light_small_14">
-        <item name="android:fontFamily">sans-serif-condensed-light</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
     <style name="condensed_normal_small_14">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">normal</item>
@@ -72,6 +66,12 @@
         <item name="android:textSize">19sp</item>
     </style>
 
+    <style name="condensed_light_small_14">
+        <item name="android:fontFamily">sans-serif-condensed-light</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="condensed_light_24">
         <item name="android:fontFamily">sans-serif-condensed-light</item>
         <item name="android:textStyle">normal</item>
@@ -90,12 +90,23 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="condensed_bold_15">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <style name="condensed_bold_17">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">17sp</item>
     </style>
 
+    <style name="condensed_bold_20">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
 
     <style name="condensed_bold_22">
         <item name="android:fontFamily">sans-serif-condensed</item>
@@ -107,6 +118,12 @@
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="condensed_bold_27">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">27sp</item>
     </style>
 
     <style name="condensed_bold_36">
