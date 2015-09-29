@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/condensed_bold_27"
+        style="@style/condensed_bold_25"
         android:text="Huellas"
         android:textColor="@color/icons"/>
 </android.support.v7.widget.Toolbar>

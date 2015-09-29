@@ -2,7 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-       <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="android:textColorPrimary">@color/primary_text</item>
@@ -12,7 +12,6 @@
 
 
     </style>
-
 
 
     <!-- ToolBar -->
@@ -35,6 +34,14 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">15sp</item>
     </style>
+
+
+    <style name="condensed_normal_16">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
 
     <style name="condensed_normal_17">
         <item name="android:fontFamily">sans-serif-condensed</item>
@@ -114,10 +121,10 @@
         <item name="android:textSize">22sp</item>
     </style>
 
-    <style name="condensed_bold_24">
+    <style name="condensed_bold_25">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">25sp</item>
     </style>
 
     <style name="condensed_bold_27">

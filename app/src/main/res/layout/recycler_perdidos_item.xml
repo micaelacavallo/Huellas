@@ -4,6 +4,9 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     card_view:cardElevation="2dp"
+    card_view:cardCornerRadius="1dp"
+    card_view:cardMaxElevation="4dp"
+    card_view:cardUseCompatPadding="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
@@ -56,7 +59,7 @@
                     android:layout_width="match_parent"
                     android:padding="10dp"
                     android:text="Golden mediano marron"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/icons" />
             </LinearLayout>
         </FrameLayout>
 
