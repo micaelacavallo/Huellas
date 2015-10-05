@@ -1,5 +1,6 @@
 package com.example.micaela.huellas;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,11 +10,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.micaela.Controladores.IAdicionalesImpl;
+import com.example.micaela.Interfaces.IAdicionales;
+import com.example.micaela.clases.Adicionales;
+import com.example.micaela.clases.Colores;
+import com.example.micaela.clases.Comentarios;
+import com.example.micaela.clases.Estados;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class BaseActivity extends AppCompatActivity {
 
     Toolbar mToolbar;
     ViewGroup mainContainer;
     ViewGroup containerLayout;
+    IAdicionalesImpl mIAdicionales;
+    Adicionales mAdicional;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +47,7 @@ public class BaseActivity extends AppCompatActivity {
         containerLayout.addView(content);
 
         super.setContentView(mainContainer);
+
     }
 
 
