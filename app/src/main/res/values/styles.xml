@@ -2,7 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-       <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="android:textColorPrimary">@color/primary_text</item>
@@ -14,7 +14,6 @@
     </style>
 
 
-
     <!-- ToolBar -->
     <style name="ToolbarStyle" parent="AppTheme">
         <item name="actionMenuTextColor">@android:color/white</item>
@@ -23,37 +22,6 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-
-    <style name="condensed_light_small_14">
-        <item name="android:fontFamily">sans-serif-condensed-light</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="condensed_light_small_15">
-        <item name="android:fontFamily">sans-serif-condensed-light</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">15sp</item>
-    </style>
-
-    <style name="condensed_light_small_16">
-        <item name="android:fontFamily">sans-serif-condensed-light</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-
-    <style name="condensed_normal_small_11">
-        <item name="android:fontFamily">sans-serif-condensed</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">11sp</item>
-    </style>
-
-    <style name="condensed_normal_small_12">
-        <item name="android:fontFamily">sans-serif-condensed</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">12sp</item>
-    </style>
 
     <style name="condensed_normal_small_14">
         <item name="android:fontFamily">sans-serif-condensed</item>
@@ -67,67 +35,105 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+
+    <style name="condensed_normal_16">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+
     <style name="condensed_normal_17">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">17sp</item>
     </style>
 
-    <style name="condensed_bold_small">
+    <style name="condensed_normal_19">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">19sp</item>
+    </style>
+
+    <style name="condensed_normal_24">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="condensed_normal_36">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <style name="condensed_light_19">
+        <item name="android:fontFamily">sans-serif-condensed-light</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">19sp</item>
+    </style>
+
+    <style name="condensed_light_small_14">
+        <item name="android:fontFamily">sans-serif-condensed-light</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="condensed_light_24">
+        <item name="android:fontFamily">sans-serif-condensed-light</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="condensed_light_36">
+        <item name="android:fontFamily">sans-serif-condensed-light</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <style name="condensed_bold_14">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="condensed_light_medium">
-        <item name="android:fontFamily">sans-serif-condensed-light</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">19sp</item>
-    </style>
-
-    <style name="condensed_normal_medium">
-        <item name="android:fontFamily">sans-serif-condensed</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">19sp</item>
-    </style>
-
-    <style name="condensed_bold_medium">
+    <style name="condensed_bold_15">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">19sp</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
-    <style name="condensed_light_large">
-        <item name="android:fontFamily">sans-serif-condensed-light</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">24sp</item>
-    </style>
-
-    <style name="condensed_normal_large">
-        <item name="android:fontFamily">sans-serif-condensed</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">24sp</item>
-    </style>
-
-    <style name="condensed_bold_large">
+    <style name="condensed_bold_17">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">17sp</item>
     </style>
 
-    <style name="condensed_light_extra_large">
-        <item name="android:fontFamily">sans-serif-condensed-light</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">36sp</item>
-    </style>
-
-    <style name="condensed_normal_extra_large">
+    <style name="condensed_bold_20">
         <item name="android:fontFamily">sans-serif-condensed</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">36sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="condensed_bold_extra_large">
+    <style name="condensed_bold_22">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="condensed_bold_25">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="condensed_bold_27">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">27sp</item>
+    </style>
+
+    <style name="condensed_bold_36">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">36sp</item>

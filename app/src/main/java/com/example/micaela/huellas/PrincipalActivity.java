@@ -112,9 +112,9 @@ public class PrincipalActivity extends BaseActivity {
             TextView txtTab1 = (TextView) ((ViewGroup) slidingTabLayout.getChildAt(0)).getChildAt(1);
             TextView txtTab2 = (TextView) ((ViewGroup) slidingTabLayout.getChildAt(1)).getChildAt(1);
             TextView txtTab3 = (TextView) ((ViewGroup) slidingTabLayout.getChildAt(2)).getChildAt(1);
-            txtTab1.setTextAppearance(this, R.style.condensed_normal_small_15);
-            txtTab2.setTextAppearance(this, R.style.condensed_normal_small_15);
-            txtTab3.setTextAppearance(this, R.style.condensed_normal_small_15);
+            txtTab1.setTextAppearance(this, R.style.condensed_normal_16);
+            txtTab2.setTextAppearance(this, R.style.condensed_normal_16);
+            txtTab3.setTextAppearance(this, R.style.condensed_normal_16);
             tabLayout.invalidate();
         } catch (Exception e) {
             Log.e(getClass().getSimpleName(), e.getMessage());
