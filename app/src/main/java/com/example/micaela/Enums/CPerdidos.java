@@ -5,6 +5,7 @@ package com.example.micaela.Enums;
  */
 public class CPerdidos {
 
+    public static String OBJECT_ID = "objectId";
     public static String ID_PERDIDO = "idPerdido";
     public static String ID_RAZA  = "Razas";
     public static String ID_COLOR  = "Colores";

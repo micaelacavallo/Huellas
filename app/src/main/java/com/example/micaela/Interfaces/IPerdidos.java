@@ -32,6 +32,7 @@ public interface IPerdidos {
     public List<Tamaños> getTamaños();
     public List<Edades> getEdades();
     public List<Especies> getEspecies();
+    public void deletePerdido(String objectId) throws ParseException;
 
 
 }

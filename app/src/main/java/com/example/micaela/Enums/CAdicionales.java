@@ -5,6 +5,7 @@ package com.example.micaela.Enums;
  */
 public class CAdicionales {
 
+    public static String OBJECT_ID = "objectId";
     public static String ID_ADICIONAL = "idAdicional";
     public static String TITULO = "titulo";
     public static String DESCRIPCION= "descripcion";

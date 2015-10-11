@@ -395,6 +395,16 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     }
 
     @Override
+    public void deletePerdido(String objectId) throws ParseException {
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.PERDIDOS);
+        query.whereEqualTo(CPerdidos.OBJECT_ID, objectId);
+        ParseObject object = query.getFirst();
+
+        object.deleteInBackground();
+    }
+
+    @Override
     public void pinObjectInBackground(ParseObject object) {
 
     }
