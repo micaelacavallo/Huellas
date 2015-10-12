@@ -127,7 +127,7 @@ public class PerdidosFragment extends BaseFragment {
                 holder.textViewEstado.setBackgroundResource(R.color.blue_light);
             }
 
-            holder.imageViewFoto.setImageResource(R.mipmap.dog);
+          //  holder.imageViewFoto.setImageResource(R.mipmap.dog);
         }
 
 

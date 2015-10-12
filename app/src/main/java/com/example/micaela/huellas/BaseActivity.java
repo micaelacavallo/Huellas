@@ -11,13 +11,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.micaela.Controladores.IAdicionalesImpl;
+import com.example.micaela.Controladores.IPerdidosImpl;
 import com.example.micaela.Interfaces.IAdicionales;
 import com.example.micaela.clases.Adicionales;
 import com.example.micaela.clases.Colores;
 import com.example.micaela.clases.Comentarios;
+import com.example.micaela.clases.Edades;
+import com.example.micaela.clases.Especies;
 import com.example.micaela.clases.Estados;
+import com.example.micaela.clases.Perdidos;
+import com.example.micaela.clases.Razas;
+import com.example.micaela.clases.Sexos;
+import com.example.micaela.clases.Tamaños;
 import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
 import java.util.ArrayList;
@@ -29,8 +37,7 @@ public class BaseActivity extends AppCompatActivity {
     Toolbar mToolbar;
     ViewGroup mainContainer;
     ViewGroup containerLayout;
-    IAdicionalesImpl mIAdicionales;
-    Adicionales mAdicional;
+    IPerdidosImpl mIPerdidos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +55,12 @@ public class BaseActivity extends AppCompatActivity {
 
         super.setContentView(mainContainer);
 
+        mIPerdidos = new IPerdidosImpl(this);
+        try {
+            mIPerdidos.AgregarComentarioPerdido("0ywWYmi7Nt", "AGREGANDO COMENTARIO PERDIDO", "admin@gmail.com");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
 

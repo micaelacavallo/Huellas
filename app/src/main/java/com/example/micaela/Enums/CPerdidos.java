@@ -20,7 +20,7 @@ public class CPerdidos {
     public static String UBICACION = "ubicacion";
     public static String FECHA = "fecha";
     public static String FOTOS = "fotos";
-    public static String COMENTARIOS = "comentarios";
+    public static String COMENTARIOS = "Comentarios";
 
 
 }

@@ -2,6 +2,7 @@ package com.example.micaela.Controladores;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.widget.Toast;
 
 import com.example.micaela.Enums.CAdicionales;
 import com.example.micaela.Enums.CColores;
@@ -43,17 +44,71 @@ import java.util.List;
 public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
 
     ParseObject perdidosObject;
+    Context context;
+
+    ParseQuery<ParseObject> query;
+    List<Perdidos> perdidos;
+    ParseObject objectAux;
+    Razas raza;
+    Colores color;
+    Sexos sexo;
+    Tamaños tamaño;
+    Edades edad;
+    Especies especie;
+    Personas persona;
+    Estados estado;
+    ArrayList<String> fotos;
+    List<ParseObject> listParseObject;
+    ParseRelation objectRelation;
+    List<Comentarios> comentarios;
+    Perdidos perdido;
+    List<Razas> razas;
+    List<Tamaños> tamaños;
+    List<Especies> especies;
+    List<Colores> colores;
+    List<Sexos> sexos;
+    List<Edades> edades;
+
 
     public IPerdidosImpl(Context context)
     {
         Parse.initialize(context, Keys.APPLICATION_ID, Keys.CLIENT_ID);
-        perdidosObject = new ParseObject(Clases.PERDIDOS);
+        this.context = context;
+        init();
 
+    }
+
+    public void init()
+    {
+        perdidosObject = new ParseObject(Clases.PERDIDOS);
+        query = null;
+        perdidos = new ArrayList<Perdidos>();
+        objectAux = null;
+        raza = null;
+        color = null;
+        sexo = null;
+        tamaño = null;
+        edad = null;
+        especie = null;
+        persona = null;
+        estado = null;
+        fotos = null;
+        listParseObject = null;
+        objectRelation = null;
+        comentarios = new ArrayList<Comentarios>();
+        perdido = null;
+        razas = new ArrayList<Razas>();
+        tamaños = new ArrayList<Tamaños>();
+        especies = new ArrayList<Especies>();
+        colores = new ArrayList<Colores>();
+        sexos = new ArrayList<Sexos>();
+        edades = new ArrayList<Edades>();
     }
 
         @Override
     public List<Perdidos> getPerdidos() throws ParseException {
-            ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.PERDIDOS);
+
+            query = ParseQuery.getQuery(Clases.PERDIDOS);
             query.include(CPerdidos.ID_RAZA);
             query.include(CPerdidos.ID_COLOR);
             query.include(CPerdidos.ID_SEXO);
@@ -63,68 +118,49 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
             query.include(CPerdidos.ID_ESTADO);
             query.include(CPerdidos.ID_PERSONA);
 
-            List<ParseObject> objects = query.find();
-            List<Perdidos> perdidos = new ArrayList<Perdidos>();
-            ParseObject objectAux = null;
-            Razas raza = null;
-            Colores color = null;
-            Sexos sexo = null;
-            Tamaños tamaño = null;
-            Edades edad = null;
-            Especies especie = null;
-            Personas persona = null;
-            Estados estado = null;
-            ArrayList<String> fotos = null;
-            List<ParseObject> listComentarios = null;
-            Comentarios comentario = null;
-            ParseRelation objectRelation;
-            List<Comentarios> comentarios = new ArrayList<Comentarios>();
-            Perdidos perdido = null;
+            try{
 
+                listParseObject = query.find();
 
-            if(objects.size() > 0){
-                for(ParseObject object : objects)
-                {
-                    objectAux = object.getParseObject(CPerdidos.ID_RAZA);
-                    raza = new Razas(objectAux.getInt(CRazas.ID_RAZA), objectAux.getString(CRazas.RAZA), objectAux.getObjectId());
-
-                    objectAux = object.getParseObject(CPerdidos.ID_COLOR);
-                    color = new Colores(objectAux.getInt(CColores.ID_COLOR), objectAux.getString(CColores.COLOR), objectAux.getObjectId());
-
-                    objectAux = object.getParseObject(CPerdidos.ID_SEXO);
-                    sexo = new Sexos(objectAux.getInt(CSexos.ID_SEXO), objectAux.getString(CSexos.SEXO), objectAux.getObjectId());
-
-                    objectAux = object.getParseObject(CPerdidos.ID_TAMAÑO);
-                    tamaño = new Tamaños(objectAux.getInt(CTamaños.ID_TAMAÑO), objectAux.getString(CTamaños.TAMAÑO), objectAux.getObjectId());
-
-                    objectAux = object.getParseObject(CPerdidos.ID_EDAD);
-                    edad = new Edades(objectAux.getInt(CEdades.ID_EDAD), objectAux.getString(CEdades.EDAD), objectAux.getObjectId());
-
-                    objectAux = object.getParseObject(CPerdidos.ID_ESPECIE);
-                    especie = new Especies(objectAux.getInt(CEspecies.ID_ESPECIE), objectAux.getString(CEspecies.ESPECIE), objectAux.getObjectId());
-
-                    objectAux = object.getParseObject(CPerdidos.ID_PERSONA);
-                    persona = new Personas(objectAux.getObjectId(), objectAux.getInt(CPersonas.ID_PERSONA), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR));
-
-                    objectAux = object.getParseObject(CPerdidos.ID_ESTADO);
-                    estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO), objectAux.getBoolean(CEstados.SOLUCIONADO), objectAux.getString(CEstados.SITUACION));
-
-                    objectRelation = object.getRelation(CPerdidos.COMENTARIOS);
-                    listComentarios = objectRelation.getQuery().find();
-
-                    //verificar que no sea null
-                    for(ParseObject objectComentario : listComentarios)
+                if(listParseObject.size() > 0){
+                    for(ParseObject object : listParseObject)
                     {
-                        objectAux = object.getParseObject(CComentarios.ID_PERSONA);
-                        persona = new Personas(objectAux.getObjectId(), objectAux.getInt(CPersonas.ID_PERSONA), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR));
-                        comentario = new Comentarios(objectComentario.getObjectId(), objectComentario.getInt(CComentarios.ID_COMENTARIO), objectComentario.getString(CComentarios.COMENTARIO), persona, objectComentario.getDate(CComentarios.FECHA));
-                        comentarios.add(comentario);
-                    }
+                        objectAux = object.getParseObject(CPerdidos.ID_RAZA);
+                        raza = new Razas(objectAux.getInt(CRazas.ID_RAZA), objectAux.getString(CRazas.RAZA), objectAux.getObjectId());
 
-                    fotos = (ArrayList<String>) object.get(CPerdidos.FOTOS);
-                    perdido = new Perdidos(object.getInt(CPerdidos.ID_PERDIDO), edad, raza, especie, tamaño, color, sexo, estado, persona, object.getDate(CPerdidos.FECHA), object.getParseGeoPoint(CPerdidos.UBICACION), object.getString(CPerdidos.TITULO), object.getString(CPerdidos.DESCRIPCION), fotos, comentarios);
-                    perdidos.add(perdido);
+                        objectAux = object.getParseObject(CPerdidos.ID_COLOR);
+                        color = new Colores(objectAux.getInt(CColores.ID_COLOR), objectAux.getString(CColores.COLOR), objectAux.getObjectId());
+
+                        objectAux = object.getParseObject(CPerdidos.ID_SEXO);
+                        sexo = new Sexos(objectAux.getInt(CSexos.ID_SEXO), objectAux.getString(CSexos.SEXO), objectAux.getObjectId());
+
+                        objectAux = object.getParseObject(CPerdidos.ID_TAMAÑO);
+                        tamaño = new Tamaños(objectAux.getInt(CTamaños.ID_TAMAÑO), objectAux.getString(CTamaños.TAMAÑO), objectAux.getObjectId());
+
+                        objectAux = object.getParseObject(CPerdidos.ID_EDAD);
+                        edad = new Edades(objectAux.getInt(CEdades.ID_EDAD), objectAux.getString(CEdades.EDAD), objectAux.getObjectId());
+
+                        objectAux = object.getParseObject(CPerdidos.ID_ESPECIE);
+                        especie = new Especies(objectAux.getInt(CEspecies.ID_ESPECIE), objectAux.getString(CEspecies.ESPECIE), objectAux.getObjectId());
+
+                        objectAux = object.getParseObject(CPerdidos.ID_PERSONA);
+                        persona = new Personas(objectAux.getObjectId(), objectAux.getInt(CPersonas.ID_PERSONA), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR));
+
+                        objectAux = object.getParseObject(CPerdidos.ID_ESTADO);
+                        estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO), objectAux.getBoolean(CEstados.SOLUCIONADO), objectAux.getString(CEstados.SITUACION));
+
+                        objectRelation = object.getRelation(CPerdidos.COMENTARIOS);
+                        comentarios = getComentarios(objectRelation.getQuery().find(), object);
+
+                        fotos = (ArrayList<String>) object.get(CPerdidos.FOTOS);
+                        perdido = new Perdidos(object.getInt(CPerdidos.ID_PERDIDO), edad, raza, especie, tamaño, color, sexo, estado, persona, object.getDate(CPerdidos.FECHA), object.getParseGeoPoint(CPerdidos.UBICACION), object.getString(CPerdidos.TITULO), object.getString(CPerdidos.DESCRIPCION), fotos, comentarios);
+                        perdidos.add(perdido);
+                    }
                 }
+            }
+            catch(ParseException e)
+            {
+                Toast.makeText(context, "no hay perdidos", Toast.LENGTH_LONG);
             }
 
             return perdidos;
@@ -140,14 +176,6 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
         perdidosObject.put(CPerdidos.FOTOS, perdido.getFotos());
         perdidosObject.put(CPerdidos.UBICACION, perdido.getUbicacion());
 
-        Razas raza = null;
-        Colores color  = null;
-        Sexos sexo  = null;
-        Tamaños tamaño  = null;
-        Edades edad  = null;
-        Especies especie  = null;
-        Estados estado = null;
-        Personas persona = null;
 
         try {
             perdidosObject.put(CPerdidos.ID_PERDIDO, getUltimoInsertado());
@@ -178,12 +206,12 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public int getUltimoInsertado() throws ParseException {
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.PERDIDOS);
+        query = ParseQuery.getQuery(Clases.PERDIDOS);
         query.orderByDescending(CPerdidos.ID_PERDIDO);
         int idUltimo = 0;
         //capturar si no hay nada insertado
-        ParseObject object = query.getFirst();
-        idUltimo = object.getInt(CPerdidos.ID_PERDIDO) + 1;
+        objectAux = query.getFirst();
+        idUltimo = objectAux.getInt(CPerdidos.ID_PERDIDO) + 1;
         return idUltimo;
 
     }
@@ -191,83 +219,120 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public Razas getRaza(String raza) throws ParseException {
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.RAZAS);
+        query = ParseQuery.getQuery(Clases.RAZAS);
         query.whereEqualTo(CRazas.RAZA, raza);
-        ParseObject object = query.getFirst();
+        Razas razaObject = null;
 
-        Razas razaObject = new Razas(object.getInt(CRazas.ID_RAZA), object.getString(CRazas.RAZA), object.getObjectId());
-
+        try{
+            objectAux = query.getFirst();
+            razaObject = new Razas(objectAux.getInt(CRazas.ID_RAZA), objectAux.getString(CRazas.RAZA), objectAux.getObjectId());
+        }
+        catch(ParseException e)
+        {
+            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
+        }
         return razaObject;
     }
 
     @Override
     public Colores getColor(String color) throws ParseException {
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.COLORES);
+        query = ParseQuery.getQuery(Clases.COLORES);
         query.whereEqualTo(CColores.COLOR, color);
-        ParseObject object = query.getFirst();
+        Colores colorObject = null;
 
-        Colores colorObject = new Colores(object.getInt(CColores.ID_COLOR), object.getString(CColores.COLOR), object.getObjectId());
-
+        try{
+            objectAux = query.getFirst();
+            colorObject = new Colores(objectAux.getInt(CColores.ID_COLOR), objectAux.getString(CColores.COLOR), objectAux.getObjectId());
+        }
+        catch(ParseException e)
+        {
+            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
+        }
         return colorObject;
     }
 
     @Override
     public Sexos getSexo(String sexo) throws ParseException {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.SEXOS);
+
+        query = ParseQuery.getQuery(Clases.SEXOS);
         query.whereEqualTo(CSexos.SEXO, sexo);
-        ParseObject object = query.getFirst();
-
-        Sexos sexoObject = new Sexos(object.getInt(CSexos.ID_SEXO), object.getString(CSexos.SEXO), object.getObjectId());
-
+        Sexos sexoObject = null;
+        try {
+            objectAux = query.getFirst();
+            sexoObject = new Sexos(objectAux.getInt(CSexos.ID_SEXO), objectAux.getString(CSexos.SEXO), objectAux.getObjectId());
+        }
+        catch(ParseException e)
+        {
+            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
+        }
         return sexoObject;
     }
 
     @Override
     public Tamaños getTamaño(String tamaño) throws ParseException {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.TAMAÑOS);
+
+        query = ParseQuery.getQuery(Clases.TAMAÑOS);
         query.whereEqualTo(CTamaños.TAMAÑO, tamaño);
-        ParseObject object = query.getFirst();
-
-        Tamaños tamañoObject = new Tamaños(object.getInt(CTamaños.ID_TAMAÑO), object.getString(CTamaños.TAMAÑO), object.getObjectId());
-
+        Tamaños tamañoObject = null;
+        try{
+            objectAux = query.getFirst();
+            tamañoObject = new Tamaños(objectAux.getInt(CTamaños.ID_TAMAÑO), objectAux.getString(CTamaños.TAMAÑO), objectAux.getObjectId());
+        }
+        catch(ParseException e)
+        {
+            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
+        }
         return tamañoObject;
     }
 
     @Override
     public Edades getEdad(String edad) throws ParseException {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.EDADES);
+
+        query = ParseQuery.getQuery(Clases.EDADES);
         query.whereEqualTo(CEdades.EDAD, edad);
-        ParseObject object = query.getFirst();
+        Edades edadObject = null;
+        try {
+            objectAux = query.getFirst();
+            edadObject = new Edades(objectAux.getInt(CEdades.ID_EDAD), objectAux.getString(CEdades.EDAD), objectAux.getObjectId());
+        }
+        catch(ParseException e)
+        {
+            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
+        }
 
-        Edades edadObject = new Edades(object.getInt(CEdades.ID_EDAD), object.getString(CEdades.EDAD), object.getObjectId());
-
-        return edadObject;
+    return edadObject;
     }
 
     @Override
     public Especies getEspecie(String especie) throws ParseException {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.ESPECIES);
-        query.whereEqualTo(CEspecies.ESPECIE, especie);
-        ParseObject object = query.getFirst();
 
-        Especies especieObject = new Especies(object.getInt(CEspecies.ID_ESPECIE), object.getString(CEspecies.ESPECIE), object.getObjectId());
+        query = ParseQuery.getQuery(Clases.ESPECIES);
+        query.whereEqualTo(CEspecies.ESPECIE, especie);
+        Especies especieObject = null;
+        try{
+            objectAux = query.getFirst();
+            especieObject = new Especies(objectAux.getInt(CEspecies.ID_ESPECIE), objectAux.getString(CEspecies.ESPECIE), objectAux.getObjectId());
+        }
+        catch(ParseException e)
+        {
+            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
+        }
 
         return especieObject;
+
     }
 
     @Override
     public List<Razas> getRazas() {
 
-        List<Razas> razas = new ArrayList<Razas>();
-        Razas raza = null;
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.RAZAS);
-        List<ParseObject> listParseObject = null;
+        query = ParseQuery.getQuery(Clases.RAZAS);
         try {
             listParseObject = query.find();
-        } catch (ParseException e) {
-            e.printStackTrace();
+        }
+        catch(ParseException e)
+        {
+            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
         }
 
         for(ParseObject object : listParseObject)
@@ -282,15 +347,13 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public List<Colores> getColores() {
 
-        List<Colores> colores = new ArrayList<Colores>();
-        Colores color = null;
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.COLORES);
-        List<ParseObject> listParseObject = null;
+        query = ParseQuery.getQuery(Clases.COLORES);
         try {
             listParseObject = query.find();
-        } catch (ParseException e) {
-            e.printStackTrace();
+        }
+        catch(ParseException e)
+        {
+            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
         }
 
         for(ParseObject object : listParseObject)
@@ -305,15 +368,13 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public List<Sexos> getSexos() {
 
-        List<Sexos> sexos = new ArrayList<Sexos>();
-        Sexos sexo = null;
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.SEXOS);
-        List<ParseObject> listParseObject = null;
+        query = ParseQuery.getQuery(Clases.SEXOS);
         try {
             listParseObject = query.find();
-        } catch (ParseException e) {
-            e.printStackTrace();
+        }
+        catch(ParseException e)
+        {
+            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
         }
 
         for(ParseObject object : listParseObject)
@@ -328,15 +389,13 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public List<Tamaños> getTamaños() {
 
-        List<Tamaños> tamaños = new ArrayList<Tamaños>();
-        Tamaños tamaño  = null;
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.TAMAÑOS);
-        List<ParseObject> listParseObject = null;
+        query = ParseQuery.getQuery(Clases.TAMAÑOS);
         try {
             listParseObject = query.find();
-        } catch (ParseException e) {
-            e.printStackTrace();
+        }
+        catch(ParseException e)
+        {
+            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
         }
 
         for(ParseObject object : listParseObject)
@@ -351,15 +410,14 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public List<Edades> getEdades() {
 
-        List<Edades> edades = new ArrayList<Edades>();
-        Edades edad= null;
+        query = ParseQuery.getQuery(Clases.EDADES);
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.EDADES);
-        List<ParseObject> listParseObject = null;
         try {
             listParseObject = query.find();
-        } catch (ParseException e) {
-            e.printStackTrace();
+        }
+        catch(ParseException e)
+        {
+            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
         }
 
         for(ParseObject object : listParseObject)
@@ -374,15 +432,13 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public List<Especies> getEspecies() {
 
-        List<Especies> especies = new ArrayList<Especies>();
-        Especies especie = null;
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.ESPECIES);
-        List<ParseObject> listParseObject = null;
+        query = ParseQuery.getQuery(Clases.ESPECIES);
         try {
             listParseObject = query.find();
-        } catch (ParseException e) {
-            e.printStackTrace();
+        }
+        catch(ParseException e)
+        {
+            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
         }
 
         for(ParseObject object : listParseObject)
@@ -397,11 +453,49 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public void deletePerdido(String objectId) throws ParseException {
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.PERDIDOS);
+        query = ParseQuery.getQuery(Clases.PERDIDOS);
         query.whereEqualTo(CPerdidos.OBJECT_ID, objectId);
-        ParseObject object = query.getFirst();
+        try {
+            objectAux = query.getFirst();
+            objectRelation = objectAux.getRelation(CPerdidos.COMENTARIOS);
+            listParseObject = objectRelation.getQuery().find();
 
-        object.deleteInBackground();
+            for (ParseObject parseObject : listParseObject) {
+                parseObject.deleteInBackground();
+            }
+
+            objectAux.deleteInBackground();
+        }
+        catch(ParseException e)
+        {
+            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
+        }
+    }
+
+    @Override
+    public void AgregarComentarioPerdido(String perdidoObjectId, String comentario, String email) throws ParseException {
+
+        ParseObject parseObjectComentario = agregarComentario(comentario, email);
+        objectAux = getParseObjectById(perdidoObjectId);
+        objectRelation = objectAux.getRelation(CPerdidos.COMENTARIOS);
+        objectRelation.add(parseObjectComentario);
+        objectAux.saveInBackground();
+    }
+
+    public ParseObject getParseObjectById(String objectId) {
+
+        query = ParseQuery.getQuery(Clases.PERDIDOS);
+        query.whereEqualTo(CAdicionales.OBJECT_ID, objectId);
+        try{
+            objectAux = query.getFirst();
+        }
+        catch(ParseException e)
+        {
+            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
+        }
+
+        return objectAux;
+
     }
 
     @Override
