@@ -72,6 +72,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
 
     public IPerdidosImpl(Context context)
     {
+        Parse.enableLocalDatastore(context);
         Parse.initialize(context, Keys.APPLICATION_ID, Keys.CLIENT_ID);
         this.context = context;
         init();
