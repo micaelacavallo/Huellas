@@ -1,6 +1,5 @@
 package com.example.micaela.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +12,9 @@ import java.util.List;
 
 public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
     List<String> mAnimales;
-    private Context mContext;
     private int mCurrentPage;
 
-    public AnimalesAdapter(List<String> animales, int currentPage, Context context) {
-        mContext = context;
+    public AnimalesAdapter(List<String> animales, int currentPage) {
         mAnimales = animales;
         mCurrentPage = currentPage;
     }

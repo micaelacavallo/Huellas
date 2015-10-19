@@ -42,7 +42,7 @@ public class DonacionesFragment extends BaseFragment {
     private void inicializarRecycler(View view, List<String> animales) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        AnimalesAdapter mAdapter = new AnimalesAdapter(animales, 1, getContext());
+        AnimalesAdapter mAdapter = new AnimalesAdapter(animales, 1);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
