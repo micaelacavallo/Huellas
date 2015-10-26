@@ -25,6 +25,8 @@ import com.parse.ParseRelation;
 import java.util.ArrayList;
 import java.util.List;
 
+import bolts.Task;
+
 
 /**
  * Created by Quimey on 19/09/2015.
@@ -77,7 +79,7 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
         objectAux = new ParseObject(Clases.COLORES);
         objectAux.put(CColores.ID_COLOR, color.getIdColor());
         objectAux.put(CColores.COLOR, color.getColor());
-        objectAux.saveInBackground();
+        save(objectAux);
     }
 
     @Override
@@ -86,6 +88,8 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
         query = ParseQuery.getQuery(Clases.ADICIONALES);
         query.include(CAdicionales.ID_PERSONA);
         query.include(CAdicionales.ID_ESTADO);
+        checkInternetGet(query);
+
         try{
             listParseObject = query.find();
 
@@ -120,6 +124,8 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
         query.include(CAdicionales.ID_PERSONA);
         query.include(CAdicionales.ID_ESTADO);
         query.whereEqualTo(CAdicionales.ID_ADICIONAL, idAdicional);
+        checkInternetGet(query);
+
         try{
             ParseObject object = query.getFirst();
 
@@ -159,15 +165,29 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
 
         adicionalObject.put(CAdicionales.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(estado.getObjectId())));
         adicionalObject.put(CAdicionales.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
+        save(adicionalObject);
+    }
 
-        adicionalObject.saveInBackground();
 
+    public ParseObject cargarAdicional(Adicionales adicional)
+    {
+        adicionalObject.put(CAdicionales.TITULO, adicional.getTitulo());
+        adicionalObject.put(CAdicionales.DESCRIPCION, adicional.getDescripcion());
+        adicionalObject.put(CAdicionales.FECHA, adicional.getFecha());
+        adicionalObject.put(CAdicionales.FOTOS, adicional.getFotos());
+        adicionalObject.put(CAdicionales.ID_ADICIONAL, adicional.getIdAdicional());
+        adicionalObject.put(CAdicionales.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(adicional.getEstado().getObjectId())));
+        adicionalObject.put(CAdicionales.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(adicional.getPersona().getObjectId())));
+
+        return adicionalObject;
     }
 
     @Override
-    public void editAdicional(Adicionales adicional) {
+    public void editAdicional(Adicionales adicional) throws ParseException {
 
-
+        objectAux = cargarAdicional(adicional);
+         deleteAdicional(adicional.getObjectId());
+        saveAdicional(adicional);
     }
 
     @Override
@@ -176,10 +196,15 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
         query = ParseQuery.getQuery(Clases.ADICIONALES);
         query.orderByDescending(CAdicionales.ID_ADICIONAL);
         int idUltimo = 0;
-        //capturar si no hay nada insertado
-        objectAux = query.getFirst();
-        idUltimo = objectAux.getInt(CAdicionales.ID_ADICIONAL) + 1;
-
+        int size = query.count();
+        if(size != 0) {
+            objectAux = query.getFirst();
+            idUltimo = objectAux.getInt(CAdicionales.ID_ADICIONAL) + 1;
+        }
+        else
+        {
+            idUltimo = 1;
+        }
         return idUltimo;
     }
 
@@ -188,6 +213,7 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
 
         query = ParseQuery.getQuery(Clases.ADICIONALES);
         query.whereEqualTo(CAdicionales.OBJECT_ID, objectId);
+        checkInternetGet(query);
         objectAux = query.getFirst();
         objectRelation = objectAux.getRelation(CAdicionales.ID_COMENTARIOS);
         try{
@@ -195,9 +221,10 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
 
             for(ParseObject parseObject : listParseObject)
             {
-                parseObject.deleteInBackground();
+                delete(parseObject);
             }
-            objectAux.deleteInBackground();
+
+            delete(objectAux);
         }
         catch(ParseException e)
         {
@@ -208,17 +235,19 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
     @Override
     public void AgregarComentarioAdicional(String adicionalObjectId, String comentarioText, String email) throws ParseException {
 
-        ParseObject parseObjectComentario = agregarComentario(comentarioText, email);
+        ParseObject parseObjectComentario = agregarComentario(comentarioText, email, context);
         objectAux = getParseObjectById(adicionalObjectId);
         objectRelation = objectAux.getRelation(CAdicionales.ID_COMENTARIOS);
         objectRelation.add(parseObjectComentario);
-        objectAux.saveInBackground();
+        save(objectAux);
     }
 
     public ParseObject getParseObjectById(String objectId) {
 
         query = ParseQuery.getQuery(Clases.ADICIONALES);
         query.whereEqualTo(CAdicionales.OBJECT_ID, objectId);
+        checkInternetGet(query);
+
         try{
             objectAux = query.getFirst();
        }
@@ -237,7 +266,77 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
     }
 
     @Override
+    public void unpinObjectInBackground(ParseObject object) {
+        object.unpinInBackground();
+    }
+
+    @Override
     public void queryFromLocalDatastore(ParseQuery query) {
         query.fromLocalDatastore();
+    }
+
+    @Override
+    public void saveEventually(ParseObject object) {
+        object.saveEventually();
+    }
+
+    @Override
+    public void saveInBackground(ParseObject object) {
+
+        object.saveInBackground();
+    }
+
+    @Override
+    public void deleteEventually(ParseObject object) {
+        object.deleteEventually();
+    }
+
+    @Override
+    public void deleteInBackground(ParseObject object) {
+        object.deleteInBackground();
+    }
+
+    @Override
+    public void cargarDBLocal() throws ParseException {
+
+        adicionales = getAdicionales();
+        ParseObject.pinAllInBackground(adicionales);
+    }
+
+    @Override
+    public void save(ParseObject object) {
+
+        if(internet(context)) {
+            saveInBackground(object);
+        }
+        else
+        {
+            saveEventually(object);
+        }
+
+        pinObjectInBackground(object);
+
+    }
+
+    @Override
+    public void delete(ParseObject object) {
+
+        if(internet(context)) {
+            deleteInBackground(objectAux);
+        }
+        else {
+            deleteEventually(objectAux);
+        }
+
+        unpinObjectInBackground(objectAux);
+    }
+
+
+    @Override
+    public void checkInternetGet(ParseQuery<ParseObject> query)
+    {
+        if(!internet(context)) {
+            query.fromLocalDatastore();
+        }
     }
 }

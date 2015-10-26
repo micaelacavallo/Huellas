@@ -1,5 +1,7 @@
 package com.example.micaela.db.clases;
 
+import com.parse.ParseObject;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,9 +9,10 @@ import java.util.List;
 /**
  * Created by Quimey on 13/09/2015.
  */
-public class Adicionales {
+public class Adicionales extends ParseObject {
 
     private int mIdAdicional;
+    private String objectId;
     private Personas mPersona;
     private Estados mEstado;
     private Date mFecha;
@@ -98,5 +101,13 @@ public class Adicionales {
 
     public void setComentarios(List<Comentarios> comentarios) {
         this.mComentarios = comentarios;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 }

@@ -116,6 +116,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
             query.include(CPerdidos.ID_ESPECIE);
             query.include(CPerdidos.ID_ESTADO);
             query.include(CPerdidos.ID_PERSONA);
+            checkInternetGet(query);
 
             try{
 
@@ -198,8 +199,33 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
         perdidosObject.put(CPerdidos.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(estado.getObjectId())));
         perdidosObject.put(CPerdidos.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
 
-        perdidosObject.saveInBackground();
+        save(perdidosObject);
+    }
 
+    public ParseObject cargarPerdido(Perdidos perdido)
+    {
+        perdidosObject.put(CPerdidos.TITULO, perdido.getTitulo());
+        perdidosObject.put(CPerdidos.DESCRIPCION, perdido.getDescripcion());
+        perdidosObject.put(CPerdidos.FECHA, perdido.getFecha());
+        perdidosObject.put(CPerdidos.FOTOS, perdido.getFotos());
+        perdidosObject.put(CPerdidos.UBICACION, perdido.getUbicacion());
+        perdidosObject.put(CPerdidos.ID_PERDIDO, perdido.getIdPerdido());
+        perdidosObject.put(CPerdidos.ID_RAZA, ParseObject.createWithoutData(Clases.RAZAS, perdido.getRaza().getObjectId()));
+        perdidosObject.put(CPerdidos.ID_COLOR, ParseObject.createWithoutData(Clases.COLORES, perdido.getColor().getObjectId()));
+        perdidosObject.put(CPerdidos.ID_SEXO, ParseObject.createWithoutData(Clases.SEXOS, perdido.getSexo().getObjectId()));
+        perdidosObject.put(CPerdidos.ID_TAMAÑO, ParseObject.createWithoutData(Clases.TAMAÑOS, perdido.getTamaño().getObjectId()));
+        perdidosObject.put(CPerdidos.ID_EDAD, ParseObject.createWithoutData(Clases.EDADES, perdido.getEdad().getObjectId()));
+        perdidosObject.put(CPerdidos.ID_ESPECIE, ParseObject.createWithoutData(Clases.ESPECIES, perdido.getEspecie().getObjectId()));
+        perdidosObject.put(CPerdidos.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, perdido.getEstado().getObjectId()));
+        perdidosObject.put(CPerdidos.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, perdido.getPersona().getObjectId()));
+
+        return perdidosObject;
+    }
+    @Override
+    public void editPerdido(Perdidos perdido) throws ParseException {
+        objectAux = cargarPerdido(perdido);
+        deletePerdido(perdido.getObjectId());
+        savePerdido(perdido);
     }
 
     @Override
@@ -208,9 +234,16 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
         query = ParseQuery.getQuery(Clases.PERDIDOS);
         query.orderByDescending(CPerdidos.ID_PERDIDO);
         int idUltimo = 0;
-        //capturar si no hay nada insertado
-        objectAux = query.getFirst();
-        idUltimo = objectAux.getInt(CPerdidos.ID_PERDIDO) + 1;
+        int size = query.count();
+        if(size != 0) {
+            objectAux = query.getFirst();
+            idUltimo = objectAux.getInt(CPerdidos.ID_PERDIDO) + 1;
+        }
+        else
+        {
+            idUltimo = 1;
+        }
+
         return idUltimo;
 
     }
@@ -220,6 +253,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         query = ParseQuery.getQuery(Clases.RAZAS);
         query.whereEqualTo(CRazas.RAZA, raza);
+        checkInternetGet(query);
         Razas razaObject = null;
 
         try{
@@ -238,6 +272,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         query = ParseQuery.getQuery(Clases.COLORES);
         query.whereEqualTo(CColores.COLOR, color);
+        checkInternetGet(query);
         Colores colorObject = null;
 
         try{
@@ -256,7 +291,9 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         query = ParseQuery.getQuery(Clases.SEXOS);
         query.whereEqualTo(CSexos.SEXO, sexo);
+        checkInternetGet(query);
         Sexos sexoObject = null;
+
         try {
             objectAux = query.getFirst();
             sexoObject = new Sexos(objectAux.getInt(CSexos.ID_SEXO), objectAux.getString(CSexos.SEXO), objectAux.getObjectId());
@@ -273,6 +310,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         query = ParseQuery.getQuery(Clases.TAMAÑOS);
         query.whereEqualTo(CTamaños.TAMAÑO, tamaño);
+        checkInternetGet(query);
         Tamaños tamañoObject = null;
         try{
             objectAux = query.getFirst();
@@ -290,6 +328,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         query = ParseQuery.getQuery(Clases.EDADES);
         query.whereEqualTo(CEdades.EDAD, edad);
+        checkInternetGet(query);
         Edades edadObject = null;
         try {
             objectAux = query.getFirst();
@@ -308,7 +347,9 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         query = ParseQuery.getQuery(Clases.ESPECIES);
         query.whereEqualTo(CEspecies.ESPECIE, especie);
+        checkInternetGet(query);
         Especies especieObject = null;
+
         try{
             objectAux = query.getFirst();
             especieObject = new Especies(objectAux.getInt(CEspecies.ID_ESPECIE), objectAux.getString(CEspecies.ESPECIE), objectAux.getObjectId());
@@ -319,13 +360,13 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
         }
 
         return especieObject;
-
     }
 
     @Override
     public List<Razas> getRazas() {
 
         query = ParseQuery.getQuery(Clases.RAZAS);
+        checkInternetGet(query);
         try {
             listParseObject = query.find();
         }
@@ -347,6 +388,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     public List<Colores> getColores() {
 
         query = ParseQuery.getQuery(Clases.COLORES);
+        checkInternetGet(query);
         try {
             listParseObject = query.find();
         }
@@ -368,6 +410,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     public List<Sexos> getSexos() {
 
         query = ParseQuery.getQuery(Clases.SEXOS);
+        checkInternetGet(query);
         try {
             listParseObject = query.find();
         }
@@ -389,6 +432,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     public List<Tamaños> getTamaños() {
 
         query = ParseQuery.getQuery(Clases.TAMAÑOS);
+        checkInternetGet(query);
         try {
             listParseObject = query.find();
         }
@@ -410,6 +454,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     public List<Edades> getEdades() {
 
         query = ParseQuery.getQuery(Clases.EDADES);
+        checkInternetGet(query);
 
         try {
             listParseObject = query.find();
@@ -432,6 +477,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     public List<Especies> getEspecies() {
 
         query = ParseQuery.getQuery(Clases.ESPECIES);
+        checkInternetGet(query);
         try {
             listParseObject = query.find();
         }
@@ -454,16 +500,19 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         query = ParseQuery.getQuery(Clases.PERDIDOS);
         query.whereEqualTo(CPerdidos.OBJECT_ID, objectId);
+        checkInternetGet(query);
         try {
             objectAux = query.getFirst();
             objectRelation = objectAux.getRelation(CPerdidos.COMENTARIOS);
             listParseObject = objectRelation.getQuery().find();
 
             for (ParseObject parseObject : listParseObject) {
-                parseObject.deleteInBackground();
+
+                delete(parseObject);
             }
 
-            objectAux.deleteInBackground();
+            delete(objectAux);
+
         }
         catch(ParseException e)
         {
@@ -474,17 +523,19 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public void AgregarComentarioPerdido(String perdidoObjectId, String comentario, String email) throws ParseException {
 
-        ParseObject parseObjectComentario = agregarComentario(comentario, email);
+        ParseObject parseObjectComentario = agregarComentario(comentario, email, context);
         objectAux = getParseObjectById(perdidoObjectId);
         objectRelation = objectAux.getRelation(CPerdidos.COMENTARIOS);
         objectRelation.add(parseObjectComentario);
-        objectAux.saveInBackground();
+        save(objectAux);
     }
 
     public ParseObject getParseObjectById(String objectId) {
 
         query = ParseQuery.getQuery(Clases.PERDIDOS);
         query.whereEqualTo(CAdicionales.OBJECT_ID, objectId);
+        checkInternetGet(query);
+
         try{
             objectAux = query.getFirst();
         }
@@ -499,11 +550,95 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
 
     @Override
     public void pinObjectInBackground(ParseObject object) {
+        object.pinInBackground();
+    }
 
+    @Override
+    public void unpinObjectInBackground(ParseObject object) {
+        object.unpinInBackground();
     }
 
     @Override
     public void queryFromLocalDatastore(ParseQuery query) {
+        query.fromLocalDatastore();
+    }
 
+    @Override
+    public void saveEventually(ParseObject object) {
+        object.saveEventually();
+    }
+
+    @Override
+    public void saveInBackground(ParseObject object) {
+
+        object.saveInBackground();
+    }
+
+    @Override
+    public void deleteEventually(ParseObject object) {
+        object.deleteEventually();
+    }
+
+    @Override
+    public void deleteInBackground(ParseObject object) {
+        object.deleteInBackground();
+    }
+
+    @Override
+    public void cargarDBLocal() throws ParseException {
+
+        perdidos = getPerdidos();
+        razas = getRazas();
+        colores = getColores();
+        sexos = getSexos();
+        tamaños = getTamaños();
+        edades = getEdades();
+        especies = getEspecies();
+
+        ParseObject.pinAllInBackground(perdidos);
+        ParseObject.pinAllInBackground(razas);
+        ParseObject.pinAllInBackground(colores);
+        ParseObject.pinAllInBackground(sexos);
+        ParseObject.pinAllInBackground(tamaños);
+        ParseObject.pinAllInBackground(edades);
+        ParseObject.pinAllInBackground(especies);
+    }
+
+    @Override
+    public void save(ParseObject object) {
+
+        if(internet(context)) {
+            saveInBackground(object);
+        }
+        else
+        {
+            saveEventually(object);
+        }
+
+        pinObjectInBackground(object);
+    }
+
+
+    @Override
+    public void delete(ParseObject object) {
+
+        if(internet(context)) {
+            deleteInBackground(objectAux);
+        }
+        else {
+            deleteEventually(objectAux);
+        }
+
+        unpinObjectInBackground(objectAux);
+    }
+
+
+
+    @Override
+    public void checkInternetGet(ParseQuery<ParseObject> query)
+    {
+        if(!internet(context)) {
+            query.fromLocalDatastore();
+        }
     }
 }

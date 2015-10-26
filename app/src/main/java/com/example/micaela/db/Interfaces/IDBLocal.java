@@ -1,5 +1,6 @@
 package com.example.micaela.db.Interfaces;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
@@ -9,5 +10,12 @@ import com.parse.ParseQuery;
 public interface IDBLocal {
 
     public void pinObjectInBackground(ParseObject object);
+    public void unpinObjectInBackground(ParseObject object);
     public void queryFromLocalDatastore(ParseQuery query);
+    public void saveEventually(ParseObject object);
+    public void saveInBackground(ParseObject object);
+    public void deleteEventually(ParseObject object);
+    public void deleteInBackground(ParseObject object);
+    public void cargarDBLocal() throws ParseException;
+
 }
