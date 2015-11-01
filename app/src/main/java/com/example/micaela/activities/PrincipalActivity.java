@@ -30,6 +30,8 @@ public class PrincipalActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        hideOverlay();
         mPager = (ViewPager) findViewById(R.id.pager);
 
         PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
@@ -37,6 +39,11 @@ public class PrincipalActivity extends BaseActivity {
         mPager.setPageTransformer(false, new ZoomOutPageTransformer());
         mPager.setOffscreenPageLimit(3);
 
+        inicializarTabs();
+        inicializarFAB();
+    }
+
+    private void inicializarTabs() {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mPager);
 
@@ -52,7 +59,6 @@ public class PrincipalActivity extends BaseActivity {
         tabsList.getChildAt(2).setOnClickListener(listener);
 
         setTabsTextStyle(tabLayout);
-        inicializarFAB();
     }
 
     private void inicializarFAB() {
@@ -80,14 +86,7 @@ public class PrincipalActivity extends BaseActivity {
 
         @Override
         public Fragment getItem(int position) {
-
             Fragment fragment;
-
-            Bundle args = new Bundle();
-            // Our object is just an integer :-P
-            // args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1);
-
-
             switch (position) {
                 case 0:
                     fragment = new PerdidosFragment();
@@ -98,9 +97,7 @@ public class PrincipalActivity extends BaseActivity {
                 default:
                     fragment = new InformacionUtilFragment();
             }
-            fragment.setArguments(args);
             return fragment;
-
         }
 
         @Override

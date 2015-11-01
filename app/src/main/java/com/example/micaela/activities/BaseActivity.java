@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.example.micaela.db.Controladores.IPerdidosImpl;
 import com.example.micaela.huellas.R;
@@ -47,6 +50,16 @@ public class BaseActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
+    }
+
+    public void hideOverlay () {
+        mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.GONE);
+    }
+
+    public void showOverlay () {
+        mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.VISIBLE);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotate_image);
+        mainContainer.findViewById(R.id.imageView).startAnimation(animation);
     }
 //
 //    public void setToolbarTitle(String title) {

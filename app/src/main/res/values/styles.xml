@@ -133,6 +133,12 @@
         <item name="android:textSize">27sp</item>
     </style>
 
+    <style name="condensed_bold_30">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
     <style name="condensed_bold_36">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">bold</item>
