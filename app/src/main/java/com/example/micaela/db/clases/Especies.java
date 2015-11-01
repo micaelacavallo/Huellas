@@ -1,9 +1,11 @@
 package com.example.micaela.db.clases;
 
+import com.parse.ParseObject;
+
 /**
  * Created by Quimey on 13/09/2015.
  */
-public class Especies {
+public class Especies extends ParseObject {
 
     private int mIdEspecie;
     private String mEspecie;

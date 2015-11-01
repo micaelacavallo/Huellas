@@ -1,6 +1,7 @@
 package com.example.micaela.db.clases;
 
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,7 +10,7 @@ import java.util.List;
 /**
  * Created by Quimey on 13/09/2015.
  */
-public class Perdidos {
+public class Perdidos extends ParseObject {
 
     private int mIdPerdido;
     private Edades mEdad;
@@ -26,6 +27,7 @@ public class Perdidos {
     private String mDescripcion;
     private List<String> mFotos;
     private List<Comentarios> mComentarios;
+    private String mObjectId;
 
 
     public Perdidos() {
@@ -178,5 +180,13 @@ public class Perdidos {
 
     public void setComentarios(List<Comentarios> mComentarios) {
         this.mComentarios = mComentarios;
+    }
+
+    public String getObjectId() {
+        return mObjectId;
+    }
+
+    public void setObjectId(String mObjectId) {
+        this.mObjectId = mObjectId;
     }
 }

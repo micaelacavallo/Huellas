@@ -1,9 +1,14 @@
 package com.example.micaela.db.Controladores;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.example.micaela.db.Enums.CComentarios;
 import com.example.micaela.db.Enums.CEstados;
 import com.example.micaela.db.Enums.CPersonas;
 import com.example.micaela.db.Enums.Clases;
+import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.clases.Comentarios;
 import com.example.micaela.db.clases.Estados;
@@ -19,7 +24,7 @@ import java.util.List;
 /**
  * Created by Horacio on 10/10/2015.
  */
-public class IGeneralImpl implements IGeneral{
+public class IGeneralImpl implements IGeneral, IDBLocal{
 
     @Override
     public Estados getEstado(String situacion) throws ParseException {
@@ -78,7 +83,7 @@ public class IGeneralImpl implements IGeneral{
     }
 
     @Override
-    public ParseObject agregarComentario(String comentario, String email) throws ParseException {
+    public ParseObject agregarComentario(String comentario, String email, Context context) throws ParseException {
 
         ParseObject object = new ParseObject(Clases.COMENTARIOS);
         object.put(CComentarios.ID_COMENTARIO, getUltimoComentarioInsertado());
@@ -86,7 +91,14 @@ public class IGeneralImpl implements IGeneral{
         object.put(CComentarios.FECHA, new Date());
         Personas persona = getPersona(email);
         object.put(CComentarios.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
-        object.saveInBackground();
+        if(internet(context)) {
+            saveInBackground(object);
+        }
+        else
+        {
+            saveEventually(object);
+        }
+        pinObjectInBackground(object);
         ParseObject objectComentario = getComentarioById(getUltimoObjectId());
 
         return objectComentario;
@@ -111,6 +123,39 @@ public class IGeneralImpl implements IGeneral{
             e.fillInStackTrace();
         }
         return objectAux;
+
+    }
+
+    @Override
+    public boolean internet(Context context) {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
+
+    @Override
+    public void save(ParseObject object) {
+
+    }
+
+    @Override
+    public void delete(ParseObject object) {
+
+    }
+
+    @Override
+    public void checkInternetGet(ParseQuery<ParseObject> query) {
 
     }
 
@@ -142,5 +187,46 @@ public class IGeneralImpl implements IGeneral{
         }
 
         return objectId;
+    }
+
+    @Override
+    public void pinObjectInBackground(ParseObject object) {
+        object.pinInBackground();
+    }
+
+    @Override
+    public void unpinObjectInBackground(ParseObject object) {
+        object.unpinInBackground();
+    }
+
+    @Override
+    public void queryFromLocalDatastore(ParseQuery query) {
+        query.fromLocalDatastore();
+    }
+
+    @Override
+    public void saveEventually(ParseObject object) {
+        object.saveEventually();
+    }
+
+    @Override
+    public void saveInBackground(ParseObject object) {
+
+        object.saveInBackground();
+    }
+
+    @Override
+    public void deleteEventually(ParseObject object) {
+        object.deleteEventually();
+    }
+
+    @Override
+    public void deleteInBackground(ParseObject object) {
+        object.deleteInBackground();
+    }
+
+    @Override
+    public void cargarDBLocal() throws ParseException {
+
     }
 }
