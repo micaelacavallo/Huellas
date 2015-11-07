@@ -5,17 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.micaela.db.clases.Perdidos;
 import com.example.micaela.huellas.R;
 
 import java.util.List;
 
 
 public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
-    List<String> mAnimales;
+    List<Perdidos> mPerdidos;
     private int mCurrentPage;
 
-    public AnimalesAdapter(List<String> animales, int currentPage) {
-        mAnimales = animales;
+    public AnimalesAdapter(List<Perdidos> perdidos, int currentPage) {
+        mPerdidos = perdidos;
         mCurrentPage = currentPage;
     }
 
@@ -52,6 +53,6 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
 
     @Override
     public int getItemCount() {
-        return mAnimales.size();
+        return mPerdidos.size();
     }
 }
