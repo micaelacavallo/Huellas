@@ -71,6 +71,14 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     public IPerdidosImpl(Context context)
     {
         Parse.enableLocalDatastore(context);
+        ParseObject.registerSubclass(Colores.class);
+        ParseObject.registerSubclass(Edades.class);
+        ParseObject.registerSubclass(Especies.class);
+        ParseObject.registerSubclass(Razas.class);
+        ParseObject.registerSubclass(Sexos.class);
+        ParseObject.registerSubclass(Tamaños.class);
+        ParseObject.registerSubclass(Perdidos.class);
+
         Parse.initialize(context, Keys.APPLICATION_ID, Keys.CLIENT_ID);
         this.context = context;
         init();
@@ -79,7 +87,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
 
     public void init()
     {
-        perdidosObject = new ParseObject(Clases.PERDIDOS);
+        perdidosObject = ParseObject.create(Clases.PERDIDOS);
         query = null;
         perdidos = new ArrayList<Perdidos>();
         objectAux = null;
@@ -149,10 +157,18 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
                         objectAux = object.getParseObject(CPerdidos.ID_ESTADO);
                         estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO), objectAux.getBoolean(CEstados.SOLUCIONADO), objectAux.getString(CEstados.SITUACION));
 
+                        try{
                         objectRelation = object.getRelation(CPerdidos.COMENTARIOS);
-                        comentarios = getComentarios(objectRelation.getQuery().find(), object);
+                            List<ParseObject> listComentarios = objectRelation.getQuery().find();
+                        comentarios = getComentarios(objectRelation.getQuery().find(), object);}
+                            catch (Exception e)
+                            {
+                                comentarios = null;
+                            }
 
-                        fotos = (ArrayList<String>) object.get(CPerdidos.FOTOS);
+
+                            fotos = (ArrayList<String>) object.get(CPerdidos.FOTOS);
+
                         perdido = new Perdidos(object.getInt(CPerdidos.ID_PERDIDO), edad, raza, especie, tamaño, color, sexo, estado, persona, object.getDate(CPerdidos.FECHA), object.getParseGeoPoint(CPerdidos.UBICACION), object.getString(CPerdidos.TITULO), object.getString(CPerdidos.DESCRIPCION), fotos, comentarios);
                         perdidos.add(perdido);
                     }

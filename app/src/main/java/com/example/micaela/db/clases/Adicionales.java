@@ -1,5 +1,6 @@
 package com.example.micaela.db.clases;
 
+import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * Created by Quimey on 13/09/2015.
  */
+@ParseClassName("Adicionales")
 public class Adicionales extends ParseObject {
 
     private int mIdAdicional;

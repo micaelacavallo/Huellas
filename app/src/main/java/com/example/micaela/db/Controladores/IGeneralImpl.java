@@ -71,15 +71,19 @@ public class IGeneralImpl implements IGeneral, IDBLocal{
         Personas persona = null;
         List<Comentarios> comentarios = new ArrayList<Comentarios>();
 
-        for(ParseObject objectComentario : listComentarios)
-        {
-            objectAux = object.getParseObject(CComentarios.ID_PERSONA);
-            persona = new Personas(objectAux.getObjectId(), objectAux.getInt(CPersonas.ID_PERSONA), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR));
-            comentario = new Comentarios(objectComentario.getObjectId(), objectComentario.getInt(CComentarios.ID_COMENTARIO), objectComentario.getString(CComentarios.COMENTARIO), persona, objectComentario.getDate(CComentarios.FECHA));
-            comentarios.add(comentario);
+        if(listComentarios == null) {
+            for (ParseObject objectComentario : listComentarios) {
+                objectAux = object.getParseObject(CComentarios.ID_PERSONA);
+                persona = new Personas(objectAux.getObjectId(), objectAux.getInt(CPersonas.ID_PERSONA), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR));
+                comentario = new Comentarios(objectComentario.getObjectId(), objectComentario.getInt(CComentarios.ID_COMENTARIO), objectComentario.getString(CComentarios.COMENTARIO), persona, objectComentario.getDate(CComentarios.FECHA));
+                comentarios.add(comentario);
+            }
+            return comentarios;
         }
-
-        return comentarios;
+        else
+        {
+            return null;
+        }
     }
 
     @Override

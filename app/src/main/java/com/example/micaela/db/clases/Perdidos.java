@@ -1,5 +1,6 @@
 package com.example.micaela.db.clases;
 
+import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * Created by Quimey on 13/09/2015.
  */
+@ParseClassName("Perdidos")
 public class Perdidos extends ParseObject {
 
     private int mIdPerdido;

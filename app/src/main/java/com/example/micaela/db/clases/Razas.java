@@ -1,10 +1,12 @@
 package com.example.micaela.db.clases;
 
+import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
 /**
  * Created by Quimey on 13/09/2015.
  */
+@ParseClassName("Razas")
 public class Razas extends ParseObject {
 
     private int mIdRaza;
