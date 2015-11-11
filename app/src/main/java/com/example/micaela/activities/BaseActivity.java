@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -45,7 +46,7 @@ public class BaseActivity extends AppCompatActivity {
 
 
         // If it is not Dashboard, set up button for header
-        if (!(this instanceof PrincipalActivity)) {
+        if (!(this instanceof PrincipalActivity) && !(this instanceof LoginActivity)) {
             ActionBar actionBar = getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);

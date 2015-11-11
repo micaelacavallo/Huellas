@@ -8,7 +8,6 @@ import com.example.micaela.db.Enums.CColores;
 import com.example.micaela.db.Enums.CEstados;
 import com.example.micaela.db.Enums.CPersonas;
 import com.example.micaela.db.Enums.Clases;
-import com.example.micaela.db.Enums.Keys;
 import com.example.micaela.db.Interfaces.IAdicionales;
 import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.clases.Adicionales;
@@ -16,7 +15,6 @@ import com.example.micaela.db.clases.Colores;
 import com.example.micaela.db.clases.Comentarios;
 import com.example.micaela.db.clases.Estados;
 import com.example.micaela.db.clases.Personas;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -24,8 +22,6 @@ import com.parse.ParseRelation;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import bolts.Task;
 
 
 /**
@@ -50,8 +46,6 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
 
     public IAdicionalesImpl(Context context)
     {
-        Parse.enableLocalDatastore(context);
-        Parse.initialize(context, Keys.APPLICATION_ID, Keys.CLIENT_ID);
         this.context = context;
         init();
     }
@@ -67,10 +61,10 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
         fotos = null;
         listParseObject = null;
         objectRelation = null;
-        comentarios = new ArrayList<Comentarios>();
-        adicionales = new ArrayList<Adicionales>();
+        comentarios = new ArrayList<>();
+        adicionales = new ArrayList<>();
         adicional = null;
-        comentarios = new ArrayList<Comentarios>();
+        comentarios = new ArrayList<>();
 
     }
 

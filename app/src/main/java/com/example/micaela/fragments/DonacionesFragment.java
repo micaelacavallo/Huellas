@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.adapters.AnimalesAdapter;
+import com.example.micaela.db.clases.Perdidos;
 import com.example.micaela.huellas.R;
 
 import java.util.ArrayList;
@@ -23,13 +24,7 @@ public class DonacionesFragment extends BaseFragment {
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_donaciones, container, false);
 
-        List<String> animales = new ArrayList<>();
-        animales.add("fdgdg");
-        animales.add("fdgdg");
-        animales.add("fdgdg");
-        animales.add("fdgdg");
-        animales.add("fdgdg");
-        animales.add("fdgdg");
+        List<Perdidos> animales = new ArrayList<>();
 
         SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
@@ -39,7 +34,7 @@ public class DonacionesFragment extends BaseFragment {
         return view;
     }
 
-    private void inicializarRecycler(View view, List<String> animales) {
+    private void inicializarRecycler(View view, List<Perdidos> animales) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         AnimalesAdapter mAdapter = new AnimalesAdapter(animales, 1);

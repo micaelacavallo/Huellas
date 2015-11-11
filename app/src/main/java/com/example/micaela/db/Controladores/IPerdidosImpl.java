@@ -14,7 +14,6 @@ import com.example.micaela.db.Enums.CRazas;
 import com.example.micaela.db.Enums.CSexos;
 import com.example.micaela.db.Enums.CTamaños;
 import com.example.micaela.db.Enums.Clases;
-import com.example.micaela.db.Enums.Keys;
 import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.Interfaces.IPerdidos;
 import com.example.micaela.db.clases.Colores;
@@ -36,9 +35,6 @@ import com.parse.ParseRelation;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Horacio on 5/10/2015.
- */
 public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
 
     ParseObject perdidosObject;
@@ -70,7 +66,6 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
 
     public IPerdidosImpl(Context context)
     {
-        Parse.enableLocalDatastore(context);
         ParseObject.registerSubclass(Colores.class);
         ParseObject.registerSubclass(Edades.class);
         ParseObject.registerSubclass(Especies.class);
@@ -79,7 +74,6 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
         ParseObject.registerSubclass(Tamaños.class);
         ParseObject.registerSubclass(Perdidos.class);
 
-        Parse.initialize(context, Keys.APPLICATION_ID, Keys.CLIENT_ID);
         this.context = context;
         init();
 

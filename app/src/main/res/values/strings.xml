@@ -43,4 +43,7 @@
     <string name="error_fragment_message">An error occurred</string>
     <string name="dismiss_error">Dismiss</string>
     <string name="oops">Oops</string>
+
+    <string name="facebook_app_id">902165699839178</string>
+    <string name="title_activity_login">LoginActivity</string>
 </resources>

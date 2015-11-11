@@ -1,5 +1,6 @@
 package com.example.micaela.activities;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,12 +14,15 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.micaela.HuellasApplication;
 import com.example.micaela.fragments.DonacionesFragment;
 import com.example.micaela.fragments.InformacionUtilFragment;
 import com.example.micaela.fragments.PerdidosFragment;
 import com.example.micaela.ZoomOutPageTransformer;
 import com.example.micaela.huellas.R;
 import com.software.shell.fab.ActionButton;
+
+import java.util.Objects;
 
 
 public class PrincipalActivity extends BaseActivity {
@@ -41,6 +45,11 @@ public class PrincipalActivity extends BaseActivity {
 
         inicializarTabs();
         inicializarFAB();
+
+        if (HuellasApplication.getInstance().getAccessTokenFacebook().equals("")) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void inicializarTabs() {
