@@ -1,24 +1,29 @@
 package com.example.micaela.activities;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.example.micaela.db.Controladores.IPerdidosImpl;
 import com.example.micaela.huellas.R;
-import com.parse.ParseException;
+import com.example.micaela.utils.CircleImageTransform;
+import com.squareup.picasso.Picasso;
 
 public class BaseActivity extends AppCompatActivity {
 
     Toolbar mToolbar;
     ViewGroup mainContainer;
     ViewGroup containerLayout;
+
+    TextView mProfileNameToolbar;
+    ImageView mProfileImageToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +58,14 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public void setPerfilToolbar (String nombre, String imagenUrl) {
+        mainContainer.findViewById(R.id.layout_profile).setVisibility(View.VISIBLE);
+        mProfileNameToolbar = (TextView) mainContainer.findViewById(R.id.textView_profile);
+        mProfileImageToolbar = (ImageView) mainContainer.findViewById(R.id.imageView_profile);
+        Picasso.with(getApplicationContext()).load(Uri.parse(imagenUrl)).transform(new CircleImageTransform()).into(mProfileImageToolbar);
+        mProfileNameToolbar.setText(nombre);
+    }
+
     public void hideOverlay () {
         mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.GONE);
     }
@@ -61,6 +74,12 @@ public class BaseActivity extends AppCompatActivity {
         mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.VISIBLE);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotate_image);
         mainContainer.findViewById(R.id.imageView).startAnimation(animation);
+    }
+
+    public void showOverlay (String mensaje) {
+        mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.VISIBLE);
+        mainContainer.findViewById(R.id.imageView).setVisibility(View.GONE);
+        ((TextView)mainContainer.findViewById(R.id.textView_titulo)).setText(mensaje);
     }
 //
 //    public void setToolbarTitle(String title) {

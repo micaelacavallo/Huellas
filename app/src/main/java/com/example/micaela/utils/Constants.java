@@ -13,5 +13,7 @@ public class Constants {
 
     // FACEBOOK
     public static final String ACCESS_TOKEN_FCB = "Access Token";
+    public static final String PROFILE_NAME = "Profile Name";
+    public static final String PROFILE_IMAGE = "Profile Image";
 
 }

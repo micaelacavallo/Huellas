@@ -46,14 +46,25 @@ public class PrincipalActivity extends BaseActivity {
         inicializarTabs();
         inicializarFAB();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         if (HuellasApplication.getInstance().getAccessTokenFacebook().equals("")) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+        } else {
+            String facebookNombre = HuellasApplication.getInstance().getProfileNameFacebook();
+            String facebookImagen = HuellasApplication.getInstance().getProfileImageFacebook();
+            setPerfilToolbar(facebookNombre, facebookImagen);
         }
     }
 
     private void inicializarTabs() {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setVisibility(View.VISIBLE);
         tabLayout.setupWithViewPager(mPager);
 
         LinearLayout tabsList = ((LinearLayout) tabLayout.getChildAt(0));
@@ -71,7 +82,7 @@ public class PrincipalActivity extends BaseActivity {
     }
 
     private void inicializarFAB() {
-        mActionButton = (ActionButton)findViewById(R.id.fab);
+        mActionButton = (ActionButton) findViewById(R.id.fab);
         mActionButton.setShowAnimation(ActionButton.Animations.ROLL_FROM_RIGHT);
         mActionButton.setHideAnimation(ActionButton.Animations.ROLL_TO_DOWN);
         mActionButton.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +131,7 @@ public class PrincipalActivity extends BaseActivity {
                     title = getString(R.string.donaciones_titulo);
                     break;
                 default:
-                    title= getString(R.string.informacion_util_titulo);
+                    title = getString(R.string.informacion_util_titulo);
                     break;
             }
             return title.toUpperCase();
@@ -136,7 +147,7 @@ public class PrincipalActivity extends BaseActivity {
         mPager.setCurrentItem(page);
     }
 
-    public int getCurrentPage () {
+    public int getCurrentPage() {
         return mPager.getCurrentItem();
     }
 

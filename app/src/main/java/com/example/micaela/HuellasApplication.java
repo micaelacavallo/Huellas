@@ -3,6 +3,7 @@ package com.example.micaela;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 
 import com.example.micaela.utils.Constants;
 import com.facebook.FacebookSdk;
@@ -39,6 +40,23 @@ public class HuellasApplication extends Application{
     public String getAccessTokenFacebook () {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(Constants.ACCESS_TOKEN_FCB, "");
+    }
+
+    public void saveProfileFacebook(Uri image, String name) {
+        SharedPreferences.Editor editor = HuellasApplication.getInstance().getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE).edit();
+        editor.putString(Constants.PROFILE_IMAGE, image.toString());
+        editor.putString(Constants.PROFILE_NAME, name);
+        editor.commit();
+    }
+
+    public String getProfileNameFacebook () {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(Constants.PROFILE_NAME, "");
+    }
+
+    public String getProfileImageFacebook () {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(Constants.PROFILE_IMAGE, "");
     }
 
 }

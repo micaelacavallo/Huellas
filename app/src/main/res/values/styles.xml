@@ -55,6 +55,12 @@
         <item name="android:textSize">19sp</item>
     </style>
 
+    <style name="condensed_normal_22">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
     <style name="condensed_normal_24">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">normal</item>

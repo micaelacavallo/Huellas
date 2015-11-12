@@ -46,4 +46,7 @@
 
     <string name="facebook_app_id">902165699839178</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="encontrado_mayus">ENCONTRADO</string>
+    <string name="buscado_mayus">BUSCADO</string>
+    <string name="buscado_minus">buscado</string>
 </resources>

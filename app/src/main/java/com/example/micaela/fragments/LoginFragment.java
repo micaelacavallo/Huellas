@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.micaela.HuellasApplication;
+import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.huellas.R;
 import com.facebook.AccessToken;
@@ -47,10 +48,11 @@ public class LoginFragment extends Fragment {
             public void onSuccess(LoginResult loginResult) {
                 AccessToken token = loginResult.getAccessToken();
                 if (token != null) {
+                    getActivity().finish();
+                    ((BaseActivity)getActivity()).hideOverlay();
                     HuellasApplication.getInstance().saveAccessTokenFacebook(token.getToken());
                     Profile profile = Profile.getCurrentProfile();
-                    String name = profile.getFirstName();
-                    getActivity().finish();
+                    HuellasApplication.getInstance().saveProfileFacebook(profile.getProfilePictureUri(150, 150), profile.getName());
                 }
             }
 
@@ -61,7 +63,7 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onError(FacebookException exception) {
-                // App code
+                ((BaseActivity)getActivity()).showOverlay("Hubo un problema, intente nuevamente");
             }
         });
 

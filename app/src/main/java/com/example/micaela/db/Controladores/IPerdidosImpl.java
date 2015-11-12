@@ -109,6 +109,8 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
         @Override
     public List<Perdidos> getPerdidos() throws ParseException {
 
+            perdidos.clear();
+
             query = ParseQuery.getQuery(Clases.PERDIDOS);
             query.include(CPerdidos.ID_RAZA);
             query.include(CPerdidos.ID_COLOR);
@@ -597,21 +599,23 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public void cargarDBLocal() throws ParseException {
 
-        perdidos = getPerdidos();
-        razas = getRazas();
-        colores = getColores();
-        sexos = getSexos();
-        tamaños = getTamaños();
-        edades = getEdades();
-        especies = getEspecies();
+        if(internet(context)) {
+            perdidos = getPerdidos();
+            razas = getRazas();
+            colores = getColores();
+            sexos = getSexos();
+            tamaños = getTamaños();
+            edades = getEdades();
+            especies = getEspecies();
 
-        ParseObject.pinAllInBackground(perdidos);
-        ParseObject.pinAllInBackground(razas);
-        ParseObject.pinAllInBackground(colores);
-        ParseObject.pinAllInBackground(sexos);
-        ParseObject.pinAllInBackground(tamaños);
-        ParseObject.pinAllInBackground(edades);
-        ParseObject.pinAllInBackground(especies);
+            ParseObject.pinAllInBackground(perdidos);
+            ParseObject.pinAllInBackground(razas);
+            ParseObject.pinAllInBackground(colores);
+            ParseObject.pinAllInBackground(sexos);
+            ParseObject.pinAllInBackground(tamaños);
+            ParseObject.pinAllInBackground(edades);
+            ParseObject.pinAllInBackground(especies);
+        }
     }
 
     @Override

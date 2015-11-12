@@ -1,12 +1,20 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@color/primary"
                 android:gravity="center"
+              android:orientation="vertical"
                 tools:context="com.example.micaela.fragments.LoginFragment">
 
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Bienvenido a Huellas!"
+    style="@style/condensed_normal_36"
+    android:textColor="@color/icons"
+    android:layout_marginBottom="50dp"/>
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
@@ -15,4 +23,4 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center"/>
 
-</RelativeLayout>
+</LinearLayout>
