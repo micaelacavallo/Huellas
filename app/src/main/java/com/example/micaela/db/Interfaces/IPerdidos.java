@@ -35,5 +35,6 @@ public interface IPerdidos {
     public List<Especies> getEspecies();
     public void deletePerdido(String objectId) throws ParseException;
     public void AgregarComentarioPerdido(String perdidoObjectId, String comentario, String email) throws ParseException;
+    public void cargarDBLocal() throws ParseException;
 
 }

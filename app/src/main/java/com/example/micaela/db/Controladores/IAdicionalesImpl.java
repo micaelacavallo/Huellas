@@ -293,8 +293,10 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
     @Override
     public void cargarDBLocal() throws ParseException {
 
-        adicionales = getAdicionales();
-        ParseObject.pinAllInBackground(adicionales);
+        if(internet(context)) {
+            adicionales = getAdicionales();
+            ParseObject.pinAllInBackground(adicionales);
+        }
     }
 
     @Override
