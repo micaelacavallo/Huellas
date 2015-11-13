@@ -46,6 +46,25 @@ public class IGeneralImpl implements IGeneral, IDBLocal{
     }
 
     @Override
+    public Estados getEstadoNoSolucionado() throws ParseException {
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.ESTADOS);
+        query.whereEqualTo(CEstados.SITUACION, "-");
+        query.whereEqualTo(CEstados.SOLUCIONADO, false);
+        Estados estado = null;
+        try{ParseObject object = query.getFirst();
+
+            estado = new Estados(object.getObjectId(), object.getInt(CEstados.ID_ESTADO), object.getBoolean(CEstados.SOLUCIONADO), object.getString(CEstados.SITUACION));
+        }
+        catch(ParseException e)
+        {
+            e.fillInStackTrace();
+        }
+
+        return estado;
+    }
+
+    @Override
     public Personas getPersona(String email) throws ParseException {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.PERSONAS);

@@ -82,6 +82,7 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
         query = ParseQuery.getQuery(Clases.ADICIONALES);
         query.include(CAdicionales.ID_PERSONA);
         query.include(CAdicionales.ID_ESTADO);
+        query.whereEqualTo(CAdicionales.ID_ESTADO, "D4ATvjnhj4");
         checkInternetGet(query);
 
         try{
@@ -152,7 +153,7 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
         try {
             adicionalObject.put(CAdicionales.ID_ADICIONAL, getUltimoInsertado());
             persona = getPersona(adicional.getPersona().getEmail());
-            estado = getEstado(adicional.getEstado().getSituacion());
+            estado = getEstadoNoSolucionado();
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -293,8 +294,10 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
     @Override
     public void cargarDBLocal() throws ParseException {
 
-        adicionales = getAdicionales();
-        ParseObject.pinAllInBackground(adicionales);
+        if(internet(context)) {
+            adicionales = getAdicionales();
+            ParseObject.pinAllInBackground(adicionales);
+        }
     }
 
     @Override
