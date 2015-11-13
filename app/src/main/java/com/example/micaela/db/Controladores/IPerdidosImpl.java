@@ -120,6 +120,8 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
             query.include(CPerdidos.ID_ESPECIE);
             query.include(CPerdidos.ID_ESTADO);
             query.include(CPerdidos.ID_PERSONA);
+            query.whereEqualTo(CPerdidos.ID_ESTADO, "sxKzAP5IRv");
+            query.whereEqualTo(CPerdidos.ID_ESTADO, "jXXrO2YtxD");
             checkInternetGet(query);
 
             try{
