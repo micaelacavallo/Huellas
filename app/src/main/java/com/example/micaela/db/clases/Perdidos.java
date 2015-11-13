@@ -1,6 +1,9 @@
 package com.example.micaela.db.clases;
 
+import android.net.Uri;
+
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
@@ -27,7 +30,7 @@ public class Perdidos extends ParseObject {
     private ParseGeoPoint mUbicacion;
     private String mTitulo;
     private String mDescripcion;
-    private List<String> mFotos;
+    private Uri mFoto;
     private List<Comentarios> mComentarios;
     private String mObjectId;
 
@@ -41,11 +44,11 @@ public class Perdidos extends ParseObject {
         mSexo = new Sexos();
         mPersona = new Personas();
         mEstado = new Estados();
-        mFotos = new ArrayList<String>();
+       // mFotos = new ParseFile();
         mComentarios = new ArrayList<Comentarios>();
     }
 
-    public Perdidos(int idPerdido, Edades edad, Razas raza, Especies especie, Tamaños tamaño, Colores color, Sexos sexo, Estados estado, Personas persona, Date fecha, ParseGeoPoint ubicacion, String titulo, String descripcion, List<String> fotos, List<Comentarios> comentarios) {
+    public Perdidos(int idPerdido, Edades edad, Razas raza, Especies especie, Tamaños tamaño, Colores color, Sexos sexo, Estados estado, Personas persona, Date fecha, ParseGeoPoint ubicacion, String titulo, String descripcion, Uri foto, List<Comentarios> comentarios) {
         this.mIdPerdido = idPerdido;
         this.mEdad = edad;
         this.mRaza = raza;
@@ -59,7 +62,7 @@ public class Perdidos extends ParseObject {
         this.mUbicacion = ubicacion;
         this.mTitulo = titulo;
         this.mDescripcion = descripcion;
-        this.mFotos = fotos;
+        this.mFoto = foto;
         this.mComentarios = comentarios;
     }
 
@@ -168,12 +171,12 @@ public class Perdidos extends ParseObject {
         this.mDescripcion = mDescripcion;
     }
 
-    public List<String> getFotos() {
-        return mFotos;
+    public Uri getFoto() {
+        return mFoto;
     }
 
-    public void setFotos(List<String> mFotos) {
-        this.mFotos = mFotos;
+    public void setFoto(Uri mFoto) {
+        this.mFoto = mFoto;
     }
 
     public List<Comentarios> getComentarios() {

@@ -12,6 +12,6 @@ public class CAdicionales {
     public static String ID_PERSONA= "Personas";
     public static String ID_ESTADO = "Estados";
     public static String FECHA = "fecha";
-    public static String FOTOS = "fotos";
+    public static String FOTOS = "foto";
     public static String ID_COMENTARIOS = "Comentarios";
 }

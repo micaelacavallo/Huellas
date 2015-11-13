@@ -1,6 +1,7 @@
 package com.example.micaela.db.Controladores;
 
 import android.content.Context;
+import android.net.Uri;
 import android.widget.Toast;
 
 import com.example.micaela.db.Enums.CAdicionales;
@@ -16,6 +17,7 @@ import com.example.micaela.db.clases.Comentarios;
 import com.example.micaela.db.clases.Estados;
 import com.example.micaela.db.clases.Personas;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
@@ -36,7 +38,7 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
     ParseObject objectAux;
     Personas persona;
     Estados estado;
-    ArrayList<String> fotos;
+    ParseFile foto;
     List<ParseObject> listParseObject;
     ParseRelation objectRelation;
     List<Comentarios> comentarios;
@@ -58,7 +60,7 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
         persona = null;
         estado = null;
         comentario = null;
-        fotos = null;
+        foto = null;
         listParseObject = null;
         objectRelation = null;
         comentarios = new ArrayList<>();
@@ -98,8 +100,11 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
                     objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
                     comentarios = getComentarios(objectRelation.getQuery().find(), object);
 
-                    fotos = (ArrayList<String>) object.get(CAdicionales.FOTOS);
-                    adicional = new Adicionales(object.getInt(CAdicionales.ID_ADICIONAL), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), fotos, comentarios);
+                    foto = object.getParseFile(CAdicionales.FOTOS);
+                    String imageURL = foto.getUrl();
+                    Uri imageUri = Uri.parse(imageURL);
+
+                    adicional = new Adicionales(object.getInt(CAdicionales.ID_ADICIONAL), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), imageUri, comentarios);
                     adicionales.add(adicional);
                 }
             }
@@ -130,8 +135,10 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
              estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO), objectAux.getBoolean(CEstados.SOLUCIONADO), objectAux.getString(CEstados.SITUACION));
              objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
              comentarios = getComentarios(objectRelation.getQuery().find(), object);
-             fotos = (ArrayList<String>) object.get(CAdicionales.FOTOS);
-             adicional = new Adicionales(object.getInt(CAdicionales.ID_ADICIONAL), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), fotos, comentarios);
+             foto = object.getParseFile(CAdicionales.FOTOS);
+            String imageURL = foto.getUrl();
+            Uri imageUri = Uri.parse(imageURL);
+            adicional = new Adicionales(object.getInt(CAdicionales.ID_ADICIONAL), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), imageUri, comentarios);
         }
         catch(ParseException e)
         {
@@ -148,7 +155,7 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
         adicionalObject.put(CAdicionales.TITULO, adicional.getTitulo());
         adicionalObject.put(CAdicionales.DESCRIPCION, adicional.getDescripcion());
         adicionalObject.put(CAdicionales.FECHA, adicional.getFecha());
-        adicionalObject.put(CAdicionales.FOTOS, adicional.getFotos());
+        adicionalObject.put(CAdicionales.FOTOS, adicional.getFoto());
 
         try {
             adicionalObject.put(CAdicionales.ID_ADICIONAL, getUltimoInsertado());
@@ -169,7 +176,7 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
         adicionalObject.put(CAdicionales.TITULO, adicional.getTitulo());
         adicionalObject.put(CAdicionales.DESCRIPCION, adicional.getDescripcion());
         adicionalObject.put(CAdicionales.FECHA, adicional.getFecha());
-        adicionalObject.put(CAdicionales.FOTOS, adicional.getFotos());
+        adicionalObject.put(CAdicionales.FOTOS, adicional.getFoto());
         adicionalObject.put(CAdicionales.ID_ADICIONAL, adicional.getIdAdicional());
         adicionalObject.put(CAdicionales.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(adicional.getEstado().getObjectId())));
         adicionalObject.put(CAdicionales.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(adicional.getPersona().getObjectId())));

@@ -1,6 +1,7 @@
 package com.example.micaela.db.Controladores;
 
 import android.content.Context;
+import android.net.Uri;
 import android.widget.Toast;
 
 import com.example.micaela.db.Enums.CAdicionales;
@@ -28,6 +29,7 @@ import com.example.micaela.db.clases.Sexos;
 import com.example.micaela.db.clases.Tamaños;
 import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
@@ -51,7 +53,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
     Especies especie;
     Personas persona;
     Estados estado;
-    ArrayList<String> fotos;
+    ParseFile foto;
     List<ParseObject> listParseObject;
     ParseRelation objectRelation;
     List<Comentarios> comentarios;
@@ -93,7 +95,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
         especie = null;
         persona = null;
         estado = null;
-        fotos = null;
+        foto = null;
         listParseObject = null;
         objectRelation = null;
         comentarios = new ArrayList<Comentarios>();
@@ -120,8 +122,6 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
             query.include(CPerdidos.ID_ESPECIE);
             query.include(CPerdidos.ID_ESTADO);
             query.include(CPerdidos.ID_PERSONA);
-            query.whereEqualTo(CPerdidos.ID_ESTADO, "sxKzAP5IRv");
-            query.whereEqualTo(CPerdidos.ID_ESTADO, "jXXrO2YtxD");
             checkInternetGet(query);
 
             try{
@@ -165,9 +165,11 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
                             }
 
 
-                            fotos = (ArrayList<String>) object.get(CPerdidos.FOTOS);
+                            foto =  object.getParseFile(CPerdidos.FOTOS);
+                            String imageURL = foto.getUrl();
+                            Uri imageUri = Uri.parse(imageURL);
 
-                        perdido = new Perdidos(object.getInt(CPerdidos.ID_PERDIDO), edad, raza, especie, tamaño, color, sexo, estado, persona, object.getDate(CPerdidos.FECHA), object.getParseGeoPoint(CPerdidos.UBICACION), object.getString(CPerdidos.TITULO), object.getString(CPerdidos.DESCRIPCION), fotos, comentarios);
+                        perdido = new Perdidos(object.getInt(CPerdidos.ID_PERDIDO), edad, raza, especie, tamaño, color, sexo, estado, persona, object.getDate(CPerdidos.FECHA), object.getParseGeoPoint(CPerdidos.UBICACION), object.getString(CPerdidos.TITULO), object.getString(CPerdidos.DESCRIPCION), imageUri, comentarios);
                         perdidos.add(perdido);
                     }
                 }
@@ -187,7 +189,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
         perdidosObject.put(CPerdidos.TITULO, perdido.getTitulo());
         perdidosObject.put(CPerdidos.DESCRIPCION, perdido.getDescripcion());
         perdidosObject.put(CPerdidos.FECHA, perdido.getFecha());
-        perdidosObject.put(CPerdidos.FOTOS, perdido.getFotos());
+        perdidosObject.put(CPerdidos.FOTOS, perdido.getFoto());
         perdidosObject.put(CPerdidos.UBICACION, perdido.getUbicacion());
 
 
@@ -221,7 +223,7 @@ public class IPerdidosImpl extends IGeneralImpl implements IPerdidos, IDBLocal {
         perdidosObject.put(CPerdidos.TITULO, perdido.getTitulo());
         perdidosObject.put(CPerdidos.DESCRIPCION, perdido.getDescripcion());
         perdidosObject.put(CPerdidos.FECHA, perdido.getFecha());
-        perdidosObject.put(CPerdidos.FOTOS, perdido.getFotos());
+        perdidosObject.put(CPerdidos.FOTOS, perdido.getFoto());
         perdidosObject.put(CPerdidos.UBICACION, perdido.getUbicacion());
         perdidosObject.put(CPerdidos.ID_PERDIDO, perdido.getIdPerdido());
         perdidosObject.put(CPerdidos.ID_RAZA, ParseObject.createWithoutData(Clases.RAZAS, perdido.getRaza().getObjectId()));
