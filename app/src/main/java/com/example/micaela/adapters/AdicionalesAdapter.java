@@ -41,6 +41,11 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
 
     @Override
     public int getItemCount() {
-        return mAdicionales.size();
+        if (mAdicionales != null) {
+            return mAdicionales.size();
+        }
+        else {
+            return 0;
+        }
     }
 }

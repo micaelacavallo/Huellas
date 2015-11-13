@@ -79,13 +79,19 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
         save(objectAux);
     }
 
+    private ParseObject getEstadoByID(String estadoID) throws ParseException {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.ESTADOS);
+        query.whereEqualTo(CEstados.OBJECT_ID, estadoID);
+        return query.getFirst();
+    }
+
     @Override
     public List<Adicionales> getAdicionales() throws ParseException {
 
         query = ParseQuery.getQuery(Clases.ADICIONALES);
         query.include(CAdicionales.ID_PERSONA);
         query.include(CAdicionales.ID_ESTADO);
-        query.whereEqualTo(CAdicionales.ID_ESTADO, "D4ATvjnhj4");
+        query.whereEqualTo(CAdicionales.ID_ESTADO, getEstadoByID("D4ATvjnhj4"));
         checkInternetGet(query);
 
         try{
