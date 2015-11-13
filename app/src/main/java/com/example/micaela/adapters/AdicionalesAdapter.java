@@ -9,20 +9,17 @@ import android.view.ViewGroup;
 import com.example.micaela.db.clases.Adicionales;
 import com.example.micaela.db.clases.Perdidos;
 import com.example.micaela.huellas.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/**
- * Created by Horacio on 13/11/2015.
- */
+
 public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHolder> {
     List<Adicionales> mAdicionales;
-    private int mCurrentPage;
     private Context mContext;
 
-    public AdicionalesAdapter(List<Adicionales> adicionales, int currentPage, Context context) {
+    public AdicionalesAdapter(List<Adicionales> adicionales, Context context) {
         mAdicionales = adicionales;
-        mCurrentPage = currentPage;
         mContext = context;
     }
 
@@ -35,27 +32,10 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
 
     @Override
     public void onBindViewHolder(AdicionalesViewHolder holder, int position) {
-/*        String title = mPerdidos.get(position).getRaza().getRaza() + " " + mPerdidos.get(position).getColor().getColor();
-        holder.getTextViewTitulo().setText(title);
-        holder.getTextViewDescripcion().setText(mPerdidos.get(position).getDescripcion());
+        holder.getTextViewTitulo().setText(mAdicionales.get(position).getTitulo());
+        holder.getTextViewDescripcion().setText(mAdicionales.get(position).getDescripcion());
+        Picasso.with(mContext).load(mAdicionales.get(position).getFoto().toString()).into(holder.getImageViewFoto());
 
-
-        if (mCurrentPage == 0) {
-            holder.getCardEstado().setVisibility(View.VISIBLE);
-            if (mPerdidos.get(position).getEstado().getSituacion().equals(mContext.getString(R.string.buscado_minus))) {
-                holder.getTextViewEstado().setText(mContext.getString(R.string.buscado_mayus));
-                holder.getTextViewEstado().setBackgroundResource(R.color.orange_light);
-            } else {
-                holder.getTextViewEstado().setText(mContext.getString(R.string.encontrado_mayus));
-                holder.getTextViewEstado().setBackgroundResource(R.color.blue_light);
-            }
-        }
-        else {
-            holder.getCardEstado().setVisibility(View.INVISIBLE);
-        }
-
-        holder.getImageViewFoto().setImageResource(R.mipmap.dog);
-*/
     }
 
 

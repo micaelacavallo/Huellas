@@ -2,6 +2,7 @@ package com.example.micaela.db.Controladores;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.micaela.db.Enums.CAdicionales;
@@ -111,7 +112,7 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
         }
         catch(ParseException e)
         {
-            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
+            Log.e(e.getMessage(), "no existe");
         }
 
         return adicionales;

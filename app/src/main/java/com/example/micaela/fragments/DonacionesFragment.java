@@ -78,7 +78,7 @@ public class DonacionesFragment extends BaseFragment {
         @Override
         protected void onPostExecute(List<Adicionales> adicionalesList) {
             super.onPostExecute(adicionalesList);
-            AdicionalesAdapter mAdapter = new AdicionalesAdapter(adicionalesList, 0, getContext());
+            AdicionalesAdapter mAdapter = new AdicionalesAdapter(adicionalesList, getContext());
             mRecyclerView.setAdapter(mAdapter);
             getActivity().runOnUiThread(new Runnable() {
                 @Override

@@ -46,6 +46,7 @@ public class LoginFragment extends Fragment {
         mLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                mLoginButton.setVisibility(View.INVISIBLE);
                 AccessToken token = loginResult.getAccessToken();
                 if (token != null) {
                     getActivity().finish();

@@ -78,7 +78,7 @@ public class PerdidosFragment extends BaseFragment {
         @Override
         protected void onPostExecute(List<Perdidos> perdidosList) {
             super.onPostExecute(perdidosList);
-            AnimalesAdapter mAdapter = new AnimalesAdapter(perdidosList, 0, getContext());
+            AnimalesAdapter mAdapter = new AnimalesAdapter(perdidosList, getContext());
             mRecyclerView.setAdapter(mAdapter);
             getActivity().runOnUiThread(new Runnable() {
                 @Override
