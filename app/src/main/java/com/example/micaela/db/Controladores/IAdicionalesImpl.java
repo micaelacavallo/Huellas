@@ -91,7 +91,7 @@ public class IAdicionalesImpl extends IGeneralImpl implements IAdicionales, IDBL
         query = ParseQuery.getQuery(Clases.ADICIONALES);
         query.include(CAdicionales.ID_PERSONA);
         query.include(CAdicionales.ID_ESTADO);
-        query.whereEqualTo(CAdicionales.ID_ESTADO, getEstadoByID("D4ATvjnhj4"));
+      //  query.whereEqualTo(CAdicionales.ID_ESTADO, getEstadoByID("D4ATvjnhj4"));
         checkInternetGet(query);
 
         try{

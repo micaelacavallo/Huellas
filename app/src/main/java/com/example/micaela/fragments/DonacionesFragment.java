@@ -35,7 +35,7 @@ public class DonacionesFragment extends BaseFragment {
         mIAdicionalesImpl = new IAdicionalesImpl(getActivity().getApplicationContext());
 
         ((BaseActivity) getActivity()).showOverlay();
-        new AsyncTaskAdicionales().execute();
+      //  new AsyncTaskAdicionales().execute();
         inicializarSwipeRefresh(view);
         inicializarRecycler(view);
 
