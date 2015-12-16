@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/group_drawer_1">
+        <item
+            android:id="@+id/nav_drawer_configuracion"
+            android:icon="@mipmap/ic_ajustes"
+            android:title="@string/ajustes" />
+        <item
+            android:id="@+id/nav_drawer_historial"
+            android:icon="@mipmap/ic_historial"
+            android:title="@string/historial" />
+    </group>
+
+    <group android:id="@+id/group_drawer_2">
+        <item
+            android:id="@+id/nav_drawer_cerrar_sesion"
+            android:icon="@mipmap/ic_cerrar_sesion"
+            android:title="@string/cerrar_sesion"/>
+    </group>
+</menu>

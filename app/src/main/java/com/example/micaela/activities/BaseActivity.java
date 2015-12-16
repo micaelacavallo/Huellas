@@ -12,6 +12,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.micaela.HuellasApplication;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.CircleImageTransform;
 import com.squareup.picasso.Picasso;
@@ -22,8 +23,8 @@ public class BaseActivity extends AppCompatActivity {
     ViewGroup mainContainer;
     ViewGroup containerLayout;
 
-    TextView mProfileNameToolbar;
-    ImageView mProfileImageToolbar;
+    TextView mUserNameTextView;
+    ImageView mUserPhotoImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +57,6 @@ public class BaseActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
-    }
-
-    public void setPerfilToolbar (String nombre, String imagenUrl) {
-        mainContainer.findViewById(R.id.layout_profile).setVisibility(View.VISIBLE);
-        mProfileNameToolbar = (TextView) mainContainer.findViewById(R.id.textView_profile);
-        mProfileImageToolbar = (ImageView) mainContainer.findViewById(R.id.imageView_profile);
-        Picasso.with(getApplicationContext()).load(Uri.parse(imagenUrl)).transform(new CircleImageTransform()).into(mProfileImageToolbar);
-        mProfileNameToolbar.setText(nombre);
     }
 
     public void hideOverlay () {

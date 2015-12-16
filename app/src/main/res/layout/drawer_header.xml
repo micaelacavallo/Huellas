@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="170dp"
+    android:background="@mipmap/nav_background2"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/nav_drawer_foto_perfil"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/dog"
+        />
+
+
+    <TextView
+        android:id="@+id/nav_drawer_nombre_cuenta"
+        style="@style/condensed_bold_20"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/icons"
+        android:layout_marginTop="20dp"/>
+
+
+</LinearLayout>

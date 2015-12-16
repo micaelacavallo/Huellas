@@ -5,35 +5,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/main_content"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
-        <FrameLayout
-            android:id="@+id/container_base"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:orientation="vertical">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <include layout="@layout/toolbar" />
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tabs"
-                android:visibility="gone"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                app:tabSelectedTextColor="@color/icons"
-                app:tabTextColor="@color/white" />
+                android:layout_height="match_parent">
 
-        </android.support.design.widget.AppBarLayout>
-    </android.support.design.widget.CoordinatorLayout>
+                <android.support.design.widget.CoordinatorLayout
+                    android:id="@+id/main_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.design.widget.AppBarLayout
+                        android:id="@+id/appbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <include layout="@layout/toolbar"/>
+
+                        <android.support.design.widget.TabLayout
+                            android:id="@+id/tabs"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:visibility="gone"
+                            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                            app:tabSelectedTextColor="@color/icons"
+                            app:tabTextColor="@color/white"/>
+
+                    </android.support.design.widget.AppBarLayout>
+
+                    <FrameLayout
+                        android:id="@+id/container_base"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+                </android.support.design.widget.CoordinatorLayout>
+
+            </FrameLayout>
+        </LinearLayout>
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/drawer_nav_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:headerLayout="@layout/drawer_header"
+            app:itemTextColor="@color/primary"
+            app:menu="@menu/drawer"/>
+
+    </android.support.v4.widget.DrawerLayout>
 
     <include
         android:id="@+id/layout_base_overlay"

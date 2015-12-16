@@ -1,16 +1,24 @@
 package com.example.micaela.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.net.Uri;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,15 +28,19 @@ import com.example.micaela.fragments.InformacionUtilFragment;
 import com.example.micaela.fragments.PerdidosFragment;
 import com.example.micaela.ZoomOutPageTransformer;
 import com.example.micaela.huellas.R;
+import com.example.micaela.utils.CircleImageTransform;
 import com.software.shell.fab.ActionButton;
-
-import java.util.Objects;
+import com.squareup.picasso.Picasso;
 
 
 public class PrincipalActivity extends BaseActivity {
     private ViewPager mPager;
     private ActionButton mActionButton;
-
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private boolean mIsDrawerOpen = false;
+    private TextView mUserNameTextView;
+    private ImageView mUserPhotoImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +58,48 @@ public class PrincipalActivity extends BaseActivity {
         inicializarTabs();
         inicializarFAB();
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_layout);
+        navigationView.setItemIconTintList(null);
+        if (navigationView != null) {
+            setupDrawerContent(navigationView);
+        }
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,                  /* host Activity */
+                mDrawerLayout,         /* DrawerLayout object */
+                R.string.app_name,  /* "open drawer" description */
+                R.string.app_name  /* "close drawer" description */
+        ) {
+
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                mIsDrawerOpen = false;
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                mIsDrawerOpen = true;
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+
+        mUserNameTextView = (TextView) findViewById(R.id.nav_drawer_nombre_cuenta);
+        mUserPhotoImageView = (ImageView) findViewById(R.id.nav_drawer_foto_perfil);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mIsDrawerOpen) {
+            mDrawerLayout.closeDrawers();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -56,10 +110,23 @@ public class PrincipalActivity extends BaseActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         } else {
-            String facebookNombre = HuellasApplication.getInstance().getProfileNameFacebook();
+            mUserNameTextView.setText(HuellasApplication.getInstance().getProfileNameFacebook());
             String facebookImagen = HuellasApplication.getInstance().getProfileImageFacebook();
-            setPerfilToolbar(facebookNombre, facebookImagen);
+            Picasso.with(getApplicationContext()).load(Uri.parse(facebookImagen)).transform(new CircleImageTransform()).into(mUserPhotoImageView);
         }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     private void inicializarTabs() {
@@ -95,8 +162,40 @@ public class PrincipalActivity extends BaseActivity {
         });
     }
 
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+                        Intent aIntent;
+                        switch (menuItem.getItemId()) {
+//                            case R.id.nav_drawer_transfer_founds:
+//                                aIntent = new Intent(DashboardActivity.this, TransferFoundActivity.class);
+//                                startActivityForResult(aIntent, TRANSFER_FOUNDS_ACTIVITY_CODE);
+//                                break;
+
+                        }
+                        mDrawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
+    }
+
+
     public ActionButton getActionButton() {
         return mActionButton;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
