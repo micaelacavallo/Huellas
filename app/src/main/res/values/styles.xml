@@ -9,8 +9,12 @@
         <item name="android:textColorSecondary">@color/primary_text</item>
         <item name="android:windowEnableSplitTouch">false</item>
         <item name="android:splitMotionEvents">false</item>
+        <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
 
+    </style>
 
+    <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/icons</item>
     </style>
 
     <style name="FacebookLoginButton">

@@ -1,6 +1,5 @@
 package com.example.micaela.activities;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,22 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.micaela.HuellasApplication;
 import com.example.micaela.huellas.R;
-import com.example.micaela.utils.CircleImageTransform;
-import com.squareup.picasso.Picasso;
 
 public class BaseActivity extends AppCompatActivity {
 
     Toolbar mToolbar;
     ViewGroup mainContainer;
     ViewGroup containerLayout;
-
-    TextView mUserNameTextView;
-    ImageView mUserPhotoImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

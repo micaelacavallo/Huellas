@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,9 +64,7 @@ public class PrincipalActivity extends BaseActivity {
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_layout);
         navigationView.setItemIconTintList(null);
-        if (navigationView != null) {
             setupDrawerContent(navigationView);
-        }
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -86,11 +85,21 @@ public class PrincipalActivity extends BaseActivity {
             }
         };
 
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerToggle.syncState();
 
-        mUserNameTextView = (TextView) findViewById(R.id.nav_drawer_nombre_cuenta);
-        mUserPhotoImageView = (ImageView) findViewById(R.id.nav_drawer_foto_perfil);
+        View header = navigationView.inflateHeaderView(R.layout.drawer_header);
+
+        mUserNameTextView = (TextView) header.findViewById(R.id.nav_drawer_nombre_cuenta);
+        mUserPhotoImageView = (ImageView) header.findViewById(R.id.nav_drawer_foto_perfil);
+        if (HuellasApplication.getInstance().getAccessTokenFacebook().equals("")) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        } else {
+            mUserNameTextView.setText(HuellasApplication.getInstance().getProfileNameFacebook());
+            String facebookImagen = HuellasApplication.getInstance().getProfileImageFacebook();
+            Picasso.with(getApplicationContext()).load(Uri.parse(facebookImagen)).transform(new CircleImageTransform()).into(mUserPhotoImageView);
+        }
     }
 
     @Override
@@ -99,20 +108,6 @@ public class PrincipalActivity extends BaseActivity {
             mDrawerLayout.closeDrawers();
         } else {
             super.onBackPressed();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (HuellasApplication.getInstance().getAccessTokenFacebook().equals("")) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        } else {
-            mUserNameTextView.setText(HuellasApplication.getInstance().getProfileNameFacebook());
-            String facebookImagen = HuellasApplication.getInstance().getProfileImageFacebook();
-            Picasso.with(getApplicationContext()).load(Uri.parse(facebookImagen)).transform(new CircleImageTransform()).into(mUserPhotoImageView);
         }
     }
 
