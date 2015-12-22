@@ -6,8 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.micaela.db.clases.Adicionales;
-import com.example.micaela.db.clases.Perdidos;
+import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.huellas.R;
 import com.squareup.picasso.Picasso;
 

@@ -15,11 +15,10 @@ import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.adapters.AnimalesAdapter;
 import com.example.micaela.db.Controladores.IPerdidosImpl;
 import com.example.micaela.db.Interfaces.IPerdidos;
-import com.example.micaela.db.clases.Perdidos;
+import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.huellas.R;
 import com.parse.ParseException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

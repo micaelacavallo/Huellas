@@ -6,11 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.micaela.db.clases.Perdidos;
+import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.huellas.R;
 import com.squareup.picasso.Picasso;
 
-import java.net.ContentHandler;
 import java.util.List;
 
 
