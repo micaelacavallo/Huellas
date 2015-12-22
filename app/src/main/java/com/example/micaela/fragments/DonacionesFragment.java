@@ -14,6 +14,7 @@ import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.adapters.AdicionalesAdapter;
 import com.example.micaela.db.Controladores.IAdicionalesImpl;
+import com.example.micaela.db.DAO.AdicionalesDAO;
 import com.example.micaela.db.Interfaces.IAdicionales;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.huellas.R;

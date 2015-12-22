@@ -18,5 +18,7 @@ public interface IAdicionales {
     public int getUltimoInsertado() throws ParseException;
     public void deleteAdicional(String objectId) throws  ParseException;
     public void AgregarComentarioAdicional(String adicionalObjectId, String comentario, String email) throws ParseException;
+    public void cargarDBLocal() throws ParseException;
+
 
 }

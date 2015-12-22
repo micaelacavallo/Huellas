@@ -79,4 +79,9 @@ public class IAdicionalesImpl implements IAdicionales {
         mAdicionalesDAO.AgregarComentarioAdicional(adicionalObjectId, comentarioText, email);
     }
 
+    @Override
+    public void cargarDBLocal() throws ParseException {
+        mAdicionalesDAO.cargarDBLocal();
+    }
+
 }

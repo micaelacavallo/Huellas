@@ -136,4 +136,9 @@ public class IPerdidosImpl implements IPerdidos {
         mPerdidosDAO.AgregarComentarioPerdido(perdidoObjectId, comentario, email);
     }
 
+    @Override
+    public void cargarDBLocal() throws ParseException {
+        mPerdidosDAO.cargarDBLocal();
+    }
+
 }
