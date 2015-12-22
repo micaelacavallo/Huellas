@@ -1,5 +1,7 @@
 package com.example.micaela.db.Interfaces;
 
+import android.content.Context;
+
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -16,6 +18,6 @@ public interface IDBLocal {
     public void saveInBackground(ParseObject object);
     public void deleteEventually(ParseObject object);
     public void deleteInBackground(ParseObject object);
-    public void cargarDBLocal() throws ParseException;
+    public void cargarDBLocal(Context context) throws ParseException;
 
 }

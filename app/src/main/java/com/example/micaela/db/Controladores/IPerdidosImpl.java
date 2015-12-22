@@ -137,8 +137,8 @@ public class IPerdidosImpl implements IPerdidos {
     }
 
     @Override
-    public void cargarDBLocal() throws ParseException {
-        mPerdidosDAO.cargarDBLocal();
+    public void cargarDBLocal(Context context) throws ParseException {
+        mPerdidosDAO.cargarDBLocal(context);
     }
 
 }

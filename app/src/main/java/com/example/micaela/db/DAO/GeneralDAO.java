@@ -26,6 +26,14 @@ import java.util.List;
  */
 public class GeneralDAO implements IGeneral, IDBLocal {
 
+    private Context context;
+
+    public GeneralDAO(){}
+
+    public GeneralDAO(Context context)
+    {
+        this.context = context;
+    }
     @Override
     public Estados getEstado(String situacion) throws ParseException {
 
@@ -249,7 +257,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
     }
 
     @Override
-    public void cargarDBLocal() throws ParseException {
+    public void cargarDBLocal(Context context) throws ParseException {
 
     }
 }

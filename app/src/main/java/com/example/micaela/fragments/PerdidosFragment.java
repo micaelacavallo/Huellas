@@ -91,7 +91,7 @@ public class PerdidosFragment extends BaseFragment {
         @Override
         protected List<Perdidos> doInBackground(Void... voids) {
             try {
-                mIperdidosImpl.cargarDBLocal();
+                mIperdidosImpl.cargarDBLocal(getActivity().getBaseContext());
                 return mIperdidosImpl.getPerdidos();
             } catch (ParseException e) {
                 e.printStackTrace();

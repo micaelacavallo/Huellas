@@ -604,7 +604,7 @@ public class PerdidosDAO  extends IGeneralImpl implements IPerdidos, IDBLocal {
     }
 
     @Override
-    public void cargarDBLocal() throws ParseException {
+    public void cargarDBLocal(Context context) throws ParseException {
 
         if(internet(context)) {
             perdidos = getPerdidos();

@@ -29,6 +29,11 @@ public class IGeneralImpl implements IGeneral {
 
     private GeneralDAO mGeneralDAO;
 
+    public IGeneralImpl(){}
+
+    public IGeneralImpl(Context context){
+    }
+
     @Override
     public Estados getEstado(String situacion) throws ParseException {
         return mGeneralDAO.getEstado(situacion);
@@ -89,9 +94,4 @@ public class IGeneralImpl implements IGeneral {
         return mGeneralDAO.getUltimoObjectId();
     }
 
-
-    @Override
-    public void cargarDBLocal() throws ParseException {
-
-    }
 }

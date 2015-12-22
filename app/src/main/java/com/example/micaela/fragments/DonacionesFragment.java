@@ -90,7 +90,7 @@ public class DonacionesFragment extends BaseFragment {
         @Override
         protected List<Adicionales> doInBackground(Void... voids) {
             try {
-                mIAdicionalesImpl.cargarDBLocal();
+                mIAdicionalesImpl.cargarDBLocal(getActivity().getBaseContext());
                 return mIAdicionalesImpl.getAdicionales();
             } catch (ParseException e) {
                 e.printStackTrace();

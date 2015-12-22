@@ -307,7 +307,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     }
 
     @Override
-    public void cargarDBLocal() throws ParseException {
+    public void cargarDBLocal(Context context) throws ParseException {
 
         if(internet(context)) {
             adicionales = getAdicionales();

@@ -80,8 +80,8 @@ public class IAdicionalesImpl implements IAdicionales {
     }
 
     @Override
-    public void cargarDBLocal() throws ParseException {
-        mAdicionalesDAO.cargarDBLocal();
+    public void cargarDBLocal(Context context) throws ParseException {
+        mAdicionalesDAO.cargarDBLocal(context);
     }
 
 }

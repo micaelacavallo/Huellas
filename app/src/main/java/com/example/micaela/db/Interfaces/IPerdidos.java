@@ -1,5 +1,7 @@
 package com.example.micaela.db.Interfaces;
 
+import android.content.Context;
+
 import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Edades;
 import com.example.micaela.db.Modelo.Especies;
@@ -34,6 +36,6 @@ public interface IPerdidos {
     public List<Especies> getEspecies();
     public void deletePerdido(String objectId) throws ParseException;
     public void AgregarComentarioPerdido(String perdidoObjectId, String comentario, String email) throws ParseException;
-    public void cargarDBLocal() throws ParseException;
+    public void cargarDBLocal(Context context) throws ParseException;
 
 }
