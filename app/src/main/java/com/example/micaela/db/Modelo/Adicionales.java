@@ -1,4 +1,4 @@
-package com.example.micaela.db.clases;
+package com.example.micaela.db.Modelo;
 
 import android.net.Uri;
 

@@ -1,4 +1,4 @@
-package com.example.micaela.db.clases;
+package com.example.micaela.db.Modelo;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;

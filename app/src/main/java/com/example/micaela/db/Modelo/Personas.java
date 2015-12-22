@@ -1,4 +1,4 @@
-package com.example.micaela.db.clases;
+package com.example.micaela.db.Modelo;
 
 /**
  * Created by Quimey on 13/09/2015.

@@ -1,9 +1,8 @@
-package com.example.micaela.db.clases;
+package com.example.micaela.db.Modelo;
 
 import android.net.Uri;
 
 import com.parse.ParseClassName;
-import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 

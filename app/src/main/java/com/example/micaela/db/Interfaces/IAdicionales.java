@@ -1,6 +1,6 @@
 package com.example.micaela.db.Interfaces;
 
-import com.example.micaela.db.clases.Adicionales;
+import com.example.micaela.db.Modelo.Adicionales;
 import com.parse.ParseException;
 
 import java.util.List;
@@ -18,6 +18,5 @@ public interface IAdicionales {
     public int getUltimoInsertado() throws ParseException;
     public void deleteAdicional(String objectId) throws  ParseException;
     public void AgregarComentarioAdicional(String adicionalObjectId, String comentario, String email) throws ParseException;
-    public void cargarDBLocal() throws ParseException;
 
 }

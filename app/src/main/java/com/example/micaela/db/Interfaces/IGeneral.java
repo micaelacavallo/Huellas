@@ -2,9 +2,9 @@ package com.example.micaela.db.Interfaces;
 
 import android.content.Context;
 
-import com.example.micaela.db.clases.Comentarios;
-import com.example.micaela.db.clases.Estados;
-import com.example.micaela.db.clases.Personas;
+import com.example.micaela.db.Modelo.Comentarios;
+import com.example.micaela.db.Modelo.Estados;
+import com.example.micaela.db.Modelo.Personas;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -26,5 +26,6 @@ public interface IGeneral {
     public void delete(ParseObject object);
     public void checkInternetGet(ParseQuery<ParseObject> query);
     public Estados getEstadoNoSolucionado() throws ParseException;
+    public void cargarDBLocal() throws ParseException;
 
 }

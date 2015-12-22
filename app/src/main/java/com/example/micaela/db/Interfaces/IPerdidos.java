@@ -1,12 +1,12 @@
 package com.example.micaela.db.Interfaces;
 
-import com.example.micaela.db.clases.Colores;
-import com.example.micaela.db.clases.Edades;
-import com.example.micaela.db.clases.Especies;
-import com.example.micaela.db.clases.Perdidos;
-import com.example.micaela.db.clases.Razas;
-import com.example.micaela.db.clases.Sexos;
-import com.example.micaela.db.clases.Tamaños;
+import com.example.micaela.db.Modelo.Colores;
+import com.example.micaela.db.Modelo.Edades;
+import com.example.micaela.db.Modelo.Especies;
+import com.example.micaela.db.Modelo.Perdidos;
+import com.example.micaela.db.Modelo.Razas;
+import com.example.micaela.db.Modelo.Sexos;
+import com.example.micaela.db.Modelo.Tamaños;
 import com.parse.ParseException;
 
 import java.util.List;
@@ -17,7 +17,6 @@ import java.util.List;
 public interface IPerdidos {
 
     public List<Perdidos> getPerdidos() throws ParseException;
-
     public void savePerdido(Perdidos perdido);
     public void editPerdido(Perdidos perdido) throws ParseException;
     public int getUltimoInsertado() throws ParseException;
@@ -35,5 +34,4 @@ public interface IPerdidos {
     public List<Especies> getEspecies();
     public void deletePerdido(String objectId) throws ParseException;
     public void AgregarComentarioPerdido(String perdidoObjectId, String comentario, String email) throws ParseException;
-    public void cargarDBLocal() throws ParseException;
 }
