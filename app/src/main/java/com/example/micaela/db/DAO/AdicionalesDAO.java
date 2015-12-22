@@ -56,7 +56,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
     public void init()
     {
-        adicionalObject = new ParseObject(Clases.ADICIONALES);
+        adicionalObject = ParseObject.create(Clases.ADICIONALES);
         query = null;
         objectAux = null;
         persona = null;
@@ -103,10 +103,18 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                 {
                     objectAux = object.getParseObject(CAdicionales.ID_PERSONA);
                     persona = new Personas(objectAux.getObjectId(), objectAux.getInt(CPersonas.ID_PERSONA), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR));
+
                     objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
                     estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO), objectAux.getBoolean(CEstados.SOLUCIONADO), objectAux.getString(CEstados.SITUACION));
-                    objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
-                    comentarios = getComentarios(objectRelation.getQuery().find(), object);
+
+
+                    try {
+                        objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
+                        comentarios = getComentarios(objectRelation.getQuery().find(), object);
+                    }catch (Exception e)
+                    {
+                        comentarios = null;
+                    }
 
                     foto = object.getParseFile(CAdicionales.FOTOS);
                     String imageURL = foto.getUrl();
