@@ -34,13 +34,21 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         mLoginButton = (LoginButton) rootView.findViewById(R.id.login_button);
         mCallbackManager = CallbackManager.Factory.create();
         mLoginButton.setReadPermissions("user_friends");
         // If using in a fragment
         mLoginButton.setFragment(this);
         // Other app specific specialization
+
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.setVisibility(View.INVISIBLE);
+                rootView.findViewById(R.id.textView_nombre_app).setVisibility(View.INVISIBLE);
+            }
+        });
 
         // Callback registration
         mLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {

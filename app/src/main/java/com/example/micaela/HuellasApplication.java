@@ -34,7 +34,7 @@ public class HuellasApplication extends Application{
     public void saveAccessTokenFacebook(String token) {
         SharedPreferences.Editor editor = HuellasApplication.getInstance().getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE).edit();
         editor.putString(Constants.ACCESS_TOKEN_FCB, token);
-        editor.commit();
+        editor.apply();
     }
 
     public String getAccessTokenFacebook () {
@@ -46,7 +46,15 @@ public class HuellasApplication extends Application{
         SharedPreferences.Editor editor = HuellasApplication.getInstance().getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE).edit();
         editor.putString(Constants.PROFILE_IMAGE, image.toString());
         editor.putString(Constants.PROFILE_NAME, name);
-        editor.commit();
+        editor.apply();
+    }
+
+    public void clearProfileFacebook () {
+        SharedPreferences.Editor editor = HuellasApplication.getInstance().getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE).edit();
+        editor.putString(Constants.PROFILE_IMAGE, "");
+        editor.putString(Constants.PROFILE_NAME, "");
+        editor.putString(Constants.ACCESS_TOKEN_FCB, "");
+        editor.apply();
     }
 
     public String getProfileNameFacebook () {

@@ -51,33 +51,19 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public void hideOverlay () {
+    public void hideOverlay() {
         mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.GONE);
     }
 
-    public void showOverlay () {
+    public void showOverlay() {
         mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.VISIBLE);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotate_image);
         mainContainer.findViewById(R.id.imageView).startAnimation(animation);
     }
 
-    public void showOverlay (String mensaje) {
+    public void showOverlay(String mensaje) {
         mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.VISIBLE);
         mainContainer.findViewById(R.id.imageView).setVisibility(View.GONE);
-        ((TextView)mainContainer.findViewById(R.id.textView_titulo)).setText(mensaje);
+        ((TextView) mainContainer.findViewById(R.id.textView_titulo)).setText(mensaje);
     }
-//
-//    public void setToolbarTitle(String title) {
-//        TextView loyalTV = (TextView) mToolbar.findViewById(R.id.txt_toolbar1);
-//        TextView titleTV = (TextView) mToolbar.findViewById(R.id.toolbar_fragment_title);
-//
-//        if (TextUtils.isEmpty(title)) {
-//            loyalTV.setVisibility(View.VISIBLE);
-//            titleTV.setVisibility(View.GONE);
-//        } else {
-//            loyalTV.setVisibility(View.GONE);
-//            titleTV.setVisibility(View.VISIBLE);
-//            titleTV.setText(title);
-//        }
-//    }
 }

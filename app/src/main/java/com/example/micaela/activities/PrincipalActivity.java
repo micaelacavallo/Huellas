@@ -30,6 +30,7 @@ import com.example.micaela.fragments.PerdidosFragment;
 import com.example.micaela.ZoomOutPageTransformer;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.CircleImageTransform;
+import com.facebook.login.LoginManager;
 import com.software.shell.fab.ActionButton;
 import com.squareup.picasso.Picasso;
 
@@ -165,14 +166,16 @@ public class PrincipalActivity extends BaseActivity {
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
                         Intent aIntent;
-                        switch (menuItem.getItemId()) {
-//                            case R.id.nav_drawer_transfer_founds:
-//                                aIntent = new Intent(DashboardActivity.this, TransferFoundActivity.class);
-//                                startActivityForResult(aIntent, TRANSFER_FOUNDS_ACTIVITY_CODE);
-//                                break;
-
-                        }
                         mDrawerLayout.closeDrawers();
+                        switch (menuItem.getItemId()) {
+                            case R.id.nav_drawer_cerrar_sesion:
+                                LoginManager.getInstance().logOut();
+                                HuellasApplication.getInstance().clearProfileFacebook();
+                                aIntent = new Intent(getBaseContext(), LoginActivity.class);
+                                startActivity(aIntent);
+                                break;
+                        }
+
                         return true;
                     }
                 });
