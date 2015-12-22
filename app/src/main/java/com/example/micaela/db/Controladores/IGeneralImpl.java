@@ -29,9 +29,8 @@ public class IGeneralImpl implements IGeneral {
 
     private GeneralDAO mGeneralDAO;
 
-    public IGeneralImpl(){}
-
-    public IGeneralImpl(Context context){
+    public IGeneralImpl(){
+        mGeneralDAO = new GeneralDAO();
     }
 
     @Override
