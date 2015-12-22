@@ -71,13 +71,13 @@ public class PerdidosDAO  extends IGeneralImpl implements IPerdidos, IDBLocal {
 
     public PerdidosDAO(Context context)
     {
-        ParseObject.registerSubclass(Colores.class);
+/*        ParseObject.registerSubclass(Colores.class);
         ParseObject.registerSubclass(Edades.class);
         ParseObject.registerSubclass(Especies.class);
         ParseObject.registerSubclass(Razas.class);
         ParseObject.registerSubclass(Sexos.class);
         ParseObject.registerSubclass(Tamaños.class);
-        ParseObject.registerSubclass(Perdidos.class);
+        ParseObject.registerSubclass(Perdidos.class);*/
 
         this.context = context;
         init();

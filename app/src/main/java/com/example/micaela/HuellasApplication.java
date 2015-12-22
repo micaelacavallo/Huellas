@@ -5,9 +5,18 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+import com.example.micaela.db.Modelo.Adicionales;
+import com.example.micaela.db.Modelo.Colores;
+import com.example.micaela.db.Modelo.Edades;
+import com.example.micaela.db.Modelo.Especies;
+import com.example.micaela.db.Modelo.Perdidos;
+import com.example.micaela.db.Modelo.Razas;
+import com.example.micaela.db.Modelo.Sexos;
+import com.example.micaela.db.Modelo.Tamaños;
 import com.example.micaela.utils.Constants;
 import com.facebook.FacebookSdk;
 import com.parse.Parse;
+import com.parse.ParseObject;
 
 
 public class HuellasApplication extends Application{
@@ -23,11 +32,24 @@ public class HuellasApplication extends Application{
         super.onCreate();
 
         instance = this;
-        Parse.enableLocalDatastore(getApplicationContext());
-        Parse.initialize(getApplicationContext(), Constants.APPLICATION_ID, Constants.CLIENT_ID);
-
+        initParse();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
+    }
+
+    public void initParse()
+    {
+        ParseObject.registerSubclass(Colores.class);
+        ParseObject.registerSubclass(Edades.class);
+        ParseObject.registerSubclass(Especies.class);
+        ParseObject.registerSubclass(Razas.class);
+        ParseObject.registerSubclass(Sexos.class);
+        ParseObject.registerSubclass(Tamaños.class);
+        ParseObject.registerSubclass(Perdidos.class);
+        ParseObject.registerSubclass(Adicionales.class);
+
+        Parse.enableLocalDatastore(getApplicationContext());
+        Parse.initialize(getApplicationContext(), Constants.APPLICATION_ID, Constants.CLIENT_ID);
     }
 
 
