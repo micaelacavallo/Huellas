@@ -23,6 +23,7 @@ public class Adicionales extends ParseObject {
     private String mTitulo;
     private String mDescripcion;
     private Uri mFoto;
+    private boolean mDonacion;
     private List<Comentarios> mComentarios;
 
     public Adicionales() {
@@ -31,7 +32,7 @@ public class Adicionales extends ParseObject {
         mFoto = null;
         mComentarios = new ArrayList<Comentarios>();
     }
-    public Adicionales(int idAdicional, Personas persona, Estados estado, Date fecha, String titulo, String descripcion, Uri foto, List<Comentarios> comentarios) {
+    public Adicionales(int idAdicional, Personas persona, Estados estado, Date fecha, String titulo, String descripcion, Uri foto, boolean donacion, List<Comentarios> comentarios) {
         this.mIdAdicional = idAdicional;
         this.mPersona = persona;
         this.mEstado = estado;
@@ -39,6 +40,7 @@ public class Adicionales extends ParseObject {
         this.mTitulo = titulo;
         this.mDescripcion = descripcion;
         this.mFoto = foto;
+        this.mDonacion = donacion;
         this.mComentarios = comentarios;
     }
 
@@ -112,5 +114,13 @@ public class Adicionales extends ParseObject {
 
     public void setObjectId(String objectId) {
         this.objectId = objectId;
+    }
+
+    public boolean isDonacion() {
+        return mDonacion;
+    }
+
+    public void setDonacion(boolean mDonacion) {
+        this.mDonacion = mDonacion;
     }
 }

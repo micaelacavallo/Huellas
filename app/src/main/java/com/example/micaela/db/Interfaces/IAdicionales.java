@@ -13,7 +13,8 @@ import java.util.List;
  */
 public interface IAdicionales {
 
-    public List<Adicionales> getAdicionales() throws ParseException;
+    public List<Adicionales> getDonaciones() throws ParseException;
+    public List<Adicionales> getInfoUtil() throws ParseException;
     public Adicionales getAdicionalById(int idAdicional);
     public void saveAdicional(Adicionales adicional);
     public void editAdicional(Adicionales adicional) throws ParseException;

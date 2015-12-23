@@ -40,8 +40,13 @@ public class IAdicionalesImpl implements IAdicionales {
     }
 
     @Override
-    public List<Adicionales> getAdicionales() throws ParseException {
-        return mAdicionalesDAO.getAdicionales();
+    public List<Adicionales> getDonaciones() throws ParseException {
+        return mAdicionalesDAO.getDonaciones();
+    }
+
+    @Override
+    public List<Adicionales> getInfoUtil() throws ParseException {
+        return mAdicionalesDAO.getInfoUtil();
     }
 
     @Override

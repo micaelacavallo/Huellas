@@ -20,6 +20,7 @@ import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.huellas.R;
 import com.parse.ParseException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DonacionesFragment extends BaseFragment {
@@ -91,7 +92,7 @@ public class DonacionesFragment extends BaseFragment {
         protected List<Adicionales> doInBackground(Void... voids) {
             try {
                 mIAdicionalesImpl.cargarDBLocal(getActivity().getBaseContext());
-                return mIAdicionalesImpl.getAdicionales();
+                return mIAdicionalesImpl.getDonaciones();
             } catch (ParseException e) {
                 e.printStackTrace();
             }

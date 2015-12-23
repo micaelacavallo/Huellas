@@ -1,21 +1,24 @@
 package com.example.micaela.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.huellas.R;
 
 import java.util.List;
 
 public class InfoAdapter extends RecyclerView.Adapter<InfoViewHolder> {
-    List<String> mAnimales;
+    List<Adicionales> mAdicionales;
+    private Context mContext;
 
-    public InfoAdapter(List<String> animales) {
-        mAnimales = animales;
+    public InfoAdapter(List<Adicionales> adicionales, Context context) {
+        mAdicionales = adicionales;
+        mContext = context;
     }
-
 
     @Override
     public InfoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -38,6 +41,11 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoViewHolder> {
 
     @Override
     public int getItemCount() {
-        return mAnimales.size();
+        if (mAdicionales != null) {
+            return mAdicionales.size();
+        }
+        else {
+            return 0;
+        }
     }
 }
