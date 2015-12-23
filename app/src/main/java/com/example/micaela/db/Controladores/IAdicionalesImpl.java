@@ -85,8 +85,13 @@ public class IAdicionalesImpl implements IAdicionales {
     }
 
     @Override
-    public void cargarDBLocal(Context context) throws ParseException {
-        mAdicionalesDAO.cargarDBLocal(context);
+    public void cargarDBLocalDonaciones(Context context) throws ParseException {
+        mAdicionalesDAO.cargarDBLocalDonaciones(context);
+    }
+
+    @Override
+    public void cargarDBLocalInfoUtil(Context context) throws ParseException {
+        mAdicionalesDAO.cargarDBLocalInfoUtil(context);
     }
 
 }
