@@ -13,15 +13,12 @@ import android.view.ViewGroup;
 import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.adapters.AdicionalesAdapter;
-import com.example.micaela.adapters.AnimalesAdapter;
-import com.example.micaela.adapters.InfoAdapter;
 import com.example.micaela.db.Controladores.IAdicionalesImpl;
 import com.example.micaela.db.Interfaces.IAdicionales;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.huellas.R;
 import com.parse.ParseException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class InformacionUtilFragment extends BaseFragment  {
@@ -79,7 +76,7 @@ public class InformacionUtilFragment extends BaseFragment  {
         @Override
         protected void onPostExecute(List<Adicionales> adicionalesList) {
             super.onPostExecute(adicionalesList);
-            InfoAdapter mAdapter = new InfoAdapter(adicionalesList, getContext());
+            AdicionalesAdapter mAdapter = new AdicionalesAdapter(adicionalesList, getContext());
             mRecyclerView.setAdapter(mAdapter);
             getActivity().runOnUiThread(new Runnable() {
                 @Override
