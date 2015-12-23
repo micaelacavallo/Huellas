@@ -25,7 +25,7 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
     @Override
     public AdicionalesViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.recycler_info_item, viewGroup, false); //ver ok
+                .inflate(R.layout.recycler_animales_item, viewGroup, false); //ver ok
         return new AdicionalesViewHolder(view);
     }
 
