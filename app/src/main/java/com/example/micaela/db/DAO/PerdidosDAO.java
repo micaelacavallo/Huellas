@@ -2,6 +2,7 @@ package com.example.micaela.db.DAO;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.micaela.db.Controladores.IGeneralImpl;
@@ -28,6 +29,7 @@ import com.example.micaela.db.Modelo.Personas;
 import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.db.Modelo.Sexos;
 import com.example.micaela.db.Modelo.Tamaños;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -159,9 +161,20 @@ public class PerdidosDAO  extends IGeneralImpl implements IPerdidos, IDBLocal {
                     estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO), objectAux.getBoolean(CEstados.SOLUCIONADO), objectAux.getString(CEstados.SITUACION));
 
                     try{
-                        objectRelation = object.getRelation(CPerdidos.COMENTARIOS);
-                        List<ParseObject> listComentarios = objectRelation.getQuery().find();
-                        comentarios = getComentarios(objectRelation.getQuery().find(), object);}
+                       // objectRelation = object.getRelation(CPerdidos.COMENTARIOS);
+                       // comentarios = getComentarios(objectRelation.getQuery().find(), object);
+                        ParseQuery<ParseObject> qry = object.getRelation(CPerdidos.COMENTARIOS).getQuery();
+                        qry.findInBackground(new FindCallback<ParseObject>() {
+                            public void done(List<ParseObject> hearList, ParseException e) {
+                                for(ParseObject hear : hearList){
+                                    String id = hear.getObjectId();
+                                    Log.d("ID: ",id);
+                                }
+                            }
+                        });
+
+                    }
+
                     catch (Exception e)
                     {
                         comentarios = null;
