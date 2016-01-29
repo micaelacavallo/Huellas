@@ -139,6 +139,8 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     @Override
     public List<Adicionales> getDonaciones() throws ParseException {
 
+        adicionales.clear();
+
         query = ParseQuery.getQuery(Clases.ADICIONALES);
         query.include(CAdicionales.ID_PERSONA);
         query.include(CAdicionales.ID_ESTADO);
