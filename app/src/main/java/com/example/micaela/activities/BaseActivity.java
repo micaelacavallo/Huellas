@@ -1,5 +1,6 @@
 package com.example.micaela.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import com.example.micaela.HuellasApplication;
 import com.example.micaela.huellas.R;
+import com.facebook.login.LoginManager;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -55,15 +58,33 @@ public class BaseActivity extends AppCompatActivity {
         mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.GONE);
     }
 
-    public void showOverlay() {
-        mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.VISIBLE);
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotate_image);
-        mainContainer.findViewById(R.id.imageView).startAnimation(animation);
-    }
 
     public void showOverlay(String mensaje) {
         mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.VISIBLE);
-        mainContainer.findViewById(R.id.imageView).setVisibility(View.GONE);
+        mainContainer.findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
         ((TextView) mainContainer.findViewById(R.id.textView_titulo)).setText(mensaje);
+        mainContainer.findViewById(R.id.button_confirmar).setVisibility(View.GONE);
+    }
+
+    public void showErrorOverlay(String mensaje) {
+        mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.VISIBLE);
+        mainContainer.findViewById(R.id.progress_bar).setVisibility(View.GONE);
+        ((TextView) mainContainer.findViewById(R.id.textView_titulo)).setText(mensaje);
+        mainContainer.findViewById(R.id.button_confirmar).setVisibility(View.VISIBLE);
+        mainContainer.findViewById(R.id.button_confirmar).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setResult(-1);
+                finish();
+            }
+        });
+
+    }
+
+    public void logOut() {
+        LoginManager.getInstance().logOut();
+        HuellasApplication.getInstance().clearProfileFacebook();
+        Intent aIntent = new Intent(getBaseContext(), LoginActivity.class);
+        startActivity(aIntent);
     }
 }

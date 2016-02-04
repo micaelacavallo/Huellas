@@ -163,15 +163,15 @@ public class PerdidosDAO  extends IGeneralImpl implements IPerdidos, IDBLocal {
                     try{
                        // objectRelation = object.getRelation(CPerdidos.COMENTARIOS);
                        // comentarios = getComentarios(objectRelation.getQuery().find(), object);
-                        ParseQuery<ParseObject> qry = object.getRelation(CPerdidos.COMENTARIOS).getQuery();
-                        qry.findInBackground(new FindCallback<ParseObject>() {
-                            public void done(List<ParseObject> hearList, ParseException e) {
-                                for(ParseObject hear : hearList){
-                                    String id = hear.getObjectId();
-                                    Log.d("ID: ",id);
-                                }
-                            }
-                        });
+//                        ParseQuery<ParseObject> qry = object.getRelation(CPerdidos.COMENTARIOS).getQuery();
+//                        qry.findInBackground(new FindCallback<ParseObject>() {
+//                            public void done(List<ParseObject> hearList, ParseException e) {
+//                                for(ParseObject hear : hearList){
+//                                    String id = hear.getObjectId();
+//                                    Log.d("ID: ",id);
+////                                }
+//                            }
+//                        });
 
                     }
 

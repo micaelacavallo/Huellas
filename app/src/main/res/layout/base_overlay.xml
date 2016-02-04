@@ -1,29 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/primary"
-    android:gravity="center_vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/primary_30_transparency"
+             android:gravity="center_vertical"
+             android:orientation="vertical">
 
     <TextView
+        android:id="@+id/textView_titulo"
+        style="@style/condensed_normal_24"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cargando publicaciones, por favor espere..."
-        style="@style/condensed_normal_24"
-        android:textColor="@color/icons"
-        android:id="@+id/textView_titulo"
-        android:gravity="center"
         android:layout_gravity="center"
         android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp" />
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="75dp"
+        android:gravity="center"
+        android:textColor="@color/icons"/>
 
-    <ImageView
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:id="@+id/imageView"
-        android:layout_gravity="center"
-        android:src="@mipmap/ic_circulo_progreso"
-        android:layout_marginTop="40dp"
-        android:scaleType="fitCenter"
-        android:layout_marginBottom="70dp" />
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/button_confirmar"
+        style="@style/condensed_normal_17"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@color/icons"
+        android:text="Confirmar"
+        android:textColor="@color/primary_text"
+        android:visibility="gone"/>
+</FrameLayout>

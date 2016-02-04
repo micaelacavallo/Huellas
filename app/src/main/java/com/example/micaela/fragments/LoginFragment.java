@@ -12,6 +12,7 @@ import com.example.micaela.HuellasApplication;
 import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.huellas.R;
+import com.example.micaela.utils.Constants;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -57,11 +58,13 @@ public class LoginFragment extends Fragment {
                 mLoginButton.setVisibility(View.INVISIBLE);
                 AccessToken token = loginResult.getAccessToken();
                 if (token != null) {
+                    getActivity().setResult(0);
                     getActivity().finish();
                     ((BaseActivity)getActivity()).hideOverlay();
                     HuellasApplication.getInstance().saveAccessTokenFacebook(token.getToken());
                     Profile profile = Profile.getCurrentProfile();
                     HuellasApplication.getInstance().saveProfileFacebook(profile.getProfilePictureUri(150, 150), profile.getName());
+
                 }
             }
 
@@ -72,7 +75,7 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onError(FacebookException exception) {
-                ((BaseActivity)getActivity()).showOverlay("Hubo un problema, intente nuevamente");
+                ((BaseActivity)getActivity()).showErrorOverlay("Hubo un problema, intente nuevamente");
             }
         });
 

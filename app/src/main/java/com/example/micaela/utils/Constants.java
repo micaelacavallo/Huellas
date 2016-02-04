@@ -16,4 +16,6 @@ public class Constants {
     public static final String PROFILE_NAME = "Profile Name";
     public static final String PROFILE_IMAGE = "Profile Image";
 
+    public static final int REQUEST_CODE_OK = 0;
+
 }

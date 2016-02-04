@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,7 @@ import com.example.micaela.fragments.PerdidosFragment;
 import com.example.micaela.ZoomOutPageTransformer;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.CircleImageTransform;
-import com.facebook.login.LoginManager;
+import com.example.micaela.utils.Constants;
 import com.software.shell.fab.ActionButton;
 import com.squareup.picasso.Picasso;
 
@@ -57,15 +56,15 @@ public class PrincipalActivity extends BaseActivity {
         mPager.setPageTransformer(false, new ZoomOutPageTransformer());
         mPager.setOffscreenPageLimit(3);
 
-        inicializarTabs();
-        inicializarFAB();
+        setUpTabs();
+        setUpFAB();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_layout);
         navigationView.setItemIconTintList(null);
-            setupDrawerContent(navigationView);
+        setupDrawerContent(navigationView);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -95,11 +94,24 @@ public class PrincipalActivity extends BaseActivity {
         mUserPhotoImageView = (ImageView) header.findViewById(R.id.nav_drawer_foto_perfil);
         if (HuellasApplication.getInstance().getAccessTokenFacebook().equals("")) {
             Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, Constants.REQUEST_CODE_OK);
         } else {
-            mUserNameTextView.setText(HuellasApplication.getInstance().getProfileNameFacebook());
-            String facebookImagen = HuellasApplication.getInstance().getProfileImageFacebook();
-            Picasso.with(getApplicationContext()).load(Uri.parse(facebookImagen)).transform(new CircleImageTransform()).into(mUserPhotoImageView);
+            updateFacebookData();
+        }
+    }
+
+    private void updateFacebookData() {
+        mUserNameTextView.setText(HuellasApplication.getInstance().getProfileNameFacebook());
+        String facebookImagen = HuellasApplication.getInstance().getProfileImageFacebook();
+        Picasso.with(getApplicationContext()).load(Uri.parse(facebookImagen)).transform(new CircleImageTransform()).into(mUserPhotoImageView);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.REQUEST_CODE_OK) {
+            if (resultCode == 0) {
+                updateFacebookData();
+            }
         }
     }
 
@@ -125,7 +137,7 @@ public class PrincipalActivity extends BaseActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private void inicializarTabs() {
+    private void setUpTabs() {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setVisibility(View.VISIBLE);
         tabLayout.setupWithViewPager(mPager);
@@ -144,7 +156,7 @@ public class PrincipalActivity extends BaseActivity {
         setTabsTextStyle(tabLayout);
     }
 
-    private void inicializarFAB() {
+    private void setUpFAB() {
         mActionButton = (ActionButton) findViewById(R.id.fab);
         mActionButton.setShowAnimation(ActionButton.Animations.ROLL_FROM_RIGHT);
         mActionButton.setHideAnimation(ActionButton.Animations.ROLL_TO_DOWN);
@@ -164,15 +176,10 @@ public class PrincipalActivity extends BaseActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-
-                        Intent aIntent;
                         mDrawerLayout.closeDrawers();
                         switch (menuItem.getItemId()) {
                             case R.id.nav_drawer_cerrar_sesion:
-                                LoginManager.getInstance().logOut();
-                                HuellasApplication.getInstance().clearProfileFacebook();
-                                aIntent = new Intent(getBaseContext(), LoginActivity.class);
-                                startActivity(aIntent);
+                                logOut();
                                 break;
                         }
 

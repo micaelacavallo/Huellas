@@ -32,7 +32,7 @@ public class PerdidosFragment extends BaseFragment {
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_perdidos, container, false);
         mIperdidosImpl = new IPerdidosImpl(getActivity().getApplicationContext());
-        ((BaseActivity) getActivity()).showOverlay();
+        ((BaseActivity) getActivity()).showOverlay("Cargando publicaciones...");
         new AsyncTaskPerdidos().execute();
         inicializarSwipeRefresh(view);
         inicializarRecycler(view);
