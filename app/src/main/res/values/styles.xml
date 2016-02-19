@@ -93,10 +93,10 @@
         <item name="android:textSize">36sp</item>
     </style>
 
-    <style name="condensed_normal_50">
+    <style name="condensed_normal_52">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">italic</item>
-        <item name="android:textSize">50sp</item>
+        <item name="android:textSize">52sp</item>
     </style>
 
 

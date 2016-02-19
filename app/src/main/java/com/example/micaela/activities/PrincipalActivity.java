@@ -46,7 +46,7 @@ public class PrincipalActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
+        setContentView(R.layout.activity_principal);
 
         hideOverlay();
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -163,9 +163,19 @@ public class PrincipalActivity extends BaseActivity {
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-           /*     Intent intent = new Intent(getActivity(), EventsManagerPagerActivity.class);
+                int currentPage = getCurrentPage();
+                Intent intent = null;
+                switch (currentPage) {
+                    case 0:
+                        intent = new Intent(getBaseContext(), AltaAnimalesActivity.class);
+                        break;
+                    case 1:
+                        //   intent = new Intent(PrincipalActivity.this, a.class);
+                        break;
+                    case 2:
+                        //   intent = new Intent(PrincipalActivity.this, a.class);
+                }
                 startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.bottom_in, R.anim.top_out); */
             }
         });
     }

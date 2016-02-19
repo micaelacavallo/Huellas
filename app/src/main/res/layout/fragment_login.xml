@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:src="@mipmap/street_dog"
         android:scaleType="centerCrop"
-        android:alpha="0.6"
+        android:alpha="0.75"
         android:adjustViewBounds="false" />
 
 <TextView
@@ -20,7 +20,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/textView_nombre_app"
     android:text="Huellas"
-    style="@style/condensed_normal_50"
+    style="@style/condensed_normal_52"
     android:textColor="@color/primary_text"
     android:layout_gravity="center_vertical"
     android:layout_marginTop="10dp"
