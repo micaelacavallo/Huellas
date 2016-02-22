@@ -17,13 +17,16 @@
         >
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/main.collapsing"
+            android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginStart="48dp"
+            app:collapsedTitleTextAppearance="@style/condensed_normal_22"
+            app:expandedTitleTextAppearance="@style/condensed_normal_24"
+            app:title="Crear publicación"
             app:expandedTitleMarginEnd="64dp"
             >
 
