@@ -16,6 +16,10 @@ public class Personas {
     public Personas() {
     }
 
+    public Personas(String email) {
+        this.email = email;
+    }
+
     public Personas(String objectId, int idPersona, String email, String nombre, String apellido, String telefono, boolean administrador) {
         this.idPersona = idPersona;
         this.email = email;

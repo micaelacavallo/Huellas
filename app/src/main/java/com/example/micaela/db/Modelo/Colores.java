@@ -17,6 +17,10 @@ public class Colores extends ParseObject {
     public Colores() {
     }
 
+    public Colores(String color) {
+        this.mColor = color;
+    }
+
     public Colores(int idColor, String color, String objectId) {
         this.mIdColor = idColor;
         this.mColor = color;

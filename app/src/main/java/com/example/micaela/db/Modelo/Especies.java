@@ -17,6 +17,10 @@ public class Especies extends ParseObject {
     public Especies() {
     }
 
+    public Especies(String especie) {
+        this.mEspecie = especie;
+    }
+
     public Especies(int idEspecie, String especie, String objectId) {
         this.mIdEspecie = idEspecie;
         this.mEspecie = especie;

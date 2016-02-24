@@ -1,16 +1,22 @@
 package com.example.micaela.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.huellas.R;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
@@ -42,7 +48,9 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
             holder.getTextViewEstado().setText(mContext.getString(R.string.encontrado_mayus));
             holder.getTextViewEstado().setBackgroundResource(R.color.blue_light);
         }
-        Picasso.with(mContext).load(mPerdidos.get(position).getFoto().toString()).into(holder.getImageViewFoto());
+
+        holder.getImageViewFoto().setImageBitmap(((BaseActivity)mContext).convertFromByteToBitmap(mPerdidos.get(position).getFoto()));
+        holder.getTextViewHora().setText(((BaseActivity) mContext).getPublicationTime(mPerdidos.get(position).getFecha()));
 
     }
 

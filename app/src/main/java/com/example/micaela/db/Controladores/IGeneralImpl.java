@@ -38,10 +38,6 @@ public class IGeneralImpl implements IGeneral {
         return mGeneralDAO.getEstado(situacion);
     }
 
-    @Override
-    public Estados getEstadoNoSolucionado() throws ParseException {
-        return mGeneralDAO.getEstadoNoSolucionado();
-    }
 
     @Override
     public Personas getPersona(String email) throws ParseException {

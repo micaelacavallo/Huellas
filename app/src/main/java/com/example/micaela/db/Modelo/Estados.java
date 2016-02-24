@@ -6,7 +6,6 @@ package com.example.micaela.db.Modelo;
 public class Estados {
 
     private int mIdEstado;
-    private boolean mSolucionado;
     private String mSituacion;
     private String mObjectId;
 
@@ -14,9 +13,12 @@ public class Estados {
 
     }
 
-    public Estados(String objectId, int idEstado, boolean solucionado, String situacion) {
+    public Estados(String situacion) {
+        this.mSituacion = situacion;
+    }
+
+    public Estados(String objectId, int idEstado, String situacion) {
         this.mIdEstado = idEstado;
-        this.mSolucionado = solucionado;
         this.mSituacion = situacion;
         this.mObjectId = objectId;
     }
@@ -29,13 +31,6 @@ public class Estados {
         this.mIdEstado = idEstado;
     }
 
-    public boolean isSolucionado() {
-        return mSolucionado;
-    }
-
-    public void setSolucionado(boolean solucionado) {
-        this.mSolucionado = solucionado;
-    }
 
     public String getSituacion() {
         return mSituacion;

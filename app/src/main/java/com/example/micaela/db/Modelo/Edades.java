@@ -18,6 +18,10 @@ public class Edades extends ParseObject {
     public Edades() {
     }
 
+    public Edades(String edad) {
+        this.mEdad = edad;
+    }
+
     public Edades(int idEdad, String edad, String objectId) {
         this.mIdEdad = idEdad;
         this.mEdad = edad;

@@ -29,8 +29,9 @@ public class Perdidos extends ParseObject {
     private ParseGeoPoint mUbicacion;
     private String mTitulo;
     private String mDescripcion;
-    private Uri mFoto;
+    private byte[] mFoto;
     private List<Comentarios> mComentarios;
+    private boolean mSolucionado;
     private String mObjectId;
 
 
@@ -47,7 +48,7 @@ public class Perdidos extends ParseObject {
         mComentarios = new ArrayList<Comentarios>();
     }
 
-    public Perdidos(int idPerdido, Edades edad, Razas raza, Especies especie, Tamaños tamaño, Colores color, Sexos sexo, Estados estado, Personas persona, Date fecha, ParseGeoPoint ubicacion, String titulo, String descripcion, Uri foto, List<Comentarios> comentarios) {
+    public Perdidos(int idPerdido, Edades edad, Razas raza, Especies especie, Tamaños tamaño, Colores color, Sexos sexo, Estados estado, Personas persona, Date fecha, ParseGeoPoint ubicacion, String titulo, String descripcion, byte[] foto, List<Comentarios> comentarios, boolean mSolucionado) {
         this.mIdPerdido = idPerdido;
         this.mEdad = edad;
         this.mRaza = raza;
@@ -63,6 +64,7 @@ public class Perdidos extends ParseObject {
         this.mDescripcion = descripcion;
         this.mFoto = foto;
         this.mComentarios = comentarios;
+        this.mSolucionado = mSolucionado;
     }
 
 
@@ -170,11 +172,11 @@ public class Perdidos extends ParseObject {
         this.mDescripcion = mDescripcion;
     }
 
-    public Uri getFoto() {
+    public byte[] getFoto() {
         return mFoto;
     }
 
-    public void setFoto(Uri mFoto) {
+    public void setFoto(byte[] mFoto) {
         this.mFoto = mFoto;
     }
 
@@ -193,4 +195,13 @@ public class Perdidos extends ParseObject {
     public void setObjectId(String mObjectId) {
         this.mObjectId = mObjectId;
     }
+
+    public boolean isSolucionado() {
+        return mSolucionado;
+    }
+
+    public void setSolucionado(boolean solucionado) {
+        mSolucionado = solucionado;
+    }
+
 }

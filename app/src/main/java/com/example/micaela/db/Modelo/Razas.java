@@ -17,6 +17,10 @@ public class Razas extends ParseObject {
     public Razas() {
     }
 
+    public Razas(String raza) {
+        this.mRaza = raza;
+    }
+
     public Razas(int idRaza, String raza, String objectId) {
         this.mIdRaza = idRaza;
         this.mRaza = raza;

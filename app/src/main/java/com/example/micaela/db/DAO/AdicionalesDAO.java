@@ -95,6 +95,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         query.include(CAdicionales.ID_PERSONA);
         query.include(CAdicionales.ID_ESTADO);
         query.whereEqualTo(CAdicionales.DONACION, false);
+        query.orderByDescending(CAdicionales.FECHA);
         //  query.whereEqualTo(CAdicionales.ID_ESTADO, getEstadoByID("D4ATvjnhj4"));
         checkInternetGet(query);
 
@@ -108,7 +109,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                     persona = new Personas(objectAux.getObjectId(), objectAux.getInt(CPersonas.ID_PERSONA), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR));
 
                     objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
-                    estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO), objectAux.getBoolean(CEstados.SOLUCIONADO), objectAux.getString(CEstados.SITUACION));
+                    estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO), objectAux.getString(CEstados.SITUACION));
 
 
                     try {
@@ -120,10 +121,12 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                     }
 
                     foto = object.getParseFile(CAdicionales.FOTOS);
-                    String imageURL = foto.getUrl();
-                    Uri imageUri = Uri.parse(imageURL);
 
-                    adicional = new Adicionales(object.getInt(CAdicionales.ID_ADICIONAL), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), imageUri, object.getBoolean(CAdicionales.DONACION), comentarios);
+                    byte[] image = null;
+                    if (foto != null) {
+                        image = foto.getData();
+                    }
+                    adicional = new Adicionales(object.getInt(CAdicionales.ID_ADICIONAL), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
                     adicionales.add(adicional);
                 }
             }
@@ -145,6 +148,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         query.include(CAdicionales.ID_PERSONA);
         query.include(CAdicionales.ID_ESTADO);
         query.whereEqualTo(CAdicionales.DONACION, true);
+        query.orderByDescending(CAdicionales.FECHA);
         //  query.whereEqualTo(CAdicionales.ID_ESTADO, getEstadoByID("D4ATvjnhj4"));
         checkInternetGet(query);
 
@@ -158,7 +162,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                     persona = new Personas(objectAux.getObjectId(), objectAux.getInt(CPersonas.ID_PERSONA), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR));
 
                     objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
-                    estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO), objectAux.getBoolean(CEstados.SOLUCIONADO), objectAux.getString(CEstados.SITUACION));
+                    estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO), objectAux.getString(CEstados.SITUACION));
 
 
                     try {
@@ -170,10 +174,12 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                     }
 
                     foto = object.getParseFile(CAdicionales.FOTOS);
-                    String imageURL = foto.getUrl();
-                    Uri imageUri = Uri.parse(imageURL);
+                    byte[] image = null;
+                    if (foto != null) {
+                        image = foto.getData();
+                    }
 
-                    adicional = new Adicionales(object.getInt(CAdicionales.ID_ADICIONAL), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), imageUri, object.getBoolean(CAdicionales.DONACION), comentarios);
+                    adicional = new Adicionales(object.getInt(CAdicionales.ID_ADICIONAL), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
                     adicionales.add(adicional);
                 }
             }
@@ -201,13 +207,15 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
             objectAux = object.getParseObject(CAdicionales.ID_PERSONA);
             persona = new Personas(objectAux.getObjectId(), objectAux.getInt(CPersonas.ID_PERSONA), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR));
             objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
-            estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO), objectAux.getBoolean(CEstados.SOLUCIONADO), objectAux.getString(CEstados.SITUACION));
+            estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO),  objectAux.getString(CEstados.SITUACION));
             objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
             comentarios = getComentarios(objectRelation.getQuery().find(), object);
             foto = object.getParseFile(CAdicionales.FOTOS);
-            String imageURL = foto.getUrl();
-            Uri imageUri = Uri.parse(imageURL);
-            adicional = new Adicionales(object.getInt(CAdicionales.ID_ADICIONAL), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), imageUri, object.getBoolean(CAdicionales.DONACION), comentarios);
+            byte[] image = null;
+            if (foto != null) {
+                image = foto.getData();
+            }
+            adicional = new Adicionales(object.getInt(CAdicionales.ID_ADICIONAL), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
         }
         catch(ParseException e)
         {
@@ -229,7 +237,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         try {
             adicionalObject.put(CAdicionales.ID_ADICIONAL, getUltimoInsertado());
             persona = getPersona(adicional.getPersona().getEmail());
-            estado = getEstadoNoSolucionado();
+            estado = getEstado("-");
         } catch (ParseException e) {
             e.printStackTrace();
         }

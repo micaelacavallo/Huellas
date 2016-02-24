@@ -18,6 +18,10 @@ public class Tamaños extends ParseObject{
     public Tamaños() {
     }
 
+    public Tamaños(String tamaño) {
+        this.mTamaño = tamaño;
+    }
+
     public Tamaños(int idTamaño, String tamaño, String objectId) {
         this.mIdTamaño = idTamaño;
         this.mTamaño = tamaño;

@@ -22,7 +22,7 @@ public class Adicionales extends ParseObject {
     private Date mFecha;
     private String mTitulo;
     private String mDescripcion;
-    private Uri mFoto;
+    private byte[] mFoto;
     private boolean mDonacion;
     private List<Comentarios> mComentarios;
 
@@ -32,7 +32,7 @@ public class Adicionales extends ParseObject {
         mFoto = null;
         mComentarios = new ArrayList<Comentarios>();
     }
-    public Adicionales(int idAdicional, Personas persona, Estados estado, Date fecha, String titulo, String descripcion, Uri foto, boolean donacion, List<Comentarios> comentarios) {
+    public Adicionales(int idAdicional, Personas persona, Estados estado, Date fecha, String titulo, String descripcion, byte[] foto, boolean donacion, List<Comentarios> comentarios) {
         this.mIdAdicional = idAdicional;
         this.mPersona = persona;
         this.mEstado = estado;
@@ -92,11 +92,11 @@ public class Adicionales extends ParseObject {
         this.mDescripcion = descripcion;
     }
 
-    public Uri getFoto() {
+    public byte[] getFoto() {
         return mFoto;
     }
 
-    public void setFoto(Uri foto) {
+    public void setFoto(byte[] foto) {
         this.mFoto = foto;
     }
 

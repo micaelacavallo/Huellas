@@ -17,6 +17,10 @@ public class Sexos extends ParseObject {
     public Sexos() {
     }
 
+    public Sexos(String sexo) {
+        this.mSexo = sexo;
+    }
+
     public Sexos(int idSexo, String sexo, String objectId) {
         this.mIdSexo = idSexo;
         this.mSexo = sexo;
