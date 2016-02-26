@@ -1,5 +1,8 @@
 package com.example.micaela.db.Modelo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
@@ -7,7 +10,7 @@ import com.parse.ParseObject;
  * Created by Quimey on 13/09/2015.
  */
 @ParseClassName("Razas")
-public class Razas extends ParseObject {
+public class Razas extends ParseObject implements Parcelable {
 
     private int mIdRaza;
     private String mRaza;
@@ -50,4 +53,32 @@ public class Razas extends ParseObject {
     public void setObjectId(String mObjectId) {
         this.mObjectId = mObjectId;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.mIdRaza);
+        dest.writeString(this.mObjectId);
+        dest.writeString(this.mRaza);
+    }
+
+    protected Razas(Parcel in) {
+        this.mIdRaza = in.readInt();
+        this.mObjectId = in.readString();
+        this.mRaza = in.readString();
+    }
+
+    public static final Parcelable.Creator<Razas> CREATOR = new Parcelable.Creator<Razas>() {
+        public Razas createFromParcel(Parcel source) {
+            return new Razas(source);
+        }
+
+        public Razas[] newArray(int size) {
+            return new Razas[size];
+        }
+    };
 }

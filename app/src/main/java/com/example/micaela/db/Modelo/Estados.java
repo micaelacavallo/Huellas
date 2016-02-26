@@ -1,9 +1,12 @@
 package com.example.micaela.db.Modelo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Quimey on 13/09/2015.
  */
-public class Estados {
+public class Estados implements Parcelable {
 
     private int mIdEstado;
     private String mSituacion;
@@ -47,4 +50,32 @@ public class Estados {
     public void setObjectId(String mObjectId) {
         this.mObjectId = mObjectId;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.mIdEstado);
+        dest.writeString(this.mSituacion);
+        dest.writeString(this.mObjectId);
+    }
+
+    protected Estados(Parcel in) {
+        this.mIdEstado = in.readInt();
+        this.mSituacion = in.readString();
+        this.mObjectId = in.readString();
+    }
+
+    public static final Parcelable.Creator<Estados> CREATOR = new Parcelable.Creator<Estados>() {
+        public Estados createFromParcel(Parcel source) {
+            return new Estados(source);
+        }
+
+        public Estados[] newArray(int size) {
+            return new Estados[size];
+        }
+    };
 }

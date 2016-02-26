@@ -36,6 +36,10 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="CollapseToolbarTextExpandedStyle" parent="AppTheme">
+        <item name="android:textColor">@android:color/transparent</item>
+        <item name="android:textSize">0.1sp</item>
+    </style>
 
     <style name="condensed_normal_small_14">
         <item name="android:fontFamily">sans-serif-condensed</item>
@@ -142,6 +146,13 @@
         <item name="android:textSize">17sp</item>
     </style>
 
+    <style name="condensed_bold_18">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+
     <style name="condensed_bold_20">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">bold</item>
@@ -179,6 +190,7 @@
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
 
 
 </resources>

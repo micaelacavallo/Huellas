@@ -44,7 +44,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     List<ParseObject> listParseObject;
     ParseRelation objectRelation;
     List<Comentarios> comentarios;
-    List<Adicionales> adicionales = new ArrayList<Adicionales>();
+    List<Adicionales> adicionales = new ArrayList<>();
     Adicionales adicional = null;
     Comentarios comentario;
 

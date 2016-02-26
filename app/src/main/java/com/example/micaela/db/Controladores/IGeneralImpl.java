@@ -1,15 +1,8 @@
 package com.example.micaela.db.Controladores;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 import com.example.micaela.db.DAO.GeneralDAO;
-import com.example.micaela.db.Enums.CComentarios;
-import com.example.micaela.db.Enums.CEstados;
-import com.example.micaela.db.Enums.CPersonas;
-import com.example.micaela.db.Enums.Clases;
-import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Estados;
@@ -18,8 +11,6 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**

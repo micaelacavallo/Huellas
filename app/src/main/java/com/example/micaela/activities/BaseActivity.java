@@ -13,9 +13,12 @@ import android.widget.TextView;
 
 import com.example.micaela.HuellasApplication;
 import com.example.micaela.huellas.R;
+import com.example.micaela.utils.Constants;
 import com.facebook.login.LoginManager;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -90,6 +93,11 @@ public class BaseActivity extends AppCompatActivity {
         startActivity(aIntent);
     }
 
+    public String getFormattedDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat(Constants.PUBLICATION_DETAILS_DATE_FORMAT, Locale.getDefault());
+        return sdf.format(date);
+    }
+
     public String getPublicationTime(Date date) {
         Date currentDate = new Date();
         String difference = "";
@@ -133,7 +141,7 @@ public class BaseActivity extends AppCompatActivity {
         return difference;
     }
 
-    public Bitmap convertFromByteToBitmap (byte[] pic) {
+    public Bitmap convertFromByteToBitmap(byte[] pic) {
         return BitmapFactory.decodeByteArray(pic, 0, pic.length);
     }
 

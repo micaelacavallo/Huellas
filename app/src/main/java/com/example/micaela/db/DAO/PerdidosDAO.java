@@ -1,8 +1,6 @@
 package com.example.micaela.db.DAO;
 
 import android.content.Context;
-import android.net.Uri;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.micaela.db.Controladores.IGeneralImpl;
@@ -29,9 +27,9 @@ import com.example.micaela.db.Modelo.Personas;
 import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.db.Modelo.Sexos;
 import com.example.micaela.db.Modelo.Tamaños;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
@@ -182,7 +180,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
                     if (foto != null) {
                         image = foto.getData();
                     }
-                    perdido = new Perdidos(object.getInt(CPerdidos.ID_PERDIDO), edad, raza, especie, tamaño, color, sexo, estado, persona, object.getDate(CPerdidos.FECHA), object.getParseGeoPoint(CPerdidos.UBICACION), object.getString(CPerdidos.TITULO), object.getString(CPerdidos.DESCRIPCION), image, comentarios, object.getBoolean(CPerdidos.SOLUCIONADO));
+                    perdido = new Perdidos(object.getInt(CPerdidos.ID_PERDIDO), edad, raza, especie, tamaño, color, sexo, estado, persona, object.getDate(CPerdidos.FECHA), object.getParseGeoPoint(CPerdidos.UBICACION).getLatitude(), object.getParseGeoPoint(CPerdidos.UBICACION).getLongitude(), object.getString(CPerdidos.TITULO), object.getString(CPerdidos.DESCRIPCION), image, comentarios, object.getBoolean(CPerdidos.SOLUCIONADO));
                     perdidos.add(perdido);
                 }
             }
@@ -201,7 +199,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         perdidosObject.put(CPerdidos.DESCRIPCION, perdido.getDescripcion());
         perdidosObject.put(CPerdidos.FECHA, perdido.getFecha());
  //       perdidosObject.put(CPerdidos.FOTOS, perdido.getFoto());
-        perdidosObject.put(CPerdidos.UBICACION, perdido.getUbicacion());
+        perdidosObject.put(CPerdidos.UBICACION, new ParseGeoPoint(perdido.getLatitud(), perdido.getLongitud()));
 
 
         try {
@@ -234,7 +232,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         perdidosObject.put(CPerdidos.DESCRIPCION, perdido.getDescripcion());
         perdidosObject.put(CPerdidos.FECHA, perdido.getFecha());
         perdidosObject.put(CPerdidos.FOTOS, perdido.getFoto());
-        perdidosObject.put(CPerdidos.UBICACION, perdido.getUbicacion());
+        perdidosObject.put(CPerdidos.UBICACION, new ParseGeoPoint(perdido.getLatitud(), perdido.getLongitud()));
         perdidosObject.put(CPerdidos.ID_PERDIDO, perdido.getIdPerdido());
         perdidosObject.put(CPerdidos.ID_RAZA, ParseObject.createWithoutData(Clases.RAZAS, perdido.getRaza().getObjectId()));
         perdidosObject.put(CPerdidos.ID_COLOR, ParseObject.createWithoutData(Clases.COLORES, perdido.getColor().getObjectId()));

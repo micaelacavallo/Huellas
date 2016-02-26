@@ -1,9 +1,12 @@
 package com.example.micaela.db.Modelo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Quimey on 13/09/2015.
  */
-public class Personas {
+public class Personas implements Parcelable {
 
     private int idPersona;
     private String email;
@@ -85,4 +88,40 @@ public class Personas {
     public void setObjectId(String objectId) {
         this.objectId = objectId;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.idPersona);
+        dest.writeString(this.email);
+        dest.writeString(this.nombre);
+        dest.writeString(this.apellido);
+        dest.writeString(this.telefono);
+        dest.writeByte(administrador ? (byte) 1 : (byte) 0);
+        dest.writeString(this.objectId);
+    }
+
+    protected Personas(Parcel in) {
+        this.idPersona = in.readInt();
+        this.email = in.readString();
+        this.nombre = in.readString();
+        this.apellido = in.readString();
+        this.telefono = in.readString();
+        this.administrador = in.readByte() != 0;
+        this.objectId = in.readString();
+    }
+
+    public static final Parcelable.Creator<Personas> CREATOR = new Parcelable.Creator<Personas>() {
+        public Personas createFromParcel(Parcel source) {
+            return new Personas(source);
+        }
+
+        public Personas[] newArray(int size) {
+            return new Personas[size];
+        }
+    };
 }

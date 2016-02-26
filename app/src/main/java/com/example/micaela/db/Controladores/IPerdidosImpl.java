@@ -1,40 +1,17 @@
 package com.example.micaela.db.Controladores;
 
 import android.content.Context;
-import android.net.Uri;
-import android.widget.Toast;
 
 import com.example.micaela.db.DAO.PerdidosDAO;
-import com.example.micaela.db.Enums.CAdicionales;
-import com.example.micaela.db.Enums.CColores;
-import com.example.micaela.db.Enums.CEdades;
-import com.example.micaela.db.Enums.CEspecies;
-import com.example.micaela.db.Enums.CEstados;
-import com.example.micaela.db.Enums.CPerdidos;
-import com.example.micaela.db.Enums.CPersonas;
-import com.example.micaela.db.Enums.CRazas;
-import com.example.micaela.db.Enums.CSexos;
-import com.example.micaela.db.Enums.CTamaños;
-import com.example.micaela.db.Enums.Clases;
-import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.Interfaces.IPerdidos;
 import com.example.micaela.db.Modelo.Colores;
-import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Edades;
 import com.example.micaela.db.Modelo.Especies;
-import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.db.Modelo.Perdidos;
-import com.example.micaela.db.Modelo.Personas;
 import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.db.Modelo.Sexos;
 import com.example.micaela.db.Modelo.Tamaños;
 import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseRelation;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class IPerdidosImpl implements IPerdidos {

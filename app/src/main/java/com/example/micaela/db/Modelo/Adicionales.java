@@ -1,6 +1,8 @@
 package com.example.micaela.db.Modelo;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
@@ -13,7 +15,7 @@ import java.util.List;
  * Created by Quimey on 13/09/2015.
  */
 @ParseClassName("Adicionales")
-public class Adicionales extends ParseObject {
+public class Adicionales extends ParseObject implements Parcelable {
 
     private int mIdAdicional;
     private String objectId;
@@ -123,4 +125,47 @@ public class Adicionales extends ParseObject {
     public void setDonacion(boolean mDonacion) {
         this.mDonacion = mDonacion;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.objectId);
+        dest.writeInt(this.mIdAdicional);
+        dest.writeParcelable(this.mPersona, 0);
+        dest.writeParcelable(this.mEstado, 0);
+        dest.writeLong(mFecha != null ? mFecha.getTime() : -1);
+        dest.writeString(this.mTitulo);
+        dest.writeString(this.mDescripcion);
+        dest.writeByteArray(this.mFoto);
+        dest.writeByte(mDonacion ? (byte) 1 : (byte) 0);
+        dest.writeTypedList(mComentarios);
+    }
+
+    protected Adicionales(Parcel in) {
+        this.objectId = in.readString();
+        this.mIdAdicional = in.readInt();
+        this.mPersona = in.readParcelable(Personas.class.getClassLoader());
+        this.mEstado = in.readParcelable(Estados.class.getClassLoader());
+        long tmpMFecha = in.readLong();
+        this.mFecha = tmpMFecha == -1 ? null : new Date(tmpMFecha);
+        this.mTitulo = in.readString();
+        this.mDescripcion = in.readString();
+        this.mFoto = in.createByteArray();
+        this.mDonacion = in.readByte() != 0;
+        this.mComentarios = in.createTypedArrayList(Comentarios.CREATOR);
+    }
+
+    public static final Parcelable.Creator<Adicionales> CREATOR = new Parcelable.Creator<Adicionales>() {
+        public Adicionales createFromParcel(Parcel source) {
+            return new Adicionales(source);
+        }
+
+        public Adicionales[] newArray(int size) {
+            return new Adicionales[size];
+        }
+    };
 }
