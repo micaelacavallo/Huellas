@@ -6,6 +6,7 @@ import android.widget.Toast;
 import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Enums.CAdicionales;
 import com.example.micaela.db.Enums.CColores;
+import com.example.micaela.db.Enums.CComentarios;
 import com.example.micaela.db.Enums.CEdades;
 import com.example.micaela.db.Enums.CEspecies;
 import com.example.micaela.db.Enums.CEstados;
@@ -70,13 +71,6 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
 
 
     public PerdidosDAO(Context context) {
-/*        ParseObject.registerSubclass(Colores.class);
-        ParseObject.registerSubclass(Edades.class);
-        ParseObject.registerSubclass(Especies.class);
-        ParseObject.registerSubclass(Razas.class);
-        ParseObject.registerSubclass(Sexos.class);
-        ParseObject.registerSubclass(Tamaños.class);
-        ParseObject.registerSubclass(Perdidos.class);*/
 
         this.context = context;
         init();
@@ -158,17 +152,8 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
                     estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO), objectAux.getString(CEstados.SITUACION));
 
                     try {
-                        // objectRelation = object.getRelation(CPerdidos.COMENTARIOS);
-                        // comentarios = getComentarios(objectRelation.getQuery().find(), object);
-//                        ParseQuery<ParseObject> qry = object.getRelation(CPerdidos.COMENTARIOS).getQuery();
-//                        qry.findInBackground(new FindCallback<ParseObject>() {
-//                            public void done(List<ParseObject> hearList, ParseException e) {
-//                                for(ParseObject hear : hearList){
-//                                    String id = hear.getObjectId();
-//                                    Log.d("ID: ",id);
-////                                }
-//                            }
-//                        });
+                        objectRelation = object.getRelation(CPerdidos.COMENTARIOS);
+                        comentarios = getComentarios(objectRelation.getQuery().find(), object);
 
                     } catch (Exception e) {
                         comentarios = null;
@@ -200,6 +185,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         perdidosObject.put(CPerdidos.FECHA, perdido.getFecha());
  //       perdidosObject.put(CPerdidos.FOTOS, perdido.getFoto());
         perdidosObject.put(CPerdidos.UBICACION, new ParseGeoPoint(perdido.getLatitud(), perdido.getLongitud()));
+        perdidosObject.put(CPerdidos.SOLUCIONADO, false);
 
 
         try {
@@ -584,13 +570,14 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
             edades = getEdades();
             especies = getEspecies();
 
-            ParseObject.pinAllInBackground(perdidos);
+
+   /*         ParseObject.pinAllInBackground(perdidos);
             ParseObject.pinAllInBackground(razas);
             ParseObject.pinAllInBackground(colores);
             ParseObject.pinAllInBackground(sexos);
             ParseObject.pinAllInBackground(tamaños);
             ParseObject.pinAllInBackground(edades);
-            ParseObject.pinAllInBackground(especies);
+            ParseObject.pinAllInBackground(especies);*/
         }
     }
 

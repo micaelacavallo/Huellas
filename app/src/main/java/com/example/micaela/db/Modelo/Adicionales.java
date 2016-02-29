@@ -14,8 +14,7 @@ import java.util.List;
 /**
  * Created by Quimey on 13/09/2015.
  */
-@ParseClassName("Adicionales")
-public class Adicionales extends ParseObject implements Parcelable {
+public class Adicionales {
 
     private int mIdAdicional;
     private String objectId;

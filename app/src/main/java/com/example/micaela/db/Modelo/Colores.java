@@ -9,8 +9,7 @@ import com.parse.ParseObject;
 /**
  * Created by Quimey on 13/09/2015.
  */
-@ParseClassName("Colores")
-public class Colores extends ParseObject implements Parcelable {
+public class Colores {
 
     private int mIdColor;
     private String mColor;

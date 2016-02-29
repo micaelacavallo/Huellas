@@ -93,9 +93,13 @@ public class PerdidosFragment extends BaseFragment {
                 @Override
                 public void run() {
                     ((BaseActivity)getActivity()).hideOverlay();
-                    Perdidos per = new Perdidos(5000, new Edades("adulto"), new Razas("San Bernardo"), new Especies("conejo"), new Tamaños("grande"), new Colores("marron claro"), new Sexos("macho"), new Estados("buscado"),  new Personas("admin@gmail.com"), new Date(), 30,30, "holahola", "holahola", null, null, false);
+                    Perdidos per = new Perdidos(5000, new Edades("adulto"), new Razas("San Bernardo"), new Especies("conejo"), new Tamaños("grande"), new Colores("marron claro"), new Sexos("macho"), new Estados("buscado"),  new Personas("admin@gmail.com"), new Date(), new ParseGeoPoint(30,30), "holahola", "holahola", null, null, false);
+                   try{
                     mIperdidosImpl.savePerdido(per);
-                    mSwipeRefreshLayout.setRefreshing(false);
+                    mSwipeRefreshLayout.setRefreshing(false);}
+                   catch (Exception e){
+                       e.printStackTrace();
+                   }
                 }
             });
         }

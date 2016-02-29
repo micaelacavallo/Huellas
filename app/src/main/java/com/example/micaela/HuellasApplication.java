@@ -39,14 +39,6 @@ public class HuellasApplication extends Application{
 
     public void initParse()
     {
-        ParseObject.registerSubclass(Colores.class);
-        ParseObject.registerSubclass(Edades.class);
-        ParseObject.registerSubclass(Especies.class);
-        ParseObject.registerSubclass(Razas.class);
-        ParseObject.registerSubclass(Sexos.class);
-        ParseObject.registerSubclass(Tamaños.class);
-        ParseObject.registerSubclass(Perdidos.class);
-        ParseObject.registerSubclass(Adicionales.class);
 
         Parse.enableLocalDatastore(getApplicationContext());
         Parse.initialize(getApplicationContext(), Constants.APPLICATION_ID, Constants.CLIENT_ID);
