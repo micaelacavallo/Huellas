@@ -385,7 +385,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
         if(internet(context)) {
             adicionales = getDonaciones();
-            ParseObject.pinAllInBackground(adicionales);
+            //ParseObject.pinAllInBackground(adicionales);
         }
     }
 
@@ -394,7 +394,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
         if(internet(context)) {
             adicionales = getInfoUtil();
-            ParseObject.pinAllInBackground(adicionales);
+         //   ParseObject.pinAllInBackground(adicionales);
         }
     }
 

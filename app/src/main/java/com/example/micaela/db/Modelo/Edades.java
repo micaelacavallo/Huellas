@@ -7,8 +7,7 @@ import com.parse.ParseObject;
  * Created by Quimey on 13/09/2015.
  */
 
-@ParseClassName("Edades")
-public class Edades extends ParseObject {
+public class Edades {
 
     private int mIdEdad;
     private String mEdad;

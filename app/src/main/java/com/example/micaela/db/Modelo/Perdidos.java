@@ -13,8 +13,7 @@ import java.util.List;
 /**
  * Created by Quimey on 13/09/2015.
  */
-@ParseClassName("Perdidos")
-public class Perdidos extends ParseObject {
+public class Perdidos {
 
     private int mIdPerdido;
     private Edades mEdad;

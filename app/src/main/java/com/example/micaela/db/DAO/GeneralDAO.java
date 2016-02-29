@@ -74,19 +74,18 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         Comentarios comentario = null;
         ParseObject objectAux = null;
         Personas persona = null;
-        List<Comentarios> comentarios = new ArrayList<Comentarios>();
+        List<Comentarios> comentarios = null;
 
-        if (listComentarios == null) {
+        if (listComentarios != null) {
+            comentarios = new ArrayList<Comentarios>();
             for (ParseObject objectComentario : listComentarios) {
                 objectAux = object.getParseObject(CComentarios.ID_PERSONA);
                 persona = new Personas(objectAux.getObjectId(), objectAux.getInt(CPersonas.ID_PERSONA), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR));
                 comentario = new Comentarios(objectComentario.getObjectId(), objectComentario.getInt(CComentarios.ID_COMENTARIO), objectComentario.getString(CComentarios.COMENTARIO), persona, objectComentario.getDate(CComentarios.FECHA));
                 comentarios.add(comentario);
             }
-            return comentarios;
-        } else {
-            return null;
         }
+            return comentarios;
     }
 
     @Override

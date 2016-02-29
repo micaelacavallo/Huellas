@@ -6,8 +6,8 @@ import com.parse.ParseObject;
 /**
  * Created by Quimey on 13/09/2015.
  */
-@ParseClassName("Sexos")
-public class Sexos extends ParseObject {
+
+public class Sexos {
 
     private int mIdSexo;
     private String mSexo;
