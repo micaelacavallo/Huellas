@@ -42,7 +42,6 @@ public class PerdidosFragment extends BaseFragment {
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_perdidos, container, false);
         mIperdidosImpl = new IPerdidosImpl(getActivity().getApplicationContext());
-        ((BaseActivity) getActivity()).showOverlay("Cargando publicaciones...");
         new AsyncTaskPerdidos().execute();
         inicializarSwipeRefresh(view);
         inicializarRecycler(view);
@@ -92,14 +91,9 @@ public class PerdidosFragment extends BaseFragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ((BaseActivity)getActivity()).hideOverlay();
-                    Perdidos per = new Perdidos(5000, new Edades("adulto"), new Razas("San Bernardo"), new Especies("conejo"), new Tamaños("grande"), new Colores("marron claro"), new Sexos("macho"), new Estados("buscado"),  new Personas("admin@gmail.com"), new Date(), new ParseGeoPoint(30,30), "holahola", "holahola", null, null, false);
-                   try{
-                    mIperdidosImpl.savePerdido(per);
-                    mSwipeRefreshLayout.setRefreshing(false);}
-                   catch (Exception e){
-                       e.printStackTrace();
-                   }
+                    ((BaseActivity) getActivity()).hideOverlay();
+                    mSwipeRefreshLayout.setRefreshing(false);
+
                 }
             });
         }

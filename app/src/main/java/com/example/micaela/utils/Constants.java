@@ -6,7 +6,7 @@ package com.example.micaela.utils;
 public class Constants {
 
     public static final String SHARED_PREFERENCES_HUELLAS = "HUELLAS";
-    public static final String PUBLICATION_DETAILS_DATE_FORMAT = "dd MMM yyyy HH:mm hs.";
+    public static final String PUBLICATION_DETAILS_DATE_FORMAT = "dd MMM HH:mm";
 
     // PARSE
     public static String APPLICATION_ID = "3EEEv0tiZTfwvODGscyrSSgzJG5lg3gSrVwP51L7";

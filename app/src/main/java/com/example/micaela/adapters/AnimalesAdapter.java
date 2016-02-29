@@ -52,7 +52,10 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
             holder.getTextViewEstado().setBackgroundResource(R.color.blue_light);
         }
 
-        holder.getImageViewFoto().setImageBitmap(((BaseActivity)mContext).convertFromByteToBitmap(mPerdidos.get(position).getFoto()));
+        byte[] foto = mPerdidos.get(position).getFoto();
+        if (foto != null) {
+            holder.getImageViewFoto().setImageBitmap(((BaseActivity) mContext).convertFromByteToBitmap(foto));
+        }
         holder.getTextViewHora().setText(((BaseActivity) mContext).getPublicationTime(mPerdidos.get(position).getFecha()));
 
         holder.getCardContainer().setTag(position);
@@ -60,7 +63,7 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, DetallePublicacionActivity.class);
-                intent.putExtra(Constants.OBJETO_PERDIDO, mPerdidos.get((int)view.getTag()));
+                intent.putExtra(Constants.OBJETO_PERDIDO, mPerdidos.get((int) view.getTag()));
                 mContext.startActivity(intent);
             }
         });

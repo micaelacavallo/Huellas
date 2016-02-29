@@ -9,7 +9,7 @@ import com.parse.ParseObject;
 /**
  * Created by Quimey on 13/09/2015.
  */
-public class Razas {
+public class Razas implements Parcelable{
 
     private int mIdRaza;
     private String mRaza;

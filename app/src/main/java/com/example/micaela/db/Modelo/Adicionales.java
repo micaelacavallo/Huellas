@@ -1,11 +1,7 @@
 package com.example.micaela.db.Modelo;
 
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.parse.ParseClassName;
-import com.parse.ParseObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,7 +10,7 @@ import java.util.List;
 /**
  * Created by Quimey on 13/09/2015.
  */
-public class Adicionales {
+public class Adicionales implements Parcelable {
 
     private int mIdAdicional;
     private String objectId;

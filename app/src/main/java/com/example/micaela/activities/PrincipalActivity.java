@@ -51,6 +51,8 @@ public class PrincipalActivity extends BaseActivity {
         hideOverlay();
         mPager = (ViewPager) findViewById(R.id.pager);
 
+       showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+
         PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setPageTransformer(false, new ZoomOutPageTransformer());

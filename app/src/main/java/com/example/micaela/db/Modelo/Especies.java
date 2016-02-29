@@ -9,8 +9,8 @@ import com.parse.ParseObject;
 /**
  * Created by Quimey on 13/09/2015.
  */
-@ParseClassName("Especies")
-public class Especies extends ParseObject {
+
+public class Especies implements Parcelable{
 
     private int mIdEspecie;
     private String mEspecie;

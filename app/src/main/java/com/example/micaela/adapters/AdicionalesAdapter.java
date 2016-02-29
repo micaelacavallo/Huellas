@@ -35,7 +35,10 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
         holder.getTextViewTitulo().setText(mAdicionales.get(position).getTitulo());
         holder.getTextViewDescripcion().setText(mAdicionales.get(position).getDescripcion());
 
-        holder.getImageViewFoto().setImageBitmap(((BaseActivity) mContext).convertFromByteToBitmap(mAdicionales.get(position).getFoto()));
+        byte[] foto = mAdicionales.get(position).getFoto();
+        if (foto != null) {
+            holder.getImageViewFoto().setImageBitmap(((BaseActivity) mContext).convertFromByteToBitmap(foto));
+        }
         holder.getTextViewHora().setText(((BaseActivity) mContext).getPublicationTime(mAdicionales.get(position).getFecha()));
 
     }

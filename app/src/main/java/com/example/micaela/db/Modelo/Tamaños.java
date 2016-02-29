@@ -10,7 +10,7 @@ import com.parse.ParseObject;
  * Created by Quimey on 13/09/2015.
  */
 
-public class Tamaños {
+public class Tamaños implements Parcelable{
 
     private int mIdTamaño;
     private String mTamaño;

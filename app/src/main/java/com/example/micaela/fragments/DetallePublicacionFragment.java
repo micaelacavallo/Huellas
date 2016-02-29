@@ -33,9 +33,12 @@ public class DetallePublicacionFragment extends BaseFragment {
         mTextViewFecha = (TextView) view.findViewById(R.id.textView_fecha);
         mTextViewSexo = (TextView) view.findViewById(R.id.textView_sexo);
 
-        mImageViewFoto.setImageBitmap(((BaseActivity) getActivity()).convertFromByteToBitmap(perdidos.getFoto()));
-        mTextViewDescripcion.setText(perdidos.getDescripcion());
 
+        byte[] foto = perdidos.getFoto();
+        if (foto != null) {
+            mImageViewFoto.setImageBitmap(((BaseActivity) getActivity()).convertFromByteToBitmap(foto));
+        }
+        mTextViewDescripcion.setText(perdidos.getDescripcion());
 
 
         mTextViewFecha.setText(((BaseActivity)getActivity()).getFormattedDate(perdidos.getFecha()));

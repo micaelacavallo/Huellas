@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by Quimey on 13/09/2015.
  */
-public class Perdidos {
+public class Perdidos implements Parcelable {
 
     private int mIdPerdido;
     private Edades mEdad;
@@ -264,7 +264,7 @@ public class Perdidos {
         this.mObjectId = in.readString();
     }
 
-    public static final Creator<Perdidos> CREATOR = new Creator<Perdidos>() {
+    public static final Parcelable.Creator<Perdidos> CREATOR = new Parcelable.Creator<Perdidos>() {
         public Perdidos createFromParcel(Parcel source) {
             return new Perdidos(source);
         }

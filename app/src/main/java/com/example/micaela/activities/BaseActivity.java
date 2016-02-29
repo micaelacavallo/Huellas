@@ -95,7 +95,7 @@ public class BaseActivity extends AppCompatActivity {
 
     public String getFormattedDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat(Constants.PUBLICATION_DETAILS_DATE_FORMAT, Locale.getDefault());
-        return sdf.format(date);
+        return sdf.format(date) + " hs.";
     }
 
     public String getPublicationTime(Date date) {

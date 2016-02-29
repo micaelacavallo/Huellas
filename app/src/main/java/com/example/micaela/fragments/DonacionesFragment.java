@@ -33,7 +33,6 @@ public class DonacionesFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_donaciones, container, false);
         mIAdicionalesImpl = new IAdicionalesImpl(getActivity().getApplicationContext());
 
-        ((BaseActivity) getActivity()).showOverlay("Cargando publicaciones...");
         new AsyncTaskAdicionales().execute();
         inicializarSwipeRefresh(view);
         inicializarRecycler(view);
