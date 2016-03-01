@@ -9,53 +9,59 @@ import com.example.micaela.huellas.R;
 
 public class AnimalesViewHolder extends RecyclerView.ViewHolder {
 
-    private TextView textViewTitulo;
-    private TextView textViewEstado;
-    private TextView textViewDescripcion;
-    private ImageView imageViewFoto;
-    private View cardEstado;
-    private TextView textViewHora;
-    private ImageView imageViewComentar;
-    private TextView textViewComentar;
+    private TextView mTextViewTitulo;
+    private TextView mTextViewEstado;
+    private TextView mTextViewDescripcion;
+    private ImageView mImageViewFoto;
+    private View mCardEstado;
+    private TextView mTextViewHora;
+    private ImageView mImageViewComentar;
+    private TextView mTextViewComentar;
+    private View mCardContainer;
 
     public AnimalesViewHolder(View itemView) {
         super(itemView);
-        textViewTitulo = (TextView) itemView.findViewById(R.id.textView_titulo);
-        textViewEstado = (TextView) itemView.findViewById(R.id.textView_estado);
-        textViewDescripcion = (TextView) itemView.findViewById(R.id.textView_descripcion);
-        imageViewFoto = (ImageView) itemView.findViewById(R.id.imageView_foto);
-        cardEstado = itemView.findViewById(R.id.card_estado);
-        textViewHora = (TextView) itemView.findViewById(R.id.textView_hora);
-        imageViewComentar = (ImageView) itemView.findViewById(R.id.imageView_comentar);
-        textViewComentar = (TextView) itemView.findViewById(R.id.textView_comentar);
+        mTextViewTitulo = (TextView) itemView.findViewById(R.id.textView_titulo);
+        mTextViewEstado = (TextView) itemView.findViewById(R.id.textView_estado);
+        mTextViewDescripcion = (TextView) itemView.findViewById(R.id.textView_descripcion);
+        mImageViewFoto = (ImageView) itemView.findViewById(R.id.imageView_foto);
+        mCardEstado = itemView.findViewById(R.id.card_estado);
+        mTextViewHora = (TextView) itemView.findViewById(R.id.textView_hora);
+        mImageViewComentar = (ImageView) itemView.findViewById(R.id.imageView_comentar);
+        mTextViewComentar = (TextView) itemView.findViewById(R.id.textView_comentar);
+        mCardContainer = itemView.findViewById(R.id.cardView_container);
     }
 
     public View getCardEstado() {
-        return cardEstado;
+        return mCardEstado;
     }
 
     public TextView getTextViewTitulo() {
-        return textViewTitulo;
+        return mTextViewTitulo;
     }
 
     public TextView getTextViewEstado() {
-        return textViewEstado;
+        return mTextViewEstado;
     }
 
     public TextView getTextViewDescripcion() {
-        return textViewDescripcion;
+        return mTextViewDescripcion;
     }
 
     public ImageView getImageViewFoto() {
-        return imageViewFoto;
+        return mImageViewFoto;
     }
 
     public TextView getTextViewComentar() {
-        return textViewComentar;
+        return mTextViewComentar;
     }
 
     public TextView getTextViewHora() {
-        return textViewHora;
+        return mTextViewHora;
+    }
+
+    public View getCardContainer() {
+        return mCardContainer;
     }
 }
 

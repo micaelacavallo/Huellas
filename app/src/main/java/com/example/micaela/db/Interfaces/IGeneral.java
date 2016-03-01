@@ -25,6 +25,5 @@ public interface IGeneral {
     public void save(ParseObject object);
     public void delete(ParseObject object);
     public void checkInternetGet(ParseQuery<ParseObject> query);
-    public Estados getEstadoNoSolucionado() throws ParseException;
 
 }

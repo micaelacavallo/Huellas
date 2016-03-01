@@ -15,10 +15,20 @@ import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.adapters.AnimalesAdapter;
 import com.example.micaela.db.Controladores.IPerdidosImpl;
 import com.example.micaela.db.Interfaces.IPerdidos;
+import com.example.micaela.db.Modelo.Colores;
+import com.example.micaela.db.Modelo.Edades;
+import com.example.micaela.db.Modelo.Especies;
+import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.db.Modelo.Perdidos;
+import com.example.micaela.db.Modelo.Personas;
+import com.example.micaela.db.Modelo.Razas;
+import com.example.micaela.db.Modelo.Sexos;
+import com.example.micaela.db.Modelo.Tamaños;
 import com.example.micaela.huellas.R;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -32,7 +42,6 @@ public class PerdidosFragment extends BaseFragment {
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_perdidos, container, false);
         mIperdidosImpl = new IPerdidosImpl(getActivity().getApplicationContext());
-        ((BaseActivity) getActivity()).showOverlay("Cargando publicaciones...");
         new AsyncTaskPerdidos().execute();
         inicializarSwipeRefresh(view);
         inicializarRecycler(view);
@@ -75,15 +84,16 @@ public class PerdidosFragment extends BaseFragment {
     private class AsyncTaskPerdidos extends AsyncTask<Void, Void, List<Perdidos>> {
 
         @Override
-        protected void onPostExecute(List<Perdidos> perdidosList) {
+        protected void onPostExecute(final List<Perdidos> perdidosList) {
             super.onPostExecute(perdidosList);
             AnimalesAdapter mAdapter = new AnimalesAdapter(perdidosList, getContext());
             mRecyclerView.setAdapter(mAdapter);
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ((BaseActivity)getActivity()).hideOverlay();
+                    ((BaseActivity) getActivity()).hideOverlay();
                     mSwipeRefreshLayout.setRefreshing(false);
+
                 }
             });
         }

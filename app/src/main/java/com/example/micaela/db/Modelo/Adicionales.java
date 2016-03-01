@@ -1,9 +1,7 @@
 package com.example.micaela.db.Modelo;
 
-import android.net.Uri;
-
-import com.parse.ParseClassName;
-import com.parse.ParseObject;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,8 +10,7 @@ import java.util.List;
 /**
  * Created by Quimey on 13/09/2015.
  */
-@ParseClassName("Adicionales")
-public class Adicionales extends ParseObject {
+public class Adicionales implements Parcelable {
 
     private int mIdAdicional;
     private String objectId;
@@ -22,7 +19,7 @@ public class Adicionales extends ParseObject {
     private Date mFecha;
     private String mTitulo;
     private String mDescripcion;
-    private Uri mFoto;
+    private byte[] mFoto;
     private boolean mDonacion;
     private List<Comentarios> mComentarios;
 
@@ -32,7 +29,7 @@ public class Adicionales extends ParseObject {
         mFoto = null;
         mComentarios = new ArrayList<Comentarios>();
     }
-    public Adicionales(int idAdicional, Personas persona, Estados estado, Date fecha, String titulo, String descripcion, Uri foto, boolean donacion, List<Comentarios> comentarios) {
+    public Adicionales(int idAdicional, Personas persona, Estados estado, Date fecha, String titulo, String descripcion, byte[] foto, boolean donacion, List<Comentarios> comentarios) {
         this.mIdAdicional = idAdicional;
         this.mPersona = persona;
         this.mEstado = estado;
@@ -92,11 +89,11 @@ public class Adicionales extends ParseObject {
         this.mDescripcion = descripcion;
     }
 
-    public Uri getFoto() {
+    public byte[] getFoto() {
         return mFoto;
     }
 
-    public void setFoto(Uri foto) {
+    public void setFoto(byte[] foto) {
         this.mFoto = foto;
     }
 
@@ -123,4 +120,47 @@ public class Adicionales extends ParseObject {
     public void setDonacion(boolean mDonacion) {
         this.mDonacion = mDonacion;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.objectId);
+        dest.writeInt(this.mIdAdicional);
+        dest.writeParcelable(this.mPersona, 0);
+        dest.writeParcelable(this.mEstado, 0);
+        dest.writeLong(mFecha != null ? mFecha.getTime() : -1);
+        dest.writeString(this.mTitulo);
+        dest.writeString(this.mDescripcion);
+        dest.writeByteArray(this.mFoto);
+        dest.writeByte(mDonacion ? (byte) 1 : (byte) 0);
+        dest.writeTypedList(mComentarios);
+    }
+
+    protected Adicionales(Parcel in) {
+        this.objectId = in.readString();
+        this.mIdAdicional = in.readInt();
+        this.mPersona = in.readParcelable(Personas.class.getClassLoader());
+        this.mEstado = in.readParcelable(Estados.class.getClassLoader());
+        long tmpMFecha = in.readLong();
+        this.mFecha = tmpMFecha == -1 ? null : new Date(tmpMFecha);
+        this.mTitulo = in.readString();
+        this.mDescripcion = in.readString();
+        this.mFoto = in.createByteArray();
+        this.mDonacion = in.readByte() != 0;
+        this.mComentarios = in.createTypedArrayList(Comentarios.CREATOR);
+    }
+
+    public static final Parcelable.Creator<Adicionales> CREATOR = new Parcelable.Creator<Adicionales>() {
+        public Adicionales createFromParcel(Parcel source) {
+            return new Adicionales(source);
+        }
+
+        public Adicionales[] newArray(int size) {
+            return new Adicionales[size];
+        }
+    };
 }

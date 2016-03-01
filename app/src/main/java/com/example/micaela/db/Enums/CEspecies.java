@@ -7,4 +7,6 @@ public class CEspecies {
 
     public static String  ID_ESPECIE = "idEspecie";
     public static String  ESPECIE = "especie";
+    public static String  ObjectId = "objectId";
+
 }

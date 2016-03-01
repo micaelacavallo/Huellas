@@ -21,6 +21,8 @@ public class CPerdidos {
     public static String FECHA = "fecha";
     public static String FOTOS = "foto";
     public static String COMENTARIOS = "Comentarios";
+    public static String SOLUCIONADO = "solucionado";
+
 
 
 }

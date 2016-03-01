@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.huellas.R;
 import com.squareup.picasso.Picasso;
@@ -33,7 +34,12 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
     public void onBindViewHolder(AdicionalesViewHolder holder, int position) {
         holder.getTextViewTitulo().setText(mAdicionales.get(position).getTitulo());
         holder.getTextViewDescripcion().setText(mAdicionales.get(position).getDescripcion());
-        Picasso.with(mContext).load(mAdicionales.get(position).getFoto().toString()).into(holder.getImageViewFoto());
+
+        byte[] foto = mAdicionales.get(position).getFoto();
+        if (foto != null) {
+            holder.getImageViewFoto().setImageBitmap(((BaseActivity) mContext).convertFromByteToBitmap(foto));
+        }
+        holder.getTextViewHora().setText(((BaseActivity) mContext).getPublicationTime(mAdicionales.get(position).getFecha()));
 
     }
 
