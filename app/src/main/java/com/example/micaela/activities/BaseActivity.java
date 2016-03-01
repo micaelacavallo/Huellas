@@ -76,6 +76,7 @@ public class BaseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 setResult(-1);
                 finish();
+                logOut();
             }
         });
 

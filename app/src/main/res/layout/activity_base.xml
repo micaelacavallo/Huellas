@@ -59,6 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
+            app:itemTextAppearance="@style/condensed_normal_16"
             app:itemTextColor="@color/primary_text"
             app:menu="@menu/drawer"/>
 
