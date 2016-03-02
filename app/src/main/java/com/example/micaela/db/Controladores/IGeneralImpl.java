@@ -71,6 +71,12 @@ public class IGeneralImpl implements IGeneral {
 
     }
 
+    @Override
+    public List<Estados> getEstados() {
+
+        return mGeneralDAO.getEstados();
+    }
+
     public int getUltimoComentarioInsertado() throws ParseException {
         return mGeneralDAO.getUltimoComentarioInsertado();
     }

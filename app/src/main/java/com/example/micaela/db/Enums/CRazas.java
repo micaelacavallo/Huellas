@@ -7,6 +7,8 @@ public class CRazas {
 
     public static String  ID_RAZA = "idRaza";
     public static String  RAZA = "raza";
+    public static String ID_ESPECIE = "Especies";
+
 
 
 }
