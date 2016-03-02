@@ -170,14 +170,16 @@ public class PrincipalActivity extends BaseActivity {
                 switch (currentPage) {
                     case 0:
                         intent = new Intent(getBaseContext(), AltaAnimalesActivity.class);
+                        startActivity(intent);
                         break;
                     case 1:
                         //   intent = new Intent(PrincipalActivity.this, a.class);
                         break;
                     case 2:
                         //   intent = new Intent(PrincipalActivity.this, a.class);
+                        break;
                 }
-                startActivity(intent);
+              //  startActivity(intent);
             }
         });
     }

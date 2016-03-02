@@ -10,9 +10,13 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="encontrado_mayus">ENCONTRADO</string>
     <string name="buscado_mayus">BUSCADO</string>
-    <string name="buscado_minus">buscado</string>
+    <string name="buscado_minus">Buscado</string>
     <string name="ajustes">Ajustes</string>
     <string name="cerrar_sesion">Cerrar Sesión</string>
     <string name="historial">Mis publicaciones recientes</string>
     <string name="cargando_publicaciones_mensaje">Cargando publicaciones</string>
+    <string name="encontrado_minus">Encontrado</string>
+    <string name="adopcion_minus">Adopción</string>
+    <string name="adopcion_mayus">ADOPCIÓN</string>
+
 </resources>

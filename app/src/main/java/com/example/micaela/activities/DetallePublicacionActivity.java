@@ -11,5 +11,6 @@ public class DetallePublicacionActivity  extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_publicacion);
         getSupportActionBar().hide();
+        getSupportActionBar().setHomeButtonEnabled(false);
     }
 }

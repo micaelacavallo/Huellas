@@ -1,35 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_light"
-    android:fitsSystemWindows="true"
-    >
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/main.appbar"
         android:layout_width="match_parent"
         android:layout_height="350dp"
         android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        >
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
+            android:id="@+id/collapsing_toolbar_detalle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:collapsedTitleTextAppearance="@style/condensed_normal_22"
-            app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
-            app:expandedTitleTextAppearance="@style/CollapseToolbarTextExpandedStyle"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:title="Detalle de publicación"
-            >
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginStart="30dp"
+            app:collapsedTitleTextAppearance="@style/condensed_normal_22"
+            app:expandedTitleTextAppearance="@style/condensed_normal_24"
+            app:expandedTitleMarginEnd="64dp">
+
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_estado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                card_view:cardElevation="2dp">
+
+                <TextView
+                    android:id="@+id/textView_estado"
+                    style="@style/condensed_bold_17"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:background="@color/blue_light"
+                    android:gravity="center"
+                    android:padding="15dp"
+                    android:text="BUSCADO"
+                    android:textColor="@color/primary_text" />
+
+            </android.support.v7.widget.CardView>
 
             <ImageView
                 android:id="@+id/imageView_foto"
@@ -38,47 +54,46 @@
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/placeholder"
-                app:layout_collapseMode="parallax"
-                />
+                app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar2"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
         android:background="@color/white"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:paddingBottom="10dp">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clipToPadding="false"
+            android:padding="5dp">
 
             <TextView
                 style="@style/condensed_bold_18"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/activity_horizontal_margin"
-                android:text="Descripción"
-                />
+                android:text="Descripción" />
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/icons"
                 card_view:cardCornerRadius="1dp"
                 card_view:cardElevation="1dp"
                 card_view:cardMaxElevation="3dp"
-                card_view:cardUseCompatPadding="true"
-                app:cardBackgroundColor="@color/icons">
+                card_view:cardUseCompatPadding="true">
 
 
                 <TextView
@@ -86,9 +101,8 @@
                     style="@style/condensed_normal_17"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="20dp"
-                    android:text="dfsfdfsdfsdfsdfsdfsdfsdfsdsdfsdfsdsddsdfsd"
-                    />
+                    android:padding="15dp"
+                    android:text="dfsfdfsdfsdfsdfsdfsdfsdfsdsdfsdfsdsddsdfsd" />
 
             </android.support.v7.widget.CardView>
 
@@ -97,79 +111,58 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/activity_horizontal_margin"
-                android:text="Características"
-                />
+                android:layout_marginTop="5dp"
+                android:text="Características" />
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/icons"
                 card_view:cardCornerRadius="1dp"
                 card_view:cardElevation="1dp"
                 card_view:cardMaxElevation="3dp"
-                card_view:cardUseCompatPadding="true"
-                app:cardBackgroundColor="@color/icons">
+                card_view:cardUseCompatPadding="true">
 
-                <LinearLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:id="@+id/textView_datos"
+                    style="@style/condensed_normal_17"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/activity_horizontal_margin">
+                    android:paddingBottom="10dp"/>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="5dp">
+                <TextView
+                    android:id="@+id/textView_direccion"
+                    style="@style/condensed_normal_17"
+                    android:text="Ubicación: PROXIMAMENTE"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"/>
 
-                        4<TextView
-                            style="@style/condensed_normal_17"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Fecha de publicación:"
-                            />
+                <TextView
+                    android:id="@+id/textView_fecha"
+                    style="@style/condensed_normal_17"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"/>
 
-                        <TextView
-                            android:id="@+id/textView_fecha"
-                            style="@style/condensed_normal_17"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal"
-                        android:padding="5dp"
-                        >
-
-                        <TextView
-                            style="@style/condensed_normal_17"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Sexo:"
-                            />
-
-                        <TextView
-                            android:id="@+id/textView_sexo"
-                            style="@style/condensed_normal_17"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
+                <TextView
+                    android:id="@+id/textView_persona"
+                    style="@style/condensed_normal_17"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"/>
 
         </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
-</android.support.design.widget.CoordinatorLayout>
+    </android.support.design.widget.CoordinatorLayout>

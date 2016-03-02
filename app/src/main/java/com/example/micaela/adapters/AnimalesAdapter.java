@@ -43,30 +43,60 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
         String title = mPerdidos.get(position).getRaza().getRaza() + " " + mPerdidos.get(position).getColor().getColor();
         holder.getTextViewTitulo().setText(title);
         holder.getTextViewDescripcion().setText(mPerdidos.get(position).getDescripcion());
+        holder.getCardEstado().setVisibility(View.VISIBLE);
 
         if (mPerdidos.get(position).getEstado().getSituacion().equals(mContext.getString(R.string.buscado_minus))) {
             holder.getTextViewEstado().setText(mContext.getString(R.string.buscado_mayus));
             holder.getTextViewEstado().setBackgroundResource(R.color.orange_light);
         } else {
-            holder.getTextViewEstado().setText(mContext.getString(R.string.encontrado_mayus));
-            holder.getTextViewEstado().setBackgroundResource(R.color.blue_light);
+            if (mPerdidos.get(position).getEstado().getSituacion().equals(mContext.getString(R.string.encontrado_minus))) {
+                holder.getTextViewEstado().setText(mContext.getString(R.string.encontrado_mayus));
+                holder.getTextViewEstado().setBackgroundResource(R.color.blue_light);
+            } else {
+                if (mPerdidos.get(position).getEstado().getSituacion().equals(mContext.getString(R.string.adopcion_minus))) {
+                    holder.getTextViewEstado().setText(mContext.getString(R.string.adopcion_mayus));
+                    holder.getTextViewEstado().setBackgroundResource(R.color.green_light);
+                }
+            }
         }
 
         byte[] foto = mPerdidos.get(position).getFoto();
-        if (foto != null) {
+        if (foto != null)
+
+        {
             holder.getImageViewFoto().setImageBitmap(((BaseActivity) mContext).convertFromByteToBitmap(foto));
         }
-        holder.getTextViewHora().setText(((BaseActivity) mContext).getPublicationTime(mPerdidos.get(position).getFecha()));
 
-        holder.getCardContainer().setTag(position);
-        holder.getCardContainer().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, DetallePublicacionActivity.class);
-                intent.putExtra(Constants.OBJETO_PERDIDO, mPerdidos.get((int) view.getTag()));
-                mContext.startActivity(intent);
-            }
-        });
+        holder.getTextViewHora().
+
+                setText(((BaseActivity) mContext
+
+                ).
+
+                        getPublicationTime(mPerdidos.get(position)
+
+                                        .
+
+                                                getFecha()
+
+                        ));
+
+        holder.getCardContainer().
+
+                setTag(position);
+
+        holder.getCardContainer().
+
+                setOnClickListener(new View.OnClickListener() {
+                                       @Override
+                                       public void onClick(View view) {
+                                           Intent intent = new Intent(mContext, DetallePublicacionActivity.class);
+                                           intent.putExtra(Constants.OBJETO_PERDIDO, mPerdidos.get((int) view.getTag()));
+                                           mContext.startActivity(intent);
+                                       }
+                                   }
+
+                );
     }
 
 
