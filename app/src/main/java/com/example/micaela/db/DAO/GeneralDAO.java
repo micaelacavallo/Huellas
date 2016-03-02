@@ -3,20 +3,24 @@ package com.example.micaela.db.DAO;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
 
 import com.example.micaela.db.Enums.CComentarios;
 import com.example.micaela.db.Enums.CEstados;
 import com.example.micaela.db.Enums.CPersonas;
+import com.example.micaela.db.Enums.CRazas;
 import com.example.micaela.db.Enums.Clases;
 import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.db.Modelo.Personas;
+import com.example.micaela.db.Modelo.Razas;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +31,7 @@ import java.util.List;
 public class GeneralDAO implements IGeneral, IDBLocal {
 
     private Context context;
+    private ParseQuery<ParseObject> query;
 
     public GeneralDAO() {
     }
@@ -38,7 +43,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
     @Override
     public Estados getEstado(String situacion) throws ParseException {
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.ESTADOS);
+        query = ParseQuery.getQuery(Clases.ESTADOS);
         query.whereEqualTo(CEstados.SITUACION, situacion);
         Estados estado = null;
         try {
@@ -55,7 +60,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
     @Override
     public Personas getPersona(String email) throws ParseException {
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.PERSONAS);
+        query = ParseQuery.getQuery(Clases.PERSONAS);
         query.whereEqualTo(CPersonas.EMAIL, email);
         Personas persona = null;
         try {
@@ -111,7 +116,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
     @Override
     public ParseObject getComentarioById(String objectId) throws ParseException {
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.COMENTARIOS);
+        query = ParseQuery.getQuery(Clases.COMENTARIOS);
         query.whereEqualTo(CComentarios.OBJECT_ID, objectId);
         // Comentarios comentario = null;
         ParseObject objectAux = null;
@@ -161,9 +166,30 @@ public class GeneralDAO implements IGeneral, IDBLocal {
 
     }
 
+    @Override
+    public List<Estados> getEstados() {
+        query = ParseQuery.getQuery(Clases.ESTADOS);
+        List<Estados> listEstados = null;
+        List<ParseObject> listParseObject = null;
+        Estados estado = null;
+        checkInternetGet(query);
+        try {
+            listParseObject = query.find();
+        } catch (ParseException e) {
+            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
+        }
+
+        for (ParseObject object : listParseObject) {
+            estado = new Estados(object.getObjectId(), object.getInt(CEstados.ID_ESTADO), object.getString(CEstados.SITUACION));
+            listEstados.add(estado);
+        }
+
+        return listEstados;
+    }
+
     public int getUltimoComentarioInsertado() throws ParseException {
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.COMENTARIOS);
+        query = ParseQuery.getQuery(Clases.COMENTARIOS);
         query.orderByDescending(CComentarios.ID_COMENTARIO);
         int idUltimo = 0;
         //capturar si no hay nada insertado
@@ -176,7 +202,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
 
     public String getUltimoObjectId() throws ParseException {
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.COMENTARIOS);
+        query = ParseQuery.getQuery(Clases.COMENTARIOS);
         query.orderByDescending(CComentarios.ID_COMENTARIO);
         String objectId = null;
         try {
