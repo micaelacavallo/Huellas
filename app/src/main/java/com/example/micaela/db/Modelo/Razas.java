@@ -14,6 +14,7 @@ public class Razas implements Parcelable{
     private int mIdRaza;
     private String mRaza;
     private String mObjectId;
+    private Especies mEspecie;
 
 
     public Razas() {
@@ -23,10 +24,11 @@ public class Razas implements Parcelable{
         this.mRaza = raza;
     }
 
-    public Razas(int idRaza, String raza, String objectId) {
+    public Razas(int idRaza, String raza, String objectId, Especies especie) {
         this.mIdRaza = idRaza;
         this.mRaza = raza;
         this.mObjectId = objectId;
+        this.mEspecie = especie;
     }
 
     public int getIdRaza() {
@@ -80,4 +82,36 @@ public class Razas implements Parcelable{
             return new Razas[size];
         }
     };
+
+    public int getmIdRaza() {
+        return mIdRaza;
+    }
+
+    public void setmIdRaza(int mIdRaza) {
+        this.mIdRaza = mIdRaza;
+    }
+
+    public String getmRaza() {
+        return mRaza;
+    }
+
+    public void setmRaza(String mRaza) {
+        this.mRaza = mRaza;
+    }
+
+    public String getmObjectId() {
+        return mObjectId;
+    }
+
+    public void setmObjectId(String mObjectId) {
+        this.mObjectId = mObjectId;
+    }
+
+    public Especies getmEspecie() {
+        return mEspecie;
+    }
+
+    public void setmEspecie(Especies mEspecie) {
+        this.mEspecie = mEspecie;
+    }
 }
