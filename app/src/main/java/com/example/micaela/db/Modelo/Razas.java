@@ -11,7 +11,6 @@ import com.parse.ParseObject;
  */
 public class Razas implements Parcelable{
 
-    private int mIdRaza;
     private String mRaza;
     private String mObjectId;
     private Especies mEspecie;
@@ -24,19 +23,10 @@ public class Razas implements Parcelable{
         this.mRaza = raza;
     }
 
-    public Razas(int idRaza, String raza, String objectId, Especies especie) {
-        this.mIdRaza = idRaza;
+    public Razas(String raza, String objectId, Especies especie) {
         this.mRaza = raza;
         this.mObjectId = objectId;
         this.mEspecie = especie;
-    }
-
-    public int getIdRaza() {
-        return mIdRaza;
-    }
-
-    public void setIdRaza(int idRaza) {
-        this.mIdRaza = idRaza;
     }
 
     public String getRaza() {
@@ -62,13 +52,11 @@ public class Razas implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.mIdRaza);
         dest.writeString(this.mObjectId);
         dest.writeString(this.mRaza);
     }
 
     protected Razas(Parcel in) {
-        this.mIdRaza = in.readInt();
         this.mObjectId = in.readString();
         this.mRaza = in.readString();
     }
@@ -82,14 +70,6 @@ public class Razas implements Parcelable{
             return new Razas[size];
         }
     };
-
-    public int getmIdRaza() {
-        return mIdRaza;
-    }
-
-    public void setmIdRaza(int mIdRaza) {
-        this.mIdRaza = mIdRaza;
-    }
 
     public String getmRaza() {
         return mRaza;

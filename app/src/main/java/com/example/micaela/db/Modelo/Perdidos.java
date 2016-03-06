@@ -17,7 +17,6 @@ import java.util.List;
  */
 public class Perdidos implements Parcelable {
 
-    private int mIdPerdido;
     private Edades mEdad;
     private Razas mRaza;
     private Especies mEspecie;
@@ -35,6 +34,7 @@ public class Perdidos implements Parcelable {
     private List<Comentarios> mComentarios;
     private boolean mSolucionado;
     private String mObjectId;
+    private boolean mBloqueado;
 
 
     public Perdidos() {
@@ -50,8 +50,7 @@ public class Perdidos implements Parcelable {
         mComentarios = new ArrayList<Comentarios>();
     }
 
-    public Perdidos(int idPerdido, Edades edad, Razas raza, Especies especie, Tamaños tamaño, Colores color, Sexos sexo, Estados estado, Personas persona, Date fecha, double latitud, double logitud, String titulo, String descripcion, byte[] foto, List<Comentarios> comentarios, boolean mSolucionado) {
-        this.mIdPerdido = idPerdido;
+    public Perdidos(Edades edad, Razas raza, Especies especie, Tamaños tamaño, Colores color, Sexos sexo, Estados estado, Personas persona, Date fecha, double latitud, double logitud, String titulo, String descripcion, byte[] foto, List<Comentarios> comentarios, boolean mSolucionado, boolean mBloqueado) {
         this.mEdad = edad;
         this.mRaza = raza;
         this.mEspecie = especie;
@@ -68,6 +67,7 @@ public class Perdidos implements Parcelable {
         this.mFoto = foto;
         this.mComentarios = comentarios;
         this.mSolucionado = mSolucionado;
+        this.mBloqueado = mBloqueado;
     }
 
     public double getLongitud() {
@@ -84,14 +84,6 @@ public class Perdidos implements Parcelable {
 
     public void setLatitud(double latitud) {
         mLatitud = latitud;
-    }
-
-    public int getIdPerdido() {
-        return mIdPerdido;
-    }
-
-    public void setIdPerdido(int mIdPerdido) {
-        this.mIdPerdido = mIdPerdido;
     }
 
     public Edades getEdad() {
@@ -215,6 +207,8 @@ public class Perdidos implements Parcelable {
     }
 
 
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -222,7 +216,6 @@ public class Perdidos implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.mIdPerdido);
         dest.writeParcelable(this.mEdad, 0);
         dest.writeParcelable(this.mRaza, 0);
         dest.writeParcelable(this.mEspecie, 0);
@@ -243,7 +236,6 @@ public class Perdidos implements Parcelable {
     }
 
     protected Perdidos(Parcel in) {
-        this.mIdPerdido = in.readInt();
         this.mEdad = in.readParcelable(Edades.class.getClassLoader());
         this.mRaza = in.readParcelable(Razas.class.getClassLoader());
         this.mEspecie = in.readParcelable(Especies.class.getClassLoader());
@@ -273,4 +265,12 @@ public class Perdidos implements Parcelable {
             return new Perdidos[size];
         }
     };
+
+    public boolean isBloqueado() {
+        return mBloqueado;
+    }
+
+    public void setBloqueado(boolean bloqueado) {
+        this.mBloqueado = bloqueado;
+    }
 }

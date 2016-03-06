@@ -11,7 +11,6 @@ import com.parse.ParseObject;
  */
 public class Colores implements Parcelable{
 
-    private int mIdColor;
     private String mColor;
     private String mObjectId;
 
@@ -23,18 +22,9 @@ public class Colores implements Parcelable{
         this.mColor = color;
     }
 
-    public Colores(int idColor, String color, String objectId) {
-        this.mIdColor = idColor;
+    public Colores(String color, String objectId) {
         this.mColor = color;
         this.mObjectId = objectId;
-    }
-
-    public int getIdColor() {
-        return mIdColor;
-    }
-
-    public void setIdColor(int idColor) {
-        this.mIdColor = idColor;
     }
 
     public String getColor() {
@@ -60,13 +50,11 @@ public class Colores implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.mIdColor);
         dest.writeString(this.mColor);
         dest.writeString(this.mObjectId);
     }
 
     protected Colores(Parcel in) {
-        this.mIdColor = in.readInt();
         this.mColor = in.readString();
         this.mObjectId = in.readString();
     }

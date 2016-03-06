@@ -1,30 +1,13 @@
 package com.example.micaela.db.Controladores;
 
 import android.content.Context;
-import android.net.Uri;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.example.micaela.db.DAO.AdicionalesDAO;
-import com.example.micaela.db.Enums.CAdicionales;
-import com.example.micaela.db.Enums.CColores;
-import com.example.micaela.db.Enums.CEstados;
-import com.example.micaela.db.Enums.CPersonas;
-import com.example.micaela.db.Enums.Clases;
 import com.example.micaela.db.Interfaces.IAdicionales;
-import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.Modelo.Adicionales;
-import com.example.micaela.db.Modelo.Colores;
-import com.example.micaela.db.Modelo.Comentarios;
-import com.example.micaela.db.Modelo.Estados;
-import com.example.micaela.db.Modelo.Personas;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseRelation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -50,7 +33,7 @@ public class IAdicionalesImpl implements IAdicionales {
     }
 
     @Override
-    public Adicionales getAdicionalById(int idAdicional) {
+    public Adicionales getAdicionalById(String idAdicional) {
         return mAdicionalesDAO.getAdicionalById(idAdicional);
     }
 
@@ -69,10 +52,6 @@ public class IAdicionalesImpl implements IAdicionales {
         mAdicionalesDAO.editAdicional(adicional);
     }
 
-    @Override
-    public int getUltimoInsertado() throws ParseException {
-        return mAdicionalesDAO.getUltimoInsertado();
-    }
 
     @Override
     public void deleteAdicional(String objectId) throws ParseException {

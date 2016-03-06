@@ -1,4 +1,4 @@
-package com.example.micaela.db.Enums;
+package com.example.micaela.db.Constantes;
 
 /**
  * Created by Horacio on 27/9/2015.
@@ -6,7 +6,6 @@ package com.example.micaela.db.Enums;
 public class CAdicionales {
 
     public static String OBJECT_ID = "objectId";
-    public static String ID_ADICIONAL = "idAdicional";
     public static String TITULO = "titulo";
     public static String DESCRIPCION= "descripcion";
     public static String ID_PERSONA= "Personas";

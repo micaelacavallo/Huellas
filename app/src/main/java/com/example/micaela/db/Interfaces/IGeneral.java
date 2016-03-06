@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Estados;
+import com.example.micaela.db.Modelo.MotivoDenuncia;
 import com.example.micaela.db.Modelo.Personas;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -26,6 +27,9 @@ public interface IGeneral {
     public void delete(ParseObject object);
     public void checkInternetGet(ParseQuery<ParseObject> query);
     public List<Estados> getEstados ();
-
+    public void cambiarEstado(String idpublicacion, boolean estado);
+    public void denunciar(String id, String motivo) throws ParseException;
+    public MotivoDenuncia getMotivoDenuncia(String motivo);
+    public List<MotivoDenuncia> getMotivoDenuncias();
 
 }

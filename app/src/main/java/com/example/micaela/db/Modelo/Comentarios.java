@@ -10,7 +10,6 @@ import java.util.Date;
  */
 public class Comentarios implements Parcelable {
 
-    private int mIdComentario;
     private String mComentario;
     private Personas mPersona;
     private Date mFecha;
@@ -19,20 +18,11 @@ public class Comentarios implements Parcelable {
     public Comentarios() {
     }
 
-    public Comentarios(String objectId, int idComentario, String comentario, Personas persona, Date fecha) {
-        this.mIdComentario = idComentario;
+    public Comentarios(String objectId, String comentario, Personas persona, Date fecha) {
         this.mComentario = comentario;
         this.mPersona = persona;
         this.mFecha = fecha;
         this.mObjectId = objectId;
-    }
-
-    public int getIdComentario() {
-        return mIdComentario;
-    }
-
-    public void setIdComentario(int idComentario) {
-        this.mIdComentario = idComentario;
     }
 
     public String getComentario() {
@@ -74,7 +64,6 @@ public class Comentarios implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.mIdComentario);
         dest.writeString(this.mComentario);
         dest.writeParcelable(this.mPersona, 0);
         dest.writeLong(mFecha != null ? mFecha.getTime() : -1);
@@ -82,7 +71,6 @@ public class Comentarios implements Parcelable {
     }
 
     protected Comentarios(Parcel in) {
-        this.mIdComentario = in.readInt();
         this.mComentario = in.readString();
         this.mPersona = in.readParcelable(Personas.class.getClassLoader());
         long tmpMFecha = in.readLong();

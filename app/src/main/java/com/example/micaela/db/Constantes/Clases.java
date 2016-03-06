@@ -1,4 +1,4 @@
-package com.example.micaela.db.Enums;
+package com.example.micaela.db.Constantes;
 
 /**
  * Created by Horacio on 27/9/2015.
@@ -16,5 +16,8 @@ public class Clases {
     public static String RAZAS = "Razas";
     public static String SEXOS = "Sexos";
     public static String TAMAÑOS = "Tamanos";
+    public static String MOTIVODENUNCIA = "Motivo_denuncia";
+    public static String DENUNCIAS = "Denuncias";
+
 
 }

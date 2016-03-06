@@ -12,7 +12,6 @@ import com.parse.ParseObject;
 
 public class Sexos implements Parcelable {
 
-    private int mIdSexo;
     private String mSexo;
     private String mObjectId;
 
@@ -24,16 +23,9 @@ public class Sexos implements Parcelable {
         this.mSexo = sexo;
     }
 
-    public Sexos(int idSexo, String sexo, String objectId) {
-        this.mIdSexo = idSexo;
+    public Sexos(String sexo, String objectId) {
         this.mSexo = sexo;
         this.mObjectId = objectId;
-    }
-
-    public int getIdSexo() {return mIdSexo;}
-
-    public void setIdSexo(int idSexo) {
-        this.mIdSexo = idSexo;
     }
 
     public String getSexo() {
@@ -59,13 +51,11 @@ public class Sexos implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.mIdSexo);
         dest.writeString(this.mSexo);
         dest.writeString(this.mObjectId);
     }
 
     protected Sexos(Parcel in) {
-        this.mIdSexo = in.readInt();
         this.mSexo = in.readString();
         this.mObjectId = in.readString();
     }

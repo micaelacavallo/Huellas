@@ -8,7 +8,6 @@ import android.os.Parcelable;
  */
 public class Estados implements Parcelable {
 
-    private int mIdEstado;
     private String mSituacion;
     private String mObjectId;
 
@@ -20,20 +19,10 @@ public class Estados implements Parcelable {
         this.mSituacion = situacion;
     }
 
-    public Estados(String objectId, int idEstado, String situacion) {
-        this.mIdEstado = idEstado;
+    public Estados(String objectId, String situacion) {
         this.mSituacion = situacion;
         this.mObjectId = objectId;
     }
-
-    public int getIdEstado() {
-        return mIdEstado;
-    }
-
-    public void setIdEstado(int idEstado) {
-        this.mIdEstado = idEstado;
-    }
-
 
     public String getSituacion() {
         return mSituacion;
@@ -58,13 +47,11 @@ public class Estados implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.mIdEstado);
         dest.writeString(this.mSituacion);
         dest.writeString(this.mObjectId);
     }
 
     protected Estados(Parcel in) {
-        this.mIdEstado = in.readInt();
         this.mSituacion = in.readString();
         this.mObjectId = in.readString();
     }

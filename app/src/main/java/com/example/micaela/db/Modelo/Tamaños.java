@@ -12,7 +12,6 @@ import com.parse.ParseObject;
 
 public class Tamaños implements Parcelable{
 
-    private int mIdTamaño;
     private String mTamaño;
     private String mObjectId;
 
@@ -24,8 +23,7 @@ public class Tamaños implements Parcelable{
         this.mTamaño = tamaño;
     }
 
-    public Tamaños(int idTamaño, String tamaño, String objectId) {
-        this.mIdTamaño = idTamaño;
+    public Tamaños(String tamaño, String objectId) {
         this.mTamaño = tamaño;
         this.mObjectId = objectId;
     }
@@ -36,14 +34,6 @@ public class Tamaños implements Parcelable{
 
     public void setTamaño(String tamaño) {
         this.mTamaño = tamaño;
-    }
-
-    public int getIdTamaño() {
-        return mIdTamaño;
-    }
-
-    public void setIdTamaño(int idTamaño) {
-        this.mIdTamaño = idTamaño;
     }
 
     public String getObjectId() {
@@ -63,13 +53,11 @@ public class Tamaños implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mObjectId);
         dest.writeString(this.mTamaño);
-        dest.writeInt(this.mIdTamaño);
     }
 
     protected Tamaños(Parcel in) {
         this.mObjectId = in.readString();
         this.mTamaño = in.readString();
-        this.mIdTamaño = in.readInt();
     }
 
     public static final Parcelable.Creator<Tamaños> CREATOR = new Parcelable.Creator<Tamaños>() {

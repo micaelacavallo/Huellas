@@ -8,13 +8,13 @@ import android.os.Parcelable;
  */
 public class Personas implements Parcelable {
 
-    private int idPersona;
     private String email;
     private String nombre;
     private String apellido;
     private String telefono;
     private boolean administrador;
     private String objectId;
+    private boolean mBloqueado;
 
     public Personas() {
     }
@@ -23,14 +23,14 @@ public class Personas implements Parcelable {
         this.email = email;
     }
 
-    public Personas(String objectId, int idPersona, String email, String nombre, String apellido, String telefono, boolean administrador) {
-        this.idPersona = idPersona;
+    public Personas(String objectId, String email, String nombre, String apellido, String telefono, boolean administrador, boolean bloqueado) {
         this.email = email;
         this.nombre = nombre;
         this.apellido = apellido;
         this.telefono = telefono;
         this.administrador = administrador;
         this.objectId = objectId;
+        this.mBloqueado = bloqueado;
     }
 
     public String getEmail() {
@@ -73,14 +73,6 @@ public class Personas implements Parcelable {
         this.administrador = administrador;
     }
 
-    public int getIdPersona() {
-        return idPersona;
-    }
-
-    public void setIdPersona(int idPersona) {
-        this.idPersona = idPersona;
-    }
-
     public String getObjectId() {
         return objectId;
     }
@@ -89,6 +81,8 @@ public class Personas implements Parcelable {
         this.objectId = objectId;
     }
 
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -96,7 +90,6 @@ public class Personas implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.idPersona);
         dest.writeString(this.email);
         dest.writeString(this.nombre);
         dest.writeString(this.apellido);
@@ -106,7 +99,6 @@ public class Personas implements Parcelable {
     }
 
     protected Personas(Parcel in) {
-        this.idPersona = in.readInt();
         this.email = in.readString();
         this.nombre = in.readString();
         this.apellido = in.readString();
@@ -124,4 +116,12 @@ public class Personas implements Parcelable {
             return new Personas[size];
         }
     };
+
+    public boolean isBloqueado() {
+        return mBloqueado;
+    }
+
+    public void setBloqueado(boolean bloqueado) {
+        this.mBloqueado = bloqueado;
+    }
 }

@@ -3,6 +3,7 @@ package com.example.micaela.db.Interfaces;
 import android.content.Context;
 
 import com.example.micaela.db.Modelo.Adicionales;
+import com.example.micaela.db.Modelo.MotivoDenuncia;
 import com.parse.ParseException;
 
 import java.util.List;
@@ -15,14 +16,12 @@ public interface IAdicionales {
 
     public List<Adicionales> getDonaciones() throws ParseException;
     public List<Adicionales> getInfoUtil() throws ParseException;
-    public Adicionales getAdicionalById(int idAdicional);
+    public Adicionales getAdicionalById(String idAdicional);
     public void saveAdicional(Adicionales adicional);
     public void editAdicional(Adicionales adicional) throws ParseException;
-    public int getUltimoInsertado() throws ParseException;
     public void deleteAdicional(String objectId) throws  ParseException;
     public void AgregarComentarioAdicional(String adicionalObjectId, String comentario, String email) throws ParseException;
     public void cargarDBLocalDonaciones(Context context) throws ParseException;
     public void cargarDBLocalInfoUtil(Context context) throws ParseException;
-
 
 }

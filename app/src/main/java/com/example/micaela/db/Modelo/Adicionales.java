@@ -12,7 +12,6 @@ import java.util.List;
  */
 public class Adicionales implements Parcelable {
 
-    private int mIdAdicional;
     private String objectId;
     private Personas mPersona;
     private Estados mEstado;
@@ -29,8 +28,7 @@ public class Adicionales implements Parcelable {
         mFoto = null;
         mComentarios = new ArrayList<Comentarios>();
     }
-    public Adicionales(int idAdicional, Personas persona, Estados estado, Date fecha, String titulo, String descripcion, byte[] foto, boolean donacion, List<Comentarios> comentarios) {
-        this.mIdAdicional = idAdicional;
+    public Adicionales(Personas persona, Estados estado, Date fecha, String titulo, String descripcion, byte[] foto, boolean donacion, List<Comentarios> comentarios) {
         this.mPersona = persona;
         this.mEstado = estado;
         this.mFecha = fecha;
@@ -41,13 +39,6 @@ public class Adicionales implements Parcelable {
         this.mComentarios = comentarios;
     }
 
-    public int getIdAdicional() {
-        return mIdAdicional;
-    }
-
-    public void setIdAdicional(int idAdicional) {
-        this.mIdAdicional = idAdicional;
-    }
 
     public Personas getPersona() {
         return mPersona;
@@ -129,7 +120,6 @@ public class Adicionales implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.objectId);
-        dest.writeInt(this.mIdAdicional);
         dest.writeParcelable(this.mPersona, 0);
         dest.writeParcelable(this.mEstado, 0);
         dest.writeLong(mFecha != null ? mFecha.getTime() : -1);
@@ -142,7 +132,6 @@ public class Adicionales implements Parcelable {
 
     protected Adicionales(Parcel in) {
         this.objectId = in.readString();
-        this.mIdAdicional = in.readInt();
         this.mPersona = in.readParcelable(Personas.class.getClassLoader());
         this.mEstado = in.readParcelable(Estados.class.getClassLoader());
         long tmpMFecha = in.readLong();

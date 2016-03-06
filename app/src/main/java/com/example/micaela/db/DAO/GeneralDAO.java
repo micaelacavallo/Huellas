@@ -5,22 +5,24 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
-import com.example.micaela.db.Enums.CComentarios;
-import com.example.micaela.db.Enums.CEstados;
-import com.example.micaela.db.Enums.CPersonas;
-import com.example.micaela.db.Enums.CRazas;
-import com.example.micaela.db.Enums.Clases;
+import com.example.micaela.db.Constantes.CComentarios;
+import com.example.micaela.db.Constantes.CDenuncias;
+import com.example.micaela.db.Constantes.CEstados;
+import com.example.micaela.db.Constantes.CMotivo_denuncia;
+import com.example.micaela.db.Constantes.CPerdidos;
+import com.example.micaela.db.Constantes.CPersonas;
+import com.example.micaela.db.Constantes.Clases;
 import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Estados;
+import com.example.micaela.db.Modelo.MotivoDenuncia;
 import com.example.micaela.db.Modelo.Personas;
-import com.example.micaela.db.Modelo.Razas;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.security.cert.Certificate;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,8 +49,10 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         query.whereEqualTo(CEstados.SITUACION, situacion);
         Estados estado = null;
         try {
-            ParseObject object = query.getFirst();
-            estado = new Estados(object.getObjectId(), object.getInt(CEstados.ID_ESTADO), object.getString(CEstados.SITUACION));
+            if(query.count() != 0) {
+                ParseObject object = query.getFirst();
+                estado = new Estados(object.getObjectId(), object.getString(CEstados.SITUACION));
+            }
         } catch (ParseException e) {
             e.fillInStackTrace();
         }
@@ -64,8 +68,10 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         query.whereEqualTo(CPersonas.EMAIL, email);
         Personas persona = null;
         try {
-            ParseObject object = query.getFirst();
-            persona = new Personas(object.getObjectId(), object.getInt(CPersonas.ID_PERSONA), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.APELLIDO), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR));
+            if(query.count() != 0) {
+                ParseObject object = query.getFirst();
+                persona = new Personas(object.getObjectId(), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.APELLIDO), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR), object.getBoolean(CPersonas.BLOQUEADO));
+            }
         } catch (ParseException e) {
             e.fillInStackTrace();
         }
@@ -85,8 +91,8 @@ public class GeneralDAO implements IGeneral, IDBLocal {
             comentarios = new ArrayList<Comentarios>();
             for (ParseObject objectComentario : listComentarios) {
                 objectAux = object.getParseObject(CComentarios.ID_PERSONA);
-                persona = new Personas(objectAux.getObjectId(), objectAux.getInt(CPersonas.ID_PERSONA), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR));
-                comentario = new Comentarios(objectComentario.getObjectId(), objectComentario.getInt(CComentarios.ID_COMENTARIO), objectComentario.getString(CComentarios.COMENTARIO), persona, objectComentario.getDate(CComentarios.FECHA));
+                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO));
+                comentario = new Comentarios(objectComentario.getObjectId(), objectComentario.getString(CComentarios.COMENTARIO), persona, objectComentario.getDate(CComentarios.FECHA));
                 comentarios.add(comentario);
             }
         }
@@ -97,7 +103,6 @@ public class GeneralDAO implements IGeneral, IDBLocal {
     public ParseObject agregarComentario(String comentario, String email, Context context) throws ParseException {
 
         ParseObject object = new ParseObject(Clases.COMENTARIOS);
-        object.put(CComentarios.ID_COMENTARIO, getUltimoComentarioInsertado());
         object.put(CComentarios.COMENTARIO, comentario);
         object.put(CComentarios.FECHA, new Date());
         Personas persona = getPersona(email);
@@ -122,10 +127,13 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         ParseObject objectAux = null;
 
         try {
-            objectAux = query.getFirst();
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
          /*   ParseObject object = objectAux.getParseObject("personas");
             Personas persona = new Personas(object.getObjectId(), object.getInt(CPersonas.ID_PERSONA), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.APELLIDO), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR));
             comentario = new Comentarios(objectAux.getObjectId(), objectAux.getInt(CComentarios.ID_COMENTARIO), objectAux.getString(CComentarios.COMENTARIO), persona, objectAux.getDate(CComentarios.FECHA));*/
+
+            }
         } catch (ParseException e) {
             e.fillInStackTrace();
         }
@@ -180,34 +188,113 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         }
 
         for (ParseObject object : listParseObject) {
-            estado = new Estados(object.getObjectId(), object.getInt(CEstados.ID_ESTADO), object.getString(CEstados.SITUACION));
+            estado = new Estados(object.getObjectId(), object.getString(CEstados.SITUACION));
             listEstados.add(estado);
         }
 
         return listEstados;
     }
 
-    public int getUltimoComentarioInsertado() throws ParseException {
+    @Override
+    public void cambiarEstado(String idpublicacion, boolean estado) {
 
-        query = ParseQuery.getQuery(Clases.COMENTARIOS);
-        query.orderByDescending(CComentarios.ID_COMENTARIO);
-        int idUltimo = 0;
-        //capturar si no hay nada insertado
-        ParseObject objectAux = query.getFirst();
-        idUltimo = objectAux.getInt(CComentarios.ID_COMENTARIO) + 1;
-        return idUltimo;
+        query = ParseQuery.getQuery(Clases.PERDIDOS);
+        query.whereEqualTo(CPerdidos.OBJECT_ID, idpublicacion);
+        ParseObject objectAux = null;
 
+        try {
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+                objectAux.put(CPerdidos.SOLUCIONADO, estado);
+                if (internet(context)) {
+                    saveInBackground(objectAux);
+                } else {
+                    saveEventually(objectAux);
+                }
+                pinObjectInBackground(objectAux);
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
+    }
+
+    @Override
+    public void denunciar(String id, String motivo) throws ParseException {
+
+        query = ParseQuery.getQuery(Clases.DENUNCIAS);
+        query.whereEqualTo(CDenuncias.ID, id);
+
+        if(query.count() == 0) {
+
+            MotivoDenuncia motivoDenuncia = this.getMotivoDenuncia(motivo);
+
+            ParseObject objectAux = new ParseObject(Clases.DENUNCIAS);
+            objectAux.put(CDenuncias.FECHA, new Date());
+            objectAux.put(CDenuncias.ID, id);
+            objectAux.put(CDenuncias.IS_USER, false);
+            objectAux.put(CDenuncias.MOTIVO_DENUNCIA, ParseObject.createWithoutData(Clases.MOTIVODENUNCIA, String.valueOf(motivoDenuncia.getmObjectId())));
+
+            if (internet(context)) {
+                saveInBackground(objectAux);
+            } else {
+                saveEventually(objectAux);
+            }
+            pinObjectInBackground(objectAux);
+        }
+
+    }
+
+    @Override
+    public MotivoDenuncia getMotivoDenuncia(String motivo) {
+
+        query = ParseQuery.getQuery(Clases.MOTIVODENUNCIA);
+        query.whereEqualTo(CMotivo_denuncia.MOTIVO, motivo);
+        MotivoDenuncia motivoDenuncia = null;
+        try {
+            if(query.count() != 0) {
+                ParseObject object = query.getFirst();
+                motivoDenuncia = new MotivoDenuncia(object.getObjectId(), object.getString(CMotivo_denuncia.MOTIVO));
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
+
+        return motivoDenuncia;
+    }
+
+    @Override
+    public List<MotivoDenuncia> getMotivoDenuncias() {
+
+        query = ParseQuery.getQuery(Clases.MOTIVODENUNCIA);
+        List<MotivoDenuncia> listMotivoDenuncia = new ArrayList<MotivoDenuncia>();
+        List<ParseObject> listParseObject = null;
+        MotivoDenuncia motivoDenuncia = null;
+        checkInternetGet(query);
+        try {
+            listParseObject = query.find();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        for (ParseObject object : listParseObject) {
+            motivoDenuncia = new MotivoDenuncia(object.getObjectId(), object.getString(CMotivo_denuncia.MOTIVO));
+            listMotivoDenuncia.add(motivoDenuncia);
+        }
+
+        return listMotivoDenuncia;
     }
 
 
     public String getUltimoObjectId() throws ParseException {
 
         query = ParseQuery.getQuery(Clases.COMENTARIOS);
-        query.orderByDescending(CComentarios.ID_COMENTARIO);
+        query.orderByDescending(CComentarios.CREATEDAT);
         String objectId = null;
         try {
-            ParseObject objectAux = query.getFirst();
-            objectId = objectAux.getObjectId();
+            if(query.count() != 0) {
+                ParseObject objectAux = query.getFirst();
+                objectId = objectAux.getObjectId();
+            }
         } catch (ParseException e) {
             e.fillInStackTrace();
         }

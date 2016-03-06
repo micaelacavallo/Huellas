@@ -1,4 +1,4 @@
-package com.example.micaela.db.Enums;
+package com.example.micaela.db.Constantes;
 
 /**
  * Created by Horacio on 27/9/2015.
@@ -6,9 +6,10 @@ package com.example.micaela.db.Enums;
 public class CComentarios {
 
     public static String OBJECT_ID = "objectId";
-    public static String ID_COMENTARIO = "idComentario";
     public static String COMENTARIO = "comentario";
     public static String FECHA = "fecha";
     public static String ID_PERSONA= "Personas";
+    public static String CREATEDAT= "createdAt";
+
 
 }

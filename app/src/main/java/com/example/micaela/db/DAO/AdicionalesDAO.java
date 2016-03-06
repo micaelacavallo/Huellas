@@ -1,16 +1,15 @@
 package com.example.micaela.db.DAO;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.micaela.db.Controladores.IGeneralImpl;
-import com.example.micaela.db.Enums.CAdicionales;
-import com.example.micaela.db.Enums.CColores;
-import com.example.micaela.db.Enums.CEstados;
-import com.example.micaela.db.Enums.CPersonas;
-import com.example.micaela.db.Enums.Clases;
+import com.example.micaela.db.Constantes.CAdicionales;
+import com.example.micaela.db.Constantes.CColores;
+import com.example.micaela.db.Constantes.CEstados;
+import com.example.micaela.db.Constantes.CPersonas;
+import com.example.micaela.db.Constantes.Clases;
 import com.example.micaela.db.Interfaces.IAdicionales;
 import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.Modelo.Adicionales;
@@ -75,7 +74,6 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     public void saveColor(Colores color)
     {
         objectAux = new ParseObject(Clases.COLORES);
-        objectAux.put(CColores.ID_COLOR, color.getIdColor());
         objectAux.put(CColores.COLOR, color.getColor());
         save(objectAux);
     }
@@ -83,13 +81,50 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     private ParseObject getEstadoByID(String estadoID) throws ParseException {
         ParseQuery<ParseObject> query = ParseQuery.getQuery(Clases.ESTADOS);
         query.whereEqualTo(CEstados.OBJECT_ID, estadoID);
-        return query.getFirst();
+        if(query.count() != 0) {
+            return query.getFirst();
+        }else{return null;}
     }
 
     @Override
     public List<Adicionales> getInfoUtil() throws ParseException {
 
         adicionales.clear();
+
+        listParseObject = getInfoUtilParseObject();
+
+        if(listParseObject.size() > 0){
+            for(ParseObject object : listParseObject)
+            {
+                objectAux = object.getParseObject(CAdicionales.ID_PERSONA);
+                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO));
+
+                objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
+                estado = new Estados(objectAux.getObjectId(), objectAux.getString(CEstados.SITUACION));
+
+                try {
+                    objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
+                    comentarios = getComentarios(objectRelation.getQuery().find(), object);
+                }catch (Exception e)
+                {
+                    comentarios = null;
+                }
+
+                foto = object.getParseFile(CAdicionales.FOTOS);
+
+                byte[] image = null;
+                if (foto != null) {
+                    image = foto.getData();
+                }
+                adicional = new Adicionales(persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
+                adicionales.add(adicional);
+            }
+        }
+
+        return adicionales;
+    }
+
+    public List<ParseObject> getInfoUtilParseObject() throws ParseException {
 
         query = ParseQuery.getQuery(Clases.ADICIONALES);
         query.include(CAdicionales.ID_PERSONA);
@@ -101,48 +136,56 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
         try{
             listParseObject = query.find();
-
-            if(listParseObject.size() > 0){
-                for(ParseObject object : listParseObject)
-                {
-                    objectAux = object.getParseObject(CAdicionales.ID_PERSONA);
-                    persona = new Personas(objectAux.getObjectId(), objectAux.getInt(CPersonas.ID_PERSONA), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR));
-
-                    objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
-                    estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO), objectAux.getString(CEstados.SITUACION));
-
-
-                    try {
-                        objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
-                        comentarios = getComentarios(objectRelation.getQuery().find(), object);
-                    }catch (Exception e)
-                    {
-                        comentarios = null;
-                    }
-
-                    foto = object.getParseFile(CAdicionales.FOTOS);
-
-                    byte[] image = null;
-                    if (foto != null) {
-                        image = foto.getData();
-                    }
-                    adicional = new Adicionales(object.getInt(CAdicionales.ID_ADICIONAL), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
-                    adicionales.add(adicional);
-                }
-            }
         }
         catch(ParseException e)
         {
-            Log.e(e.getMessage(), "no existe");
+            e.printStackTrace();
         }
 
-        return adicionales;
+        return listParseObject;
     }
+
 
     @Override
     public List<Adicionales> getDonaciones() throws ParseException {
 
         adicionales.clear();
+
+        listParseObject = getDonacionesParseObject();
+
+        if(listParseObject.size() > 0){
+            for(ParseObject object : listParseObject)
+            {
+                objectAux = object.getParseObject(CAdicionales.ID_PERSONA);
+                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO));
+
+                objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
+                estado = new Estados(objectAux.getObjectId(), objectAux.getString(CEstados.SITUACION));
+
+
+                try {
+                    objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
+                    comentarios = getComentarios(objectRelation.getQuery().find(), object);
+                }catch (Exception e)
+                {
+                    comentarios = null;
+                }
+
+                foto = object.getParseFile(CAdicionales.FOTOS);
+                byte[] image = null;
+                if (foto != null) {
+                    image = foto.getData();
+                }
+
+                adicional = new Adicionales(persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
+                adicionales.add(adicional);
+            }
+        }
+
+        return adicionales;
+    }
+
+    public List<ParseObject> getDonacionesParseObject() throws ParseException {
 
         query = ParseQuery.getQuery(Clases.ADICIONALES);
         query.include(CAdicionales.ID_PERSONA);
@@ -154,72 +197,46 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
         try{
             listParseObject = query.find();
-
-            if(listParseObject.size() > 0){
-                for(ParseObject object : listParseObject)
-                {
-                    objectAux = object.getParseObject(CAdicionales.ID_PERSONA);
-                    persona = new Personas(objectAux.getObjectId(), objectAux.getInt(CPersonas.ID_PERSONA), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR));
-
-                    objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
-                    estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO), objectAux.getString(CEstados.SITUACION));
-
-
-                    try {
-                        objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
-                        comentarios = getComentarios(objectRelation.getQuery().find(), object);
-                    }catch (Exception e)
-                    {
-                        comentarios = null;
-                    }
-
-                    foto = object.getParseFile(CAdicionales.FOTOS);
-                    byte[] image = null;
-                    if (foto != null) {
-                        image = foto.getData();
-                    }
-
-                    adicional = new Adicionales(object.getInt(CAdicionales.ID_ADICIONAL), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
-                    adicionales.add(adicional);
-                }
-            }
         }
         catch(ParseException e)
         {
-            Log.e(e.getMessage(), "no existe");
+            e.printStackTrace();
         }
 
-        return adicionales;
+        return listParseObject;
     }
 
+
     @Override
-    public Adicionales getAdicionalById(int idAdicional) {
+    public Adicionales getAdicionalById(String idAdicional) {
 
         query = ParseQuery.getQuery(Clases.ADICIONALES);
         query.include(CAdicionales.ID_PERSONA);
         query.include(CAdicionales.ID_ESTADO);
-        query.whereEqualTo(CAdicionales.ID_ADICIONAL, idAdicional);
+        query.whereEqualTo(CAdicionales.OBJECT_ID, idAdicional);
         checkInternetGet(query);
 
-        try{
-            ParseObject object = query.getFirst();
+        try {
+            if (query.count() != 0) {
+                ParseObject object = query.getFirst();
 
-            objectAux = object.getParseObject(CAdicionales.ID_PERSONA);
-            persona = new Personas(objectAux.getObjectId(), objectAux.getInt(CPersonas.ID_PERSONA), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR));
-            objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
-            estado = new Estados(objectAux.getObjectId(), objectAux.getInt(CEstados.ID_ESTADO),  objectAux.getString(CEstados.SITUACION));
-            objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
-            comentarios = getComentarios(objectRelation.getQuery().find(), object);
-            foto = object.getParseFile(CAdicionales.FOTOS);
-            byte[] image = null;
-            if (foto != null) {
-                image = foto.getData();
+                objectAux = object.getParseObject(CAdicionales.ID_PERSONA);
+                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO));
+                objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
+                estado = new Estados(objectAux.getObjectId(), objectAux.getString(CEstados.SITUACION));
+                objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
+                comentarios = getComentarios(objectRelation.getQuery().find(), object);
+                foto = object.getParseFile(CAdicionales.FOTOS);
+                byte[] image = null;
+                if (foto != null) {
+                    image = foto.getData();
+                }
+                adicional = new Adicionales(persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
             }
-            adicional = new Adicionales(object.getInt(CAdicionales.ID_ADICIONAL), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
         }
         catch(ParseException e)
         {
-            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
+            e.printStackTrace();
         }
 
         return adicional;
@@ -235,7 +252,6 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         adicionalObject.put(CAdicionales.FOTOS, adicional.getFoto());
 
         try {
-            adicionalObject.put(CAdicionales.ID_ADICIONAL, getUltimoInsertado());
             persona = getPersona(adicional.getPersona().getEmail());
             estado = getEstado("-");
         } catch (ParseException e) {
@@ -254,7 +270,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         adicionalObject.put(CAdicionales.DESCRIPCION, adicional.getDescripcion());
         adicionalObject.put(CAdicionales.FECHA, adicional.getFecha());
         adicionalObject.put(CAdicionales.FOTOS, adicional.getFoto());
-        adicionalObject.put(CAdicionales.ID_ADICIONAL, adicional.getIdAdicional());
+        adicionalObject.put(CAdicionales.OBJECT_ID, adicional.getObjectId());
         adicionalObject.put(CAdicionales.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(adicional.getEstado().getObjectId())));
         adicionalObject.put(CAdicionales.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(adicional.getPersona().getObjectId())));
 
@@ -270,44 +286,25 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     }
 
     @Override
-    public int getUltimoInsertado() throws ParseException {
-
-        query = ParseQuery.getQuery(Clases.ADICIONALES);
-        query.orderByDescending(CAdicionales.ID_ADICIONAL);
-        int idUltimo = 0;
-        int size = query.count();
-        if(size != 0) {
-            objectAux = query.getFirst();
-            idUltimo = objectAux.getInt(CAdicionales.ID_ADICIONAL) + 1;
-        }
-        else
-        {
-            idUltimo = 1;
-        }
-        return idUltimo;
-    }
-
-    @Override
     public void deleteAdicional(String objectId) throws ParseException {
 
         query = ParseQuery.getQuery(Clases.ADICIONALES);
         query.whereEqualTo(CAdicionales.OBJECT_ID, objectId);
         checkInternetGet(query);
-        objectAux = query.getFirst();
-        objectRelation = objectAux.getRelation(CAdicionales.ID_COMENTARIOS);
-        try{
-            listParseObject = objectRelation.getQuery().find();
+        if(query.count() != 0) {
+            objectAux = query.getFirst();
+            objectRelation = objectAux.getRelation(CAdicionales.ID_COMENTARIOS);
+            try {
+                listParseObject = objectRelation.getQuery().find();
 
-            for(ParseObject parseObject : listParseObject)
-            {
-                delete(parseObject);
+                for (ParseObject parseObject : listParseObject) {
+                    delete(parseObject);
+                }
+
+                delete(objectAux);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-
-            delete(objectAux);
-        }
-        catch(ParseException e)
-        {
-            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
         }
     }
 
@@ -328,11 +325,13 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         checkInternetGet(query);
 
         try{
-            objectAux = query.getFirst();
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+            }
         }
         catch(ParseException e)
         {
-            Toast.makeText(context, "no existe", Toast.LENGTH_LONG);
+            e.printStackTrace();
         }
 
         return objectAux;
@@ -384,8 +383,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     public void cargarDBLocalDonaciones(Context context) throws ParseException {
 
         if(internet(context)) {
-            adicionales = getDonaciones();
-            //ParseObject.pinAllInBackground(adicionales);
+            ParseObject.pinAllInBackground(getDonacionesParseObject());
         }
     }
 
@@ -393,8 +391,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     public void cargarDBLocalInfoUtil(Context context) throws ParseException {
 
         if(internet(context)) {
-            adicionales = getInfoUtil();
-         //   ParseObject.pinAllInBackground(adicionales);
+            ParseObject.pinAllInBackground(getInfoUtilParseObject());
         }
     }
 

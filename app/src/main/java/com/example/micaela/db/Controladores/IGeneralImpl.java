@@ -6,6 +6,7 @@ import com.example.micaela.db.DAO.GeneralDAO;
 import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Estados;
+import com.example.micaela.db.Modelo.MotivoDenuncia;
 import com.example.micaela.db.Modelo.Personas;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -20,8 +21,11 @@ public class IGeneralImpl implements IGeneral {
 
     private GeneralDAO mGeneralDAO;
 
-    public IGeneralImpl(){
-        mGeneralDAO = new GeneralDAO();
+    public IGeneralImpl(){}
+
+    public IGeneralImpl(Context context){
+
+        mGeneralDAO = new GeneralDAO(context);
     }
 
     @Override
@@ -52,6 +56,7 @@ public class IGeneralImpl implements IGeneral {
 
     @Override
     public boolean internet(Context context) {
+        mGeneralDAO = new GeneralDAO(context);
         return mGeneralDAO.internet(context);
     }
 
@@ -77,13 +82,26 @@ public class IGeneralImpl implements IGeneral {
         return mGeneralDAO.getEstados();
     }
 
-    public int getUltimoComentarioInsertado() throws ParseException {
-        return mGeneralDAO.getUltimoComentarioInsertado();
+    @Override
+    public void cambiarEstado(String idpublicacion, boolean estado) {
+        mGeneralDAO.cambiarEstado(idpublicacion, estado);
     }
 
+    @Override
+    public void denunciar(String id, String motivo) throws ParseException{
 
-    public String getUltimoObjectId() throws ParseException {
-        return mGeneralDAO.getUltimoObjectId();
+        mGeneralDAO.denunciar(id, motivo);
+    }
+
+    @Override
+    public MotivoDenuncia getMotivoDenuncia(String motivo) {
+        return mGeneralDAO.getMotivoDenuncia(motivo);
+    }
+
+    @Override
+    public List<MotivoDenuncia> getMotivoDenuncias() {
+
+        return mGeneralDAO.getMotivoDenuncias();
     }
 
 }

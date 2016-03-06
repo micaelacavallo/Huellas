@@ -39,11 +39,6 @@ public class IPerdidosImpl implements IPerdidos {
     }
 
     @Override
-    public int getUltimoInsertado() throws ParseException {
-        return mPerdidosDAO.getUltimoInsertado();
-    }
-
-    @Override
     public Razas getRaza(String raza) throws ParseException {
         return mPerdidosDAO.getRaza(raza);
     }

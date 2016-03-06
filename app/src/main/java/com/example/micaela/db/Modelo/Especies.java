@@ -12,7 +12,6 @@ import com.parse.ParseObject;
 
 public class Especies implements Parcelable{
 
-    private int mIdEspecie;
     private String mEspecie;
     private String mObjectId;
 
@@ -24,18 +23,9 @@ public class Especies implements Parcelable{
         this.mEspecie = especie;
     }
 
-    public Especies(int idEspecie, String especie, String objectId) {
-        this.mIdEspecie = idEspecie;
+    public Especies(String especie, String objectId) {
         this.mEspecie = especie;
         this.mObjectId = objectId;
-    }
-
-    public int getIdEspecie() {
-        return mIdEspecie;
-    }
-
-    public void setIdEspecie(int idEspecie) {
-        this.mIdEspecie = idEspecie;
     }
 
     public String getEspecie() {
@@ -61,13 +51,11 @@ public class Especies implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.mIdEspecie);
         dest.writeString(this.mEspecie);
         dest.writeString(this.mObjectId);
     }
 
     protected Especies(Parcel in) {
-        this.mIdEspecie = in.readInt();
         this.mEspecie = in.readString();
         this.mObjectId = in.readString();
     }
