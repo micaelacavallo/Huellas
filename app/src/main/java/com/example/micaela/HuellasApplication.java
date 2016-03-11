@@ -4,7 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.util.Log;
 
+import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Edades;
@@ -16,7 +18,12 @@ import com.example.micaela.db.Modelo.Tamaños;
 import com.example.micaela.utils.Constants;
 import com.facebook.FacebookSdk;
 import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
+import com.parse.PushService;
+import com.parse.SaveCallback;
 
 
 public class HuellasApplication extends Application{
@@ -42,6 +49,21 @@ public class HuellasApplication extends Application{
 
         Parse.enableLocalDatastore(getApplicationContext());
         Parse.initialize(getApplicationContext(), Constants.APPLICATION_ID, Constants.CLIENT_ID);
+        ParseInstallation.getCurrentInstallation().saveInBackground();
+       // PushService.subscribe(this, "commentsChannel", PrincipalActivity.class);
+
+        ParsePush.subscribeInBackground("commentsChannel", new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    Log.d("com.parse.push", "successfully subscribed to the broadcast channel.");
+                } else {
+                    Log.e("com.parse.push", "failed to subscribe for push", e);
+                }
+            }
+        });
+
+
     }
 
 
