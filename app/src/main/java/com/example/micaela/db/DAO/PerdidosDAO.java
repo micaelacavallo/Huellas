@@ -166,6 +166,26 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
             e.printStackTrace();
         }
 
+        // ParsePush push = new ParsePush(); push.setChannel("commentsChannel"); push.setMessage("HOLAA, publicacion guardada"); push.sendInBackground();
+
+        JSONObject object = new JSONObject();
+        try {
+            object.put("title", "Hola");
+            object.put("description", "click publicacion");
+            ParsePush pushMessageClient1 = new ParsePush();
+            pushMessageClient1.setData(object);
+            pushMessageClient1.setChannel("commentsChannel");
+            pushMessageClient1.sendInBackground(new SendCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        //Something wrong
+                    }
+                }
+            });
+        } catch (JSONException e)
+        {e.printStackTrace();}
+
         return perdidos;
     }
 
@@ -192,26 +212,6 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        // ParsePush push = new ParsePush(); push.setChannel("commentsChannel"); push.setMessage("HOLAA, publicacion guardada"); push.sendInBackground();
-
-        JSONObject object = new JSONObject();
-        try {
-            object.put("title", "Hola");
-            object.put("description", "click publicacion");
-            ParsePush pushMessageClient1 = new ParsePush();
-            pushMessageClient1.setData(object);
-            pushMessageClient1.setChannel("commentsChannel");
-            pushMessageClient1.sendInBackground(new SendCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        //Something wrong
-                    }
-                }
-            });
-        } catch (JSONException e)
-        {e.printStackTrace();}
 
         return listParseObject;
     }
