@@ -5,11 +5,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 
 import com.example.micaela.fragments.AltaAnimalesFragment;
 import com.example.micaela.huellas.R;
 
-public class AltaAnimalesActivity extends BaseActivity implements AltaAnimalesFragment.PictureURL {
+import java.util.List;
+
+public class AltaAnimalesActivity extends BaseActivity {
 
     private static final int SELECT_PICTURE = 1;
     private String selectedImagePath;
@@ -52,10 +55,17 @@ public class AltaAnimalesActivity extends BaseActivity implements AltaAnimalesFr
         return uri.getPath();
     }
 
-    @Override
-    public String getUrl() {
-        return null;
-    }
 
+    @Override
+    public void onBackPressed() {
+        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+        if (fragmentList != null) {
+            for (Fragment fragment : fragmentList) {
+                if (!((AltaAnimalesFragment) fragment).onBackPressed()) {
+                    super.onBackPressed();
+                }
+            }
+        }
+    }
 
 }

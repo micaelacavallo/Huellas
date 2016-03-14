@@ -44,5 +44,4 @@ public abstract class BaseFragment extends Fragment {
     private void wireUpLayouts(View rootView) {
         mContentLayout = (FrameLayout) rootView.findViewById(R.id.contentPanel);
     }
-
 }
