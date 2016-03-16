@@ -382,8 +382,10 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
     public List<Adicionales> getDonacionesById(String userId) throws ParseException {
 
+        ParseObject obj = ParseObject.createWithoutData(Clases.PERSONAS,userId);
+
         query = getQueryForDonaciones();
-        query.whereEqualTo(CAdicionales.ID_PERSONA, userId);
+        query.whereEqualTo(CAdicionales.ID_PERSONA, obj);
         query.orderByDescending(CAdicionales.FECHA);
         checkInternetGet(query);
 
@@ -397,8 +399,10 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
     private List<Adicionales> getInfoUtilById(String userId) throws ParseException {
 
+        ParseObject obj = ParseObject.createWithoutData(Clases.PERSONAS,userId);
+
         query = getQueryForInfoUtil();
-        query.whereEqualTo(CAdicionales.ID_PERSONA, userId);
+        query.whereEqualTo(CAdicionales.ID_PERSONA, obj);
         query.orderByDescending(CAdicionales.FECHA);
         checkInternetGet(query);
 
