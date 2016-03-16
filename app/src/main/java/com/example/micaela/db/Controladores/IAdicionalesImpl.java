@@ -73,4 +73,9 @@ public class IAdicionalesImpl implements IAdicionales {
         mAdicionalesDAO.cargarDBLocalInfoUtil(context);
     }
 
+    @Override
+    public List<Adicionales> getPublicacionesAdicionalesPropias(String objectId) {
+        return mAdicionalesDAO.getPublicacionesAdicionalesPropias(objectId);
+    }
+
 }

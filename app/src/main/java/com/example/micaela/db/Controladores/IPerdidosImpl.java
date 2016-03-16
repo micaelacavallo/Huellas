@@ -113,4 +113,9 @@ public class IPerdidosImpl implements IPerdidos {
         mPerdidosDAO.cargarDBLocal(context);
     }
 
+    @Override
+    public List<Perdidos> getPublicacionesPerdidosPropias(String objectId) throws ParseException {
+        return mPerdidosDAO.getPublicacionesPerdidosPropias(objectId);
+    }
+
 }

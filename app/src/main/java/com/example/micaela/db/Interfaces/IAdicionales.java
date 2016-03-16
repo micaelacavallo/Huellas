@@ -23,5 +23,7 @@ public interface IAdicionales {
     public void AgregarComentarioAdicional(String adicionalObjectId, String comentario, String email) throws ParseException;
     public void cargarDBLocalDonaciones(Context context) throws ParseException;
     public void cargarDBLocalInfoUtil(Context context) throws ParseException;
+    public List<Adicionales> getPublicacionesAdicionalesPropias(String objectId);
+
 
 }

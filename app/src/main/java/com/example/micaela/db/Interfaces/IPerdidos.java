@@ -37,5 +37,6 @@ public interface IPerdidos {
     public void deletePerdido(String objectId) throws ParseException;
     public void AgregarComentarioPerdido(String perdidoObjectId, String comentario, String email) throws ParseException;
     public void cargarDBLocal(Context context) throws ParseException;
+    public List<Perdidos> getPublicacionesPerdidosPropias(String objectId) throws ParseException;
 
 }

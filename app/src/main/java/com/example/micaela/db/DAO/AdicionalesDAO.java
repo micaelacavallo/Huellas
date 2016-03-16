@@ -93,6 +93,23 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
         listParseObject = getInfoUtilParseObject();
 
+        return getListAdicional(listParseObject);
+    }
+
+    public List<ParseObject> findQuery(){
+        try{
+            listParseObject = query.find();
+        }
+        catch(ParseException e)
+        {
+            e.printStackTrace();
+        }
+
+        return listParseObject;
+
+    }
+
+    public List<Adicionales> getListAdicional(List<ParseObject> listParseObject) throws ParseException {
         if(listParseObject.size() > 0){
             for(ParseObject object : listParseObject)
             {
@@ -114,33 +131,32 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
                 byte[] image = null;
                 if (foto != null) {
-                    image = foto.getData();
+                    image = foto. getData();
                 }
                 adicional = new Adicionales(persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
                 adicionales.add(adicional);
             }
         }
-
         return adicionales;
     }
 
-    public List<ParseObject> getInfoUtilParseObject() throws ParseException {
-
+    public ParseQuery<ParseObject> getQueryForInfoUtil(){
         query = ParseQuery.getQuery(Clases.ADICIONALES);
         query.include(CAdicionales.ID_PERSONA);
         query.include(CAdicionales.ID_ESTADO);
         query.whereEqualTo(CAdicionales.DONACION, false);
-        query.orderByDescending(CAdicionales.FECHA);
         //  query.whereEqualTo(CAdicionales.ID_ESTADO, getEstadoByID("D4ATvjnhj4"));
+
+        return query;
+    }
+
+    public List<ParseObject> getInfoUtilParseObject() throws ParseException {
+
+       query = getQueryForInfoUtil();
+        query.orderByDescending(CAdicionales.FECHA);
         checkInternetGet(query);
 
-        try{
-            listParseObject = query.find();
-        }
-        catch(ParseException e)
-        {
-            e.printStackTrace();
-        }
+        listParseObject = findQuery();
 
         return listParseObject;
     }
@@ -153,55 +169,24 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
         listParseObject = getDonacionesParseObject();
 
-        if(listParseObject.size() > 0){
-            for(ParseObject object : listParseObject)
-            {
-                objectAux = object.getParseObject(CAdicionales.ID_PERSONA);
-                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO));
-
-                objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
-                estado = new Estados(objectAux.getObjectId(), objectAux.getString(CEstados.SITUACION));
-
-
-                try {
-                    objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
-                    comentarios = getComentarios(objectRelation.getQuery().find(), object);
-                }catch (Exception e)
-                {
-                    comentarios = null;
-                }
-
-                foto = object.getParseFile(CAdicionales.FOTOS);
-                byte[] image = null;
-                if (foto != null) {
-                    image = foto.getData();
-                }
-
-                adicional = new Adicionales(persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
-                adicionales.add(adicional);
-            }
-        }
-
-        return adicionales;
+      return getListAdicional(listParseObject);
     }
 
-    public List<ParseObject> getDonacionesParseObject() throws ParseException {
-
+    public ParseQuery<ParseObject> getQueryForDonaciones(){
         query = ParseQuery.getQuery(Clases.ADICIONALES);
         query.include(CAdicionales.ID_PERSONA);
         query.include(CAdicionales.ID_ESTADO);
         query.whereEqualTo(CAdicionales.DONACION, true);
-        query.orderByDescending(CAdicionales.FECHA);
         //  query.whereEqualTo(CAdicionales.ID_ESTADO, getEstadoByID("D4ATvjnhj4"));
-        checkInternetGet(query);
 
-        try{
-            listParseObject = query.find();
-        }
-        catch(ParseException e)
-        {
-            e.printStackTrace();
-        }
+        return query;
+    }
+
+    public List<ParseObject> getDonacionesParseObject() throws ParseException {
+
+        query = getQueryForDonaciones();
+
+        listParseObject = findQuery();
 
         return listParseObject;
     }
@@ -393,6 +378,55 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         if(internet(context)) {
             ParseObject.pinAllInBackground(getInfoUtilParseObject());
         }
+    }
+
+    public List<Adicionales> getDonacionesById(String userId) throws ParseException {
+
+        query = getQueryForDonaciones();
+        query.whereEqualTo(CAdicionales.ID_PERSONA, userId);
+        query.orderByDescending(CAdicionales.FECHA);
+        checkInternetGet(query);
+
+        listParseObject = findQuery();
+
+        return getListAdicional(listParseObject);
+    }
+
+
+
+
+    private List<Adicionales> getInfoUtilById(String userId) throws ParseException {
+
+        query = getQueryForInfoUtil();
+        query.whereEqualTo(CAdicionales.ID_PERSONA, userId);
+        query.orderByDescending(CAdicionales.FECHA);
+        checkInternetGet(query);
+
+        listParseObject = findQuery();
+
+        return getListAdicional(listParseObject);
+    }
+
+
+
+    @Override
+    public List<Adicionales> getPublicacionesAdicionalesPropias(String objectId) {
+
+        List<Adicionales> listAdicionales = null;
+        try {
+            List<Adicionales> donaciones = getDonacionesById(objectId);
+
+            List<Adicionales> infoUtil = getInfoUtilById(objectId);
+
+            listAdicionales = new ArrayList<Adicionales>(donaciones);
+            listAdicionales.addAll(infoUtil);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return listAdicionales;
+
     }
 
     @Override
