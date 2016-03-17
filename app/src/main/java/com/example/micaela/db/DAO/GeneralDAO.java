@@ -20,7 +20,12 @@ import com.example.micaela.db.Modelo.MotivoDenuncia;
 import com.example.micaela.db.Modelo.Personas;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
+import com.parse.SendCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -114,6 +119,26 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         }
         pinObjectInBackground(object);
         ParseObject objectComentario = getComentarioById(getUltimoObjectId());
+
+        //push notification
+        JSONObject object2 = new JSONObject();
+        try {
+            object2.put("title", "se ha agregado un comentario en una publicacion");
+            object2.put("description", "click publicacion");
+            ParsePush push = new ParsePush();
+            push.setData(object2);
+            push.setChannel("commentsChannel");
+            push.sendInBackground(new SendCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (JSONException e)
+        {e.printStackTrace();}
+
 
         return objectComentario;
     }

@@ -395,8 +395,6 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     }
 
 
-
-
     private List<Adicionales> getInfoUtilById(String userId) throws ParseException {
 
         ParseObject obj = ParseObject.createWithoutData(Clases.PERSONAS,userId);

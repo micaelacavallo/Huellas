@@ -49,20 +49,10 @@ public class HuellasApplication extends Application{
 
         Parse.enableLocalDatastore(getApplicationContext());
         Parse.initialize(getApplicationContext(), Constants.APPLICATION_ID, Constants.CLIENT_ID);
+
+        //push notifications
         ParseInstallation.getCurrentInstallation().saveInBackground();
-       // PushService.subscribe(this, "commentsChannel", PrincipalActivity.class);
-
-        ParsePush.subscribeInBackground("commentsChannel", new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    Log.d("com.parse.push", "successfully subscribed to the broadcast channel.");
-                } else {
-                    Log.e("com.parse.push", "failed to subscribe for push", e);
-                }
-            }
-        });
-
+        ParsePush.subscribeInBackground("commentsChannel");
 
     }
 

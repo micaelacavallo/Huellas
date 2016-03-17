@@ -39,9 +39,9 @@ public class CustomPushReceiver extends ParsePushBroadcastReceiver {
             Log.e(TAG, "Push message json exception: " + e.getMessage());
         }
 
-        if(pushData.has("HOLA") && pushData.has("primer msj")){
+        if(pushData.has("HOLA!") && pushData.has("primer msj")){
 
-            String titulo = pushData.optString("HOLA");
+            String titulo = pushData.optString("HOLA!");
             String mensaje = pushData.optString("primer msj");
 
             Notification notification = new NotificationCompat.Builder(

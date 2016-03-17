@@ -5,6 +5,7 @@ package com.example.micaela.db.Constantes;
  */
 public class CPersonas {
 
+    public static String OBJECT_ID = "objectId";
     public static String  NOMBRE = "nombre";
     public static String  APELLIDO = "apellido";
     public static String  EMAIL = "email";

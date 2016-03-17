@@ -185,26 +185,6 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
             e.printStackTrace();
         }
 
-        // ParsePush push = new ParsePush(); push.setChannel("commentsChannel"); push.setMessage("HOLAA, publicacion guardada"); push.sendInBackground();
-
-        JSONObject object = new JSONObject();
-        try {
-            object.put("title", "Hola");
-            object.put("description", "click publicacion");
-            ParsePush pushMessageClient1 = new ParsePush();
-            pushMessageClient1.setData(object);
-            pushMessageClient1.setChannel("commentsChannel");
-            pushMessageClient1.sendInBackground(new SendCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        //Something wrong
-                    }
-                }
-            });
-        } catch (JSONException e)
-        {e.printStackTrace();}
-
         return getListPerdidos(listParseObject);
     }
 
@@ -675,8 +655,10 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public List<Perdidos> getPublicacionesPerdidosPropias(String objectId) throws ParseException {
 
+        ParseObject obj = ParseObject.createWithoutData(Clases.PERSONAS,objectId);
+
         query = getQueryPerdidos();
-        query.whereEqualTo(CPerdidos.ID_PERSONA, objectId);
+        query.whereEqualTo(CPerdidos.ID_PERSONA, obj);
         query.orderByDescending(CPerdidos.FECHA);
         checkInternetGet(query);
 
