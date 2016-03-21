@@ -51,8 +51,10 @@ public class HuellasApplication extends Application{
         Parse.initialize(getApplicationContext(), Constants.APPLICATION_ID, Constants.CLIENT_ID);
 
         //push notifications
-        ParseInstallation.getCurrentInstallation().saveInBackground();
-        ParsePush.subscribeInBackground("commentsChannel");
+        // Associate the device with a user
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("user",getProfileNameFacebook());
+        installation.saveInBackground();
 
     }
 

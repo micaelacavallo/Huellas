@@ -16,6 +16,7 @@ import com.example.micaela.db.Constantes.CSexos;
 import com.example.micaela.db.Constantes.CTamaños;
 import com.example.micaela.db.Constantes.Clases;
 import com.example.micaela.db.Interfaces.IDBLocal;
+import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Interfaces.IPerdidos;
 import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Comentarios;
@@ -49,41 +50,41 @@ import java.util.List;
 
 public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
 
-    ParseObject perdidosObject;
-    Context context;
-
-    ParseQuery<ParseObject> query;
-    List<Perdidos> perdidos;
-    ParseObject objectAux;
-    Razas raza;
-    Colores color;
-    Sexos sexo;
-    Tamaños tamaño;
-    Edades edad;
-    Especies especie;
-    Personas persona;
-    Estados estado;
-    ParseFile foto;
-    List<ParseObject> listParseObject;
-    ParseRelation objectRelation;
-    List<Comentarios> comentarios;
-    Perdidos perdido;
-    List<Razas> razas;
-    List<Tamaños> tamaños;
-    List<Especies> especies;
-    List<Colores> colores;
-    List<Sexos> sexos;
-    List<Edades> edades;
+    private ParseObject perdidosObject;
+    private Context context;
+    private ParseQuery<ParseObject> query;
+    private List<Perdidos> perdidos;
+    private ParseObject objectAux;
+    private Razas raza;
+    private Colores color;
+    private Sexos sexo;
+    private Tamaños tamaño;
+    private Edades edad;
+    private Especies especie;
+    private Personas persona;
+    private Estados estado;
+    private ParseFile foto;
+    private List<ParseObject> listParseObject;
+    private ParseRelation objectRelation;
+    private List<Comentarios> comentarios;
+    private Perdidos perdido;
+    private List<Razas> razas;
+    private List<Tamaños> tamaños;
+    private List<Especies> especies;
+    private List<Colores> colores;
+    private List<Sexos> sexos;
+    private List<Edades> edades;
+    private IGeneral iGeneral;
 
 
     public PerdidosDAO(Context context) {
 
         this.context = context;
-        init();
+        init(context);
 
     }
 
-    public void init() {
+    public void init(Context context) {
         perdidosObject = ParseObject.create(Clases.PERDIDOS);
         query = null;
         perdidos = new ArrayList<>();
@@ -107,6 +108,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         colores = new ArrayList<>();
         sexos = new ArrayList<>();
         edades = new ArrayList<>();
+        iGeneral = new IGeneralImpl(context);
     }
 
 
@@ -184,6 +186,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        iGeneral.startAlert();
 
         return getListPerdidos(listParseObject);
     }

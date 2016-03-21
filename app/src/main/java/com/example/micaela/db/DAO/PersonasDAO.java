@@ -6,9 +6,11 @@ import android.net.NetworkInfo;
 
 import com.example.micaela.db.Constantes.CDenuncias;
 import com.example.micaela.db.Constantes.CMotivo_denuncia;
+import com.example.micaela.db.Constantes.CPersonas;
 import com.example.micaela.db.Constantes.Clases;
 import com.example.micaela.db.Interfaces.IPersonas;
 import com.example.micaela.db.Modelo.MotivoDenuncia;
+import com.example.micaela.db.Modelo.Personas;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -24,9 +26,13 @@ public class PersonasDAO implements IPersonas {
 
     private ParseQuery<ParseObject> query;
     private Context context;
+    private ParseObject parseObject;
 
     public PersonasDAO(Context context) {
+
         this.context = context;
+        parseObject = ParseObject.create(Clases.PERSONAS);
+
     }
 
 
@@ -121,6 +127,33 @@ public class PersonasDAO implements IPersonas {
                     haveConnectedMobile = true;
         }
         return haveConnectedWifi || haveConnectedMobile;
+    }
+
+    @Override
+    public void registar(Personas persona) {
+
+        parseObject.put(CPersonas.NOMBRE, persona.getNombre());
+        parseObject.put(CPersonas.APELLIDO, persona.getApellido());
+        parseObject.put(CPersonas.EMAIL, persona.getEmail());
+        parseObject.put(CPersonas.TELEFONO, persona.getTelefono());
+        parseObject.put(CPersonas.BLOQUEADO, false);
+        parseObject.put(CPersonas.ADMINISTRADOR, false);
+        
+        save(parseObject);
+    }
+
+    public void save(ParseObject object) {
+
+        if(internet(context)) {
+            object.saveInBackground();
+        }
+        else
+        {
+            object.saveEventually();
+        }
+
+        object.pinInBackground();
+
     }
 
 }

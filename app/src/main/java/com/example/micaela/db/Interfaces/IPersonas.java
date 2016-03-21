@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.MotivoDenuncia;
+import com.example.micaela.db.Modelo.Personas;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -21,5 +22,6 @@ public interface IPersonas {
     public List<MotivoDenuncia> getMotivoDenuncias();
     public void checkInternetGet(ParseQuery<ParseObject> query);
     public boolean internet(Context context);
+    public void registar(Personas personas);
 
 }
