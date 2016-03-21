@@ -138,7 +138,8 @@ public class PersonasDAO implements IPersonas {
         parseObject.put(CPersonas.TELEFONO, persona.getTelefono());
         parseObject.put(CPersonas.BLOQUEADO, false);
         parseObject.put(CPersonas.ADMINISTRADOR, false);
-        
+        parseObject.put(CPersonas.CONTRASEÑA, "-");
+
         save(parseObject);
     }
 

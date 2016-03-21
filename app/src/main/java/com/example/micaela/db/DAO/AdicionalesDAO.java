@@ -116,7 +116,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
             for(ParseObject object : listParseObject)
             {
                 objectAux = object.getParseObject(CAdicionales.ID_PERSONA);
-                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO));
+                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO),  objectAux.getString(CPersonas.CONTRASEÑA));
 
                 objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
                 estado = new Estados(objectAux.getObjectId(), objectAux.getString(CEstados.SITUACION));
@@ -210,7 +210,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                 ParseObject object = query.getFirst();
 
                 objectAux = object.getParseObject(CAdicionales.ID_PERSONA);
-                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO));
+                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO),  objectAux.getString(CPersonas.CONTRASEÑA));
                 objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
                 estado = new Estados(objectAux.getObjectId(), objectAux.getString(CEstados.SITUACION));
                 objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);

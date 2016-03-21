@@ -9,6 +9,7 @@ public class CPersonas {
     public static String  NOMBRE = "nombre";
     public static String  APELLIDO = "apellido";
     public static String  EMAIL = "email";
+    public static String  CONTRASEÑA = "contrasena";
     public static String  TELEFONO = "telefono";
     public static String  BLOQUEADO = "bloqueado";
     public static String  ADMINISTRADOR = "administrador";
