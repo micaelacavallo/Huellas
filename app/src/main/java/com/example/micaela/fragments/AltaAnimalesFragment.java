@@ -66,8 +66,6 @@ public class AltaAnimalesFragment extends BaseFragment {
         });
 
 
-
-
         return view;
 
     }

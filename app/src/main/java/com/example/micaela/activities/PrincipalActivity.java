@@ -94,12 +94,12 @@ public class PrincipalActivity extends BaseActivity {
 
         mUserNameTextView = (TextView) header.findViewById(R.id.nav_drawer_nombre_cuenta);
         mUserPhotoImageView = (ImageView) header.findViewById(R.id.nav_drawer_foto_perfil);
-        if (HuellasApplication.getInstance().getAccessTokenFacebook().equals("")) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivityForResult(intent, Constants.REQUEST_CODE_OK);
-        } else {
-            updateFacebookData();
-        }
+//        if (HuellasApplication.getInstance().getAccessTokenFacebook().equals("")) {
+//            Intent intent = new Intent(this, LoginActivity.class);
+//            startActivityForResult(intent, Constants.REQUEST_CODE_OK);
+//        } else {
+//            updateFacebookData();
+//        }
     }
 
     private void updateFacebookData() {
