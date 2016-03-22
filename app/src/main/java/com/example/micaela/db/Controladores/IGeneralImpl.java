@@ -104,4 +104,9 @@ public class IGeneralImpl implements IGeneral {
         return mGeneralDAO.getMotivoDenuncias();
     }
 
+    @Override
+    public void startAlert() {
+        mGeneralDAO.startAlert();
+    }
+
 }

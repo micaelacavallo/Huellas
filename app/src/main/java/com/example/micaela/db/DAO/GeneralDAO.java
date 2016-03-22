@@ -1,10 +1,14 @@
 package com.example.micaela.db.DAO;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
+import com.example.micaela.db.AlarmManager.AlarmReceiver;
 import com.example.micaela.db.Constantes.CComentarios;
 import com.example.micaela.db.Constantes.CDenuncias;
 import com.example.micaela.db.Constantes.CEstados;
@@ -19,6 +23,7 @@ import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.db.Modelo.MotivoDenuncia;
 import com.example.micaela.db.Modelo.Personas;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
@@ -29,8 +34,10 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by quimey.arozarena on 12/22/2015.
@@ -75,7 +82,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         try {
             if(query.count() != 0) {
                 ParseObject object = query.getFirst();
-                persona = new Personas(object.getObjectId(), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.APELLIDO), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR), object.getBoolean(CPersonas.BLOQUEADO));
+                persona = new Personas(object.getObjectId(), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.APELLIDO), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR), object.getBoolean(CPersonas.BLOQUEADO),  object.getString(CPersonas.CONTRASEÑA));
             }
         } catch (ParseException e) {
             e.fillInStackTrace();
@@ -96,7 +103,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
             comentarios = new ArrayList<Comentarios>();
             for (ParseObject objectComentario : listComentarios) {
                 objectAux = object.getParseObject(CComentarios.ID_PERSONA);
-                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO));
+                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO), objectAux.getString(CPersonas.CONTRASEÑA));
                 comentario = new Comentarios(objectComentario.getObjectId(), objectComentario.getString(CComentarios.COMENTARIO), persona, objectComentario.getDate(CComentarios.FECHA));
                 comentarios.add(comentario);
             }
@@ -121,13 +128,19 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         ParseObject objectComentario = getComentarioById(getUltimoObjectId());
 
         //push notification
+        // Create our Installation query
+        ParseQuery pushQuery = ParseInstallation.getQuery();
+        pushQuery.whereEqualTo("user", "Quimey");
+
+        // Send push notification to query
+
         JSONObject object2 = new JSONObject();
         try {
             object2.put("title", "se ha agregado un comentario en una publicacion");
-            object2.put("description", "click publicacion");
+            object2.put("description", "traer comentario de la publicacion");
             ParsePush push = new ParsePush();
+            push.setQuery(pushQuery); // Set our Installation query
             push.setData(object2);
-            push.setChannel("commentsChannel");
             push.sendInBackground(new SendCallback() {
                 @Override
                 public void done(ParseException e) {
@@ -309,6 +322,18 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         return listMotivoDenuncia;
     }
 
+    @Override
+    public void startAlert() {
+
+        long repeatTime = TimeUnit.MINUTES.toMillis(180);
+
+        AlarmManager service = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pending = PendingIntent.getBroadcast(context, 0, intent, 0);
+
+        //AlarmManager.RTC_WAKEUP se sigue ejecutando por mas que este apagado
+        service.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), repeatTime, pending);
+    }
 
     public String getUltimoObjectId() throws ParseException {
 

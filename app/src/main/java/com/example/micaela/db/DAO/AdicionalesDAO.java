@@ -12,6 +12,7 @@ import com.example.micaela.db.Constantes.CPersonas;
 import com.example.micaela.db.Constantes.Clases;
 import com.example.micaela.db.Interfaces.IAdicionales;
 import com.example.micaela.db.Interfaces.IDBLocal;
+import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Comentarios;
@@ -32,28 +33,28 @@ import java.util.List;
 public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLocal {
 
 
-    ParseObject adicionalObject;
-    Context context;
-
-    ParseQuery<ParseObject> query;
-    ParseObject objectAux;
-    Personas persona;
-    Estados estado;
-    ParseFile foto;
-    List<ParseObject> listParseObject;
-    ParseRelation objectRelation;
-    List<Comentarios> comentarios;
-    List<Adicionales> adicionales = new ArrayList<>();
-    Adicionales adicional = null;
-    Comentarios comentario;
+    private ParseObject adicionalObject;
+    private Context context;
+    private ParseQuery<ParseObject> query;
+    private ParseObject objectAux;
+    private Personas persona;
+    private Estados estado;
+    private ParseFile foto;
+    private List<ParseObject> listParseObject;
+    private ParseRelation objectRelation;
+    private List<Comentarios> comentarios;
+    private List<Adicionales> adicionales = new ArrayList<>();
+    private Adicionales adicional = null;
+    private Comentarios comentario;
+    private IGeneral iGeneral;
 
     public AdicionalesDAO(Context context)
     {
         this.context = context;
-        init();
+        init(context);
     }
 
-    public void init()
+    public void init(Context context)
     {
         adicionalObject = ParseObject.create(Clases.ADICIONALES);
         query = null;
@@ -68,6 +69,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         adicionales = new ArrayList<>();
         adicional = null;
         comentarios = new ArrayList<>();
+        iGeneral = new IGeneralImpl(context);
 
     }
 
@@ -114,7 +116,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
             for(ParseObject object : listParseObject)
             {
                 objectAux = object.getParseObject(CAdicionales.ID_PERSONA);
-                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO));
+                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO),  objectAux.getString(CPersonas.CONTRASEÑA));
 
                 objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
                 estado = new Estados(objectAux.getObjectId(), objectAux.getString(CEstados.SITUACION));
@@ -137,6 +139,8 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                 adicionales.add(adicional);
             }
         }
+        iGeneral.startAlert();
+
         return adicionales;
     }
 
@@ -206,7 +210,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                 ParseObject object = query.getFirst();
 
                 objectAux = object.getParseObject(CAdicionales.ID_PERSONA);
-                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO));
+                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO),  objectAux.getString(CPersonas.CONTRASEÑA));
                 objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
                 estado = new Estados(objectAux.getObjectId(), objectAux.getString(CEstados.SITUACION));
                 objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);

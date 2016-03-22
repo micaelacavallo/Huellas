@@ -58,6 +58,8 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <!-- Registro del BroadcastReceiver -->
+        <receiver android:name="com.example.micaela.db.AlarmManager.AlarmReceiver"  android:enabled="true"/>
 
         <service android:name="com.parse.PushService" />
         <receiver android:name="com.parse.ParseBroadcastReceiver">
@@ -66,7 +68,7 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.example.micaela.PushNotifications.CustomPushReceiver"
+        <receiver android:name="com.parse.ParsePushBroadcastReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />

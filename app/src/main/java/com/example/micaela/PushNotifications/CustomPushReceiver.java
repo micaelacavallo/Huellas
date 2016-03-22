@@ -60,6 +60,7 @@ public class CustomPushReceiver extends ParsePushBroadcastReceiver {
         }
     }
 
+
     @Override
     public void onReceive(Context context, Intent intent) {
         try {

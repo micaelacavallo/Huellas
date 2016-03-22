@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.micaela.db.DAO.PersonasDAO;
 import com.example.micaela.db.Interfaces.IPersonas;
 import com.example.micaela.db.Modelo.MotivoDenuncia;
+import com.example.micaela.db.Modelo.Personas;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -45,5 +46,10 @@ public class IPersonasImpl implements IPersonas {
     @Override
     public boolean internet(Context context) {
         return false;
+    }
+
+    @Override
+    public void registar(Personas personas) {
+        mPersonasDAO.registar(personas);
     }
 }
