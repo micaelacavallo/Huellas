@@ -51,7 +51,7 @@ public class PrincipalActivity extends BaseActivity {
         hideOverlay();
         mPager = (ViewPager) findViewById(R.id.pager);
 
-       showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+        showOverlay(getString(R.string.cargando_publicaciones_mensaje));
 
         PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
@@ -94,12 +94,12 @@ public class PrincipalActivity extends BaseActivity {
 
         mUserNameTextView = (TextView) header.findViewById(R.id.nav_drawer_nombre_cuenta);
         mUserPhotoImageView = (ImageView) header.findViewById(R.id.nav_drawer_foto_perfil);
-//        if (HuellasApplication.getInstance().getAccessTokenFacebook().equals("")) {
-//            Intent intent = new Intent(this, LoginActivity.class);
-//            startActivityForResult(intent, Constants.REQUEST_CODE_OK);
-//        } else {
-//            updateFacebookData();
-//        }
+        if (HuellasApplication.getInstance().getAccessTokenFacebook().equals("")) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, Constants.REQUEST_CODE_OK);
+        } else {
+            updateFacebookData();
+        }
     }
 
     private void updateFacebookData() {
@@ -179,7 +179,7 @@ public class PrincipalActivity extends BaseActivity {
                         //   intent = new Intent(PrincipalActivity.this, a.class);
                         break;
                 }
-              //  startActivity(intent);
+                //  startActivity(intent);
             }
         });
     }
@@ -193,7 +193,9 @@ public class PrincipalActivity extends BaseActivity {
                         mDrawerLayout.closeDrawers();
                         switch (menuItem.getItemId()) {
                             case R.id.nav_drawer_cerrar_sesion:
+                                showOverlay("Cerrando sesión");
                                 logOut();
+                                hideOverlay();
                                 break;
                         }
 

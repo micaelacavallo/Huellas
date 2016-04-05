@@ -1,21 +1,23 @@
 package com.example.micaela.fragments;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.widget.CardView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
-
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.micaela.activities.BaseActivity;
@@ -28,7 +30,6 @@ import static com.example.micaela.utils.SpannableUtils.bold;
 public class DetallePublicacionFragment extends BaseFragment {
 
     TextView mTextViewEstado;
-    ImageView mImageViewFoto;
     TextView mTextViewDescripcion;
     TextView mTextViewFecha;
     TextView mTextViewDatos;
@@ -56,11 +57,9 @@ public class DetallePublicacionFragment extends BaseFragment {
                 }
             }
         }
-
         byte[] foto = perdido.getFoto();
-        if (foto != null) {
-            mImageViewFoto.setImageBitmap(((BaseActivity) getActivity()).convertFromByteToBitmap(foto));
-        }
+        getBaseActivity().setUpCollapsingToolbar(perdido.getTitulo(), getBaseActivity().convertFromByteToBitmap(foto));
+
         mTextViewDescripcion.setText(perdido.getDescripcion());
         mTextViewDatos.setText(perdido.getEspecie().getEspecie() + " " + perdido.getRaza().getRaza() + " de color " + perdido.getColor().getColor().toLowerCase() +
                 ", " + perdido.getSexo().getSexo().toLowerCase() + ", " + perdido.getEdad().getEdad().toLowerCase() + " y de tamaño " + perdido.getTamaño().getTamaño().toLowerCase() + ".");
@@ -99,11 +98,29 @@ public class DetallePublicacionFragment extends BaseFragment {
         return view;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void wireUpViews(View view, Perdidos perdido) {
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_detalle);
-        collapsingToolbarLayout.setTitle(perdido.getTitulo());
-        mTextViewEstado = (TextView) view.findViewById(R.id.textView_estado);
-        mImageViewFoto = (ImageView) view.findViewById(R.id.imageView_foto);
+
+        TextView textViewEstado = new TextView(getContext());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                130, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.CENTER;
+        textViewEstado.setLayoutParams(layoutParams);
+        textViewEstado.setGravity(View.TEXT_ALIGNMENT_CENTER);
+        textViewEstado.setPadding(15, 15, 15, 15);
+        textViewEstado.setTextAppearance(getContext(),R.style.condensed_bold_17);
+        textViewEstado.setTextColor(getResources().getColor(R.color.primary_text));
+
+        CardView cardViewEstado = new CardView(getContext());
+        layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.TOP | Gravity.END;
+        cardViewEstado.setElevation(2);
+        cardViewEstado.setLayoutParams(layoutParams);
+
+        cardViewEstado.addView(textViewEstado);
+
+        mTextViewEstado = textViewEstado;
         mTextViewDescripcion = (TextView) view.findViewById(R.id.textView_descripcion);
         mTextViewFecha = (TextView) view.findViewById(R.id.textView_fecha);
         mTextViewDatos = (TextView) view.findViewById(R.id.textView_datos);

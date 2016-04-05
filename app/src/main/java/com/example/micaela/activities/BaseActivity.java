@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.micaela.HuellasApplication;
@@ -25,6 +27,7 @@ public class BaseActivity extends AppCompatActivity {
     Toolbar mToolbar;
     ViewGroup mainContainer;
     ViewGroup containerLayout;
+    CollapsingToolbarLayout mCollapsingToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +36,14 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public void setContentView(int layoutResID) {
-        mainContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_base, null);
+
+        if (this instanceof LoginActivity || this instanceof PrincipalActivity) {
+            mainContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_base, null);
+        }
+        else {
+            mainContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_base_collapsing, null);
+            mCollapsingToolbar = (CollapsingToolbarLayout) mainContainer.findViewById(R.id.collapsing_toolbar);
+        }
 
         setupToolbar(mainContainer);
         containerLayout = (ViewGroup) mainContainer.findViewById(R.id.container_base);
@@ -43,6 +53,19 @@ public class BaseActivity extends AppCompatActivity {
         super.setContentView(mainContainer);
     }
 
+
+    public void setUpCollapsingToolbar (String title) {
+        mCollapsingToolbar.setTitle(title);
+        mCollapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+    }
+
+    public void setUpCollapsingToolbar (String title, Bitmap bitmapImage) {
+        mCollapsingToolbar.setTitle(title);
+        mCollapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+        if (bitmapImage != null) {
+            ((ImageView) mCollapsingToolbar.findViewById(R.id.imageView_foto)).setImageBitmap(bitmapImage);
+        }
+    }
 
     private void setupToolbar(ViewGroup mainContainer) {
         mToolbar = (Toolbar) mainContainer.findViewById(R.id.toolbar);
@@ -71,20 +94,12 @@ public class BaseActivity extends AppCompatActivity {
         mainContainer.findViewById(R.id.button_confirmar).setVisibility(View.GONE);
     }
 
-    public void showErrorOverlay(String mensaje) {
+    public void showErrorOverlay(String mensaje, View.OnClickListener listener) {
         mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.VISIBLE);
         mainContainer.findViewById(R.id.progress_bar).setVisibility(View.GONE);
         ((TextView) mainContainer.findViewById(R.id.textView_titulo)).setText(mensaje);
         mainContainer.findViewById(R.id.button_confirmar).setVisibility(View.VISIBLE);
-        mainContainer.findViewById(R.id.button_confirmar).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setResult(-1);
-                finish();
-                logOut();
-            }
-        });
-
+        mainContainer.findViewById(R.id.button_confirmar).setOnClickListener(listener);
     }
 
     public void logOut() {

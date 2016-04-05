@@ -22,6 +22,7 @@ public abstract class BaseFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_base, container, false);
         wireUpLayouts(rootView);
+
         View content = this.onCreateEventView(inflater, null, savedInstanceState);
         mContentLayout.addView(content);
         return rootView;
