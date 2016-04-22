@@ -1,5 +1,6 @@
 package com.example.micaela.fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -10,25 +11,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.micaela.activities.BaseActivity;
+import com.example.micaela.HuellasApplication;
+import com.example.micaela.activities.LoginActivity;
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.adapters.AnimalesAdapter;
 import com.example.micaela.db.Controladores.IPerdidosImpl;
+import com.example.micaela.db.DAO.GeneralDAO;
+import com.example.micaela.db.DAO.PerdidosDAO;
 import com.example.micaela.db.Interfaces.IPerdidos;
-import com.example.micaela.db.Modelo.Colores;
-import com.example.micaela.db.Modelo.Edades;
-import com.example.micaela.db.Modelo.Especies;
 import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.db.Modelo.Perdidos;
-import com.example.micaela.db.Modelo.Personas;
-import com.example.micaela.db.Modelo.Razas;
-import com.example.micaela.db.Modelo.Sexos;
-import com.example.micaela.db.Modelo.Tamaños;
 import com.example.micaela.huellas.R;
 import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
 
-import java.util.Date;
 import java.util.List;
 
 
@@ -84,24 +79,31 @@ public class PerdidosFragment extends BaseFragment {
     private class AsyncTaskPerdidos extends AsyncTask<Void, Void, List<Perdidos>> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            getBaseActivity().showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+        }
+
+        @Override
         protected void onPostExecute(final List<Perdidos> perdidosList) {
             super.onPostExecute(perdidosList);
-            AnimalesAdapter mAdapter = new AnimalesAdapter(perdidosList, getContext());
+            AnimalesAdapter mAdapter = new AnimalesAdapter(perdidosList, getBaseActivity());
             mRecyclerView.setAdapter(mAdapter);
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ((BaseActivity) getActivity()).hideOverlay();
                     mSwipeRefreshLayout.setRefreshing(false);
 
                 }
             });
+
+            new AsyncTaskPerdidosInfo().execute();
         }
 
         @Override
         protected List<Perdidos> doInBackground(Void... voids) {
             try {
-                mIperdidosImpl.cargarDBLocal(getActivity().getBaseContext());
+                mIperdidosImpl.cargarDBLocal(getBaseActivity());
                 return mIperdidosImpl.getPerdidos();
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -109,5 +111,58 @@ public class PerdidosFragment extends BaseFragment {
             return null;
 
         }
+
+
     }
+
+    private class AsyncTaskPerdidosInfo extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            try {
+                PerdidosDAO perdidosDAO = new PerdidosDAO(getActivity());
+                HuellasApplication.getInstance().setmEspecies(perdidosDAO.getEspecies());
+                HuellasApplication.getInstance().setmRazas(perdidosDAO.getRazas());
+                HuellasApplication.getInstance().setmColores(perdidosDAO.getColores());
+                HuellasApplication.getInstance().setmEdades(perdidosDAO.getEdades());
+                HuellasApplication.getInstance().setmTamanios(perdidosDAO.getTamaños());
+                HuellasApplication.getInstance().setmSexos(perdidosDAO.getSexos());
+
+                GeneralDAO generalDAO = new GeneralDAO(getBaseActivity());
+                List<Estados> estados = generalDAO.getEstados();
+                for (int x = 0; x<estados.size(); x++) {
+                    if (estados.get(x).getSituacion().equals("-")) {
+                        estados.remove(x);
+                    }
+                }
+                HuellasApplication.getInstance().setmEstados(estados);
+            }
+            catch (Exception e) {
+                getBaseActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        View.OnClickListener listener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                getBaseActivity().finish();
+                                Intent intent = new Intent(getBaseActivity(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        };
+                        getBaseActivity().showErrorOverlay("Hubo un problema, por favor intente nuevamente", listener);
+                    }
+                });
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            getBaseActivity().hideOverlay();
+        }
+    }
+
 }

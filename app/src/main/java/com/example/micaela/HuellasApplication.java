@@ -5,15 +5,33 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+import com.example.micaela.db.Modelo.Colores;
+import com.example.micaela.db.Modelo.Edades;
+import com.example.micaela.db.Modelo.Especies;
+import com.example.micaela.db.Modelo.Estados;
+import com.example.micaela.db.Modelo.Razas;
+import com.example.micaela.db.Modelo.Sexos;
+import com.example.micaela.db.Modelo.Tamaños;
 import com.example.micaela.utils.Constants;
 import com.facebook.FacebookSdk;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class HuellasApplication extends Application{
+
+public class HuellasApplication extends Application {
 
     private static HuellasApplication instance;
+
+    private List<Razas> mRazas = new ArrayList<>();
+    private List<Especies> mEspecies = new ArrayList<>();
+    private List<Tamaños> mTamanios = new ArrayList<>();
+    private List<Edades> mEdades = new ArrayList<>();
+    private List<Colores> mColores = new ArrayList<>();
+    private List<Estados> mEstados = new ArrayList<>();
+    private List<Sexos> mSexos = new ArrayList<>();
 
     public static HuellasApplication getInstance() {
         return instance;
@@ -29,8 +47,63 @@ public class HuellasApplication extends Application{
         FacebookSdk.sdkInitialize(getApplicationContext());
     }
 
-    public void initParse()
-    {
+    public List<Sexos> getmSexos() {
+        return mSexos;
+    }
+
+    public void setmSexos(List<Sexos> mSexos) {
+        this.mSexos = mSexos;
+    }
+
+    public List<Razas> getmRazas() {
+        return mRazas;
+    }
+
+    public void setmRazas(List<Razas> mRazas) {
+        this.mRazas = mRazas;
+    }
+
+    public List<Especies> getmEspecies() {
+        return mEspecies;
+    }
+
+    public void setmEspecies(List<Especies> mEspecies) {
+        this.mEspecies = mEspecies;
+    }
+
+    public List<Tamaños> getmTamanios() {
+        return mTamanios;
+    }
+
+    public void setmTamanios(List<Tamaños> mTamanios) {
+        this.mTamanios = mTamanios;
+    }
+
+    public List<Edades> getmEdades() {
+        return mEdades;
+    }
+
+    public void setmEdades(List<Edades> mEdades) {
+        this.mEdades = mEdades;
+    }
+
+    public List<Colores> getmColores() {
+        return mColores;
+    }
+
+    public void setmColores(List<Colores> mColores) {
+        this.mColores = mColores;
+    }
+
+    public List<Estados> getmEstados() {
+        return mEstados;
+    }
+
+    public void setmEstados(List<Estados> mEstados) {
+        this.mEstados = mEstados;
+    }
+
+    public void initParse() {
 
         Parse.enableLocalDatastore(getApplicationContext());
         Parse.initialize(getApplicationContext(), Constants.APPLICATION_ID, Constants.CLIENT_ID);
@@ -50,7 +123,7 @@ public class HuellasApplication extends Application{
         editor.apply();
     }
 
-    public String getAccessTokenFacebook () {
+    public String getAccessTokenFacebook() {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(Constants.ACCESS_TOKEN_FCB, "");
     }
@@ -66,7 +139,7 @@ public class HuellasApplication extends Application{
         editor.apply();
     }
 
-    public void clearProfileFacebook () {
+    public void clearProfileFacebook() {
         SharedPreferences.Editor editor = HuellasApplication.getInstance().getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE).edit();
         editor.putString(Constants.PROFILE_IMAGE, "");
         editor.putString(Constants.PROFILE_NAME, "");
@@ -78,27 +151,32 @@ public class HuellasApplication extends Application{
         editor.apply();
     }
 
-    public String getProfileNameFacebook () {
+    public String getProfileNameFacebook() {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(Constants.PROFILE_NAME, "");
     }
 
-    public String getProfileImageFacebook () {
+    public String getProfileImageFacebook() {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(Constants.PROFILE_IMAGE, "");
     }
-    public String getProfileLocationFacebook () {
+
+    public String getProfileLocationFacebook() {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(Constants.PROFILE_LOCATION, "");
-    } public String getProfileGenderFacebook () {
+    }
+
+    public String getProfileGenderFacebook() {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(Constants.PROFILE_GENDER, "");
     }
-    public String getProfileEmailFacebook () {
+
+    public String getProfileEmailFacebook() {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(Constants.PROFILE_EMAIL, "");
     }
-    public String getProfileBirthdayFacebook () {
+
+    public String getProfileBirthdayFacebook() {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(Constants.PROFILE_BIRTHDAY, "");
     }

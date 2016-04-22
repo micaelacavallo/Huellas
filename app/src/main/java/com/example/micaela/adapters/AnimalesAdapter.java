@@ -35,10 +35,10 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
     @Override
     public void onBindViewHolder(AnimalesViewHolder holder, final int position) {
         if (!mPerdidos.get(position).isSolucionado()) {
-        String title = mPerdidos.get(position).getRaza().getRaza() + " " + mPerdidos.get(position).getColor().getColor();
-        holder.getTextViewTitulo().setText(title);
-        holder.getTextViewDescripcion().setText(mPerdidos.get(position).getDescripcion());
-        holder.getCardEstado().setVisibility(View.VISIBLE);
+            String title = mPerdidos.get(position).getRaza().getRaza() + " " + mPerdidos.get(position).getColor().getColor();
+            holder.getTextViewTitulo().setText(title);
+            holder.getTextViewDescripcion().setText(mPerdidos.get(position).getDescripcion());
+            holder.getCardEstado().setVisibility(View.VISIBLE);
 
             if (mPerdidos.get(position).getEstado().getSituacion().equals(mContext.getString(R.string.buscado_minus))) {
                 holder.getTextViewEstado().setText(mContext.getString(R.string.buscado_mayus));
@@ -60,14 +60,28 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
                 holder.getImageViewFoto().setImageBitmap(((BaseActivity) mContext).convertFromByteToBitmap(foto));
             }
 
+            int cantidadComentarios = mPerdidos.get(position).getComentarios().size();
+            if (cantidadComentarios > 0) {
+                if (cantidadComentarios == 1) {
+                    holder.getmTextViewComentarios().setText(mContext.getString(R.string.un_comentario));
+                } else {
+                    holder.getmTextViewComentarios().setText(String.format(mContext.getString(R.string.comentarios_cantidad), cantidadComentarios));
+                }
+                holder.getmTextViewComentarios().setVisibility(View.VISIBLE);
+            }
+            else {
+                holder.getmTextViewComentarios().setVisibility(View.GONE);
+            }
+
             holder.getTextViewHora().setText(((BaseActivity) mContext).getPublicationTime(mPerdidos.get(position).getFecha()));
-               holder.getCardContainer().setTag(position);
-               holder.getCardContainer().setOnClickListener(new View.OnClickListener() {
-                   @Override
-                   public void onClick(View view) {
-                       Intent intent = new Intent(mContext, DetallePublicacionActivity.class);
-                       intent.putExtra(Constants.OBJETO_PERDIDO, mPerdidos.get((int) view.getTag()));
-                       mContext.startActivity(intent);
+            holder.getCardContainer().setTag(position);
+            holder.getCardContainer().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, DetallePublicacionActivity.class);
+                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
+                    intent.putExtra(Constants.OBJETO_PERDIDO, mPerdidos.get((int) view.getTag()));
+                    mContext.startActivity(intent);
                 }
             });
         }
@@ -76,6 +90,10 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
 
     @Override
     public int getItemCount() {
-        return mPerdidos.size();
+        if (mPerdidos != null) {
+            return mPerdidos.size();
+        } else {
+            return 0;
+        }
     }
 }

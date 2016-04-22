@@ -6,29 +6,39 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.micaela.huellas.R;
+
 public class CustomSpinnerHintAdapter extends ArrayAdapter<String> {
 
 
-    public CustomSpinnerHintAdapter(Context context, int resource) {
-        super(context, resource);
+    Context mContext;
+
+    public CustomSpinnerHintAdapter(Context context, int resource, int textViewResourceId) {
+        super(context, resource, textViewResourceId);
+    }
+
+    public CustomSpinnerHintAdapter(Context context) {
+        super(context, android.R.layout.simple_spinner_item);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View v = super.getView(position, convertView, parent);
-        if (position == getCount()) {
-            ((TextView)v.findViewById(android.R.id.text1)).setText("");
-            ((TextView)v.findViewById(android.R.id.text1)).setHint(getItem(getCount())); //"Hint to be displayed"
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        View view;
+        TextView textView;
+        if (position == 0) {
+            TextView hintTextView = new TextView(getContext());
+            hintTextView.setHeight(0);
+            hintTextView.setVisibility(View.GONE);
+            view = hintTextView;
+        } else {
+            view = super.getView(position, null, parent);
+            textView = (TextView) view.findViewById(android.R.id.text1);
+            textView.setPadding(50, 25, 0, 25);
+            textView.setTextAppearance(getContext(), R.style.condensed_normal_17);
         }
-        return v;
+
+        return view;
     }
-
-    @Override
-    public int getCount() {
-        return super.getCount()-1; // you dont display last item. It is used as hint.
-    }
-
-
 
 
 }

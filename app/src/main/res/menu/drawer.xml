@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/group_drawer_1">
         <item
+            android:id="@+id/nav_drawer_perfil"
+            android:icon="@mipmap/ic_personal_account"
+            android:title="@string/mis_datos" />
+        <item
             android:id="@+id/nav_drawer_configuracion"
             android:icon="@mipmap/ic_ajustes"
             android:title="@string/ajustes" />

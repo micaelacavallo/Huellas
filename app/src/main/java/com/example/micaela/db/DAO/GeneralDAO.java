@@ -32,9 +32,7 @@ import com.parse.SendCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -215,7 +213,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
     @Override
     public List<Estados> getEstados() {
         query = ParseQuery.getQuery(Clases.ESTADOS);
-        List<Estados> listEstados = null;
+        List<Estados> listEstados = new ArrayList<>();
         List<ParseObject> listParseObject = null;
         Estados estado = null;
         checkInternetGet(query);

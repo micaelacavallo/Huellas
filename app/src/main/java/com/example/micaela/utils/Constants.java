@@ -8,6 +8,14 @@ public class Constants {
     public static final String SHARED_PREFERENCES_HUELLAS = "HUELLAS";
     public static final String PUBLICATION_DETAILS_DATE_FORMAT = "dd MMM HH:mm";
 
+    //  DETALLE PUBLICACION
+    public static final String FROM_FRAGMENT = "FROM_FRAGMENT";
+    public static final String PERDIDOS = "PERDIDOS";
+    public static final String ADICIONALES = "ADICIONALES";
+    public static final String LATITUD = "LATITUD";
+    public static final String LONGITUD = "LONGITUD";
+    public static final String ADDRESS = "ADDRESS";
+
     // PARSE
     public static String APPLICATION_ID = "3EEEv0tiZTfwvODGscyrSSgzJG5lg3gSrVwP51L7";
     public static String CLIENT_ID = "CYQOSTDkNnNHICsGZ230ICHkHPZuU7CnKgJMOGkn";

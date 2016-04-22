@@ -14,9 +14,24 @@
     <string name="ajustes">Ajustes</string>
     <string name="cerrar_sesion">Cerrar Sesión</string>
     <string name="historial">Mis publicaciones recientes</string>
-    <string name="cargando_publicaciones_mensaje">Cargando publicaciones</string>
+    <string name="cargando_publicaciones_mensaje">Cargando...</string>
     <string name="encontrado_minus">Encontrado</string>
     <string name="adopcion_minus">Adopción</string>
     <string name="adopcion_mayus">ADOPCIÓN</string>
+    <string name="google_api_key">AIzaSyBZe0KK25oSkeHW4_7GmOnYvVwQUV57Xok</string>
+    <string name="mis_datos">Mis datos</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="tipo_publicacion">Tipo de publicación</string>
+    <string name="especie">Especie</string>
+    <string name="raza">Raza</string>
+    <string name="tamaño">Tamaño</string>
+    <string name="edad_aproximada">Edad aproximada</string>
+    <string name="color_predominante">Color predominante</string>
+    <string name="sexo">Sexo</string>
+    <string name="un_comentario">1 comentario</string>
+    <string name="comentarios_cantidad">%s comentarios</string>
+    <string name="ubicacion">"Ubicación: "</string>
+    <string name="crear_publicacion">Crear publicación</string>
+    google_api_key
 
 </resources>

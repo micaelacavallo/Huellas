@@ -7,7 +7,7 @@
              android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView_titulo"
+        android:id="@+id/textView_titulo_overlay"
         style="@style/condensed_normal_24"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

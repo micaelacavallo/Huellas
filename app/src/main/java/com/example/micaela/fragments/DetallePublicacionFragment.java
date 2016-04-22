@@ -17,13 +17,18 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.micaela.activities.BaseActivity;
+import com.example.micaela.activities.MapActivity;
+import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
+
+import java.util.Date;
 
 import static com.example.micaela.utils.SpannableUtils.bold;
 
@@ -35,50 +40,85 @@ public class DetallePublicacionFragment extends BaseFragment {
     TextView mTextViewDatos;
     TextView mTextViewPersona;
     TextView mTextViewDireccion;
+    View mViewLocation;
+    ImageView mImageViewLocation;
+
+    Perdidos mPerdidos;
+    private View mRootView;
 
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_detalle_publicacion, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_detalle_publicacion, container, false);
+        wireUpViews();
 
-        final Perdidos perdido = getActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
-        wireUpViews(view, perdido);
-
-        if (perdido.getEstado().getSituacion().equals(getString(R.string.buscado_minus))) {
-            mTextViewEstado.setText(getString(R.string.buscado_mayus));
-            mTextViewEstado.setBackgroundResource(R.color.orange_light);
+        if (Constants.PERDIDOS.equals(getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT))) {
+            mPerdidos = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
+            fillViews(mPerdidos.getPersona().getNombre() + " " + mPerdidos.getPersona().getApellido(),
+                    mPerdidos.getPersona().getTelefono(), mPerdidos.getEstado().getSituacion(), mPerdidos.getFoto(),
+                    mPerdidos.getTitulo(), mPerdidos.getDescripcion(), mPerdidos.getRaza().getmRaza(),
+                    mPerdidos.getEspecie().getEspecie(), mPerdidos.getColor().getColor(),
+                    mPerdidos.getTamaño().getTamaño(), mPerdidos.getEdad().getEdad(), mPerdidos.getSexo().getSexo(),
+                    mPerdidos.getLatitud(), mPerdidos.getLongitud(), mPerdidos.getFecha());
         } else {
-            if (perdido.getEstado().getSituacion().equals(getString(R.string.encontrado_minus))) {
-                mTextViewEstado.setText(getString(R.string.encontrado_mayus));
-                mTextViewEstado.setBackgroundResource(R.color.blue_light);
+            Adicionales adicionales = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
+            mTextViewDatos.setVisibility(View.GONE);
+            mViewLocation.setVisibility(View.GONE);
+            fillViews(adicionales.getPersona().getNombre() + " " + adicionales.getPersona().getApellido(),
+                    adicionales.getPersona().getTelefono(), "", adicionales.getFoto(), adicionales.getTitulo(),
+                    adicionales.getDescripcion(), "", "", "", "", "", "", 0, 0, adicionales.getFecha());
+        }
+
+
+        return mRootView;
+    }
+
+    private void fillViews(String nombre, final String telefono, String situacion, byte[] foto,
+                           String titulo, String descripcion, String raza, String especie, String color,
+                           String tamaño, String edad, String sexo, double latitud, double longitud, Date fecha) {
+
+        if (!situacion.equals("")) {
+            if (situacion.equals(getString(R.string.buscado_minus))) {
+                mTextViewEstado.setText(getString(R.string.buscado_mayus));
+                mTextViewEstado.setBackgroundResource(R.color.orange_light);
             } else {
-                if (perdido.getEstado().getSituacion().equals(getString(R.string.adopcion_minus))) {
-                    mTextViewEstado.setText(getString(R.string.adopcion_mayus));
-                    mTextViewEstado.setBackgroundResource(R.color.green_light);
+                if (situacion.equals(getString(R.string.encontrado_minus))) {
+                    mTextViewEstado.setText(getString(R.string.encontrado_mayus));
+                    mTextViewEstado.setBackgroundResource(R.color.blue_light);
+                } else {
+                    if (situacion.equals(getString(R.string.adopcion_minus))) {
+                        mTextViewEstado.setText(getString(R.string.adopcion_mayus));
+                        mTextViewEstado.setBackgroundResource(R.color.green_light);
+                    }
                 }
             }
         }
-        byte[] foto = perdido.getFoto();
-        getBaseActivity().setUpCollapsingToolbar(perdido.getTitulo(), getBaseActivity().convertFromByteToBitmap(foto));
+        getBaseActivity().setUpCollapsingToolbar(titulo, getBaseActivity().convertFromByteToBitmap(foto));
+        mTextViewDescripcion.setText(descripcion);
+        mTextViewDatos.setText(especie + " " + raza + " de color " + color.toLowerCase() +
+                ", " + sexo.toLowerCase() + ", " + edad.toLowerCase() + " y de tamaño " + tamaño.toLowerCase() + ".");
 
-        mTextViewDescripcion.setText(perdido.getDescripcion());
-        mTextViewDatos.setText(perdido.getEspecie().getEspecie() + " " + perdido.getRaza().getRaza() + " de color " + perdido.getColor().getColor().toLowerCase() +
-                ", " + perdido.getSexo().getSexo().toLowerCase() + ", " + perdido.getEdad().getEdad().toLowerCase() + " y de tamaño " + perdido.getTamaño().getTamaño().toLowerCase() + ".");
+        mTextViewFecha.setText(TextUtils.concat(bold("Fecha de publicación: "), ((BaseActivity) getActivity()).getFormattedDate(fecha)));
 
-        mTextViewFecha.setText(TextUtils.concat(bold("Fecha de publicación: "), ((BaseActivity) getActivity()).getFormattedDate(perdido.getFecha())));
-        mTextViewDireccion.setText(TextUtils.concat(bold("Ubicación: "), "PROXIMAMENTE"));// TODO falta direccion que hay que relacionarlo con google maps y falta poner tel para que pueda llamar directo de la publicacion
+        if (latitud != 0 & longitud != 0) {
+            String location = getBaseActivity().getLocation(latitud, longitud);
+            if (location.equals("")) {
+                mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), location));
+            } else {
+                mImageViewLocation.setVisibility(View.GONE);
+                mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), "No especificada"));
 
+            }
+        }
 
-        String infoContacto = "Contacto: " + perdido.getPersona().getNombre() + " " + perdido.getPersona().getApellido()
-                + " (tel: " + perdido.getPersona().getTelefono() + ")";
+        String infoContacto = "Contacto: " + nombre + " (tel: " + telefono + ")";
 
-        SpannableString ss = new SpannableString(TextUtils.concat(bold("Contacto: "), perdido.getPersona().getNombre() + " " + perdido.getPersona().getApellido()
-                + " (tel: " + perdido.getPersona().getTelefono() + ")"));
+        SpannableString ss = new SpannableString(TextUtils.concat(bold("Contacto: "), nombre + " (tel: " + telefono + ")"));
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View textView) {
                 Intent intent = new Intent(Intent.ACTION_CALL);
 
-                intent.setData(Uri.parse("tel:" + perdido.getPersona().getTelefono()));
+                intent.setData(Uri.parse("tel:" + telefono));
                 startActivity(intent);
             }
 
@@ -93,13 +133,11 @@ public class DetallePublicacionFragment extends BaseFragment {
         mTextViewPersona.setText(ss);
         mTextViewPersona.setMovementMethod(LinkMovementMethod.getInstance());
         mTextViewPersona.setHighlightColor(Color.TRANSPARENT);
-
-
-        return view;
     }
 
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void wireUpViews(View view, Perdidos perdido) {
+    private void wireUpViews() {
 
         TextView textViewEstado = new TextView(getContext());
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -108,7 +146,7 @@ public class DetallePublicacionFragment extends BaseFragment {
         textViewEstado.setLayoutParams(layoutParams);
         textViewEstado.setGravity(View.TEXT_ALIGNMENT_CENTER);
         textViewEstado.setPadding(15, 15, 15, 15);
-        textViewEstado.setTextAppearance(getContext(),R.style.condensed_bold_17);
+        textViewEstado.setTextAppearance(getContext(), R.style.condensed_bold_17);
         textViewEstado.setTextColor(getResources().getColor(R.color.primary_text));
 
         CardView cardViewEstado = new CardView(getContext());
@@ -119,12 +157,25 @@ public class DetallePublicacionFragment extends BaseFragment {
         cardViewEstado.setLayoutParams(layoutParams);
 
         cardViewEstado.addView(textViewEstado);
-
+        mImageViewLocation = (ImageView) mRootView.findViewById(R.id.imageView_location);
+        mViewLocation = mRootView.findViewById(R.id.layout_ubicacion_container);
+        mViewLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mImageViewLocation.getVisibility() == View.VISIBLE) {
+                    Intent intent = new Intent(getBaseActivity(), MapActivity.class);
+                    intent.putExtra(Constants.LATITUD, mPerdidos.getLatitud());
+                    intent.putExtra(Constants.LONGITUD, mPerdidos.getLongitud());
+                    intent.putExtra(Constants.ADDRESS, mTextViewDireccion.getText().toString());
+                    startActivity(intent);
+                }
+            }
+        });
         mTextViewEstado = textViewEstado;
-        mTextViewDescripcion = (TextView) view.findViewById(R.id.textView_descripcion);
-        mTextViewFecha = (TextView) view.findViewById(R.id.textView_fecha);
-        mTextViewDatos = (TextView) view.findViewById(R.id.textView_datos);
-        mTextViewPersona = (TextView) view.findViewById(R.id.textView_persona);
-        mTextViewDireccion = (TextView) view.findViewById(R.id.textView_direccion);
+        mTextViewDescripcion = (TextView) mRootView.findViewById(R.id.textView_descripcion);
+        mTextViewFecha = (TextView) mRootView.findViewById(R.id.textView_fecha);
+        mTextViewDatos = (TextView) mRootView.findViewById(R.id.textView_datos);
+        mTextViewPersona = (TextView) mRootView.findViewById(R.id.textView_persona);
+        mTextViewDireccion = (TextView) mRootView.findViewById(R.id.textView_direccion);
     }
 }

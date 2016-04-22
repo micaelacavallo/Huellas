@@ -3,6 +3,7 @@ package com.example.micaela.activities;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -11,7 +12,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
@@ -23,10 +23,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.micaela.HuellasApplication;
+import com.example.micaela.ZoomOutPageTransformer;
 import com.example.micaela.fragments.DonacionesFragment;
 import com.example.micaela.fragments.InformacionUtilFragment;
 import com.example.micaela.fragments.PerdidosFragment;
-import com.example.micaela.ZoomOutPageTransformer;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.CircleImageTransform;
 import com.example.micaela.utils.Constants;
@@ -48,10 +48,9 @@ public class PrincipalActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
 
-        hideOverlay();
-        mPager = (ViewPager) findViewById(R.id.pager);
-
         showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+
+        mPager = (ViewPager) findViewById(R.id.pager);
 
         PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
@@ -166,20 +165,17 @@ public class PrincipalActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 int currentPage = getCurrentPage();
-                Intent intent = null;
+                Intent intent = new Intent(getBaseContext(), AltaAnimalesActivity.class);
                 switch (currentPage) {
                     case 0:
-                        intent = new Intent(getBaseContext(), AltaAnimalesActivity.class);
-                        startActivity(intent);
+                        intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
                         break;
                     case 1:
-                        //   intent = new Intent(PrincipalActivity.this, a.class);
-                        break;
                     case 2:
-                        //   intent = new Intent(PrincipalActivity.this, a.class);
+                        intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES);
                         break;
                 }
-                //  startActivity(intent);
+                startActivity(intent);
             }
         });
     }
@@ -196,6 +192,11 @@ public class PrincipalActivity extends BaseActivity {
                                 showOverlay("Cerrando sesión");
                                 logOut();
                                 hideOverlay();
+                                break;
+
+                            case R.id.nav_drawer_perfil:
+                                Intent intent = new Intent(PrincipalActivity.this, MisDatosActivity.class);
+                                startActivity(intent);
                                 break;
                         }
 

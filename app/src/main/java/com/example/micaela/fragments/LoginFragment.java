@@ -62,7 +62,6 @@ public class LoginFragment extends BaseFragment {
                         if (token != null) {
                             HuellasApplication.getInstance().saveAccessTokenFacebook(token.getToken());
                             final Profile profile = Profile.getCurrentProfile();
-
                             GraphRequest request = GraphRequest.newMeRequest(
                                     loginResult.getAccessToken(),
                                     new GraphRequest.GraphJSONObjectCallback() {
@@ -91,7 +90,15 @@ public class LoginFragment extends BaseFragment {
                                             } catch (JSONException e) {
                                                 gender = "";
                                             }
-                                            HuellasApplication.getInstance().saveProfileFacebook(profile.getProfilePictureUri(150, 150), profile.getName(), email, location,
+
+                                            if (gender.equals("female")) {
+                                                gender = "femenino";
+                                            } else {
+                                                if (gender.equals("male")) {
+                                                    gender = "masculino";
+                                                }
+                                            }
+                                            HuellasApplication.getInstance().saveProfileFacebook(profile.getProfilePictureUri(400, 400), profile.getName(), email, location,
                                                     gender, birthday);
                                             getActivity().setResult(0);
                                             getActivity().finish();

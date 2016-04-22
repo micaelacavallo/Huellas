@@ -3,34 +3,44 @@ package com.example.micaela.fragments;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.micaela.HuellasApplication;
 import com.example.micaela.activities.AltaAnimalesActivity;
-import com.example.micaela.db.DAO.PerdidosDAO;
+import com.example.micaela.activities.MapActivity;
+import com.example.micaela.adapters.CustomSpinnerHintAdapter;
 import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Edades;
 import com.example.micaela.db.Modelo.Especies;
 import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.db.Modelo.Razas;
+import com.example.micaela.db.Modelo.Sexos;
 import com.example.micaela.db.Modelo.Tamaños;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
+import com.google.android.gms.location.LocationServices;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 public class AltaAnimalesFragment extends BaseFragment {
 
@@ -39,19 +49,13 @@ public class AltaAnimalesFragment extends BaseFragment {
     private View mViewDialogCamera;
     private boolean mIsDialogVisible = false;
 
-    private List<Razas> mRazas;
-    private List<Especies> mEspecies;
-    private List<Tamaños> mTamanios;
-    private List<Edades> mEdades;
-    private List<Colores> mColores;
-    private List<Estados> mEstados;
-
     private ImageView mImageViewFoto;
+    private View mLayoutUbicacionContainer;
     private Spinner mSpinnerEdades;
     private Spinner mSpinnerRazas;
     private Spinner mSpinnerEspecies;
     private Spinner mSpinnerTamanios;
-    private Spinner mSDpinnerColores;
+    private Spinner mSpinnerColores;
     private Spinner mSpinnerSexos;
     private Spinner mSpinnerEstado;
     private TextInputLayout mTextInputLayoutTitulo;
@@ -60,63 +64,221 @@ public class AltaAnimalesFragment extends BaseFragment {
     private EditText mEditTextTitulo;
     private EditText mEditTextDescripcion;
     private EditText mEditTextUbicacion;
+    private EditText mEditTextNombre;
+    private EditText mEditTextTelefono;
+    private EditText mEditTextMail;
+    private Button mButtonPublicar;
+    private ImageView mImageViewMap;
+    private View mViewRazasContainer;
 
     private final int CAMERA_CAPTURE = 1;
     private final int SELECT_PICTURE = 2;
     private final int CROP_PIC = 3;
+    private View mRootView;
+    private Location mLastLocation;
 
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_alta_animales, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_alta_animales, container, false);
 
-        getBaseActivity().setUpCollapsingToolbar("Crear publicación");
+        getBaseActivity().setUpCollapsingToolbar(getBaseActivity().getString(R.string.crear_publicacion));
+        wireUpViews();
+        if (getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT).equals(Constants.PERDIDOS)) {
+            setUpSpinners();
+        } else {
+            mRootView.findViewById(R.id.layout_detalle_mascota_container).setVisibility(View.GONE);
+            mRootView.findViewById(R.id.layout_estado_container).setVisibility(View.GONE);
+        }
 
-        mImageViewFoto = (ImageView) view.findViewById(R.id.imageView_foto);
-        mSpinnerEdades = (Spinner) view.findViewById(R.id.spinner_edades);
-        mSpinnerEspecies = (Spinner) view.findViewById(R.id.spinner_especies);
-        mSpinnerEstado = (Spinner) view.findViewById(R.id.spinner_estado);
-        mSDpinnerColores =  (Spinner) view.findViewById(R.id.spinner_colores);
-        mSpinnerSexos = (Spinner) view.findViewById(R.id.spinner_sexos);
-        mSpinnerTamanios = (Spinner) view.findViewById(R.id.spinner_tamanios);
 
-        mTextInputLayoutDescription = (TextInputLayout) view.findViewById(R.id.textInputLayout_descripcion);
-        mTextInputLayoutTitulo = (TextInputLayout) view.findViewById(R.id.textInputLayout_titulo);
-        mTextInputLayoutUbicacion = (TextInputLayout) view.findViewById(R.id.textInputLayout_ubicacion);
+        return mRootView;
+
+    }
+
+    private void setUpSpinners() {
+        final List<Razas> mRazas = HuellasApplication.getInstance().getmRazas();
+        List<Especies> mEspecies = HuellasApplication.getInstance().getmEspecies();
+        List<Tamaños> mTamanios = HuellasApplication.getInstance().getmTamanios();
+        List<Edades> mEdades = HuellasApplication.getInstance().getmEdades();
+        List<Colores> mColores = HuellasApplication.getInstance().getmColores();
+        List<Estados> mEstados = HuellasApplication.getInstance().getmEstados();
+        List<Sexos> mSexos = HuellasApplication.getInstance().getmSexos();
+
+        CustomSpinnerHintAdapter adapterEstados = new CustomSpinnerHintAdapter(getBaseActivity());
+        adapterEstados.add(getString(R.string.tipo_publicacion));
+        for (int x = 0; x < mEstados.size(); x++) {
+            adapterEstados.add(mEstados.get(x).getSituacion());
+        }
+        mSpinnerEstado.setAdapter(adapterEstados);
+
+
+        CustomSpinnerHintAdapter adapterEspecies = new CustomSpinnerHintAdapter(getBaseActivity());
+        adapterEspecies.add(getString(R.string.especie));
+        for (int x = 0; x < mEspecies.size(); x++) {
+            adapterEspecies.add(mEspecies.get(x).getEspecie());
+        }
+        mSpinnerEspecies.setAdapter(adapterEspecies);
+
+        final CustomSpinnerHintAdapter adapterRazas = new CustomSpinnerHintAdapter(getBaseActivity());
+        adapterRazas.add(getString(R.string.raza));
+        mSpinnerRazas.setAdapter(adapterRazas);
+
+        CustomSpinnerHintAdapter adapterTamaños = new CustomSpinnerHintAdapter(getBaseActivity());
+        adapterTamaños.add(getString(R.string.tamaño));
+        for (int x = 0; x < mTamanios.size(); x++) {
+            adapterTamaños.add(mTamanios.get(x).getTamaño());
+        }
+        mSpinnerTamanios.setAdapter(adapterTamaños);
+
+        CustomSpinnerHintAdapter adapterEdades = new CustomSpinnerHintAdapter(getBaseActivity());
+        adapterEdades.add(getString(R.string.edad_aproximada));
+        for (int x = 0; x < mEdades.size(); x++) {
+            adapterEdades.add(mEdades.get(x).getEdad());
+        }
+        mSpinnerEdades.setAdapter(adapterEdades);
+
+        CustomSpinnerHintAdapter adapterColores = new CustomSpinnerHintAdapter(getBaseActivity());
+        adapterColores.add(getString(R.string.color_predominante));
+        for (int x = 0; x < mColores.size(); x++) {
+            adapterColores.add(mColores.get(x).getColor());
+        }
+        mSpinnerColores.setAdapter(adapterColores);
+
+
+        CustomSpinnerHintAdapter adapterSexos = new CustomSpinnerHintAdapter(getBaseActivity());
+        adapterSexos.add(getString(R.string.sexo));
+        for (int x = 0; x < mSexos.size(); x++) {
+            adapterSexos.add(mSexos.get(x).getSexo());
+        }
+        mSpinnerSexos.setAdapter(adapterSexos);
+
+
+        AdapterView.OnItemSelectedListener onItemSelectedListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
+                if (view != null) {
+                    String textItemSelected = ((AppCompatTextView) view).getText().toString();
+                    switch (parent.getId()) {
+                        case R.id.spinner_colores:
+                            if (!textItemSelected.equals(getString(R.string.color_predominante))) {
+                                mRootView.findViewById(R.id.textView_colores).setVisibility(View.VISIBLE);
+                            }
+                            break;
+                        case R.id.spinner_edades:
+                            if (!textItemSelected.equals(getString(R.string.edad_aproximada))) {
+                                mRootView.findViewById(R.id.textView_edad).setVisibility(View.VISIBLE);
+                            }
+                            break;
+                        case R.id.spinner_especies:
+                            if (!textItemSelected.equals(getString(R.string.especie))) {
+                                mRootView.findViewById(R.id.textView_especie).setVisibility(View.VISIBLE);
+                                String selectedEspecie = mSpinnerEspecies.getSelectedItem().toString();
+                                if (selectedEspecie.equals("Gato") || selectedEspecie.equals("Perro")) {
+                                    adapterRazas.clear();
+                                    adapterRazas.add(getString(R.string.raza));
+                                    for (int x = 0; x < mRazas.size(); x++) {
+                                        if (selectedEspecie.equals(mRazas.get(x).getmEspecie().getEspecie()))
+                                            adapterRazas.add(mRazas.get(x).getRaza());
+                                    }
+                                    mSpinnerRazas.setAdapter(adapterRazas);
+                                    mViewRazasContainer.setVisibility(View.VISIBLE);
+                                }
+
+                                else {
+                                    mViewRazasContainer.setVisibility(View.GONE);
+                                }
+                            }
+                            break;
+                        case R.id.spinner_razas:
+                            if (!textItemSelected.equals(getString(R.string.raza))) {
+                                mRootView.findViewById(R.id.textView_raza).setVisibility(View.VISIBLE);
+                            }
+                            break;
+                        case R.id.spinner_estado:
+                            if (!textItemSelected.equals(getString(R.string.tipo_publicacion))) {
+                                mRootView.findViewById(R.id.textView_tipo_publicacion).setVisibility(View.VISIBLE);
+                            }
+                            break;
+                        case R.id.spinner_sexos:
+                            if (!textItemSelected.equals(getString(R.string.sexo))) {
+                                mRootView.findViewById(R.id.textView_sexo).setVisibility(View.VISIBLE);
+                            }
+                            break;
+                        case R.id.spinner_tamanios:
+                            if (!textItemSelected.equals(getString(R.string.tamaño))) {
+                                mRootView.findViewById(R.id.textView_tamanios).setVisibility(View.VISIBLE);
+                            }
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        };
+
+        mSpinnerEdades.setOnItemSelectedListener(onItemSelectedListener);
+        mSpinnerEspecies.setOnItemSelectedListener(onItemSelectedListener);
+        mSpinnerEstado.setOnItemSelectedListener(onItemSelectedListener);
+        mSpinnerColores.setOnItemSelectedListener(onItemSelectedListener);
+        mSpinnerSexos.setOnItemSelectedListener(onItemSelectedListener);
+        mSpinnerTamanios.setOnItemSelectedListener(onItemSelectedListener);
+    }
+
+    private void wireUpViews() {
+        mImageViewFoto = getBaseActivity().getmImageViewPicture();
+        mViewRazasContainer = mRootView.findViewById(R.id.layout_razas_container);
+        mImageViewMap = (ImageView) mRootView.findViewById(R.id.imageView_location);
+        mImageViewMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mEditTextUbicacion.setEnabled(false);
+                if (!((AltaAnimalesActivity) getBaseActivity()).isConnected()) {
+                    Toast.makeText(getBaseActivity(), "No es posible encontrar tu ubicación", Toast.LENGTH_LONG).show();
+                    mEditTextUbicacion.setEnabled(true);
+                } else {
+                    mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                            ((AltaAnimalesActivity) getBaseActivity()).getmGoogleApiClient());
+                    if (mLastLocation != null) {
+                        mEditTextUbicacion.setText(getBaseActivity().getLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                    } else {
+                        Toast.makeText(getBaseActivity(), "No es posible encontrar tu ubicación", Toast.LENGTH_LONG).show();
+
+                    }
+                    mEditTextUbicacion.setEnabled(true);
+                }
+            }
+        });
+        mSpinnerRazas = (Spinner) mRootView.findViewById(R.id.spinner_razas);
+        mSpinnerEdades = (Spinner) mRootView.findViewById(R.id.spinner_edades);
+        mSpinnerEspecies = (Spinner) mRootView.findViewById(R.id.spinner_especies);
+        mSpinnerEstado = (Spinner) mRootView.findViewById(R.id.spinner_estado);
+        mSpinnerColores = (Spinner) mRootView.findViewById(R.id.spinner_colores);
+        mSpinnerSexos = (Spinner) mRootView.findViewById(R.id.spinner_sexos);
+        mSpinnerTamanios = (Spinner) mRootView.findViewById(R.id.spinner_tamanios);
+
+        mTextInputLayoutDescription = (TextInputLayout) mRootView.findViewById(R.id.textInputLayout_descripcion);
+        mTextInputLayoutTitulo = (TextInputLayout) mRootView.findViewById(R.id.textInputLayout_titulo);
+        mTextInputLayoutUbicacion = (TextInputLayout) mRootView.findViewById(R.id.textInputLayout_ubicacion);
 
         mEditTextDescripcion = (EditText) mTextInputLayoutDescription.findViewById(R.id.editText_descripcion);
         mEditTextTitulo = (EditText) mTextInputLayoutTitulo.findViewById(R.id.editText_titulo);
         mEditTextUbicacion = (EditText) mTextInputLayoutUbicacion.findViewById(R.id.editText_ubicacion);
-
-        /*CustomSpinnerHintAdapter adapter = new CustomSpinnerHintAdapter(this, android.R.layout.simple_spinner_item, spinnerArray);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        adapter.addAll("Item 1");
-        adapter.add("Hint to be displayed");
-
-        spinner.setAdapter(adapter);
-*/
-
-
-/*
-        PerdidosDAO perdidosDAO = new PerdidosDAO(getActivity());
-        List<Especies> especiesList = perdidosDAO.getEspecies();
-        ListperdidosDAO.getRazas();
-        perdidosDAO.getColores();
-        perdidosDAO.getEdades();
-        perdidosDAO.
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray); //selected item will look like a spinner set from XML
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(spinnerArrayAdapter);*/
-
-        FloatingActionButton buttonCamera = (FloatingActionButton) view.findViewById(R.id.button_camera);
-        buttonCamera.setOnClickListener(new View.OnClickListener() {
+        mEditTextNombre = (EditText) mRootView.findViewById(R.id.editText_nombre);
+        mEditTextNombre.setText(HuellasApplication.getInstance().getProfileNameFacebook());
+        mEditTextMail = (EditText) mRootView.findViewById(R.id.editText_mail);
+        mEditTextMail.setText(HuellasApplication.getInstance().getProfileEmailFacebook());
+        mEditTextTelefono = (EditText) mRootView.findViewById(R.id.editText_telefono);
+        getBaseActivity().getmFloatingButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mViewDialogCamera.setVisibility(View.VISIBLE);
                 mIsDialogVisible = true;
             }
         });
-
-        mViewDialogCamera = view.findViewById(R.id.dialog_take_picture);
+        mViewDialogCamera = getBaseActivity().getmViewDialogCamera();
         mTextViewSelectPicture = (TextView) mViewDialogCamera.findViewById(R.id.textView_escoger_foto);
         mTextViewSelectPicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,57 +308,40 @@ public class AltaAnimalesFragment extends BaseFragment {
         });
 
 
-        return view;
+        mLayoutUbicacionContainer = mRootView.findViewById(R.id.layout_ubicacion_container);
+        mLayoutUbicacionContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseActivity(), MapActivity.class);
+                startActivity(intent);
+            }
+        });
 
+        mButtonPublicar = (Button) mRootView.findViewById(R.id.button_publicar);
+        mButtonPublicar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
 
-    private class AsyncTaskPerdidos extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
+    public void convertAddress(String address) {
+        Geocoder geocoder = new Geocoder(getBaseActivity(), Locale.getDefault());
+        if (address != null && !address.isEmpty()) {
             try {
-                PerdidosDAO perdidosDAO = new PerdidosDAO(getActivity());
-                mEspecies = perdidosDAO.getEspecies();
-                mRazas = perdidosDAO.getRazas();
-                mColores = perdidosDAO.getColores();
-                mEdades = perdidosDAO.getEdades();
-                mTamanios = perdidosDAO.getTamaños();
-                mEstados = perdidosDAO.getEstados();
-            }
-            catch (Exception e) {
-                getBaseActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        View.OnClickListener listener = new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                getBaseActivity().finish();
-                                Intent intent = new Intent(getBaseActivity(), AltaAnimalesActivity.class);
-                                startActivity(intent);
-                            }
-                        };
-                        getBaseActivity().showErrorOverlay("Hubo un problema, por favor intente nuevamente", listener);
-                    }
-                });
-            }
-            return null;
-        }
+                List<Address> addressList = geocoder.getFromLocationName(address, 1);
+                if (addressList != null && addressList.size() > 0) {
+                    double lat = addressList.get(0).getLatitude();
+                    double lng = addressList.get(0).getLongitude();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } // end catch
+        } // end if
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            getBaseActivity().showOverlay("Cargando...");
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            getBaseActivity().hideOverlay();
-        }
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -223,10 +368,10 @@ public class AltaAnimalesFragment extends BaseFragment {
         Intent cropIntent = new Intent(Constants.IMAGE_CROP);
         cropIntent.setDataAndType(picUri, Constants.URI_NAME);
         cropIntent.putExtra(Constants.EXTRA_CROP, "true");
-        cropIntent.putExtra(Constants.EXTRA_ASPECTX, 1);
-        cropIntent.putExtra(Constants.EXTRA_ASPECTY, 1);
-        cropIntent.putExtra(Constants.EXTRA_OUTPUTX, mImageViewFoto.getWidth() + 100);
-        cropIntent.putExtra(Constants.EXTRA_OUTPUTY, mImageViewFoto.getHeight() + 100);
+        cropIntent.putExtra(Constants.EXTRA_ASPECTX, mImageViewFoto.getWidth() + 200);
+        cropIntent.putExtra(Constants.EXTRA_ASPECTY, mImageViewFoto.getHeight() + 200);
+        cropIntent.putExtra(Constants.EXTRA_OUTPUTX, mImageViewFoto.getWidth() + 200);
+        cropIntent.putExtra(Constants.EXTRA_OUTPUTY, mImageViewFoto.getHeight() + 200);
         cropIntent.putExtra(Constants.EXTRA_RETURN_DATA, true);
         startActivityForResult(cropIntent, CROP_PIC);
     }

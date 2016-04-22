@@ -7,6 +7,7 @@
         <item name="colorAccent">@color/accent</item>
         <item name="android:textColorPrimary">@color/primary_text</item>
         <item name="android:textColorSecondary">@color/primary_text</item>
+        <item name="colorControlNormal">@color/grey_light_2</item>
         <item name="android:windowEnableSplitTouch">false</item>
         <item name="android:splitMotionEvents">false</item>
         <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
@@ -46,6 +47,12 @@
         <item name="android:textSize">@style/condensed_normal_19</item>
     </style>
 
+    <style name="condensed_normal_small_13">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
     <style name="condensed_normal_small_14">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">normal</item>
@@ -76,6 +83,12 @@
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">19sp</item>
+    </style>
+
+    <style name="condensed_normal_20">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="condensed_normal_22">
@@ -157,6 +170,11 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="condensed_bold_19">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">19sp</item>
+    </style>
 
     <style name="condensed_bold_20">
         <item name="android:fontFamily">sans-serif-condensed</item>
