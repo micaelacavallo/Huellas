@@ -10,7 +10,6 @@ public class Personas implements Parcelable {
 
     private String email;
     private String nombre;
-    private String apellido;
     private String telefono;
     private String contraseña;
     private boolean administrador;
@@ -24,10 +23,9 @@ public class Personas implements Parcelable {
         this.email = email;
     }
 
-    public Personas(String objectId, String email, String nombre, String apellido, String telefono, boolean administrador, boolean bloqueado, String contraseña) {
+    public Personas(String objectId, String email, String nombre, String telefono, boolean administrador, boolean bloqueado, String contraseña) {
         this.email = email;
         this.nombre = nombre;
-        this.apellido = apellido;
         this.telefono = telefono;
         this.administrador = administrador;
         this.objectId = objectId;
@@ -49,14 +47,6 @@ public class Personas implements Parcelable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
     }
 
     public String getTelefono() {
@@ -94,7 +84,6 @@ public class Personas implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.email);
         dest.writeString(this.nombre);
-        dest.writeString(this.apellido);
         dest.writeString(this.telefono);
         dest.writeByte(administrador ? (byte) 1 : (byte) 0);
         dest.writeString(this.objectId);
@@ -103,7 +92,6 @@ public class Personas implements Parcelable {
     protected Personas(Parcel in) {
         this.email = in.readString();
         this.nombre = in.readString();
-        this.apellido = in.readString();
         this.telefono = in.readString();
         this.administrador = in.readByte() != 0;
         this.objectId = in.readString();

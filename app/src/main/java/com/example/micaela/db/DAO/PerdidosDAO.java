@@ -142,7 +142,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
                 raza = new Razas(objectAux.getString(CRazas.RAZA), objectAux.getObjectId(), especie);
 
                 objectAux = object.getParseObject(CPerdidos.ID_PERSONA);
-                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.APELLIDO), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO), objectAux.getString(CPersonas.CONTRASEÑA));
+                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO), objectAux.getString(CPersonas.CONTRASEÑA));
 
                 objectAux = object.getParseObject(CPerdidos.ID_ESTADO);
                 estado = new Estados(objectAux.getObjectId(),objectAux.getString(CEstados.SITUACION));

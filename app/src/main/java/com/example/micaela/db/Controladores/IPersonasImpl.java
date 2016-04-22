@@ -49,7 +49,12 @@ public class IPersonasImpl implements IPersonas {
     }
 
     @Override
-    public void registar(Personas personas) {
-        mPersonasDAO.registar(personas);
+    public boolean registar(Personas personas) {
+       return mPersonasDAO.registar(personas);
+    }
+
+    @Override
+    public List<Personas> getPersonas() {
+        return mPersonasDAO.getPersonas();
     }
 }

@@ -27,11 +27,17 @@ public class PersonasDAO implements IPersonas {
     private ParseQuery<ParseObject> query;
     private Context context;
     private ParseObject parseObject;
+    private List<ParseObject> listParseObject;
+    private Personas persona;
+    private List<Personas> personas;
 
     public PersonasDAO(Context context) {
 
         this.context = context;
         parseObject = ParseObject.create(Clases.PERSONAS);
+        listParseObject = null;
+        persona = null;
+        personas = new ArrayList<Personas>();
 
     }
 
@@ -130,17 +136,50 @@ public class PersonasDAO implements IPersonas {
     }
 
     @Override
-    public void registar(Personas persona) {
+    public boolean registar(Personas persona) {
 
-        parseObject.put(CPersonas.NOMBRE, persona.getNombre());
-        parseObject.put(CPersonas.APELLIDO, persona.getApellido());
-        parseObject.put(CPersonas.EMAIL, persona.getEmail());
-        parseObject.put(CPersonas.TELEFONO, persona.getTelefono());
-        parseObject.put(CPersonas.BLOQUEADO, false);
-        parseObject.put(CPersonas.ADMINISTRADOR, false);
-        parseObject.put(CPersonas.CONTRASEÑA, "-");
+        boolean flag = false;
+        personas = this.getPersonas();
+        for (int x = 0; x<personas.size();x++) {
+            if (persona.getEmail().equals(personas.get(x).getEmail())) {
+                flag = true;
+            }
+        }
 
-        save(parseObject);
+        if(flag == false)
+        {
+            parseObject.put(CPersonas.NOMBRE, persona.getNombre());
+            parseObject.put(CPersonas.EMAIL, persona.getEmail());
+            parseObject.put(CPersonas.TELEFONO, persona.getTelefono());
+            parseObject.put(CPersonas.BLOQUEADO, false);
+            parseObject.put(CPersonas.ADMINISTRADOR, false);
+            parseObject.put(CPersonas.CONTRASEÑA, "-");
+
+            save(parseObject);
+        }
+
+        return flag;
+    }
+
+    @Override
+    public List<Personas> getPersonas() {
+
+        query = ParseQuery.getQuery(Clases.PERSONAS);
+        checkInternetGet(query);
+
+        try{
+            listParseObject = query.find();
+        }
+        catch(ParseException e)
+        {
+            e.printStackTrace();
+        }
+        for (ParseObject object : listParseObject) {
+            persona = new Personas(object.getObjectId(), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR), object.getBoolean(CPersonas.BLOQUEADO), object.getString(CPersonas.CONTRASEÑA));
+            personas.add(persona);
+        }
+
+        return personas;
     }
 
     public void save(ParseObject object) {
