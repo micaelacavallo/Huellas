@@ -22,8 +22,10 @@ import com.example.micaela.HuellasApplication;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,6 +39,7 @@ public class BaseActivity extends AppCompatActivity {
     ViewGroup mainContainer;
     ViewGroup containerLayout;
     CollapsingToolbarLayout mCollapsingToolbar;
+    private boolean isOverlayOpen = false;
     FloatingActionButton mFloatingButton;
     ImageView mImageViewPicture;
     View mViewDialogCamera;
@@ -110,18 +113,34 @@ public class BaseActivity extends AppCompatActivity {
 
     public String getLocation(double latitud, double longitud) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        String address = "";
         try {
             List<Address> addresses = geocoder.getFromLocation(latitud, longitud, 1);
             try {
-                return addresses.get(0).getThoroughfare() + " " + addresses.get(0).getSubThoroughfare();
+                address = addresses.get(0).getThoroughfare() + " " + addresses.get(0).getSubThoroughfare();
             } catch (NullPointerException e) {
-                return "";
             }
         } catch (IOException e) {
-            return "";
         }
+
+        return address;
     }
 
+    public LatLng convertAddress(String address) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        LatLng latLng = null;
+        if (address != null && !address.isEmpty()) {
+            try {
+                List<Address> addressList = geocoder.getFromLocationName(address, 1);
+                if (addressList != null && addressList.size() > 0) {
+                    latLng = new LatLng(addressList.get(0).getLatitude(), addressList.get(0).getLongitude());
+                }
+            } catch (Exception e) {
+                latLng = null;
+            } // end catch
+        } // end if
+        return latLng;
+    }
 
     private void setupToolbar(ViewGroup mainContainer) {
         mToolbar = (Toolbar) mainContainer.findViewById(R.id.toolbar);
@@ -140,17 +159,20 @@ public class BaseActivity extends AppCompatActivity {
 
     public void hideOverlay() {
         mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.GONE);
+        isOverlayOpen = false;
     }
 
 
     public void showOverlay(String mensaje) {
+        isOverlayOpen = true;
         mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.VISIBLE);
         mainContainer.findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
         ((TextView) mainContainer.findViewById(R.id.textView_titulo_overlay)).setText(mensaje);
         mainContainer.findViewById(R.id.button_confirmar).setVisibility(View.GONE);
     }
 
-    public void showErrorOverlay(String mensaje, View.OnClickListener listener) {
+    public void showMessageOverlay(String mensaje, View.OnClickListener listener) {
+        isOverlayOpen = true;
         mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.VISIBLE);
         mainContainer.findViewById(R.id.progress_bar).setVisibility(View.GONE);
         ((TextView) mainContainer.findViewById(R.id.textView_titulo_overlay)).setText(mensaje);
@@ -217,11 +239,24 @@ public class BaseActivity extends AppCompatActivity {
         return BitmapFactory.decodeByteArray(pic, 0, pic.length);
     }
 
+    public byte[] convertFromBitmapToByte(Bitmap pic) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        pic.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!isOverlayOpen) {
+            super.onBackPressed();
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-               finish();
+                finish();
 
         }
         return true;

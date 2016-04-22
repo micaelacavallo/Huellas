@@ -32,6 +32,7 @@
     <string name="comentarios_cantidad">%s comentarios</string>
     <string name="ubicacion">"Ubicación: "</string>
     <string name="crear_publicacion">Crear publicación</string>
+    <string name="publicando">Subiendo publicación</string>
     google_api_key
 
 </resources>

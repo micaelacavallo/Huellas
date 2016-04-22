@@ -24,14 +24,14 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_gravity="center"/>
 
     <Button
         android:id="@+id/button_confirmar"
         style="@style/condensed_normal_17"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="45dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="30dp"
         android:layout_marginLeft="30dp"

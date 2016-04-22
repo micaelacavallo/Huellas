@@ -1,6 +1,5 @@
 package com.example.micaela.activities;
 
-import android.location.Location;
 import android.os.Bundle;
 
 import com.example.micaela.huellas.R;
@@ -14,9 +13,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapActivity extends BaseActivity implements OnMapReadyCallback {
-
-    private Location mCurrentLocation;
-
 
     private double mLatitud;
     private double mLongitud;

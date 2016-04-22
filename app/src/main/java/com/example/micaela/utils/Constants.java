@@ -11,7 +11,9 @@ public class Constants {
     //  DETALLE PUBLICACION
     public static final String FROM_FRAGMENT = "FROM_FRAGMENT";
     public static final String PERDIDOS = "PERDIDOS";
-    public static final String ADICIONALES = "ADICIONALES";
+    public static final String ADICIONALES ="ADICIONALES";
+    public static final String ADICIONALES_INFO = "ADICIONALES_INFO";
+    public static final String ADICIONALES_DONACIONES = "ADICIONALES_DONACINES";
     public static final String LATITUD = "LATITUD";
     public static final String LONGITUD = "LONGITUD";
     public static final String ADDRESS = "ADDRESS";
@@ -28,6 +30,7 @@ public class Constants {
     public static final String PROFILE_GENDER = "Profile Gender";
     public static final String PROFILE_LOCATION = "Profile Location";
     public static final String PROFILE_BIRTHDAY = "Profile Birthday";
+    public static final String PROFILE_TELEFONO = "Profile Telefono";
 
 
     public static final int REQUEST_CODE_OK = 0;

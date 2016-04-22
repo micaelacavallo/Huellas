@@ -19,6 +19,7 @@ public class MisDatosFragment extends BaseFragment {
     private TextView mTextViewGenero;
     private TextView mTextViewFechaNac;
     private TextView mTextViewCiudad;
+    private TextView mTextViewTelefono;
 
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -26,11 +27,19 @@ public class MisDatosFragment extends BaseFragment {
         String facebookImagen = HuellasApplication.getInstance().getProfileImageFacebook();
         getBaseActivity().setUpCollapsingToolbar(getString(R.string.mis_datos), facebookImagen);
 
+        String telefono = HuellasApplication.getInstance().getProfileTelefono();
+
         mTextViewFechaNac = (TextView) view.findViewById(R.id.textView_fecha_nac);
         mTextViewNombre = (TextView) view.findViewById(R.id.textView_nombre_perfil);
         mTextViewMail = (TextView) view.findViewById(R.id.textView_mail);
         mTextViewGenero = (TextView) view.findViewById(R.id.textView_genero);
         mTextViewCiudad = (TextView) view.findViewById(R.id.textView_ciudad);
+        mTextViewTelefono = (TextView) view.findViewById(R.id.textView_telefono);
+        View layoutTelefonoContainer = view.findViewById(R.id.layout_telefono_container);
+        if (!telefono.equals("")) {
+            layoutTelefonoContainer.setVisibility(View.VISIBLE);
+            mTextViewTelefono.setText(telefono);
+        }
 
         mTextViewFechaNac.setText(HuellasApplication.getInstance().getProfileBirthdayFacebook());
         mTextViewMail.setText(HuellasApplication.getInstance().getProfileEmailFacebook());

@@ -101,7 +101,7 @@ public class DetallePublicacionFragment extends BaseFragment {
 
         if (latitud != 0 & longitud != 0) {
             String location = getBaseActivity().getLocation(latitud, longitud);
-            if (location.equals("")) {
+            if (!location.equals("")) {
                 mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), location));
             } else {
                 mImageViewLocation.setVisibility(View.GONE);

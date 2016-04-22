@@ -171,8 +171,11 @@ public class PrincipalActivity extends BaseActivity {
                         intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
                         break;
                     case 1:
+                        intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
+                        break;
                     case 2:
-                        intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES);
+
+                        intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_INFO);
                         break;
                 }
                 startActivity(intent);

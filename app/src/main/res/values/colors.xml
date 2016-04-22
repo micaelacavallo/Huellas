@@ -29,5 +29,6 @@
     <color name="yellow">#EEFF41</color>
     <color name="default_background">#3d3d3d</color>
     <color name="primary_30_transparency">#489688</color>
+    <color name="error">#fc4d32</color>
 
 </resources>

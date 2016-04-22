@@ -100,6 +100,7 @@ public class LoginFragment extends BaseFragment {
                                             }
                                             HuellasApplication.getInstance().saveProfileFacebook(profile.getProfilePictureUri(400, 400), profile.getName(), email, location,
                                                     gender, birthday);
+
                                             getActivity().setResult(0);
                                             getActivity().finish();
                                             ((BaseActivity) getActivity()).hideOverlay();
@@ -128,7 +129,7 @@ public class LoginFragment extends BaseFragment {
                                 getBaseActivity().logOut();
                             }
                         };
-                        ((BaseActivity) getActivity()).showErrorOverlay("Hubo un problema, intente nuevamente", listener);
+                        ((BaseActivity) getActivity()).showMessageOverlay("Hubo un problema, intente nuevamente", listener);
                     }
                 }
 

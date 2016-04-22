@@ -82,6 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="3dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -105,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingTop="10dp"
+                android:paddingTop="15dp"
                 android:paddingBottom="10dp">
 
                 <android.support.design.widget.TextInputLayout
@@ -126,7 +127,7 @@
                 <ImageView
                     android:id="@+id/imageView_location"
                     android:layout_width="0dp"
-                    android:layout_height="30dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="3dp"
                     android:layout_weight="1"
@@ -158,7 +159,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:visibility="gone"
         android:padding="15dp"
         android:layout_marginTop="5dp"
         android:text="Detalle mascota"
@@ -186,6 +186,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -210,6 +211,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="3dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -231,6 +233,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
@@ -253,6 +256,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
@@ -276,6 +280,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="3dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -298,6 +303,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="3dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -392,6 +398,8 @@
                     style="@style/condensed_normal_17"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLength="10"
+                    android:inputType="number"
                     android:hint="Teléfono" />
 
             </android.support.design.widget.TextInputLayout>
@@ -400,12 +408,23 @@
 
     </android.support.v7.widget.CardView>
 
+
+    <TextView
+        android:id="@+id/textView_error"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        style="@style/condensed_normal_17"
+        android:gravity="center"
+        android:textColor="@color/error"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:id="@+id/button_publicar"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="50dp"
         android:background="@drawable/ripple_button_general"
         style="@style/condensed_bold_17"
         android:textColor="@color/icons"

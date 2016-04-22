@@ -3,15 +3,16 @@ package com.example.micaela.fragments;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.location.Address;
-import android.location.Geocoder;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,28 +20,38 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.example.micaela.HuellasApplication;
 import com.example.micaela.activities.AltaAnimalesActivity;
 import com.example.micaela.activities.MapActivity;
 import com.example.micaela.adapters.CustomSpinnerHintAdapter;
+import com.example.micaela.db.DAO.AdicionalesDAO;
+import com.example.micaela.db.DAO.PerdidosDAO;
+import com.example.micaela.db.DAO.PersonasDAO;
+import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Edades;
 import com.example.micaela.db.Modelo.Especies;
 import com.example.micaela.db.Modelo.Estados;
+import com.example.micaela.db.Modelo.Perdidos;
+import com.example.micaela.db.Modelo.Personas;
 import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.db.Modelo.Sexos;
 import com.example.micaela.db.Modelo.Tamaños;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class AltaAnimalesFragment extends BaseFragment {
 
@@ -61,6 +72,7 @@ public class AltaAnimalesFragment extends BaseFragment {
     private TextInputLayout mTextInputLayoutTitulo;
     private TextInputLayout mTextInputLayoutDescription;
     private TextInputLayout mTextInputLayoutUbicacion;
+    private TextInputLayout mTextInputLayoutTelefono;
     private EditText mEditTextTitulo;
     private EditText mEditTextDescripcion;
     private EditText mEditTextUbicacion;
@@ -70,12 +82,19 @@ public class AltaAnimalesFragment extends BaseFragment {
     private Button mButtonPublicar;
     private ImageView mImageViewMap;
     private View mViewRazasContainer;
-
+    private ProgressBar mProgressBar;
+    private TextView mTextViewError;
     private final int CAMERA_CAPTURE = 1;
     private final int SELECT_PICTURE = 2;
     private final int CROP_PIC = 3;
     private View mRootView;
     private Location mLastLocation;
+
+    private String mFromFragment;
+    private boolean mIsEverythingOK = true;
+    private boolean mIsLocationOK = true;
+
+    private boolean mIsFromResource = true;
 
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,14 +102,14 @@ public class AltaAnimalesFragment extends BaseFragment {
 
         getBaseActivity().setUpCollapsingToolbar(getBaseActivity().getString(R.string.crear_publicacion));
         wireUpViews();
-        if (getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT).equals(Constants.PERDIDOS)) {
+
+        mFromFragment = getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT);
+        if (mFromFragment.equals(Constants.PERDIDOS)) {
             setUpSpinners();
         } else {
             mRootView.findViewById(R.id.layout_detalle_mascota_container).setVisibility(View.GONE);
             mRootView.findViewById(R.id.layout_estado_container).setVisibility(View.GONE);
         }
-
-
         return mRootView;
 
     }
@@ -103,6 +122,14 @@ public class AltaAnimalesFragment extends BaseFragment {
         List<Colores> mColores = HuellasApplication.getInstance().getmColores();
         List<Estados> mEstados = HuellasApplication.getInstance().getmEstados();
         List<Sexos> mSexos = HuellasApplication.getInstance().getmSexos();
+
+        mSpinnerRazas = (Spinner) mRootView.findViewById(R.id.spinner_razas);
+        mSpinnerEdades = (Spinner) mRootView.findViewById(R.id.spinner_edades);
+        mSpinnerEspecies = (Spinner) mRootView.findViewById(R.id.spinner_especies);
+        mSpinnerEstado = (Spinner) mRootView.findViewById(R.id.spinner_estado);
+        mSpinnerColores = (Spinner) mRootView.findViewById(R.id.spinner_colores);
+        mSpinnerSexos = (Spinner) mRootView.findViewById(R.id.spinner_sexos);
+        mSpinnerTamanios = (Spinner) mRootView.findViewById(R.id.spinner_tamanios);
 
         CustomSpinnerHintAdapter adapterEstados = new CustomSpinnerHintAdapter(getBaseActivity());
         adapterEstados.add(getString(R.string.tipo_publicacion));
@@ -173,6 +200,7 @@ public class AltaAnimalesFragment extends BaseFragment {
                             if (!textItemSelected.equals(getString(R.string.especie))) {
                                 mRootView.findViewById(R.id.textView_especie).setVisibility(View.VISIBLE);
                                 String selectedEspecie = mSpinnerEspecies.getSelectedItem().toString();
+                                mSpinnerRazas.invalidate();
                                 if (selectedEspecie.equals("Gato") || selectedEspecie.equals("Perro")) {
                                     adapterRazas.clear();
                                     adapterRazas.add(getString(R.string.raza));
@@ -180,11 +208,10 @@ public class AltaAnimalesFragment extends BaseFragment {
                                         if (selectedEspecie.equals(mRazas.get(x).getmEspecie().getEspecie()))
                                             adapterRazas.add(mRazas.get(x).getRaza());
                                     }
+                                    adapterRazas.notifyDataSetChanged();
                                     mSpinnerRazas.setAdapter(adapterRazas);
                                     mViewRazasContainer.setVisibility(View.VISIBLE);
-                                }
-
-                                else {
+                                } else {
                                     mViewRazasContainer.setVisibility(View.GONE);
                                 }
                             }
@@ -229,6 +256,7 @@ public class AltaAnimalesFragment extends BaseFragment {
 
     private void wireUpViews() {
         mImageViewFoto = getBaseActivity().getmImageViewPicture();
+        mImageViewFoto.setTag(mIsFromResource);
         mViewRazasContainer = mRootView.findViewById(R.id.layout_razas_container);
         mImageViewMap = (ImageView) mRootView.findViewById(R.id.imageView_location);
         mImageViewMap.setOnClickListener(new View.OnClickListener() {
@@ -251,18 +279,12 @@ public class AltaAnimalesFragment extends BaseFragment {
                 }
             }
         });
-        mSpinnerRazas = (Spinner) mRootView.findViewById(R.id.spinner_razas);
-        mSpinnerEdades = (Spinner) mRootView.findViewById(R.id.spinner_edades);
-        mSpinnerEspecies = (Spinner) mRootView.findViewById(R.id.spinner_especies);
-        mSpinnerEstado = (Spinner) mRootView.findViewById(R.id.spinner_estado);
-        mSpinnerColores = (Spinner) mRootView.findViewById(R.id.spinner_colores);
-        mSpinnerSexos = (Spinner) mRootView.findViewById(R.id.spinner_sexos);
-        mSpinnerTamanios = (Spinner) mRootView.findViewById(R.id.spinner_tamanios);
 
+        mTextViewError = (TextView) mRootView.findViewById(R.id.textView_error);
         mTextInputLayoutDescription = (TextInputLayout) mRootView.findViewById(R.id.textInputLayout_descripcion);
         mTextInputLayoutTitulo = (TextInputLayout) mRootView.findViewById(R.id.textInputLayout_titulo);
         mTextInputLayoutUbicacion = (TextInputLayout) mRootView.findViewById(R.id.textInputLayout_ubicacion);
-
+        mTextInputLayoutTelefono = (TextInputLayout) mRootView.findViewById(R.id.textInputLayout_telefono);
         mEditTextDescripcion = (EditText) mTextInputLayoutDescription.findViewById(R.id.editText_descripcion);
         mEditTextTitulo = (EditText) mTextInputLayoutTitulo.findViewById(R.id.editText_titulo);
         mEditTextUbicacion = (EditText) mTextInputLayoutUbicacion.findViewById(R.id.editText_ubicacion);
@@ -271,6 +293,13 @@ public class AltaAnimalesFragment extends BaseFragment {
         mEditTextMail = (EditText) mRootView.findViewById(R.id.editText_mail);
         mEditTextMail.setText(HuellasApplication.getInstance().getProfileEmailFacebook());
         mEditTextTelefono = (EditText) mRootView.findViewById(R.id.editText_telefono);
+        String telefono = HuellasApplication.getInstance().getProfileTelefono();
+        if (!telefono.equals("")) {
+            mEditTextTelefono.setEnabled(false);
+            mEditTextTelefono.setText(telefono);
+        }
+        mProgressBar = (ProgressBar) mRootView.findViewById(R.id.progress_bar);
+
         getBaseActivity().getmFloatingButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -321,25 +350,259 @@ public class AltaAnimalesFragment extends BaseFragment {
         mButtonPublicar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LatLng latLng = null;
+                if (mFromFragment.equals(Constants.PERDIDOS)) {
+                    if (TextUtils.isEmpty(mEditTextTitulo.getText())) {
+                        mIsEverythingOK = false;
+                    }
+                    if (TextUtils.isEmpty(mEditTextDescripcion.getText())) {
+                        mIsEverythingOK = false;
+                    }
+                    if (TextUtils.isEmpty(mEditTextUbicacion.getText())) {
+                        mIsEverythingOK = false;
+                    } else {
+                        latLng = getBaseActivity().convertAddress(mEditTextUbicacion.getText().toString());
+                        if (latLng == null) {
+                            mIsEverythingOK = false;
+                            mIsLocationOK = false;
+                        }
+                    }
 
+                    if (TextUtils.isEmpty(mEditTextTelefono.getText())) {
+                        mIsEverythingOK = false;
+                    }
+
+                    if (mSpinnerEstado.getSelectedItem().equals(getString(R.string.tipo_publicacion))) {
+                        mIsEverythingOK = false;
+                    }
+                    if (mViewRazasContainer.getVisibility() == View.VISIBLE && mSpinnerRazas.getSelectedItem().equals(getString(R.string.raza))) {
+                        mIsEverythingOK = false;
+                    }
+                    if (mSpinnerTamanios.getSelectedItem().equals(getString(R.string.tamaño))) {
+                        mIsEverythingOK = false;
+                    }
+                    if (mSpinnerEspecies.getSelectedItem().equals(getString(R.string.especie))) {
+                        mIsEverythingOK = false;
+                    }
+                    if (mSpinnerSexos.getSelectedItem().equals(getString(R.string.sexo))) {
+                        mIsEverythingOK = false;
+                    }
+                    if (mSpinnerColores.getSelectedItem().equals(getString(R.string.color_predominante))) {
+                        mIsEverythingOK = false;
+                    }
+                    if (mSpinnerEdades.getSelectedItem().equals(getString(R.string.edad_aproximada))) {
+                        mIsEverythingOK = false;
+                    }
+
+                    if (mIsEverythingOK) {
+                        if (((boolean) mImageViewFoto.getTag())) {
+                            mTextViewError.setVisibility(View.VISIBLE);
+                            mTextViewError.setText("Antes de publicar, suba una imagen.");
+                            YoYo.with(Techniques.Tada)
+                                    .duration(700)
+                                    .playOn(mTextViewError);
+                        } else {
+                            (getBaseActivity()).showOverlay(getString(R.string.publicando));
+                            HuellasApplication.getInstance().saveProfileTelefono(mEditTextTelefono.getText().toString());
+                            Personas persona = new Personas("", HuellasApplication.getInstance().getProfileEmailFacebook(),
+                                    HuellasApplication.getInstance().getProfileNameFacebook(), "", mEditTextTelefono.getText().toString(), false, false, "");
+                            new AsyncTaskRegistrarUsuario().execute(persona);
+                            Perdidos perdidos = new Perdidos();
+                            perdidos.setFoto(getBaseActivity().convertFromBitmapToByte(((BitmapDrawable) mImageViewFoto.getDrawable()).getBitmap()));
+                            perdidos.setColor(new Colores(mSpinnerColores.getSelectedItem().toString()));
+                            perdidos.setDescripcion(mEditTextDescripcion.getText().toString());
+                            perdidos.setTitulo(mEditTextTitulo.getText().toString());
+                            perdidos.setEstado(new Estados(mSpinnerEstado.getSelectedItem().toString()));
+                            perdidos.setEdad(new Edades(mSpinnerEdades.getSelectedItem().toString()));
+                            perdidos.setTamaño(new Tamaños(mSpinnerTamanios.getSelectedItem().toString()));
+                            if (latLng != null) {
+                                perdidos.setLatitud(latLng.latitude);
+                                perdidos.setLongitud(latLng.longitude);
+                            }
+                            perdidos.setEspecie(new Especies(mSpinnerEspecies.getSelectedItem().toString()));
+                            perdidos.setFecha(new Date());
+                            perdidos.setRaza(new Razas(mSpinnerRazas.getSelectedItem().toString()));
+                            perdidos.setSexo(new Sexos(mSpinnerSexos.getSelectedItem().toString()));
+                            Personas personas = new Personas();
+                            personas.setEmail(HuellasApplication.getInstance().getProfileEmailFacebook());
+                            personas.setTelefono(mEditTextTelefono.getText().toString());
+                            perdidos.setPersona(personas);
+                            new AsyncTaskSavePublicacionPerdido().execute(perdidos);
+                        }
+                    } else {
+                        mIsEverythingOK = true;
+                        if (mIsLocationOK) {
+                            mTextViewError.setVisibility(View.VISIBLE);
+                            mTextViewError.setText("Todos los campos son requeridos.");
+                            YoYo.with(Techniques.Tada)
+                                    .duration(700)
+                                    .playOn(mTextViewError);
+                        } else {
+                            mTextViewError.setVisibility(View.VISIBLE);
+                            mTextViewError.setText("No se pudo encontrar la ubicación ingresada, intente nuevamente.");
+                            YoYo.with(Techniques.Tada)
+                                    .duration(700)
+                                    .playOn(mTextViewError);
+                        }
+                    }
+                } else {
+                    if (TextUtils.isEmpty(mEditTextTitulo.getText())) {
+                        mIsEverythingOK = false;
+                    }
+                    if (TextUtils.isEmpty(mEditTextDescripcion.getText())) {
+                        mIsEverythingOK = false;
+                    }
+
+                    if (TextUtils.isEmpty(mEditTextUbicacion.getText())) {
+                        mIsEverythingOK = false;
+                    }
+
+                    if (TextUtils.isEmpty(mEditTextTelefono.getText())) {
+                        mIsEverythingOK = false;
+                    }
+
+                    if (mIsEverythingOK) {
+                        if (((boolean) mImageViewFoto.getTag())) {
+                            mTextViewError.setVisibility(View.VISIBLE);
+                            mTextViewError.setText("Antes de publicar, suba una imagen.");
+                            YoYo.with(Techniques.Tada)
+                                    .duration(700)
+                                    .playOn(mTextViewError);
+                        } else {
+                            (getBaseActivity()).showOverlay(getString(R.string.publicando));
+                            HuellasApplication.getInstance().saveProfileTelefono(mEditTextTelefono.getText().toString());
+                            Personas persona = new Personas("", HuellasApplication.getInstance().getProfileEmailFacebook(),
+                                    HuellasApplication.getInstance().getProfileNameFacebook(), "", mEditTextTelefono.getText().toString(), false, false, "");
+                            new AsyncTaskRegistrarUsuario().execute(persona);
+                            Adicionales adicionales = new Adicionales();
+                            adicionales.setFoto(getBaseActivity().convertFromBitmapToByte(((BitmapDrawable) mImageViewFoto.getDrawable()).getBitmap()));
+                            adicionales.setDescripcion(mEditTextDescripcion.getText().toString());
+                            adicionales.setTitulo(mEditTextTitulo.getText().toString());
+                            if (mFromFragment.equals(Constants.ADICIONALES_DONACIONES)) {
+                                adicionales.setDonacion(true);
+                            } else {
+                                adicionales.setDonacion(false);
+                            }
+                            adicionales.setFecha(new Date());
+                            Personas personas = new Personas();
+                            personas.setEmail(HuellasApplication.getInstance().getProfileEmailFacebook());
+                            personas.setTelefono(mEditTextTelefono.getText().toString());
+                            adicionales.setPersona(personas);
+                            new AsyncTaskSavePublicacionAdicional().execute(adicionales);
+                        }
+                    } else {
+                        mIsEverythingOK = true;
+                        mTextViewError.setVisibility(View.VISIBLE);
+                        mTextViewError.setText("Todos los campos son requeridos.");
+                        YoYo.with(Techniques.Tada)
+                                .duration(700)
+                                .playOn(mTextViewError);
+                    }
+                }
             }
         });
     }
 
+    private class AsyncTaskRegistrarUsuario extends AsyncTask<Personas, Void, Void> {
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
 
-    public void convertAddress(String address) {
-        Geocoder geocoder = new Geocoder(getBaseActivity(), Locale.getDefault());
-        if (address != null && !address.isEmpty()) {
+        }
+
+        @Override
+        protected Void doInBackground(Personas... params) {
+            PersonasDAO personasDAO = new PersonasDAO(getBaseActivity());
+            personasDAO.registar(params[0]);
+            return null;
+        }
+    }
+
+
+    private class AsyncTaskSavePublicacionAdicional extends AsyncTask<Adicionales, Void, Void> {
+        private boolean error = false;
+
+        @Override
+        protected Void doInBackground(Adicionales... params) {
             try {
-                List<Address> addressList = geocoder.getFromLocationName(address, 1);
-                if (addressList != null && addressList.size() > 0) {
-                    double lat = addressList.get(0).getLatitude();
-                    double lng = addressList.get(0).getLongitude();
-                }
+                AdicionalesDAO adicionalDAO = new AdicionalesDAO(getBaseActivity());
+                adicionalDAO.saveAdicional(params[0]);
             } catch (Exception e) {
-                e.printStackTrace();
-            } // end catch
-        } // end if
+                error = true;
+                getBaseActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        View.OnClickListener listener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                getBaseActivity().hideOverlay();
+                            }
+                        };
+                        getBaseActivity().showMessageOverlay("Hubo un problema, por favor intente nuevamente", listener);
+                    }
+                });
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (!error) {
+                View.OnClickListener listener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getBaseActivity().finish();
+                    }
+                };
+                getBaseActivity().showMessageOverlay("Publicación realizada con éxito!", listener);
+
+            }
+        }
+    }
+
+    private class AsyncTaskSavePublicacionPerdido extends AsyncTask<Perdidos, Void, Void> {
+        private boolean error = false;
+
+        @Override
+        protected Void doInBackground(Perdidos... params) {
+            try {
+                PerdidosDAO perdidosDAO = new PerdidosDAO(getBaseActivity());
+                perdidosDAO.savePerdido(params[0]);
+            } catch (Exception e) {
+                getBaseActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        error = true;
+                        View.OnClickListener listener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                getBaseActivity().hideOverlay();
+                            }
+                        };
+                        getBaseActivity().showMessageOverlay("Hubo un problema, por favor intente nuevamente", listener);
+                    }
+                });
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (!error) {
+                View.OnClickListener listener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getBaseActivity().hideOverlay();
+                    }
+                };
+                getBaseActivity().showMessageOverlay("Publicación realizada con éxito!", listener);
+
+            }
+        }
 
     }
 
@@ -359,6 +622,8 @@ public class AltaAnimalesFragment extends BaseFragment {
                     mViewDialogCamera.setVisibility(View.GONE);
                     Bitmap mPhoto = data.getExtras().getParcelable(Constants.DATA);
                     mImageViewFoto.setImageBitmap(mPhoto);
+                    mIsFromResource = false;
+                    mImageViewFoto.setTag(mIsFromResource);
                     break;
             }
         }

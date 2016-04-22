@@ -47,6 +47,10 @@
         <item name="android:textSize">@style/condensed_normal_19</item>
     </style>
 
+    <style name="HintErrorStyle" parent="AppTheme">
+        <item name="android:textColorHint">@color/error</item>
+    </style>
+
     <style name="condensed_normal_small_13">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">normal</item>

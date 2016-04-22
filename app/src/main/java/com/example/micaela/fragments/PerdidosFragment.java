@@ -150,7 +150,7 @@ public class PerdidosFragment extends BaseFragment {
                                 startActivity(intent);
                             }
                         };
-                        getBaseActivity().showErrorOverlay("Hubo un problema, por favor intente nuevamente", listener);
+                        getBaseActivity().showMessageOverlay("Hubo un problema, por favor intente nuevamente", listener);
                     }
                 });
             }

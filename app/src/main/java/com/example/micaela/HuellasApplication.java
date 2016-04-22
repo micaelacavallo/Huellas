@@ -151,6 +151,18 @@ public class HuellasApplication extends Application {
         editor.apply();
     }
 
+
+    public void saveProfileTelefono (String telefono) {
+        SharedPreferences.Editor editor = HuellasApplication.getInstance().getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE).edit();
+        editor.putString(Constants.PROFILE_TELEFONO, telefono);
+        editor.apply();
+    }
+
+    public String getProfileTelefono () {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(Constants.PROFILE_TELEFONO, "");
+    }
+
     public String getProfileNameFacebook() {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(Constants.PROFILE_NAME, "");

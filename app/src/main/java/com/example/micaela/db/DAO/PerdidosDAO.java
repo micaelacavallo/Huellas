@@ -1,9 +1,7 @@
 package com.example.micaela.db.DAO;
 
 import android.content.Context;
-import android.widget.Toast;
 
-import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Constantes.CAdicionales;
 import com.example.micaela.db.Constantes.CColores;
 import com.example.micaela.db.Constantes.CEdades;
@@ -15,6 +13,7 @@ import com.example.micaela.db.Constantes.CRazas;
 import com.example.micaela.db.Constantes.CSexos;
 import com.example.micaela.db.Constantes.CTamaños;
 import com.example.micaela.db.Constantes.Clases;
+import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Interfaces.IPerdidos;
@@ -28,18 +27,12 @@ import com.example.micaela.db.Modelo.Personas;
 import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.db.Modelo.Sexos;
 import com.example.micaela.db.Modelo.Tamaños;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
-import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
-import com.parse.SendCallback;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -231,6 +224,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         perdidosObject.put(CPerdidos.FOTOS, new ParseFile("picture.jpg", perdido.getFoto()));
         perdidosObject.put(CPerdidos.UBICACION, new ParseGeoPoint(perdido.getLatitud(), perdido.getLongitud()));
         perdidosObject.put(CPerdidos.SOLUCIONADO, false);
+        perdidosObject.put(CPerdidos.BLOQUEADO, false);
 
 
         try {

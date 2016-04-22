@@ -1,15 +1,13 @@
 package com.example.micaela.db.DAO;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Constantes.CAdicionales;
 import com.example.micaela.db.Constantes.CColores;
 import com.example.micaela.db.Constantes.CEstados;
 import com.example.micaela.db.Constantes.CPersonas;
 import com.example.micaela.db.Constantes.Clases;
+import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Interfaces.IAdicionales;
 import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.Interfaces.IGeneral;
@@ -59,7 +57,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         adicionalObject = ParseObject.create(Clases.ADICIONALES);
         query = null;
         objectAux = null;
-        persona = null;
+        persona = new Personas();
         estado = null;
         comentario = null;
         foto = null;
@@ -130,6 +128,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                 }
 
                 foto = object.getParseFile(CAdicionales.FOTOS);
+
 
                 byte[] image = null;
                 if (foto != null) {
@@ -241,8 +240,8 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         adicionalObject.put(CAdicionales.FOTOS, adicional.getFoto());
 
         try {
-            persona = getPersona(adicional.getPersona().getEmail());
-            estado = getEstado("-");
+            persona = iGeneral.getPersona(adicional.getPersona().getEmail());
+            estado = iGeneral.getEstado("-");
         } catch (ParseException e) {
             e.printStackTrace();
         }
