@@ -14,13 +14,11 @@ import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.adapters.AdicionalesAdapter;
 import com.example.micaela.db.Controladores.IAdicionalesImpl;
-import com.example.micaela.db.DAO.AdicionalesDAO;
 import com.example.micaela.db.Interfaces.IAdicionales;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.huellas.R;
 import com.parse.ParseException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DonacionesFragment extends BaseFragment {
@@ -33,11 +31,18 @@ public class DonacionesFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_donaciones, container, false);
         mIAdicionalesImpl = new IAdicionalesImpl(getActivity().getApplicationContext());
 
-        new AsyncTaskAdicionales().execute();
         inicializarSwipeRefresh(view);
         inicializarRecycler(view);
 
+        setHasOptionsMenu(false);
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new AsyncTaskAdicionales().execute();
     }
 
     private void inicializarSwipeRefresh(View view) {

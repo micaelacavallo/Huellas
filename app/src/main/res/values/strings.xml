@@ -33,6 +33,7 @@
     <string name="ubicacion">"Ubicación: "</string>
     <string name="crear_publicacion">Crear publicación</string>
     <string name="publicando">Subiendo publicación</string>
+    <string name="buscar">Buscar</string>
     google_api_key
 
 </resources>

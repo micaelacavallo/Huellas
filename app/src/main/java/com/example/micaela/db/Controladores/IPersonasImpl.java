@@ -49,8 +49,8 @@ public class IPersonasImpl implements IPersonas {
     }
 
     @Override
-    public boolean registar(Personas personas) {
-       return mPersonasDAO.registar(personas);
+    public void registar(Personas personas) {
+       mPersonasDAO.registar(personas);
     }
 
     @Override

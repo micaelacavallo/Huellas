@@ -8,6 +8,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -37,12 +40,18 @@ public class PerdidosFragment extends BaseFragment {
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_perdidos, container, false);
         mIperdidosImpl = new IPerdidosImpl(getActivity().getApplicationContext());
-        new AsyncTaskPerdidos().execute();
         inicializarSwipeRefresh(view);
         inicializarRecycler(view);
 
+        setHasOptionsMenu(true);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new AsyncTaskPerdidos().execute();
     }
 
     private void inicializarSwipeRefresh(View view) {
@@ -75,6 +84,16 @@ public class PerdidosFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_dashboard, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
 
     private class AsyncTaskPerdidos extends AsyncTask<Void, Void, List<Perdidos>> {
 
@@ -111,8 +130,6 @@ public class PerdidosFragment extends BaseFragment {
             return null;
 
         }
-
-
     }
 
     private class AsyncTaskPerdidosInfo extends AsyncTask<Void, Void, Void> {

@@ -110,6 +110,7 @@
         <activity
             android:name="com.example.micaela.activities.MapActivity"
             android:label="@string/title_activity_maps"
+            android:theme="@style/AppTheme"
             android:screenOrientation="portrait">
         </activity>
 

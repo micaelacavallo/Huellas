@@ -136,7 +136,7 @@ public class PersonasDAO implements IPersonas {
     }
 
     @Override
-    public boolean registar(Personas persona) {
+    public void registar(Personas persona) {
 
         boolean flag = false;
         personas = this.getPersonas();
@@ -146,7 +146,7 @@ public class PersonasDAO implements IPersonas {
             }
         }
 
-        if(flag == false)
+        if(!flag)
         {
             parseObject.put(CPersonas.NOMBRE, persona.getNombre());
             parseObject.put(CPersonas.EMAIL, persona.getEmail());
@@ -157,8 +157,6 @@ public class PersonasDAO implements IPersonas {
 
             save(parseObject);
         }
-
-        return flag;
     }
 
     @Override

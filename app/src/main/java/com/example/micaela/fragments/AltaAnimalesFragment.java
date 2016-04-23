@@ -95,6 +95,7 @@ public class AltaAnimalesFragment extends BaseFragment {
     private boolean mIsLocationOK = true;
 
     private boolean mIsFromResource = true;
+    private LatLng latLng;
 
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -350,7 +351,6 @@ public class AltaAnimalesFragment extends BaseFragment {
         mButtonPublicar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LatLng latLng = null;
                 if (mFromFragment.equals(Constants.PERDIDOS)) {
                     if (TextUtils.isEmpty(mEditTextTitulo.getText())) {
                         mIsEverythingOK = false;
@@ -405,29 +405,8 @@ public class AltaAnimalesFragment extends BaseFragment {
                             (getBaseActivity()).showOverlay(getString(R.string.publicando));
                             HuellasApplication.getInstance().saveProfileTelefono(mEditTextTelefono.getText().toString());
                             Personas persona = new Personas("", HuellasApplication.getInstance().getProfileEmailFacebook(),
-                                    HuellasApplication.getInstance().getProfileNameFacebook(), "", mEditTextTelefono.getText().toString(), false, false, "");
+                                    HuellasApplication.getInstance().getProfileNameFacebook(), mEditTextTelefono.getText().toString(), false, false, "");
                             new AsyncTaskRegistrarUsuario().execute(persona);
-                            Perdidos perdidos = new Perdidos();
-                            perdidos.setFoto(getBaseActivity().convertFromBitmapToByte(((BitmapDrawable) mImageViewFoto.getDrawable()).getBitmap()));
-                            perdidos.setColor(new Colores(mSpinnerColores.getSelectedItem().toString()));
-                            perdidos.setDescripcion(mEditTextDescripcion.getText().toString());
-                            perdidos.setTitulo(mEditTextTitulo.getText().toString());
-                            perdidos.setEstado(new Estados(mSpinnerEstado.getSelectedItem().toString()));
-                            perdidos.setEdad(new Edades(mSpinnerEdades.getSelectedItem().toString()));
-                            perdidos.setTamaño(new Tamaños(mSpinnerTamanios.getSelectedItem().toString()));
-                            if (latLng != null) {
-                                perdidos.setLatitud(latLng.latitude);
-                                perdidos.setLongitud(latLng.longitude);
-                            }
-                            perdidos.setEspecie(new Especies(mSpinnerEspecies.getSelectedItem().toString()));
-                            perdidos.setFecha(new Date());
-                            perdidos.setRaza(new Razas(mSpinnerRazas.getSelectedItem().toString()));
-                            perdidos.setSexo(new Sexos(mSpinnerSexos.getSelectedItem().toString()));
-                            Personas personas = new Personas();
-                            personas.setEmail(HuellasApplication.getInstance().getProfileEmailFacebook());
-                            personas.setTelefono(mEditTextTelefono.getText().toString());
-                            perdidos.setPersona(personas);
-                            new AsyncTaskSavePublicacionPerdido().execute(perdidos);
                         }
                     } else {
                         mIsEverythingOK = true;
@@ -472,23 +451,8 @@ public class AltaAnimalesFragment extends BaseFragment {
                             (getBaseActivity()).showOverlay(getString(R.string.publicando));
                             HuellasApplication.getInstance().saveProfileTelefono(mEditTextTelefono.getText().toString());
                             Personas persona = new Personas("", HuellasApplication.getInstance().getProfileEmailFacebook(),
-                                    HuellasApplication.getInstance().getProfileNameFacebook(), "", mEditTextTelefono.getText().toString(), false, false, "");
+                                    HuellasApplication.getInstance().getProfileNameFacebook(), mEditTextTelefono.getText().toString(), false, false, "");
                             new AsyncTaskRegistrarUsuario().execute(persona);
-                            Adicionales adicionales = new Adicionales();
-                            adicionales.setFoto(getBaseActivity().convertFromBitmapToByte(((BitmapDrawable) mImageViewFoto.getDrawable()).getBitmap()));
-                            adicionales.setDescripcion(mEditTextDescripcion.getText().toString());
-                            adicionales.setTitulo(mEditTextTitulo.getText().toString());
-                            if (mFromFragment.equals(Constants.ADICIONALES_DONACIONES)) {
-                                adicionales.setDonacion(true);
-                            } else {
-                                adicionales.setDonacion(false);
-                            }
-                            adicionales.setFecha(new Date());
-                            Personas personas = new Personas();
-                            personas.setEmail(HuellasApplication.getInstance().getProfileEmailFacebook());
-                            personas.setTelefono(mEditTextTelefono.getText().toString());
-                            adicionales.setPersona(personas);
-                            new AsyncTaskSavePublicacionAdicional().execute(adicionales);
                         }
                     } else {
                         mIsEverythingOK = true;
@@ -507,7 +471,46 @@ public class AltaAnimalesFragment extends BaseFragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
+            if (mFromFragment.equals(Constants.PERDIDOS)) {
+                Perdidos perdidos = new Perdidos();
+                perdidos.setFoto(getBaseActivity().convertFromBitmapToByte(((BitmapDrawable) mImageViewFoto.getDrawable()).getBitmap()));
+                perdidos.setColor(new Colores(mSpinnerColores.getSelectedItem().toString()));
+                perdidos.setDescripcion(mEditTextDescripcion.getText().toString());
+                perdidos.setTitulo(mEditTextTitulo.getText().toString());
+                perdidos.setEstado(new Estados(mSpinnerEstado.getSelectedItem().toString()));
+                perdidos.setEdad(new Edades(mSpinnerEdades.getSelectedItem().toString()));
+                perdidos.setTamaño(new Tamaños(mSpinnerTamanios.getSelectedItem().toString()));
+                if (latLng != null) {
+                    perdidos.setLatitud(latLng.latitude);
+                    perdidos.setLongitud(latLng.longitude);
+                }
+                perdidos.setEspecie(new Especies(mSpinnerEspecies.getSelectedItem().toString()));
+                perdidos.setFecha(new Date());
+                perdidos.setRaza(new Razas(mSpinnerRazas.getSelectedItem().toString()));
+                perdidos.setSexo(new Sexos(mSpinnerSexos.getSelectedItem().toString()));
+                Personas personas = new Personas();
+                personas.setEmail(HuellasApplication.getInstance().getProfileEmailFacebook());
+                personas.setTelefono(mEditTextTelefono.getText().toString());
+                perdidos.setPersona(personas);
+                new AsyncTaskSavePublicacionPerdido().execute(perdidos);
+            }
+            else {
+                Adicionales adicionales = new Adicionales();
+                adicionales.setFoto(getBaseActivity().convertFromBitmapToByte(((BitmapDrawable) mImageViewFoto.getDrawable()).getBitmap()));
+                adicionales.setDescripcion(mEditTextDescripcion.getText().toString());
+                adicionales.setTitulo(mEditTextTitulo.getText().toString());
+                if (mFromFragment.equals(Constants.ADICIONALES_DONACIONES)) {
+                    adicionales.setDonacion(true);
+                } else {
+                    adicionales.setDonacion(false);
+                }
+                adicionales.setFecha(new Date());
+                Personas personas = new Personas();
+                personas.setEmail(HuellasApplication.getInstance().getProfileEmailFacebook());
+                personas.setTelefono(mEditTextTelefono.getText().toString());
+                adicionales.setPersona(personas);
+                new AsyncTaskSavePublicacionAdicional().execute(adicionales);
+            }
         }
 
         @Override

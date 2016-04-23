@@ -32,11 +32,18 @@ public class InformacionUtilFragment extends BaseFragment  {
         View view = inflater.inflate(R.layout.fragment_info_util, container, false);
         mIAdicionalesImpl = new IAdicionalesImpl(getActivity().getApplicationContext());
 
-        new AsyncTaskAdicionales().execute();
         inicializarSwipeRefresh(view);
         inicializarRecycler(view);
 
+        setHasOptionsMenu(false);
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new AsyncTaskAdicionales().execute();
     }
 
     private void inicializarSwipeRefresh(View view) {

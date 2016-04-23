@@ -53,19 +53,17 @@ public class DetallePublicacionFragment extends BaseFragment {
 
         if (Constants.PERDIDOS.equals(getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT))) {
             mPerdidos = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
-            fillViews(mPerdidos.getPersona().getNombre() + " " + mPerdidos.getPersona().getApellido(),
-                    mPerdidos.getPersona().getTelefono(), mPerdidos.getEstado().getSituacion(), mPerdidos.getFoto(),
-                    mPerdidos.getTitulo(), mPerdidos.getDescripcion(), mPerdidos.getRaza().getmRaza(),
-                    mPerdidos.getEspecie().getEspecie(), mPerdidos.getColor().getColor(),
-                    mPerdidos.getTamaño().getTamaño(), mPerdidos.getEdad().getEdad(), mPerdidos.getSexo().getSexo(),
-                    mPerdidos.getLatitud(), mPerdidos.getLongitud(), mPerdidos.getFecha());
+            fillViews(mPerdidos.getPersona().getNombre(),mPerdidos.getPersona().getTelefono(),
+                    mPerdidos.getEstado().getSituacion(), mPerdidos.getFoto(), mPerdidos.getTitulo(),
+                    mPerdidos.getDescripcion(), mPerdidos.getRaza().getmRaza(), mPerdidos.getEspecie().getEspecie(),
+                    mPerdidos.getColor().getColor(), mPerdidos.getTamaño().getTamaño(), mPerdidos.getEdad().getEdad(),
+                    mPerdidos.getSexo().getSexo(), mPerdidos.getLatitud(), mPerdidos.getLongitud(), mPerdidos.getFecha());
         } else {
             Adicionales adicionales = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
             mTextViewDatos.setVisibility(View.GONE);
             mViewLocation.setVisibility(View.GONE);
-            fillViews(adicionales.getPersona().getNombre() + " " + adicionales.getPersona().getApellido(),
-                    adicionales.getPersona().getTelefono(), "", adicionales.getFoto(), adicionales.getTitulo(),
-                    adicionales.getDescripcion(), "", "", "", "", "", "", 0, 0, adicionales.getFecha());
+            fillViews(adicionales.getPersona().getNombre(), adicionales.getPersona().getTelefono(), "", adicionales.getFoto(),
+                    adicionales.getTitulo(), adicionales.getDescripcion(), "", "", "", "", "", "", 0, 0, adicionales.getFecha());
         }
 
 
