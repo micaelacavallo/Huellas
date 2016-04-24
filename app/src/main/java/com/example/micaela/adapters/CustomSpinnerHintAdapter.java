@@ -6,19 +6,19 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.micaela.huellas.R;
-
 public class CustomSpinnerHintAdapter extends ArrayAdapter<String> {
 
-
     Context mContext;
+    int textSizeRes;
 
-    public CustomSpinnerHintAdapter(Context context, int resource, int textViewResourceId) {
+    public CustomSpinnerHintAdapter(Context context, int resource, int textViewResourceId, int textSizeRes) {
         super(context, resource, textViewResourceId);
+        this.textSizeRes = textSizeRes;
     }
 
-    public CustomSpinnerHintAdapter(Context context) {
+    public CustomSpinnerHintAdapter(Context context, int textSizeRes) {
         super(context, android.R.layout.simple_spinner_item);
+        this.textSizeRes = textSizeRes;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class CustomSpinnerHintAdapter extends ArrayAdapter<String> {
             view = super.getView(position, null, parent);
             textView = (TextView) view.findViewById(android.R.id.text1);
             textView.setPadding(50, 25, 0, 25);
-            textView.setTextAppearance(getContext(), R.style.condensed_normal_17);
+            textView.setTextAppearance(getContext(),textSizeRes);
         }
 
         return view;

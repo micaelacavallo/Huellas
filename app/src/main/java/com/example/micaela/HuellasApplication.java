@@ -9,6 +9,7 @@ import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Edades;
 import com.example.micaela.db.Modelo.Especies;
 import com.example.micaela.db.Modelo.Estados;
+import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.db.Modelo.Sexos;
 import com.example.micaela.db.Modelo.Tamaños;
@@ -32,6 +33,7 @@ public class HuellasApplication extends Application {
     private List<Colores> mColores = new ArrayList<>();
     private List<Estados> mEstados = new ArrayList<>();
     private List<Sexos> mSexos = new ArrayList<>();
+    private List<Perdidos> mPerdidos = new ArrayList<>();
 
     public static HuellasApplication getInstance() {
         return instance;
@@ -45,6 +47,14 @@ public class HuellasApplication extends Application {
         initParse();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
+    }
+
+    public List<Perdidos> getmPerdidos() {
+        return mPerdidos;
+    }
+
+    public void setmPerdidos(List<Perdidos> mPerdidos) {
+        this.mPerdidos = mPerdidos;
     }
 
     public List<Sexos> getmSexos() {

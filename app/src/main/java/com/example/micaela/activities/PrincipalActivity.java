@@ -3,6 +3,7 @@ package com.example.micaela.activities;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -24,6 +25,9 @@ import android.widget.TextView;
 
 import com.example.micaela.HuellasApplication;
 import com.example.micaela.ZoomOutPageTransformer;
+import com.example.micaela.db.DAO.GeneralDAO;
+import com.example.micaela.db.DAO.PerdidosDAO;
+import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.fragments.DonacionesFragment;
 import com.example.micaela.fragments.InformacionUtilFragment;
 import com.example.micaela.fragments.PerdidosFragment;
@@ -32,6 +36,8 @@ import com.example.micaela.utils.CircleImageTransform;
 import com.example.micaela.utils.Constants;
 import com.software.shell.fab.ActionButton;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 
 public class PrincipalActivity extends BaseActivity {
@@ -42,6 +48,7 @@ public class PrincipalActivity extends BaseActivity {
     private boolean mIsDrawerOpen = false;
     private TextView mUserNameTextView;
     private ImageView mUserPhotoImageView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +100,7 @@ public class PrincipalActivity extends BaseActivity {
 
         mUserNameTextView = (TextView) header.findViewById(R.id.nav_drawer_nombre_cuenta);
         mUserPhotoImageView = (ImageView) header.findViewById(R.id.nav_drawer_foto_perfil);
+        new AsyncTaskPerdidosInfo().execute();
         if (HuellasApplication.getInstance().getAccessTokenFacebook().equals("")) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent, Constants.REQUEST_CODE_OK);
@@ -219,8 +227,11 @@ public class PrincipalActivity extends BaseActivity {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
+            case R.id.action_search:
+                return false;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
@@ -288,6 +299,53 @@ public class PrincipalActivity extends BaseActivity {
             tabLayout.invalidate();
         } catch (Exception e) {
             Log.e(getClass().getSimpleName(), e.getMessage());
+        }
+    }
+
+    private class AsyncTaskPerdidosInfo extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            try {
+                PerdidosDAO perdidosDAO = new PerdidosDAO(PrincipalActivity.this);
+                HuellasApplication.getInstance().setmEspecies(perdidosDAO.getEspecies());
+                HuellasApplication.getInstance().setmRazas(perdidosDAO.getRazas());
+                HuellasApplication.getInstance().setmColores(perdidosDAO.getColores());
+                HuellasApplication.getInstance().setmEdades(perdidosDAO.getEdades());
+                HuellasApplication.getInstance().setmTamanios(perdidosDAO.getTamaños());
+                HuellasApplication.getInstance().setmSexos(perdidosDAO.getSexos());
+
+                GeneralDAO generalDAO = new GeneralDAO(PrincipalActivity.this);
+                List<Estados> estados = generalDAO.getEstados();
+                for (int x = 0; x < estados.size(); x++) {
+                    if (estados.get(x).getSituacion().equals("-")) {
+                        estados.remove(x);
+                    }
+                }
+                HuellasApplication.getInstance().setmEstados(estados);
+            } catch (Exception e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        View.OnClickListener listener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                               finish();
+                              logOut();
+                            }
+                        };
+                        showMessageOverlay("Hubo un problema, por favor intente nuevamente", listener);
+                    }
+                });
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
         }
     }
 

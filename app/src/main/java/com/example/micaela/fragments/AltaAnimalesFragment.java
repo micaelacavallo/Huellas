@@ -132,7 +132,7 @@ public class AltaAnimalesFragment extends BaseFragment {
         mSpinnerSexos = (Spinner) mRootView.findViewById(R.id.spinner_sexos);
         mSpinnerTamanios = (Spinner) mRootView.findViewById(R.id.spinner_tamanios);
 
-        CustomSpinnerHintAdapter adapterEstados = new CustomSpinnerHintAdapter(getBaseActivity());
+        CustomSpinnerHintAdapter adapterEstados = new CustomSpinnerHintAdapter(getBaseActivity(), R.style.condensed_normal_17);
         adapterEstados.add(getString(R.string.tipo_publicacion));
         for (int x = 0; x < mEstados.size(); x++) {
             adapterEstados.add(mEstados.get(x).getSituacion());
@@ -140,32 +140,32 @@ public class AltaAnimalesFragment extends BaseFragment {
         mSpinnerEstado.setAdapter(adapterEstados);
 
 
-        CustomSpinnerHintAdapter adapterEspecies = new CustomSpinnerHintAdapter(getBaseActivity());
+        CustomSpinnerHintAdapter adapterEspecies = new CustomSpinnerHintAdapter(getBaseActivity(), R.style.condensed_normal_17);
         adapterEspecies.add(getString(R.string.especie));
         for (int x = 0; x < mEspecies.size(); x++) {
             adapterEspecies.add(mEspecies.get(x).getEspecie());
         }
         mSpinnerEspecies.setAdapter(adapterEspecies);
 
-        final CustomSpinnerHintAdapter adapterRazas = new CustomSpinnerHintAdapter(getBaseActivity());
+        final CustomSpinnerHintAdapter adapterRazas = new CustomSpinnerHintAdapter(getBaseActivity(), R.style.condensed_normal_17);
         adapterRazas.add(getString(R.string.raza));
         mSpinnerRazas.setAdapter(adapterRazas);
 
-        CustomSpinnerHintAdapter adapterTamaños = new CustomSpinnerHintAdapter(getBaseActivity());
+        CustomSpinnerHintAdapter adapterTamaños = new CustomSpinnerHintAdapter(getBaseActivity(),  R.style.condensed_normal_17);
         adapterTamaños.add(getString(R.string.tamaño));
         for (int x = 0; x < mTamanios.size(); x++) {
             adapterTamaños.add(mTamanios.get(x).getTamaño());
         }
         mSpinnerTamanios.setAdapter(adapterTamaños);
 
-        CustomSpinnerHintAdapter adapterEdades = new CustomSpinnerHintAdapter(getBaseActivity());
+        CustomSpinnerHintAdapter adapterEdades = new CustomSpinnerHintAdapter(getBaseActivity(),  R.style.condensed_normal_17);
         adapterEdades.add(getString(R.string.edad_aproximada));
         for (int x = 0; x < mEdades.size(); x++) {
             adapterEdades.add(mEdades.get(x).getEdad());
         }
         mSpinnerEdades.setAdapter(adapterEdades);
 
-        CustomSpinnerHintAdapter adapterColores = new CustomSpinnerHintAdapter(getBaseActivity());
+        CustomSpinnerHintAdapter adapterColores = new CustomSpinnerHintAdapter(getBaseActivity(),  R.style.condensed_normal_17);
         adapterColores.add(getString(R.string.color_predominante));
         for (int x = 0; x < mColores.size(); x++) {
             adapterColores.add(mColores.get(x).getColor());
@@ -173,7 +173,7 @@ public class AltaAnimalesFragment extends BaseFragment {
         mSpinnerColores.setAdapter(adapterColores);
 
 
-        CustomSpinnerHintAdapter adapterSexos = new CustomSpinnerHintAdapter(getBaseActivity());
+        CustomSpinnerHintAdapter adapterSexos = new CustomSpinnerHintAdapter(getBaseActivity(),  R.style.condensed_normal_17);
         adapterSexos.add(getString(R.string.sexo));
         for (int x = 0; x < mSexos.size(); x++) {
             adapterSexos.add(mSexos.get(x).getSexo());
@@ -202,19 +202,16 @@ public class AltaAnimalesFragment extends BaseFragment {
                                 mRootView.findViewById(R.id.textView_especie).setVisibility(View.VISIBLE);
                                 String selectedEspecie = mSpinnerEspecies.getSelectedItem().toString();
                                 mSpinnerRazas.invalidate();
-                                if (selectedEspecie.equals("Gato") || selectedEspecie.equals("Perro")) {
                                     adapterRazas.clear();
                                     adapterRazas.add(getString(R.string.raza));
                                     for (int x = 0; x < mRazas.size(); x++) {
-                                        if (selectedEspecie.equals(mRazas.get(x).getmEspecie().getEspecie()))
+                                        if (selectedEspecie.equals(mRazas.get(x).getmEspecie().getEspecie()) ||
+                                                mRazas.get(x).getmEspecie().getEspecie() == null)
                                             adapterRazas.add(mRazas.get(x).getRaza());
                                     }
                                     adapterRazas.notifyDataSetChanged();
                                     mSpinnerRazas.setAdapter(adapterRazas);
                                     mViewRazasContainer.setVisibility(View.VISIBLE);
-                                } else {
-                                    mViewRazasContainer.setVisibility(View.GONE);
-                                }
                             }
                             break;
                         case R.id.spinner_razas:

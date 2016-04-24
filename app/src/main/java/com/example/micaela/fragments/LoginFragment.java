@@ -67,40 +67,7 @@ public class LoginFragment extends BaseFragment {
                                     new GraphRequest.GraphJSONObjectCallback() {
                                         @Override
                                         public void onCompleted(JSONObject object, GraphResponse response) {
-                                            String email, birthday, location, gender;
-                                            // Application code
-                                            try {
-                                                email = object.getString("email");
-                                            } catch (JSONException e) {
-                                                email = "";
-                                            }
-                                            try {
-                                                birthday = object.getString("birthday");
-                                            } catch (JSONException e) {
-                                                birthday = "";
-                                            }
-
-                                            try {
-                                                location = object.getJSONObject("location").getString("name");
-                                            } catch (JSONException e) {
-                                                location = "";
-                                            }
-                                            try {
-                                                gender = object.getString("gender");
-                                            } catch (JSONException e) {
-                                                gender = "";
-                                            }
-
-                                            if (gender.equals("female")) {
-                                                gender = "femenino";
-                                            } else {
-                                                if (gender.equals("male")) {
-                                                    gender = "masculino";
-                                                }
-                                            }
-                                            HuellasApplication.getInstance().saveProfileFacebook(profile.getProfilePictureUri(400, 400), profile.getName(), email, location,
-                                                    gender, birthday);
-
+                                            getFacebookData(object, profile);
                                             getActivity().setResult(0);
                                             getActivity().finish();
                                             ((BaseActivity) getActivity()).hideOverlay();
@@ -145,21 +112,40 @@ public class LoginFragment extends BaseFragment {
     }
 
 
-    private Bundle getFacebookData(JSONObject object) {
-        Bundle bundle = new Bundle();
+    private void getFacebookData(JSONObject object, Profile profile) {
+        String email, birthday, location, gender;
+        // Application code
         try {
-            if (object.has("email"))
-                bundle.putString("email", object.getString("email"));
-            if (object.has("gender"))
-                bundle.putString("gender", object.getString("gender"));
-            if (object.has("birthday"))
-                bundle.putString("birthday", object.getString("birthday"));
-            if (object.has("location"))
-                bundle.putString("location", object.getJSONObject("location").getString("name"));
+            email = object.getString("email");
         } catch (JSONException e) {
-            e.printStackTrace();
+            email = "";
+        }
+        try {
+            birthday = object.getString("birthday");
+        } catch (JSONException e) {
+            birthday = "";
         }
 
-        return bundle;
+        try {
+            location = object.getJSONObject("location").getString("name");
+        } catch (JSONException e) {
+            location = "";
+        }
+        try {
+            gender = object.getString("gender");
+        } catch (JSONException e) {
+            gender = "";
+        }
+
+        if (gender.equals("female")) {
+            gender = "femenino";
+        } else {
+            if (gender.equals("male")) {
+                gender = "masculino";
+            }
+        }
+        HuellasApplication.getInstance().saveProfileFacebook(profile.getProfilePictureUri(400, 400), profile.getName(), email, location,
+                gender, birthday);
     }
+
 }
