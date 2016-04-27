@@ -129,13 +129,9 @@ public class PerdidosFragment extends BaseFragment {
         setHasOptionsMenu(true);
 
         setUpSpinners();
-        return mRootView;
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
         new AsyncTaskPerdidos().execute();
+        return mRootView;
     }
 
     private void inicializarSwipeRefresh(View view) {

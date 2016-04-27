@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.micaela.HuellasApplication;
@@ -111,13 +112,13 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    public String getLocation(double latitud, double longitud) {
+    public Address getLocation(double latitud, double longitud) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        String address = "";
+        Address address = null;
         try {
             List<Address> addresses = geocoder.getFromLocation(latitud, longitud, 1);
             try {
-                address = addresses.get(0).getThoroughfare() + " " + addresses.get(0).getSubThoroughfare();
+                address = addresses.get(0);
             } catch (NullPointerException e) {
             }
         } catch (IOException e) {
@@ -167,6 +168,7 @@ public class BaseActivity extends AppCompatActivity {
         isOverlayOpen = true;
         mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.VISIBLE);
         mainContainer.findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
+        ((ProgressBar)mainContainer.findViewById(R.id.progress_bar)).getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.accent), android.graphics.PorterDuff.Mode.MULTIPLY);
         ((TextView) mainContainer.findViewById(R.id.textView_titulo_overlay)).setText(mensaje);
         mainContainer.findViewById(R.id.button_confirmar).setVisibility(View.GONE);
     }

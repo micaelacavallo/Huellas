@@ -3,6 +3,7 @@ package com.example.micaela.fragments;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Address;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -53,7 +54,7 @@ public class DetallePublicacionFragment extends BaseFragment {
 
         if (Constants.PERDIDOS.equals(getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT))) {
             mPerdidos = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
-            fillViews(mPerdidos.getPersona().getNombre(),mPerdidos.getPersona().getTelefono(),
+            fillViews(mPerdidos.getPersona().getNombre(), mPerdidos.getPersona().getTelefono(),
                     mPerdidos.getEstado().getSituacion(), mPerdidos.getFoto(), mPerdidos.getTitulo(),
                     mPerdidos.getDescripcion(), mPerdidos.getRaza().getmRaza(), mPerdidos.getEspecie().getEspecie(),
                     mPerdidos.getColor().getColor(), mPerdidos.getTamaño().getTamaño(), mPerdidos.getEdad().getEdad(),
@@ -98,13 +99,20 @@ public class DetallePublicacionFragment extends BaseFragment {
         mTextViewFecha.setText(TextUtils.concat(bold("Fecha de publicación: "), ((BaseActivity) getActivity()).getFormattedDate(fecha)));
 
         if (latitud != 0 & longitud != 0) {
-            String location = getBaseActivity().getLocation(latitud, longitud);
-            if (!location.equals("")) {
-                mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), location));
-            } else {
+            Address address = getBaseActivity().getLocation(latitud, longitud);
+
+            try {
+                String location = address.getThoroughfare() + " " + address.getSubThoroughfare();
+                if (!location.equals("")) {
+                    mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), location));
+                } else {
+                    mImageViewLocation.setVisibility(View.GONE);
+                    mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), "No especificada"));
+
+                }
+            } catch (NullPointerException e) {
                 mImageViewLocation.setVisibility(View.GONE);
                 mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), "No especificada"));
-
             }
         }
 
