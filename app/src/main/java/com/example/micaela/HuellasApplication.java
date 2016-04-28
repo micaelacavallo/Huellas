@@ -15,6 +15,7 @@ import com.example.micaela.db.Modelo.Sexos;
 import com.example.micaela.db.Modelo.Tamaños;
 import com.example.micaela.utils.Constants;
 import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 
@@ -47,7 +48,10 @@ public class HuellasApplication extends Application {
         initParse();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
     }
+
+
 
     public List<Perdidos> getmPerdidos() {
         return mPerdidos;

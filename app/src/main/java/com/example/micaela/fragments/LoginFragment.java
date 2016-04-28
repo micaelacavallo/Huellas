@@ -16,6 +16,7 @@ import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -31,6 +32,7 @@ public class LoginFragment extends BaseFragment {
 
     CallbackManager mCallbackManager;
     private LoginButton mLoginButton;
+    private Profile mProfile;
 
     public LoginFragment() {
     }
@@ -40,7 +42,7 @@ public class LoginFragment extends BaseFragment {
         final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         mLoginButton = (LoginButton) rootView.findViewById(R.id.login_button);
         mCallbackManager = CallbackManager.Factory.create();
-        mLoginButton.setReadPermissions(Arrays.asList("email", "user_birthday", "user_location"));
+        mLoginButton.setReadPermissions(Arrays.asList("email", "user_birthday", "user_location", "public_profile"));
         // If using in a fragment
         mLoginButton.setFragment(this);
         // Other app specific specialization
@@ -55,19 +57,34 @@ public class LoginFragment extends BaseFragment {
 
         // Callback registration
         mLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+                    private ProfileTracker mProfileTracker;
+
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         mLoginButton.setVisibility(View.INVISIBLE);
                         final AccessToken token = loginResult.getAccessToken();
                         if (token != null) {
                             HuellasApplication.getInstance().saveAccessTokenFacebook(token.getToken());
-                            final Profile profile = Profile.getCurrentProfile();
+                            if (Profile.getCurrentProfile() == null) {
+                                mProfileTracker = new ProfileTracker() {
+                                    @Override
+                                    protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
+                                        // profile2 is the new profile
+                                        mProfile = profile2;
+                                        mProfileTracker.stopTracking();
+                                    }
+                                };
+                                mProfileTracker.startTracking();
+                            } else {
+                                mProfile = Profile.getCurrentProfile();
+                            }
+
                             GraphRequest request = GraphRequest.newMeRequest(
                                     loginResult.getAccessToken(),
                                     new GraphRequest.GraphJSONObjectCallback() {
                                         @Override
                                         public void onCompleted(JSONObject object, GraphResponse response) {
-                                            getFacebookData(object, profile);
+                                            getFacebookData(object, mProfile);
                                             getActivity().setResult(0);
                                             getActivity().finish();
                                             ((BaseActivity) getActivity()).hideOverlay();
@@ -83,7 +100,8 @@ public class LoginFragment extends BaseFragment {
 
                     @Override
                     public void onCancel() {
-                        // App code
+                        getBaseActivity().setResult(-1);
+                        getBaseActivity().logOut();
                     }
 
                     @Override
@@ -92,7 +110,6 @@ public class LoginFragment extends BaseFragment {
                             @Override
                             public void onClick(View v) {
                                 getBaseActivity().setResult(-1);
-                                getBaseActivity().finish();
                                 getBaseActivity().logOut();
                             }
                         };

@@ -45,6 +45,8 @@ public class BaseActivity extends AppCompatActivity {
     ImageView mImageViewPicture;
     View mViewDialogCamera;
 
+    private View mCardEstado;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,14 +64,18 @@ public class BaseActivity extends AppCompatActivity {
             mViewDialogCamera = mainContainer.findViewById(R.id.dialog_take_picture);
             mFloatingButton = (FloatingActionButton) mainContainer.findViewById(R.id.button_camera);
             mImageViewPicture = (ImageView) mainContainer.findViewById(R.id.imageView_foto);
+            mCardEstado = mainContainer.findViewById(R.id.card_estado);
         }
-
         setupToolbar(mainContainer);
         containerLayout = (ViewGroup) mainContainer.findViewById(R.id.container_base);
         ViewGroup content = (ViewGroup) getLayoutInflater().inflate(layoutResID, containerLayout, false);
         containerLayout.addView(content);
 
         super.setContentView(mainContainer);
+    }
+
+    public View getCardEstado() {
+        return mCardEstado;
     }
 
     public View getmViewDialogCamera() {
@@ -168,7 +174,7 @@ public class BaseActivity extends AppCompatActivity {
         isOverlayOpen = true;
         mainContainer.findViewById(R.id.layout_base_overlay).setVisibility(View.VISIBLE);
         mainContainer.findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
-        ((ProgressBar)mainContainer.findViewById(R.id.progress_bar)).getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.accent), android.graphics.PorterDuff.Mode.MULTIPLY);
+        ((ProgressBar) mainContainer.findViewById(R.id.progress_bar)).getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.accent), android.graphics.PorterDuff.Mode.MULTIPLY);
         ((TextView) mainContainer.findViewById(R.id.textView_titulo_overlay)).setText(mensaje);
         mainContainer.findViewById(R.id.button_confirmar).setVisibility(View.GONE);
     }
@@ -186,6 +192,7 @@ public class BaseActivity extends AppCompatActivity {
         LoginManager.getInstance().logOut();
         HuellasApplication.getInstance().clearProfileFacebook();
         Intent aIntent = new Intent(getBaseContext(), LoginActivity.class);
+        aIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(aIntent);
     }
 

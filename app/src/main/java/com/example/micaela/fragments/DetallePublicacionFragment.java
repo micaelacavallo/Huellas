@@ -1,11 +1,9 @@
 package com.example.micaela.fragments;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.text.SpannableString;
@@ -14,12 +12,10 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.micaela.activities.BaseActivity;
@@ -142,27 +138,8 @@ public class DetallePublicacionFragment extends BaseFragment {
     }
 
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void wireUpViews() {
-
-        TextView textViewEstado = new TextView(getContext());
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                130, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.gravity = Gravity.CENTER;
-        textViewEstado.setLayoutParams(layoutParams);
-        textViewEstado.setGravity(View.TEXT_ALIGNMENT_CENTER);
-        textViewEstado.setPadding(15, 15, 15, 15);
-        textViewEstado.setTextAppearance(getContext(), R.style.condensed_bold_17);
-        textViewEstado.setTextColor(getResources().getColor(R.color.primary_text));
-
-        CardView cardViewEstado = new CardView(getContext());
-        layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.gravity = Gravity.TOP | Gravity.END;
-        cardViewEstado.setElevation(2);
-        cardViewEstado.setLayoutParams(layoutParams);
-
-        cardViewEstado.addView(textViewEstado);
+        getBaseActivity().getCardEstado().setVisibility(View.VISIBLE);
         mImageViewLocation = (ImageView) mRootView.findViewById(R.id.imageView_location);
         mViewLocation = mRootView.findViewById(R.id.layout_ubicacion_container);
         mViewLocation.setOnClickListener(new View.OnClickListener() {
@@ -177,7 +154,7 @@ public class DetallePublicacionFragment extends BaseFragment {
                 }
             }
         });
-        mTextViewEstado = textViewEstado;
+        mTextViewEstado = (TextView) ((CardView)getBaseActivity().getCardEstado()).getChildAt(0);
         mTextViewDescripcion = (TextView) mRootView.findViewById(R.id.textView_descripcion);
         mTextViewFecha = (TextView) mRootView.findViewById(R.id.textView_fecha);
         mTextViewDatos = (TextView) mRootView.findViewById(R.id.textView_datos);
