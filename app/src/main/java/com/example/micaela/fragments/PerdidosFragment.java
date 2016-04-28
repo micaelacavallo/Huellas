@@ -32,6 +32,7 @@ import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.huellas.R;
 import com.parse.ParseException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -57,6 +58,7 @@ public class PerdidosFragment extends BaseFragment {
     private View mViewFilerContainer;
     private Button mButtonFilter;
     private boolean isFilterApplied = false;
+    private boolean isItemSelected = false;
     private boolean isFilterCardVisible = false;
 
     private ImageView mImageViewClear;
@@ -79,6 +81,9 @@ public class PerdidosFragment extends BaseFragment {
         mImageViewClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isFilterApplied = false;
+                mViewCardFilter.setVisibility(View.GONE);
+                mViewNoFilterContainer.setVisibility(View.GONE);
                 AnimalesAdapter mAdapter = new AnimalesAdapter(HuellasApplication.getInstance().getmPerdidos(), getBaseActivity());
                 mRecyclerView.setAdapter(mAdapter);
             }
@@ -87,7 +92,8 @@ public class PerdidosFragment extends BaseFragment {
         mButtonFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Perdidos> perdidosFilter = HuellasApplication.getInstance().getmPerdidos();
+                List<Perdidos> perdidosFilter = new ArrayList<>();
+                perdidosFilter.addAll(HuellasApplication.getInstance().getmPerdidos());
                 String especie = mSpinnerEspecies.getSelectedItem().toString();
                 String raza = mSpinnerRazas.getSelectedItem().toString();
                 String color = mSpinnerColores.getSelectedItem().toString();
@@ -96,34 +102,47 @@ public class PerdidosFragment extends BaseFragment {
                     for (int x = 0; x < perdidosFilter.size(); x++) {
                         if (!perdidosFilter.get(x).getEstado().getSituacion().equals(tipoPubli)) {
                             perdidosFilter.remove(x);
+                            x--;
                         }
                     }
+                    isItemSelected = true;
                 }
                 if (!especie.equals(getString(R.string.especie))) {
                     for (int x = 0; x < perdidosFilter.size(); x++) {
                         if (!perdidosFilter.get(x).getEspecie().getEspecie().equals(especie)) {
                             perdidosFilter.remove(x);
+                            x--;
                         }
                     }
+                    isItemSelected = true;
                 }
-
                 if (!raza.equals(getString(R.string.raza))) {
                     for (int x = 0; x < perdidosFilter.size(); x++) {
                         if (!perdidosFilter.get(x).getEstado().getSituacion().equals(tipoPubli)) {
                             perdidosFilter.remove(x);
+                            x--;
                         }
                     }
+                    isItemSelected = true;
                 }
                 if (!color.equals(getString(R.string.color_predominante))) {
                     for (int x = 0; x < perdidosFilter.size(); x++) {
                         if (!perdidosFilter.get(x).getEstado().getSituacion().equals(tipoPubli)) {
                             perdidosFilter.remove(x);
+                            x--;
                         }
                     }
+                    isItemSelected = true;
                 }
 
-                AnimalesAdapter mAdapter = new AnimalesAdapter(perdidosFilter, getBaseActivity());
-                mRecyclerView.setAdapter(mAdapter);
+                if (isItemSelected) {
+                    mViewNoFilterContainer.setVisibility(View.VISIBLE);
+                    mViewFilerContainer.setVisibility(View.GONE);
+                    AnimalesAdapter mAdapter = new AnimalesAdapter(perdidosFilter, getBaseActivity());
+                    mRecyclerView.setAdapter(mAdapter);
+                    isFilterApplied = true;
+                    isItemSelected = false;
+                }
             }
         });
         setHasOptionsMenu(true);
@@ -184,10 +203,6 @@ public class PerdidosFragment extends BaseFragment {
                 if (view != null) {
                     String textItemSelected = ((AppCompatTextView) view).getText().toString();
                     switch (parent.getId()) {
-                        case R.id.spinner_colores:
-                            break;
-                        case R.id.spinner_edades:
-                            break;
                         case R.id.spinner_especies:
                             if (!textItemSelected.equals(getString(R.string.especie))) {
                                 String selectedEspecie = mSpinnerEspecies.getSelectedItem().toString();
@@ -201,15 +216,6 @@ public class PerdidosFragment extends BaseFragment {
                                 mSpinnerRazas.setAdapter(mAdapterRazas);
                                 mViewRazasContainer.setVisibility(View.VISIBLE);
                             }
-                            break;
-                        case R.id.spinner_razas:
-                            break;
-                        case R.id.spinner_estado:
-                            break;
-                        case R.id.spinner_sexos:
-
-                            break;
-                        case R.id.spinner_tamanios:
                             break;
                     }
                 }
@@ -269,7 +275,15 @@ public class PerdidosFragment extends BaseFragment {
                     mViewCardFilter.setVisibility(View.GONE);
                     isFilterCardVisible = false;
                 } else {
-                    fillSpinners();
+                    if (isFilterApplied) {
+                        mViewNoFilterContainer.setVisibility(View.VISIBLE);
+                        mViewFilerContainer.setVisibility(View.GONE);
+                    }
+                    else {
+                        fillSpinners();
+                        mViewNoFilterContainer.setVisibility(View.GONE);
+                        mViewFilerContainer.setVisibility(View.VISIBLE);
+                    }
                     mViewCardFilter.setVisibility(View.VISIBLE);
                     isFilterCardVisible = true;
                 }
