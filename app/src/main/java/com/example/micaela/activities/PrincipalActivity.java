@@ -25,8 +25,8 @@ import android.widget.TextView;
 
 import com.example.micaela.HuellasApplication;
 import com.example.micaela.ZoomOutPageTransformer;
-import com.example.micaela.db.DAO.GeneralDAO;
-import com.example.micaela.db.DAO.PerdidosDAO;
+import com.example.micaela.db.Controladores.IGeneralImpl;
+import com.example.micaela.db.Controladores.IPerdidosImpl;
 import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.fragments.DonacionesFragment;
 import com.example.micaela.fragments.InformacionUtilFragment;
@@ -49,12 +49,17 @@ public class PrincipalActivity extends BaseActivity {
     private TextView mUserNameTextView;
     private ImageView mUserPhotoImageView;
 
+    private IPerdidosImpl mIPerdidosImpl;
+    private IGeneralImpl mIGeneralImpl;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
 
+        mIPerdidosImpl = new IPerdidosImpl(this);
+        mIGeneralImpl = new IGeneralImpl(this);
         showOverlay(getString(R.string.cargando_publicaciones_mensaje));
 
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -107,6 +112,11 @@ public class PrincipalActivity extends BaseActivity {
         } else {
             updateFacebookData();
         }
+    }
+
+    @Override
+    public int getLayoutBase() {
+        return R.layout.activity_base;
     }
 
     private void updateFacebookData() {
@@ -308,16 +318,14 @@ public class PrincipalActivity extends BaseActivity {
         protected Void doInBackground(Void... params) {
 
             try {
-                PerdidosDAO perdidosDAO = new PerdidosDAO(PrincipalActivity.this);
-                HuellasApplication.getInstance().setmEspecies(perdidosDAO.getEspecies());
-                HuellasApplication.getInstance().setmRazas(perdidosDAO.getRazas());
-                HuellasApplication.getInstance().setmColores(perdidosDAO.getColores());
-                HuellasApplication.getInstance().setmEdades(perdidosDAO.getEdades());
-                HuellasApplication.getInstance().setmTamanios(perdidosDAO.getTamaños());
-                HuellasApplication.getInstance().setmSexos(perdidosDAO.getSexos());
+                HuellasApplication.getInstance().setmEspecies(mIPerdidosImpl.getEspecies());
+                HuellasApplication.getInstance().setmRazas(mIPerdidosImpl.getRazas());
+                HuellasApplication.getInstance().setmColores(mIPerdidosImpl.getColores());
+                HuellasApplication.getInstance().setmEdades(mIPerdidosImpl.getEdades());
+                HuellasApplication.getInstance().setmTamanios(mIPerdidosImpl.getTamaños());
+                HuellasApplication.getInstance().setmSexos(mIPerdidosImpl.getSexos());
 
-                GeneralDAO generalDAO = new GeneralDAO(PrincipalActivity.this);
-                List<Estados> estados = generalDAO.getEstados();
+                List<Estados> estados = mIGeneralImpl.getEstados();
                 for (int x = 0; x < estados.size(); x++) {
                     if (estados.get(x).getSituacion().equals("-")) {
                         estados.remove(x);

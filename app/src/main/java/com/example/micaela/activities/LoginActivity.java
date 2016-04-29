@@ -38,4 +38,9 @@ public class LoginActivity extends BaseActivity  {
             Log.e("KeyHash:", e.toString());
         }
     }
+
+    @Override
+    public int getLayoutBase() {
+        return R.layout.activity_base;
+    }
 }

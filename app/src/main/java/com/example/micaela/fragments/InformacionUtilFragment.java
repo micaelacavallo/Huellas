@@ -36,15 +36,10 @@ public class InformacionUtilFragment extends BaseFragment  {
         inicializarRecycler(view);
 
         setHasOptionsMenu(false);
-
+        new AsyncTaskAdicionales().execute();
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        new AsyncTaskAdicionales().execute();
-    }
 
     private void inicializarSwipeRefresh(View view) {
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);

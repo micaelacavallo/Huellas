@@ -89,6 +89,11 @@ public class DetallePublicacionFragment extends BaseFragment {
         }
         getBaseActivity().setUpCollapsingToolbar(titulo, getBaseActivity().convertFromByteToBitmap(foto));
         mTextViewDescripcion.setText(descripcion);
+
+        if (raza.equals("Otra")) {
+            raza = "";
+        }
+
         mTextViewDatos.setText(especie + " " + raza + " de color " + color.toLowerCase() +
                 ", " + sexo.toLowerCase() + ", " + edad.toLowerCase() + " y de tamaño " + tamaño.toLowerCase() + ".");
 

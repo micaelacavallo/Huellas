@@ -35,14 +35,8 @@ public class DonacionesFragment extends BaseFragment {
         inicializarRecycler(view);
 
         setHasOptionsMenu(false);
-
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         new AsyncTaskAdicionales().execute();
+        return view;
     }
 
     private void inicializarSwipeRefresh(View view) {

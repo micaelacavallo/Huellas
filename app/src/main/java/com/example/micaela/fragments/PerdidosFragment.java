@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.micaela.HuellasApplication;
 import com.example.micaela.activities.PrincipalActivity;
@@ -60,6 +61,7 @@ public class PerdidosFragment extends BaseFragment {
     private boolean isFilterApplied = false;
     private boolean isItemSelected = false;
     private boolean isFilterCardVisible = false;
+    private TextView mTextViewEmpty;
 
     private ImageView mImageViewClear;
 
@@ -68,12 +70,15 @@ public class PerdidosFragment extends BaseFragment {
     List<Colores> mColores;
     List<Estados> mEstados;
 
+    private boolean mFromSwipeRefresh = false;
+
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_perdidos, container, false);
         mIperdidosImpl = new IPerdidosImpl(getActivity().getApplicationContext());
         inicializarSwipeRefresh(mRootView);
         inicializarRecycler(mRootView);
+        mTextViewEmpty = (TextView) mRootView.findViewById(R.id.empty_publicaciones);
         mViewCardFilter = mRootView.findViewById(R.id.cardView_filter);
         mViewFilerContainer = mRootView.findViewById(R.id.layout_filter_container);
         mViewNoFilterContainer = mRootView.findViewById(R.id.layout_no_filter_container);
@@ -82,6 +87,7 @@ public class PerdidosFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 isFilterApplied = false;
+                mTextViewEmpty.setVisibility(View.GONE);
                 mViewCardFilter.setVisibility(View.GONE);
                 mViewNoFilterContainer.setVisibility(View.GONE);
                 AnimalesAdapter mAdapter = new AnimalesAdapter(HuellasApplication.getInstance().getmPerdidos(), getBaseActivity());
@@ -140,6 +146,9 @@ public class PerdidosFragment extends BaseFragment {
                     mViewFilerContainer.setVisibility(View.GONE);
                     AnimalesAdapter mAdapter = new AnimalesAdapter(perdidosFilter, getBaseActivity());
                     mRecyclerView.setAdapter(mAdapter);
+                    if (perdidosFilter.size() == 0) {
+                        mTextViewEmpty.setVisibility(View.VISIBLE);
+                    }
                     isFilterApplied = true;
                     isItemSelected = false;
                 }
@@ -158,6 +167,11 @@ public class PerdidosFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mFromSwipeRefresh = true;
+                isFilterApplied = false;
+                mTextViewEmpty.setVisibility(View.GONE);
+                mViewCardFilter.setVisibility(View.GONE);
+                mViewNoFilterContainer.setVisibility(View.GONE);
                 new AsyncTaskPerdidos().execute();
             }
         });
@@ -278,8 +292,7 @@ public class PerdidosFragment extends BaseFragment {
                     if (isFilterApplied) {
                         mViewNoFilterContainer.setVisibility(View.VISIBLE);
                         mViewFilerContainer.setVisibility(View.GONE);
-                    }
-                    else {
+                    } else {
                         fillSpinners();
                         mViewNoFilterContainer.setVisibility(View.GONE);
                         mViewFilerContainer.setVisibility(View.VISIBLE);
@@ -307,13 +320,17 @@ public class PerdidosFragment extends BaseFragment {
             HuellasApplication.getInstance().setmPerdidos(perdidosList);
             AnimalesAdapter mAdapter = new AnimalesAdapter(perdidosList, getBaseActivity());
             mRecyclerView.setAdapter(mAdapter);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mSwipeRefreshLayout.setRefreshing(false);
 
-                }
-            });
+            if (mFromSwipeRefresh) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        getBaseActivity().hideOverlay();
+                        mFromSwipeRefresh = false;
+                    }
+                });
+            }
         }
 
         @Override
@@ -328,6 +345,4 @@ public class PerdidosFragment extends BaseFragment {
 
         }
     }
-
-
 }

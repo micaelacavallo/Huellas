@@ -32,9 +32,9 @@ import com.example.micaela.HuellasApplication;
 import com.example.micaela.activities.AltaAnimalesActivity;
 import com.example.micaela.activities.MapActivity;
 import com.example.micaela.adapters.CustomSpinnerHintAdapter;
-import com.example.micaela.db.DAO.AdicionalesDAO;
-import com.example.micaela.db.DAO.PerdidosDAO;
-import com.example.micaela.db.DAO.PersonasDAO;
+import com.example.micaela.db.Controladores.IAdicionalesImpl;
+import com.example.micaela.db.Controladores.IPerdidosImpl;
+import com.example.micaela.db.Controladores.IPersonasImpl;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Edades;
@@ -100,10 +100,16 @@ public class AltaAnimalesFragment extends BaseFragment {
     private boolean mIsFromResource = true;
     private LatLng latLng;
 
+    private IPerdidosImpl mIPerdidosImpl;
+    private IAdicionalesImpl mIAdicionalesImpl;
+    private IPersonasImpl mIPersonasImpl;
+
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_alta_animales, container, false);
-
+    mIPerdidosImpl = new IPerdidosImpl(getBaseActivity());
+        mIAdicionalesImpl = new IAdicionalesImpl(getBaseActivity());
+        mIPersonasImpl = new IPersonasImpl(getBaseActivity());
         getBaseActivity().setUpCollapsingToolbar(getBaseActivity().getString(R.string.crear_publicacion));
         wireUpViews();
 
@@ -284,15 +290,14 @@ public class AltaAnimalesFragment extends BaseFragment {
                             mEditTextDireccion.setText("");
                             mEditTextNumero.setText("");
                         }
-
-                        mProgressBar.setVisibility(View.GONE);
-                        mImageViewMap.setVisibility(View.VISIBLE);
                     } else {
                         Toast.makeText(getBaseActivity(), "No es posible encontrar tu ubicación", Toast.LENGTH_LONG).show();
 
                     }
                     mEditTextDireccion.setEnabled(true);
                     mEditTextNumero.setEnabled(true);
+                    mProgressBar.setVisibility(View.GONE);
+                    mImageViewMap.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -317,7 +322,7 @@ public class AltaAnimalesFragment extends BaseFragment {
             mEditTextTelefono.setEnabled(false);
             mEditTextTelefono.setText(telefono);
         }
-        mProgressBar = (ProgressBar) mRootView.findViewById(R.id.progress_bar);
+        mProgressBar = (ProgressBar) mRootView.findViewById(R.id.progress_bar_map);
 
         getBaseActivity().getmFloatingButton().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -355,15 +360,6 @@ public class AltaAnimalesFragment extends BaseFragment {
             }
         });
 
-
-        mLayoutUbicacionContainer = mRootView.findViewById(R.id.layout_ubicacion_container);
-        mLayoutUbicacionContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseActivity(), MapActivity.class);
-                startActivity(intent);
-            }
-        });
 
         mButtonPublicar = (Button) mRootView.findViewById(R.id.button_publicar);
         mButtonPublicar.setOnClickListener(new View.OnClickListener() {
@@ -505,8 +501,7 @@ public class AltaAnimalesFragment extends BaseFragment {
 
         @Override
         protected Void doInBackground(Personas... params) {
-            PersonasDAO personasDAO = new PersonasDAO(getBaseActivity());
-            personasDAO.registar(params[0]);
+            mIPersonasImpl.registar(params[0]);
             return null;
         }
     }
@@ -518,8 +513,7 @@ public class AltaAnimalesFragment extends BaseFragment {
         @Override
         protected Void doInBackground(Adicionales... params) {
             try {
-                AdicionalesDAO adicionalDAO = new AdicionalesDAO(getBaseActivity());
-                adicionalDAO.saveAdicional(params[0]);
+                mIAdicionalesImpl.saveAdicional(params[0]);
             } catch (Exception e) {
                 error = true;
                 getBaseActivity().runOnUiThread(new Runnable() {
@@ -561,8 +555,7 @@ public class AltaAnimalesFragment extends BaseFragment {
         @Override
         protected Void doInBackground(Perdidos... params) {
             try {
-                PerdidosDAO perdidosDAO = new PerdidosDAO(getBaseActivity());
-                perdidosDAO.savePerdido(params[0]);
+                mIPerdidosImpl.savePerdido(params[0]);
             } catch (Exception e) {
                 getBaseActivity().runOnUiThread(new Runnable() {
                     @Override

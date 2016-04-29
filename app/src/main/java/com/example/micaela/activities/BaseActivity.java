@@ -33,7 +33,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     Toolbar mToolbar;
     TextView mToolbarTitle;
@@ -52,19 +52,23 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
+    public abstract int getLayoutBase ();
+
     @Override
     public void setContentView(int layoutResID) {
+        mainContainer = (ViewGroup) getLayoutInflater().inflate(getLayoutBase(), null);
+        switch (getLayoutBase()) {
+            case R.layout.activity_base:
+                mToolbarTitle = (TextView) mainContainer.findViewById(R.id.toolbar_title);
 
-        if (this instanceof LoginActivity || this instanceof PrincipalActivity || this instanceof MapActivity) {
-            mainContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_base, null);
-            mToolbarTitle = (TextView) mainContainer.findViewById(R.id.toolbar_title);
-        } else {
-            mainContainer = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_base_collapsing, null);
-            mCollapsingToolbar = (CollapsingToolbarLayout) mainContainer.findViewById(R.id.collapsing_toolbar);
-            mViewDialogCamera = mainContainer.findViewById(R.id.dialog_take_picture);
-            mFloatingButton = (FloatingActionButton) mainContainer.findViewById(R.id.button_camera);
-            mImageViewPicture = (ImageView) mainContainer.findViewById(R.id.imageView_foto);
-            mCardEstado = mainContainer.findViewById(R.id.card_estado);
+                break;
+            case R.layout.activity_base_collapsing:
+                mCollapsingToolbar = (CollapsingToolbarLayout) mainContainer.findViewById(R.id.collapsing_toolbar);
+                mViewDialogCamera = mainContainer.findViewById(R.id.dialog_take_picture);
+                mFloatingButton = (FloatingActionButton) mainContainer.findViewById(R.id.button_camera);
+                mImageViewPicture = (ImageView) mainContainer.findViewById(R.id.imageView_foto);
+                mCardEstado = mainContainer.findViewById(R.id.card_estado);
+                break;
         }
         setupToolbar(mainContainer);
         containerLayout = (ViewGroup) mainContainer.findViewById(R.id.container_base);
@@ -154,11 +158,12 @@ public class BaseActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
 
 
-        // If it is not Dashboard, set up button for header
-        if (!(this instanceof PrincipalActivity) && !(this instanceof LoginActivity)) {
-            ActionBar actionBar = getSupportActionBar();
+    public void showUpButton() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }

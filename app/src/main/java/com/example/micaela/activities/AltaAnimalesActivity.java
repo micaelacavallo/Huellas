@@ -1,6 +1,5 @@
 package com.example.micaela.activities;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -22,7 +21,7 @@ public class AltaAnimalesActivity extends BaseActivity implements GoogleApiClien
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alta_animales);
-
+        showUpButton();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment, new AltaAnimalesFragment()).commit();
 
         if (mGoogleApiClient == null) {
@@ -31,6 +30,11 @@ public class AltaAnimalesActivity extends BaseActivity implements GoogleApiClien
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this).build();
         }
+    }
+
+    @Override
+    public int getLayoutBase() {
+        return R.layout.activity_base_collapsing;
     }
 
     @Override

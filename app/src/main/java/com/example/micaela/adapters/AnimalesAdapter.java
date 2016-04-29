@@ -35,7 +35,12 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
     @Override
     public void onBindViewHolder(AnimalesViewHolder holder, final int position) {
         if (!mPerdidos.get(position).isSolucionado()) {
-            String title = mPerdidos.get(position).getEspecie().getEspecie() + " " + mPerdidos.get(position).getRaza().getRaza() + " " + mPerdidos.get(position).getColor().getColor();
+
+            String raza = mPerdidos.get(position).getRaza().getRaza();
+            if (raza.equals("Otra")) {
+                raza = "";
+            }
+            String title = mPerdidos.get(position).getEspecie().getEspecie() + " " + raza + " " + mPerdidos.get(position).getColor().getColor();
             holder.getTextViewTitulo().setText(title);
             holder.getTextViewDescripcion().setText(mPerdidos.get(position).getDescripcion());
             holder.getCardEstado().setVisibility(View.VISIBLE);

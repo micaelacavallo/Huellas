@@ -12,7 +12,13 @@ public class DetallePublicacionActivity  extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_publicacion);
+        showUpButton();
         getmFloatingButton().setLayoutParams(new CoordinatorLayout.LayoutParams(0, 0));
         getSupportFragmentManager().beginTransaction().add(R.id.fragment, new DetallePublicacionFragment()).commit();
+    }
+
+    @Override
+    public int getLayoutBase() {
+        return R.layout.activity_base_collapsing;
     }
 }

@@ -24,25 +24,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:visibility="gone"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:orientation="horizontal"
-            android:padding="15dp">
+            android:padding="10dp"
+            android:visibility="gone">
 
             <TextView
-                style="@style/condensed_normal_17"
+                style="@style/condensed_normal_19"
                 android:layout_width="0dp"
-                android:layout_weight="3"
                 android:layout_height="wrap_content"
-                android:text="Sacar filtros"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:layout_weight="3"
+                android:text="Sacar filtros" />
 
             <ImageView
                 android:id="@+id/imageView_clear"
+                android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_marginTop="3dp"
-                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:src="@mipmap/ic_clear" />
         </LinearLayout>
@@ -133,6 +133,22 @@
     </android.support.v7.widget.CardView>
 
 
-    <include layout="@layout/swipe_refresh_layout" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <include layout="@layout/swipe_refresh_layout" />
+
+        <TextView
+            android:id="@+id/empty_publicaciones"
+            style="@style/condensed_bold_22"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:gravity="center"
+            android:text="No existen publicaciones con el/los filtro/s especificados."
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>
