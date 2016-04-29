@@ -113,6 +113,7 @@
             android:visibility="gone"/>
 
         <LinearLayout
+            android:id="@+id/layout_comentar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
@@ -121,14 +122,12 @@
             android:layout_marginRight="10dp">
 
             <ImageView
-                android:id="@+id/imageView_comentar"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginTop="2dp"
                 android:src="@mipmap/ic_comentario" />
 
             <TextView
-                android:id="@+id/textView_comentar"
                 style="@style/condensed_normal_small_14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

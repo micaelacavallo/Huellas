@@ -15,8 +15,7 @@ public class AdicionalesViewHolder extends RecyclerView.ViewHolder  {
     private ImageView imageViewFoto;
     private TextView textViewHora;
     private View cardEstado;
-    private ImageView imageViewComentar;
-    private TextView textViewComentar;
+    private View viewComentar;
     private TextView mTextViewComentarios;
     private View mCardContainer;
 
@@ -29,8 +28,7 @@ public class AdicionalesViewHolder extends RecyclerView.ViewHolder  {
         textViewHora = (TextView) itemView.findViewById(R.id.textView_hora);
         cardEstado = itemView.findViewById(R.id.card_estado);
         cardEstado.setVisibility(View.GONE);
-        imageViewComentar = (ImageView)itemView.findViewById(R.id.imageView_comentar);
-        textViewComentar = (TextView)itemView.findViewById(R.id.textView_comentar);
+        viewComentar = itemView.findViewById(R.id.layout_comentar);
         mCardContainer = itemView.findViewById(R.id.cardView_container);
         mTextViewComentarios = (TextView) itemView.findViewById(R.id.textView_comentarios);
     }
@@ -50,16 +48,12 @@ public class AdicionalesViewHolder extends RecyclerView.ViewHolder  {
         return textViewDescripcion;
     }
 
+    public View getViewComentar() {
+        return viewComentar;
+    }
+
     public ImageView getImageViewFoto() {
         return imageViewFoto;
-    }
-
-    public ImageView getImageViewComentar() {
-        return imageViewComentar;
-    }
-
-    public TextView getTextViewComentar() {
-        return textViewComentar;
     }
 
     public TextView getTextViewHora() {

@@ -78,6 +78,13 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
                 holder.getmTextViewComentarios().setVisibility(View.GONE);
             }
 
+            holder.getViewComentar().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+             //       ((BaseActivity)mContext).getSupportFragmentManager().beginTransaction().add()
+                }
+            });
+
             holder.getTextViewHora().setText(((BaseActivity) mContext).getPublicationTime(mPerdidos.get(position).getFecha()));
             holder.getCardContainer().setTag(position);
             holder.getCardContainer().setOnClickListener(new View.OnClickListener() {

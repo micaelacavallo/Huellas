@@ -50,4 +50,8 @@ public class Constants {
     public static final String EXTRA_OUTPUTY= "outputY";
     public static final String EXTRA_RETURN_DATA= "return-data";
     public static final String DATA= "data";
+
+
+    // COMENTARIOS
+    public static final String COMENTARIOS_DATE_FORMAT = "dd/MM/yyyy HH:mm";
 }

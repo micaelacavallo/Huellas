@@ -206,6 +206,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         return sdf.format(date) + " hs.";
     }
 
+    public String getFormattedDate2(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat(Constants.COMENTARIOS_DATE_FORMAT, Locale.getDefault());
+        return sdf.format(date) + " hs.";
+    }
+
+
     public String getPublicationTime(Date date) {
         Date currentDate = new Date();
         String difference = "";
