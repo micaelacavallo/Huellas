@@ -237,7 +237,9 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         adicionalObject.put(CAdicionales.TITULO, adicional.getTitulo());
         adicionalObject.put(CAdicionales.DESCRIPCION, adicional.getDescripcion());
         adicionalObject.put(CAdicionales.FECHA, adicional.getFecha());
-        adicionalObject.put(CAdicionales.FOTOS, adicional.getFoto());
+        adicionalObject.put(CAdicionales.FOTOS, new ParseFile("picture.jpg", adicional.getFoto()));
+
+
         adicionalObject.put(CAdicionales.DONACION, adicional.isDonacion());
 
         try {
