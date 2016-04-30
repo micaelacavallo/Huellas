@@ -142,7 +142,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
                 raza = new Razas(objectAux.getString(CRazas.RAZA), objectAux.getObjectId(), especie);
 
                 objectAux = object.getParseObject(CPerdidos.ID_PERSONA);
-                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO), objectAux.getString(CPersonas.CONTRASEÑA));
+                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO), objectAux.getString(CPersonas.CONTRASEÑA), objectAux.getString(CPersonas.FOTO));
 
                 objectAux = object.getParseObject(CPerdidos.ID_ESTADO);
                 estado = new Estados(objectAux.getObjectId(),objectAux.getString(CEstados.SITUACION));
@@ -403,7 +403,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         for (ParseObject object : listParseObject) {
             objectAux = object.getParseObject(CPerdidos.ID_ESPECIE);
-            especie = new Especies(object.getString(CEspecies.ESPECIE), object.getObjectId());
+            especie = new Especies(objectAux.getString(CEspecies.ESPECIE), objectAux.getObjectId());
 
             raza = new Razas(object.getString(CRazas.RAZA), object.getObjectId(), especie);
             razas.add(raza);

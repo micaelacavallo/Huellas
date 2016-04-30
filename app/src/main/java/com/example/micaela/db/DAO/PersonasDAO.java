@@ -154,6 +154,7 @@ public class PersonasDAO implements IPersonas {
             parseObject.put(CPersonas.BLOQUEADO, false);
             parseObject.put(CPersonas.ADMINISTRADOR, false);
             parseObject.put(CPersonas.CONTRASEÑA, "-");
+            parseObject.put(CPersonas.FOTO, persona.getmFoto());
 
             save(parseObject);
         }
@@ -173,7 +174,7 @@ public class PersonasDAO implements IPersonas {
             e.printStackTrace();
         }
         for (ParseObject object : listParseObject) {
-            persona = new Personas(object.getObjectId(), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR), object.getBoolean(CPersonas.BLOQUEADO), object.getString(CPersonas.CONTRASEÑA));
+            persona = new Personas(object.getObjectId(), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR), object.getBoolean(CPersonas.BLOQUEADO), object.getString(CPersonas.CONTRASEÑA), object.getString(CPersonas.FOTO));
             personas.add(persona);
         }
 

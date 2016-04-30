@@ -15,6 +15,7 @@ public class Personas implements Parcelable {
     private boolean administrador;
     private String objectId;
     private boolean mBloqueado;
+    private String mFoto;
 
     public Personas() {
     }
@@ -23,7 +24,7 @@ public class Personas implements Parcelable {
         this.email = email;
     }
 
-    public Personas(String objectId, String email, String nombre, String telefono, boolean administrador, boolean bloqueado, String contraseña) {
+    public Personas(String objectId, String email, String nombre, String telefono, boolean administrador, boolean bloqueado, String contraseña, String foto) {
         this.email = email;
         this.nombre = nombre;
         this.telefono = telefono;
@@ -31,6 +32,7 @@ public class Personas implements Parcelable {
         this.objectId = objectId;
         this.mBloqueado = bloqueado;
         this.setContraseña(contraseña);
+        this.mFoto = foto;
     }
 
     public String getEmail() {
@@ -121,5 +123,13 @@ public class Personas implements Parcelable {
 
     public void setContraseña(String contraseña) {
         this.contraseña = contraseña;
+    }
+
+    public String getmFoto() {
+        return mFoto;
+    }
+
+    public void setmFoto(String mFoto) {
+        this.mFoto = mFoto;
     }
 }

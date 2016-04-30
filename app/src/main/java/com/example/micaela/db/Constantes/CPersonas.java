@@ -13,6 +13,8 @@ public class CPersonas {
     public static String  TELEFONO = "telefono";
     public static String  BLOQUEADO = "bloqueado";
     public static String  ADMINISTRADOR = "administrador";
+    public static String  FOTO = "foto";
+
 
 
 }
