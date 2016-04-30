@@ -1,16 +1,10 @@
 package com.example.micaela.db.Modelo;
 
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.parse.ParseClassName;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
-
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Quimey on 13/09/2015.
@@ -31,7 +25,7 @@ public class Perdidos implements Parcelable {
     private String mTitulo;
     private String mDescripcion;
     private byte[] mFoto;
-    private List<Comentarios> mComentarios;
+    private ArrayList<Comentarios> mComentarios;
     private boolean mSolucionado;
     private String mObjectId;
     private boolean mBloqueado;
@@ -47,10 +41,10 @@ public class Perdidos implements Parcelable {
         mPersona = new Personas();
         mEstado = new Estados();
        // mFotos = new ParseFile();
-        mComentarios = new ArrayList<Comentarios>();
+        mComentarios = new ArrayList<>();
     }
 
-    public Perdidos(Edades edad, Razas raza, Especies especie, Tamaños tamaño, Colores color, Sexos sexo, Estados estado, Personas persona, Date fecha, double latitud, double logitud, String titulo, String descripcion, byte[] foto, List<Comentarios> comentarios, boolean mSolucionado, boolean mBloqueado) {
+    public Perdidos(Edades edad, Razas raza, Especies especie, Tamaños tamaño, Colores color, Sexos sexo, Estados estado, Personas persona, Date fecha, double latitud, double logitud, String titulo, String descripcion, byte[] foto, ArrayList<Comentarios> comentarios, boolean mSolucionado, boolean mBloqueado) {
         this.mEdad = edad;
         this.mRaza = raza;
         this.mEspecie = especie;
@@ -182,11 +176,11 @@ public class Perdidos implements Parcelable {
         this.mFoto = mFoto;
     }
 
-    public List<Comentarios> getComentarios() {
+    public ArrayList<Comentarios> getComentarios() {
         return mComentarios;
     }
 
-    public void setComentarios(List<Comentarios> mComentarios) {
+    public void setComentarios(ArrayList<Comentarios> mComentarios) {
         this.mComentarios = mComentarios;
     }
 

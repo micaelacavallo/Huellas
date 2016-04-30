@@ -399,7 +399,8 @@ public class AltaAnimalesFragment extends BaseFragment {
                             (getBaseActivity()).showOverlay(getString(R.string.publicando));
                             HuellasApplication.getInstance().saveProfileTelefono(mEditTextTelefono.getText().toString());
                             Personas persona = new Personas("", HuellasApplication.getInstance().getProfileEmailFacebook(),
-                                    HuellasApplication.getInstance().getProfileNameFacebook(), mEditTextTelefono.getText().toString(), false, false, "");
+                                    HuellasApplication.getInstance().getProfileNameFacebook(), mEditTextTelefono.getText().toString(),
+                                    false, false, "", HuellasApplication.getInstance().getProfileImageFacebook());
                             new AsyncTaskRegistrarUsuario().execute(persona);
                         }
                     } else {
@@ -438,7 +439,8 @@ public class AltaAnimalesFragment extends BaseFragment {
                             (getBaseActivity()).showOverlay(getString(R.string.publicando));
                             HuellasApplication.getInstance().saveProfileTelefono(mEditTextTelefono.getText().toString());
                             Personas persona = new Personas("", HuellasApplication.getInstance().getProfileEmailFacebook(),
-                                    HuellasApplication.getInstance().getProfileNameFacebook(), mEditTextTelefono.getText().toString(), false, false, "");
+                                    HuellasApplication.getInstance().getProfileNameFacebook(), mEditTextTelefono.getText().toString(),
+                                    false, false, "", HuellasApplication.getInstance().getProfileImageFacebook());
                             new AsyncTaskRegistrarUsuario().execute(persona);
                         }
                     } else {

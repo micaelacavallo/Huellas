@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Quimey on 13/09/2015.
@@ -20,7 +19,7 @@ public class Adicionales implements Parcelable {
     private String mDescripcion;
     private byte[] mFoto;
     private boolean mDonacion;
-    private List<Comentarios> mComentarios;
+    private ArrayList<Comentarios> mComentarios;
 
     public Adicionales() {
         mPersona = new Personas();
@@ -28,7 +27,7 @@ public class Adicionales implements Parcelable {
         mFoto = null;
         mComentarios = new ArrayList<Comentarios>();
     }
-    public Adicionales(Personas persona, Estados estado, Date fecha, String titulo, String descripcion, byte[] foto, boolean donacion, List<Comentarios> comentarios) {
+    public Adicionales(Personas persona, Estados estado, Date fecha, String titulo, String descripcion, byte[] foto, boolean donacion, ArrayList<Comentarios> comentarios) {
         this.mPersona = persona;
         this.mEstado = estado;
         this.mFecha = fecha;
@@ -88,11 +87,11 @@ public class Adicionales implements Parcelable {
         this.mFoto = foto;
     }
 
-    public List<Comentarios> getComentarios() {
+    public ArrayList<Comentarios> getComentarios() {
         return mComentarios;
     }
 
-    public void setComentarios(List<Comentarios> comentarios) {
+    public void setComentarios(ArrayList<Comentarios> comentarios) {
         this.mComentarios = comentarios;
     }
 

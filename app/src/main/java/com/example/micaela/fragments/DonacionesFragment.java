@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.adapters.AdicionalesAdapter;
 import com.example.micaela.db.Controladores.IAdicionalesImpl;
@@ -80,7 +79,7 @@ public class DonacionesFragment extends BaseFragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ((BaseActivity) getActivity()).hideOverlay();
+                    getBaseActivity().hideOverlay();
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
             });
@@ -89,7 +88,7 @@ public class DonacionesFragment extends BaseFragment {
         @Override
         protected List<Adicionales> doInBackground(Void... voids) {
             try {
-                mIAdicionalesImpl.cargarDBLocalDonaciones(getActivity().getBaseContext());
+                mIAdicionalesImpl.cargarDBLocalDonaciones(getBaseActivity());
                 return mIAdicionalesImpl.getDonaciones();
             } catch (ParseException e) {
                 e.printStackTrace();

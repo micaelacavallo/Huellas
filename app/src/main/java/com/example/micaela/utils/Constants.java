@@ -17,6 +17,7 @@ public class Constants {
     public static final String LATITUD = "LATITUD";
     public static final String LONGITUD = "LONGITUD";
     public static final String ADDRESS = "ADDRESS";
+    public static final String COMENTARIOS_LIST = "COMENTARIOS_LIST";
 
     // PARSE
     public static String APPLICATION_ID = "3EEEv0tiZTfwvODGscyrSSgzJG5lg3gSrVwP51L7";

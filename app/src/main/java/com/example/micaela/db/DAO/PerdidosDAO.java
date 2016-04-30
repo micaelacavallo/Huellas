@@ -59,7 +59,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     private ParseFile foto;
     private List<ParseObject> listParseObject;
     private ParseRelation objectRelation;
-    private List<Comentarios> comentarios;
+    private ArrayList<Comentarios> comentarios;
     private Perdidos perdido;
     private List<Razas> razas;
     private List<Tamaños> tamaños;

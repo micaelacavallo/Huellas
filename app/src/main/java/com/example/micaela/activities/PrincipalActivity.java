@@ -52,6 +52,8 @@ public class PrincipalActivity extends BaseActivity {
     private IPerdidosImpl mIPerdidosImpl;
     private IGeneralImpl mIGeneralImpl;
 
+    private boolean thereWasError = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,8 +130,16 @@ public class PrincipalActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.REQUEST_CODE_OK) {
-            if (resultCode == 0) {
-                updateFacebookData();
+            switch (resultCode) {
+                case 0:
+                    hideOverlay();
+
+                    updateFacebookData();
+                    break;
+                case -1:
+                    logOut();
+                    break;
+
             }
         }
     }
@@ -312,6 +322,22 @@ public class PrincipalActivity extends BaseActivity {
         }
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (thereWasError) {
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadMainScreen();
+                }
+            };
+            showMessageOverlay("Hubo un problema, por favor intente nuevamente", listener);
+            thereWasError = false;
+        }
+    }
+
     private class AsyncTaskPerdidosInfo extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -333,14 +359,14 @@ public class PrincipalActivity extends BaseActivity {
                 }
                 HuellasApplication.getInstance().setmEstados(estados);
             } catch (Exception e) {
+                thereWasError= true;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         View.OnClickListener listener = new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                               finish();
-                              logOut();
+                                loadMainScreen();
                             }
                         };
                         showMessageOverlay("Hubo un problema, por favor intente nuevamente", listener);

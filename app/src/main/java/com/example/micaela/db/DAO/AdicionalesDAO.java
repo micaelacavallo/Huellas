@@ -40,7 +40,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     private ParseFile foto;
     private List<ParseObject> listParseObject;
     private ParseRelation objectRelation;
-    private List<Comentarios> comentarios;
+    private ArrayList<Comentarios> comentarios;
     private List<Adicionales> adicionales = new ArrayList<>();
     private Adicionales adicional = null;
     private Comentarios comentario;
@@ -66,7 +66,6 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         comentarios = new ArrayList<>();
         adicionales = new ArrayList<>();
         adicional = null;
-        comentarios = new ArrayList<>();
         iGeneral = new IGeneralImpl(context);
 
     }

@@ -91,7 +91,7 @@ public class InformacionUtilFragment extends BaseFragment  {
         @Override
         protected List<Adicionales> doInBackground(Void... voids) {
             try {
-                mIAdicionalesImpl.cargarDBLocalInfoUtil(getActivity().getBaseContext());
+                mIAdicionalesImpl.cargarDBLocalInfoUtil(getBaseActivity());
                 return mIAdicionalesImpl.getInfoUtil();
             } catch (ParseException e) {
                 e.printStackTrace();

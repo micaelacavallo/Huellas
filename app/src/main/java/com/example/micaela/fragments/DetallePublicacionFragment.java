@@ -13,12 +13,16 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.micaela.activities.BaseActivity;
+import com.example.micaela.activities.ComentariosActivity;
 import com.example.micaela.activities.MapActivity;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Perdidos;
@@ -41,6 +45,7 @@ public class DetallePublicacionFragment extends BaseFragment {
     ImageView mImageViewLocation;
 
     Perdidos mPerdidos;
+    Adicionales mAdicionales;
     private View mRootView;
 
     @Override
@@ -56,13 +61,14 @@ public class DetallePublicacionFragment extends BaseFragment {
                     mPerdidos.getColor().getColor(), mPerdidos.getTamaño().getTamaño(), mPerdidos.getEdad().getEdad(),
                     mPerdidos.getSexo().getSexo(), mPerdidos.getLatitud(), mPerdidos.getLongitud(), mPerdidos.getFecha());
         } else {
-            Adicionales adicionales = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
+            mAdicionales = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
             mTextViewDatos.setVisibility(View.GONE);
             mViewLocation.setVisibility(View.GONE);
-            fillViews(adicionales.getPersona().getNombre(), adicionales.getPersona().getTelefono(), "", adicionales.getFoto(),
-                    adicionales.getTitulo(), adicionales.getDescripcion(), "", "", "", "", "", "", 0, 0, adicionales.getFecha());
+            fillViews(mAdicionales.getPersona().getNombre(), mAdicionales.getPersona().getTelefono(), "", mAdicionales.getFoto(),
+                    mAdicionales.getTitulo(), mAdicionales.getDescripcion(), "", "", "", "", "", "", 0, 0, mAdicionales.getFecha());
         }
 
+        setHasOptionsMenu(true);
 
         return mRootView;
     }
@@ -165,5 +171,30 @@ public class DetallePublicacionFragment extends BaseFragment {
         mTextViewDatos = (TextView) mRootView.findViewById(R.id.textView_datos);
         mTextViewPersona = (TextView) mRootView.findViewById(R.id.textView_persona);
         mTextViewDireccion = (TextView) mRootView.findViewById(R.id.textView_direccion);
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_detalle, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_comment:
+                Intent intent = new Intent(getBaseActivity(), ComentariosActivity.class);
+                if (Constants.PERDIDOS.equals(getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT))) {
+                    intent.putParcelableArrayListExtra(Constants.COMENTARIOS_LIST, mPerdidos.getComentarios());
+                }
+                else {
+                    intent.putParcelableArrayListExtra(Constants.COMENTARIOS_LIST, mAdicionales.getComentarios());
+                }
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

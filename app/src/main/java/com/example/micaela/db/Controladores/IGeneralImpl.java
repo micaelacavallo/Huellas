@@ -12,6 +12,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,7 +41,7 @@ public class IGeneralImpl implements IGeneral {
     }
 
     @Override
-    public List<Comentarios> getComentarios(List<ParseObject> listComentarios, ParseObject object ) {
+    public ArrayList<Comentarios> getComentarios(List<ParseObject> listComentarios, ParseObject object ) {
         return mGeneralDAO.getComentarios(listComentarios, object);
     }
 

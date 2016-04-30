@@ -35,6 +35,7 @@
     <string name="publicando">Subiendo publicación</string>
     <string name="buscar">Buscar</string>
     <string name="title_activity_comentarios">ComentariosActivity</string>
+    <string name="comentar">Comentar</string>
     google_api_key
 
 </resources>

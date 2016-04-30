@@ -87,7 +87,7 @@ public class LoginFragment extends BaseFragment {
                                             getFacebookData(object, mProfile);
                                             getActivity().setResult(0);
                                             getActivity().finish();
-                                            ((BaseActivity) getActivity()).hideOverlay();
+
                                         }
                                     });
                             Bundle parameters = new Bundle();
@@ -101,7 +101,6 @@ public class LoginFragment extends BaseFragment {
                     @Override
                     public void onCancel() {
                         getBaseActivity().setResult(-1);
-                        getBaseActivity().logOut();
                     }
 
                     @Override
@@ -110,7 +109,6 @@ public class LoginFragment extends BaseFragment {
                             @Override
                             public void onClick(View v) {
                                 getBaseActivity().setResult(-1);
-                                getBaseActivity().logOut();
                             }
                         };
                         ((BaseActivity) getActivity()).showMessageOverlay("Hubo un problema, intente nuevamente", listener);
