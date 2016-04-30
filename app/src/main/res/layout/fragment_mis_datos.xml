@@ -109,7 +109,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="30dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -130,31 +129,6 @@
                     android:layout_weight="2"
                     android:gravity="start|center"
                     android:text="kdnfkdsf" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/condensed_normal_19"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:gravity="end|center"
-                    android:text="Edad:"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textView_fecha_nac"
-                    style="@style/condensed_normal_17"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:gravity="start|center"
-                    android:text="kdfjksjfdsf" />
             </LinearLayout>
 
             <LinearLayout

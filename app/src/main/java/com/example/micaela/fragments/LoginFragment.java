@@ -84,7 +84,7 @@ public class LoginFragment extends BaseFragment {
                                     new GraphRequest.GraphJSONObjectCallback() {
                                         @Override
                                         public void onCompleted(JSONObject object, GraphResponse response) {
-                                            getFacebookData(object, response, mProfile);
+                                            getFacebookData(object, mProfile);
                                             getActivity().setResult(0);
                                             getActivity().finish();
 
@@ -127,19 +127,13 @@ public class LoginFragment extends BaseFragment {
     }
 
 
-    private void getFacebookData(JSONObject object, GraphResponse response, Profile profile) {
-        String email, age_range, location, gender;
+    private void getFacebookData(JSONObject object, Profile profile) {
+        String email, location, gender;
         // Application code
         try {
             email = object.getString("email");
         } catch (JSONException e) {
             email = "";
-        }
-        try {
-            age_range = response.getJSONObject().getJSONObject("age_range").getString("min");
-
-        } catch (JSONException e) {
-            age_range = "";
         }
 
         try {
@@ -161,7 +155,7 @@ public class LoginFragment extends BaseFragment {
             }
         }
         HuellasApplication.getInstance().saveProfileFacebook(profile.getProfilePictureUri(400, 400), profile.getName(), email, location,
-                gender, age_range);
+                gender);
     }
 
 }

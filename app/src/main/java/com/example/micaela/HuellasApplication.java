@@ -142,14 +142,13 @@ public class HuellasApplication extends Application {
         return sharedPreferences.getString(Constants.ACCESS_TOKEN_FCB, "");
     }
 
-    public void saveProfileFacebook(Uri image, String name, String email, String location, String gender, String birthday) {
+    public void saveProfileFacebook(Uri image, String name, String email, String location, String gender) {
         SharedPreferences.Editor editor = HuellasApplication.getInstance().getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE).edit();
         editor.putString(Constants.PROFILE_IMAGE, image.toString());
         editor.putString(Constants.PROFILE_NAME, name);
         editor.putString(Constants.PROFILE_EMAIL, email);
         editor.putString(Constants.PROFILE_LOCATION, location);
         editor.putString(Constants.PROFILE_GENDER, gender);
-        editor.putString(Constants.PROFILE_BIRTHDAY, birthday);
         editor.apply();
     }
 
@@ -200,11 +199,6 @@ public class HuellasApplication extends Application {
     public String getProfileEmailFacebook() {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(Constants.PROFILE_EMAIL, "");
-    }
-
-    public String getProfileAgeRangeFacebook() {
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(Constants.PROFILE_BIRTHDAY, "");
     }
 
 }

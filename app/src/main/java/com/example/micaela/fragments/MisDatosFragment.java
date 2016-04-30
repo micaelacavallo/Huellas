@@ -17,7 +17,6 @@ public class MisDatosFragment extends BaseFragment {
     private TextView mTextViewNombre;
     private TextView mTextViewMail;
     private TextView mTextViewGenero;
-    private TextView mTextViewEdad;
     private TextView mTextViewCiudad;
     private TextView mTextViewTelefono;
 
@@ -29,7 +28,6 @@ public class MisDatosFragment extends BaseFragment {
 
         String telefono = HuellasApplication.getInstance().getProfileTelefono();
 
-        mTextViewEdad = (TextView) view.findViewById(R.id.textView_fecha_nac);
         mTextViewNombre = (TextView) view.findViewById(R.id.textView_nombre_perfil);
         mTextViewMail = (TextView) view.findViewById(R.id.textView_mail);
         mTextViewGenero = (TextView) view.findViewById(R.id.textView_genero);
@@ -41,7 +39,6 @@ public class MisDatosFragment extends BaseFragment {
             mTextViewTelefono.setText(telefono);
         }
 
-        mTextViewEdad.setText(HuellasApplication.getInstance().getProfileAgeRangeFacebook());
         mTextViewMail.setText(HuellasApplication.getInstance().getProfileEmailFacebook());
         mTextViewGenero.setText(HuellasApplication.getInstance().getProfileGenderFacebook());
         mTextViewNombre.setText(HuellasApplication.getInstance().getProfileNameFacebook());

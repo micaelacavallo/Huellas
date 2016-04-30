@@ -423,8 +423,6 @@ public class AltaAnimalesFragment extends BaseFragment {
                 } else {
                     if (TextUtils.isEmpty(mEditTextTitulo.getText()) ||
                             TextUtils.isEmpty(mEditTextDescripcion.getText()) ||
-                            TextUtils.isEmpty(mEditTextDireccion.getText()) ||
-                            TextUtils.isEmpty(mEditTextNumero.getText()) ||
                             TextUtils.isEmpty(mEditTextTelefono.getText())) {
                         mIsEverythingOK = false;
                     }
