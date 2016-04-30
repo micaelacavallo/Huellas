@@ -202,7 +202,7 @@ public class HuellasApplication extends Application {
         return sharedPreferences.getString(Constants.PROFILE_EMAIL, "");
     }
 
-    public String getProfileBirthdayFacebook() {
+    public String getProfileAgeRangeFacebook() {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(Constants.PROFILE_BIRTHDAY, "");
     }

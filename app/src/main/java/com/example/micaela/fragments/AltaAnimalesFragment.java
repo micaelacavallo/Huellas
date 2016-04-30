@@ -119,6 +119,7 @@ public class AltaAnimalesFragment extends BaseFragment {
         } else {
             mRootView.findViewById(R.id.layout_detalle_mascota_container).setVisibility(View.GONE);
             mRootView.findViewById(R.id.layout_estado_container).setVisibility(View.GONE);
+            mRootView.findViewById(R.id.layout_ubicacion_container).setVisibility(View.GONE);
         }
         return mRootView;
 
@@ -214,8 +215,8 @@ public class AltaAnimalesFragment extends BaseFragment {
                                 adapterRazas.clear();
                                 adapterRazas.add(getString(R.string.raza));
                                 for (int x = 0; x < mRazas.size(); x++) {
-                                    if (selectedEspecie.equals(mRazas.get(x).getmEspecie().getEspecie()) ||
-                                            mRazas.get(x).getmEspecie().getEspecie() == null)
+                                    if (mRazas.get(x).getmEspecie() == null ||
+                                            selectedEspecie.equals(mRazas.get(x).getmEspecie().getEspecie()))
                                         adapterRazas.add(mRazas.get(x).getRaza());
                                 }
                                 adapterRazas.notifyDataSetChanged();

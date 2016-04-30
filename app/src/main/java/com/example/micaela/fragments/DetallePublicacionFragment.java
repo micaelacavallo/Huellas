@@ -54,6 +54,7 @@ public class DetallePublicacionFragment extends BaseFragment {
         wireUpViews();
 
         if (Constants.PERDIDOS.equals(getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT))) {
+            getBaseActivity().getCardEstado().setVisibility(View.VISIBLE);
             mPerdidos = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
             fillViews(mPerdidos.getPersona().getNombre(), mPerdidos.getPersona().getTelefono(),
                     mPerdidos.getEstado().getSituacion(), mPerdidos.getFoto(), mPerdidos.getTitulo(),
@@ -150,7 +151,6 @@ public class DetallePublicacionFragment extends BaseFragment {
 
 
     private void wireUpViews() {
-        getBaseActivity().getCardEstado().setVisibility(View.VISIBLE);
         mImageViewLocation = (ImageView) mRootView.findViewById(R.id.imageView_location);
         mViewLocation = mRootView.findViewById(R.id.layout_ubicacion_container);
         mViewLocation.setOnClickListener(new View.OnClickListener() {

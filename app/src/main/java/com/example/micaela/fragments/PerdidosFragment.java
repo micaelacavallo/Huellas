@@ -124,7 +124,7 @@ public class PerdidosFragment extends BaseFragment {
                 }
                 if (!raza.equals(getString(R.string.raza))) {
                     for (int x = 0; x < perdidosFilter.size(); x++) {
-                        if (!perdidosFilter.get(x).getEstado().getSituacion().equals(tipoPubli)) {
+                        if (!perdidosFilter.get(x).getRaza().getRaza().equals(raza)) {
                             perdidosFilter.remove(x);
                             x--;
                         }
@@ -133,7 +133,7 @@ public class PerdidosFragment extends BaseFragment {
                 }
                 if (!color.equals(getString(R.string.color_predominante))) {
                     for (int x = 0; x < perdidosFilter.size(); x++) {
-                        if (!perdidosFilter.get(x).getEstado().getSituacion().equals(tipoPubli)) {
+                        if (!perdidosFilter.get(x).getColor().getColor().equals(color)) {
                             perdidosFilter.remove(x);
                             x--;
                         }
@@ -223,8 +223,8 @@ public class PerdidosFragment extends BaseFragment {
                                 mAdapterRazas.clear();
                                 mAdapterRazas.add(getString(R.string.raza));
                                 for (int x = 0; x < mRazas.size(); x++) {
-                                    if (selectedEspecie.equals(mRazas.get(x).getmEspecie().getEspecie()) ||
-                                            mRazas.get(x).getmEspecie().getEspecie() == null)
+                                    if (mRazas.get(x).getmEspecie() == null ||
+                                            selectedEspecie.equals(mRazas.get(x).getmEspecie().getEspecie()))
                                         mAdapterRazas.add(mRazas.get(x).getRaza());
                                 }
                                 mSpinnerRazas.setAdapter(mAdapterRazas);
