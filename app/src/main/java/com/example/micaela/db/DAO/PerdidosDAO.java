@@ -402,11 +402,16 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         listParseObject = getRazasParseObject();
 
         for (ParseObject object : listParseObject) {
-            objectAux = object.getParseObject(CPerdidos.ID_ESPECIE);
-            especie = new Especies(objectAux.getString(CEspecies.ESPECIE), objectAux.getObjectId());
 
-            raza = new Razas(object.getString(CRazas.RAZA), object.getObjectId(), especie);
-            razas.add(raza);
+                objectAux = object.getParseObject(CPerdidos.ID_ESPECIE);
+                if(objectAux == null){
+                    especie = null;
+                }
+                else {
+                especie = new Especies(objectAux.getString(CEspecies.ESPECIE), objectAux.getObjectId());
+                }
+                raza = new Razas(object.getString(CRazas.RAZA), object.getObjectId(), especie);
+                razas.add(raza);
         }
 
         return razas;
