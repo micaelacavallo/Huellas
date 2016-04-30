@@ -16,6 +16,7 @@ import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.db.Modelo.Personas;
+import com.facebook.share.widget.CreateAppGroupDialog;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -237,6 +238,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         adicionalObject.put(CAdicionales.DESCRIPCION, adicional.getDescripcion());
         adicionalObject.put(CAdicionales.FECHA, adicional.getFecha());
         adicionalObject.put(CAdicionales.FOTOS, adicional.getFoto());
+        adicionalObject.put(CAdicionales.DONACION, adicional.isDonacion());
 
         try {
             persona = iGeneral.getPersona(adicional.getPersona().getEmail());
