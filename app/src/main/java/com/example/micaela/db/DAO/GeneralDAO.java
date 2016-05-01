@@ -129,7 +129,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
             //pushQuery.whereEqualTo("email", persona.getEmail());
             pushQuery.whereEqualTo("email", "kimy_1_8@hotmail.com");
 
-            object2.put("title", "se ha agregado un comentario en una publicacion");
+            object2.put("title", "Se ha agregado un comentario en una publicacion");
             object2.put("description", "traer comentario de la publicacion");
             ParsePush push = new ParsePush();
             push.setQuery(pushQuery); // Set our Installation query
@@ -323,14 +323,11 @@ public class GeneralDAO implements IGeneral, IDBLocal {
     @Override
     public List<Comentarios> getComentariosNoLeidos(String userObjectId) {
 
-        try {
-            persona = mPersonasImpl.getPersonabyId(userObjectId);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        ParseObject obj = ParseObject.createWithoutData(Clases.PERSONAS, userObjectId);
+
         query = ParseQuery.getQuery(Clases.COMENTARIOS);
         query.include(CComentarios.ID_PERSONA);
-        query.whereEqualTo(CComentarios.ID_PERSONA, persona);
+        query.whereEqualTo(CComentarios.ID_PERSONA, obj);
         query.whereEqualTo(CComentarios.LEIDO, false);
 
         checkInternetGet(query);

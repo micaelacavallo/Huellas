@@ -125,50 +125,60 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         if (listParseObject.size() > 0) {
             for (ParseObject object : listParseObject) {
 
-                objectAux = object.getParseObject(CPerdidos.ID_COLOR);
-                color = new Colores(objectAux.getString(CColores.COLOR), objectAux.getObjectId());
-
-                objectAux = object.getParseObject(CPerdidos.ID_SEXO);
-                sexo = new Sexos(objectAux.getString(CSexos.SEXO), objectAux.getObjectId());
-
-                objectAux = object.getParseObject(CPerdidos.ID_TAMAÑO);
-                tamaño = new Tamaños(objectAux.getString(CTamaños.TAMAÑO), objectAux.getObjectId());
-
-                objectAux = object.getParseObject(CPerdidos.ID_EDAD);
-                edad = new Edades(objectAux.getString(CEdades.EDAD), objectAux.getObjectId());
-
-                objectAux = object.getParseObject(CPerdidos.ID_ESPECIE);
-                especie = new Especies(objectAux.getString(CEspecies.ESPECIE), objectAux.getObjectId());
-
-                objectAux = object.getParseObject(CPerdidos.ID_RAZA);
-                raza = new Razas(objectAux.getString(CRazas.RAZA), objectAux.getObjectId(), especie);
-
-                objectAux = object.getParseObject(CPerdidos.ID_PERSONA);
-                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO), objectAux.getString(CPersonas.CONTRASEÑA), objectAux.getString(CPersonas.FOTO));
-
-                objectAux = object.getParseObject(CPerdidos.ID_ESTADO);
-                estado = new Estados(objectAux.getObjectId(),objectAux.getString(CEstados.SITUACION));
-
-                try {
-                    objectRelation = object.getRelation(CPerdidos.COMENTARIOS);
-                    comentarios = getComentarios(objectRelation.getQuery().find(), object);
-
-                } catch (Exception e) {
-                    comentarios = null;
-                }
-
-
-                foto = object.getParseFile(CPerdidos.FOTOS);
-                byte[] image = null;
-                if (foto != null) {
-                    image = foto.getData();
-                }
-                perdido = new Perdidos(edad, raza, especie, tamaño, color, sexo, estado, persona, object.getDate(CPerdidos.FECHA), object.getParseGeoPoint(CPerdidos.UBICACION).getLatitude(), object.getParseGeoPoint(CPerdidos.UBICACION).getLongitude(), object.getString(CPerdidos.TITULO), object.getString(CPerdidos.DESCRIPCION), image, comentarios, object.getBoolean(CPerdidos.SOLUCIONADO), object.getBoolean(CPerdidos.BLOQUEADO));
+                perdido = getPerdido(object);
                 perdidos.add(perdido);
             }
         }
 
         return perdidos;
+    }
+
+    public Perdidos getPerdido(ParseObject object){
+
+        objectAux = object.getParseObject(CPerdidos.ID_COLOR);
+        color = new Colores(objectAux.getString(CColores.COLOR), objectAux.getObjectId());
+
+        objectAux = object.getParseObject(CPerdidos.ID_SEXO);
+        sexo = new Sexos(objectAux.getString(CSexos.SEXO), objectAux.getObjectId());
+
+        objectAux = object.getParseObject(CPerdidos.ID_TAMAÑO);
+        tamaño = new Tamaños(objectAux.getString(CTamaños.TAMAÑO), objectAux.getObjectId());
+
+        objectAux = object.getParseObject(CPerdidos.ID_EDAD);
+        edad = new Edades(objectAux.getString(CEdades.EDAD), objectAux.getObjectId());
+
+        objectAux = object.getParseObject(CPerdidos.ID_ESPECIE);
+        especie = new Especies(objectAux.getString(CEspecies.ESPECIE), objectAux.getObjectId());
+
+        objectAux = object.getParseObject(CPerdidos.ID_RAZA);
+        raza = new Razas(objectAux.getString(CRazas.RAZA), objectAux.getObjectId(), especie);
+
+        objectAux = object.getParseObject(CPerdidos.ID_PERSONA);
+        persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO), objectAux.getString(CPersonas.CONTRASEÑA), objectAux.getString(CPersonas.FOTO));
+
+        objectAux = object.getParseObject(CPerdidos.ID_ESTADO);
+        estado = new Estados(objectAux.getObjectId(),objectAux.getString(CEstados.SITUACION));
+
+        try {
+            objectRelation = object.getRelation(CPerdidos.COMENTARIOS);
+            comentarios = getComentarios(objectRelation.getQuery().find(), object);
+
+        } catch (Exception e) {
+            comentarios = null;
+        }
+
+
+        foto = object.getParseFile(CPerdidos.FOTOS);
+        byte[] image = null;
+        if (foto != null) {
+            try {
+                image = foto.getData();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        perdido = new Perdidos(edad, raza, especie, tamaño, color, sexo, estado, persona, object.getDate(CPerdidos.FECHA), object.getParseGeoPoint(CPerdidos.UBICACION).getLatitude(), object.getParseGeoPoint(CPerdidos.UBICACION).getLongitude(), object.getString(CPerdidos.TITULO), object.getString(CPerdidos.DESCRIPCION), image, comentarios, object.getBoolean(CPerdidos.SOLUCIONADO), object.getBoolean(CPerdidos.BLOQUEADO));
+        return perdido;
     }
 
     @Override
@@ -669,6 +679,26 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         listParseObject = findQuery();
 
         return getListPerdidos(listParseObject);
+    }
+
+    @Override
+    public Perdidos getPublicacionPerdidosById(String objectId) throws ParseException {
+
+        query = getQueryPerdidos();
+        query.whereEqualTo(CPerdidos.OBJECT_ID, objectId);
+        checkInternetGet(query);
+
+        try {
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+                perdido = getPerdido(objectAux);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return perdido;
+
     }
 
     @Override

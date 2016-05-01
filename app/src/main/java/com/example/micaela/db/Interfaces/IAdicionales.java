@@ -25,5 +25,4 @@ public interface IAdicionales {
     public void cargarDBLocalInfoUtil(Context context) throws ParseException;
     public List<Adicionales> getPublicacionesAdicionalesPropias(String objectId);
 
-
 }

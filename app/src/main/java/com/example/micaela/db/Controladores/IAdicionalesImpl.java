@@ -78,4 +78,5 @@ public class IAdicionalesImpl implements IAdicionales {
         return mAdicionalesDAO.getPublicacionesAdicionalesPropias(objectId);
     }
 
+
 }

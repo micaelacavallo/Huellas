@@ -118,4 +118,9 @@ public class IPerdidosImpl implements IPerdidos {
         return mPerdidosDAO.getPublicacionesPerdidosPropias(objectId);
     }
 
+    @Override
+    public Perdidos getPublicacionPerdidosById(String objectId) throws ParseException {
+        return mPerdidosDAO.getPublicacionPerdidosById(objectId);
+    }
+
 }

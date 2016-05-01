@@ -13,6 +13,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.example.micaela.activities.ComentariosActivity;
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.huellas.R;
 import com.parse.ParsePushBroadcastReceiver;
@@ -102,4 +103,21 @@ public class CustomPushReceiver extends ParsePushBroadcastReceiver {
         }
 
     }
+
+    @Override
+    protected void onPushOpen(Context context, Intent intent) {
+        JSONObject pushData = null;
+
+        try {
+            pushData = new JSONObject(intent.getStringExtra(KEY_PUSH_DATA));
+            Intent pushIntent = new Intent(context, ComentariosActivity.class);
+            pushIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            pushIntent.putExtra("store", pushData.getString("data"));
+            context.startActivity(pushIntent);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
