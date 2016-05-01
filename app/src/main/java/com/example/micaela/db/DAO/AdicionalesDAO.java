@@ -18,7 +18,6 @@ import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.db.Modelo.Personas;
-import com.facebook.share.widget.CreateAppGroupDialog;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -52,6 +51,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
     public AdicionalesDAO(Context context)
     {
+        super(context);
         this.context = context;
         init(context);
     }
