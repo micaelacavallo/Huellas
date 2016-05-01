@@ -14,9 +14,11 @@ import com.example.micaela.db.Constantes.CSexos;
 import com.example.micaela.db.Constantes.CTamaños;
 import com.example.micaela.db.Constantes.Clases;
 import com.example.micaela.db.Controladores.IGeneralImpl;
+import com.example.micaela.db.Controladores.IPersonasImpl;
 import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Interfaces.IPerdidos;
+import com.example.micaela.db.Interfaces.IPersonas;
 import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Edades;
@@ -68,8 +70,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     private List<Sexos> sexos;
     private List<Edades> edades;
     private IGeneral iGeneral;
-
-
+    private IPersonas iPersona;
     public PerdidosDAO(Context context) {
 
         this.context = context;
@@ -102,6 +103,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         sexos = new ArrayList<>();
         edades = new ArrayList<>();
         iGeneral = new IGeneralImpl(context);
+        iPersona = new IPersonasImpl(context);
     }
 
 
@@ -235,7 +237,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
             edad = getEdad(perdido.getEdad().getEdad());
             especie = getEspecie(perdido.getEspecie().getEspecie());
             estado = getEstado(perdido.getEstado().getSituacion());
-            persona = getPersona(perdido.getPersona().getEmail());
+            persona = iPersona.getPersonabyEmail(perdido.getPersona().getEmail());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -686,12 +688,12 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     public void delete(ParseObject object) {
 
         if (internet(context)) {
-            deleteInBackground(objectAux);
+            deleteInBackground(object);
         } else {
-            deleteEventually(objectAux);
+            deleteEventually(object);
         }
 
-        unpinObjectInBackground(objectAux);
+        unpinObjectInBackground(object);
     }
 
 

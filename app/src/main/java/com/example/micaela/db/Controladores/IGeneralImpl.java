@@ -36,11 +36,6 @@ public class IGeneralImpl implements IGeneral {
 
 
     @Override
-    public Personas getPersona(String email) throws ParseException {
-        return mGeneralDAO.getPersona(email);
-    }
-
-    @Override
     public ArrayList<Comentarios> getComentarios(List<ParseObject> listComentarios, ParseObject object ) {
         return mGeneralDAO.getComentarios(listComentarios, object);
     }
@@ -103,6 +98,21 @@ public class IGeneralImpl implements IGeneral {
     public List<MotivoDenuncia> getMotivoDenuncias() {
 
         return mGeneralDAO.getMotivoDenuncias();
+    }
+
+    @Override
+    public List<Comentarios> getComentariosNoLeidos(String userObjectId) {
+        return mGeneralDAO.getComentariosNoLeidos(userObjectId);
+    }
+
+    @Override
+    public void cambiarLeidoComentario(String comentarioObjectId, boolean leido) {
+        mGeneralDAO.cambiarLeidoComentario(comentarioObjectId, leido);
+    }
+
+    @Override
+    public void borrarComentario(String objectId) {
+        mGeneralDAO.borrarComentario(objectId);
     }
 
     @Override

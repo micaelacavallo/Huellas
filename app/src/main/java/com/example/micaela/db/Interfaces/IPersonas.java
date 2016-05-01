@@ -24,5 +24,9 @@ public interface IPersonas {
     public boolean internet(Context context);
     public void registar(Personas personas);
     public List<Personas> getPersonas();
+    public Personas getPersonabyEmail(String email) throws ParseException;
+    public Personas getPersonabyId(String objectId) throws ParseException;
+    public void editTelefono(String objectId, String telefono);
+
 
 }

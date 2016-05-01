@@ -14,15 +14,17 @@ public class Comentarios implements Parcelable {
     private Personas mPersona;
     private Date mFecha;
     private String mObjectId;
+    private boolean mLeido;
 
     public Comentarios() {
     }
 
-    public Comentarios(String objectId, String comentario, Personas persona, Date fecha) {
+    public Comentarios(String objectId, String comentario, Personas persona, Date fecha, boolean leido) {
         this.mComentario = comentario;
         this.mPersona = persona;
         this.mFecha = fecha;
         this.mObjectId = objectId;
+        this.setmLeido(leido);
     }
 
     public String getComentario() {
@@ -57,6 +59,7 @@ public class Comentarios implements Parcelable {
         this.mObjectId = mObjectId;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -87,4 +90,12 @@ public class Comentarios implements Parcelable {
             return new Comentarios[size];
         }
     };
+
+    public boolean ismLeido() {
+        return mLeido;
+    }
+
+    public void setmLeido(boolean mLeido) {
+        this.mLeido = mLeido;
+    }
 }

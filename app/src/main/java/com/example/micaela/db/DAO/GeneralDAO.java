@@ -48,6 +48,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
     private ParseQuery<ParseObject> query;
     private IPersonas mPersonasImpl;
     private ParseObject objectAux;
+    private ParseObject object;
     private List<Comentarios> comentarios;
     private List<ParseObject> listParseObject;
     private Comentarios comentario;
@@ -65,6 +66,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         listParseObject = null;
         comentario = null;
         persona = null;
+        object = null;
         iPersona = new IPersonasImpl(context);
 
     }
@@ -152,22 +154,18 @@ public class GeneralDAO implements IGeneral, IDBLocal {
     public ParseObject getComentarioById(String objectId) throws ParseException {
 
         query = ParseQuery.getQuery(Clases.COMENTARIOS);
+        query.include(CComentarios.ID_PERSONA);
         query.whereEqualTo(CComentarios.OBJECT_ID, objectId);
-        // Comentarios comentario = null;
-        ParseObject objectAux = null;
+        checkInternetGet(query);
 
         try {
             if(query.count() != 0) {
-                objectAux = query.getFirst();
-         /*   ParseObject object = objectAux.getParseObject("personas");
-            Personas persona = new Personas(object.getObjectId(), object.getInt(CPersonas.ID_PERSONA), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.APELLIDO), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR));
-            comentario = new Comentarios(objectAux.getObjectId(), objectAux.getInt(CComentarios.ID_COMENTARIO), objectAux.getString(CComentarios.COMENTARIO), persona, objectAux.getDate(CComentarios.FECHA));*/
-
+                object = query.getFirst();
             }
         } catch (ParseException e) {
             e.fillInStackTrace();
         }
-        return objectAux;
+        return object;
 
     }
 

@@ -34,6 +34,21 @@ public class IPersonasImpl implements IPersonas {
     }
 
     @Override
+    public Personas getPersonabyEmail(String email) throws ParseException {
+        return mPersonasDAO.getPersonabyEmail(email);
+    }
+
+    @Override
+    public Personas getPersonabyId(String objectId) throws ParseException {
+        return mPersonasDAO.getPersonabyId(objectId);
+    }
+
+    @Override
+    public void editTelefono(String objectId, String telefono) {
+        mPersonasDAO.editTelefono(objectId, telefono);
+    }
+
+    @Override
     public List<MotivoDenuncia> getMotivoDenuncias() {
         return getMotivoDenuncias();
     }

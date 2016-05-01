@@ -30,6 +30,8 @@ public class PersonasDAO implements IPersonas {
     private List<ParseObject> listParseObject;
     private Personas persona;
     private List<Personas> personas;
+    private ParseObject objectAux;
+
 
     public PersonasDAO(Context context) {
 
@@ -37,6 +39,7 @@ public class PersonasDAO implements IPersonas {
         parseObject = ParseObject.create(Clases.PERSONAS);
         listParseObject = null;
         persona = null;
+        objectAux = null;
         personas = new ArrayList<Personas>();
 
     }
@@ -108,6 +111,59 @@ public class PersonasDAO implements IPersonas {
         }
 
         return listMotivoDenuncia;
+    }
+
+
+    @Override
+    public Personas getPersonabyEmail(String email) throws ParseException {
+
+        query = ParseQuery.getQuery(Clases.PERSONAS);
+        query.whereEqualTo(CPersonas.EMAIL, email);
+        Personas persona = null;
+        try {
+            if(query.count() != 0) {
+                ParseObject object = query.getFirst();
+                persona = new Personas(object.getObjectId(), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR), object.getBoolean(CPersonas.BLOQUEADO),  object.getString(CPersonas.CONTRASEÑA), object.getString(CPersonas.FOTO));
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
+
+        return persona;
+    }
+
+    @Override
+    public Personas getPersonabyId(String objectId) throws ParseException {
+        query = ParseQuery.getQuery(Clases.PERSONAS);
+        query.whereEqualTo(CPersonas.OBJECT_ID, objectId);
+        Personas persona = null;
+        try {
+            if(query.count() != 0) {
+                ParseObject object = query.getFirst();
+                persona = new Personas(object.getObjectId(), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR), object.getBoolean(CPersonas.BLOQUEADO),  object.getString(CPersonas.CONTRASEÑA), object.getString(CPersonas.FOTO));
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
+
+        return persona;
+    }
+
+    @Override
+    public void editTelefono(String objectId, String telefono) {
+
+        query = ParseQuery.getQuery(Clases.PERSONAS);
+        query.whereEqualTo(CPersonas.OBJECT_ID, objectId);
+
+        try {
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+                objectAux.put(CPersonas.TELEFONO, telefono);
+                save(objectAux);
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
     }
 
     @Override

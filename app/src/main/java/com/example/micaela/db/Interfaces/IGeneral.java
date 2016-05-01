@@ -18,7 +18,6 @@ import java.util.List;
 public interface IGeneral {
 
     public Estados getEstado(String situacion) throws ParseException;
-    public Personas getPersona(String email) throws ParseException;
     public List<Comentarios> getComentarios(List<ParseObject> listComentarios, ParseObject object);
     public ParseObject agregarComentario(String comentario, String email, Context context) throws ParseException;
     public ParseObject getComentarioById(String objectId) throws ParseException;
@@ -31,6 +30,9 @@ public interface IGeneral {
     public void denunciar(String id, String motivo) throws ParseException;
     public MotivoDenuncia getMotivoDenuncia(String motivo);
     public List<MotivoDenuncia> getMotivoDenuncias();
+    public List<Comentarios> getComentariosNoLeidos(String userObjectId);
+    public void cambiarLeidoComentario(String comentarioObjectId, boolean leido);
+    public void borrarComentario(String objectId);
     public void startAlert();
 
 }

@@ -10,6 +10,7 @@ public class CComentarios {
     public static String FECHA = "fecha";
     public static String ID_PERSONA= "Personas";
     public static String CREATEDAT= "createdAt";
+    public static String LEIDO = "leido";
 
 
 }
