@@ -109,7 +109,6 @@ public class AltaAnimalesFragment extends BaseFragment {
         mRootView = inflater.inflate(R.layout.fragment_alta_animales, container, false);
     mIPerdidosImpl = new IPerdidosImpl(getBaseActivity());
         mIAdicionalesImpl = new IAdicionalesImpl(getBaseActivity());
-        mIPersonasImpl = new IPersonasImpl(getBaseActivity());
         getBaseActivity().setUpCollapsingToolbar(getBaseActivity().getString(R.string.crear_publicacion));
         wireUpViews();
 
@@ -399,10 +398,7 @@ public class AltaAnimalesFragment extends BaseFragment {
                         } else {
                             (getBaseActivity()).showOverlay(getString(R.string.publicando));
                             HuellasApplication.getInstance().saveProfileTelefono(mEditTextTelefono.getText().toString());
-                            Personas persona = new Personas("", HuellasApplication.getInstance().getProfileEmailFacebook(),
-                                    HuellasApplication.getInstance().getProfileNameFacebook(), mEditTextTelefono.getText().toString(),
-                                    false, false, "", HuellasApplication.getInstance().getProfileImageFacebook());
-                            new AsyncTaskRegistrarUsuario().execute(persona);
+                            new AsyncTaskRegistrarUsuario().execute(mEditTextTelefono.getText().toString());
                         }
                     } else {
                         mIsEverythingOK = true;
@@ -437,10 +433,7 @@ public class AltaAnimalesFragment extends BaseFragment {
                         } else {
                             (getBaseActivity()).showOverlay(getString(R.string.publicando));
                             HuellasApplication.getInstance().saveProfileTelefono(mEditTextTelefono.getText().toString());
-                            Personas persona = new Personas("", HuellasApplication.getInstance().getProfileEmailFacebook(),
-                                    HuellasApplication.getInstance().getProfileNameFacebook(), mEditTextTelefono.getText().toString(),
-                                    false, false, "", HuellasApplication.getInstance().getProfileImageFacebook());
-                            new AsyncTaskRegistrarUsuario().execute(persona);
+                            new AsyncTaskRegistrarUsuario().execute(mEditTextTelefono.getText().toString());
                         }
                     } else {
                         mIsEverythingOK = true;
@@ -455,7 +448,7 @@ public class AltaAnimalesFragment extends BaseFragment {
         });
     }
 
-    private class AsyncTaskRegistrarUsuario extends AsyncTask<Personas, Void, Void> {
+    private class AsyncTaskRegistrarUsuario extends AsyncTask<String, Void, Void> {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -476,9 +469,7 @@ public class AltaAnimalesFragment extends BaseFragment {
                 perdidos.setFecha(new Date());
                 perdidos.setRaza(new Razas(mSpinnerRazas.getSelectedItem().toString()));
                 perdidos.setSexo(new Sexos(mSpinnerSexos.getSelectedItem().toString()));
-                Personas personas = new Personas();
-                personas.setEmail(HuellasApplication.getInstance().getProfileEmailFacebook());
-                personas.setTelefono(mEditTextTelefono.getText().toString());
+                Personas personas = new Personas(HuellasApplication.getInstance().getProfileEmailFacebook());
                 perdidos.setPersona(personas);
                 new AsyncTaskSavePublicacionPerdido().execute(perdidos);
             } else {
@@ -492,17 +483,15 @@ public class AltaAnimalesFragment extends BaseFragment {
                     adicionales.setDonacion(false);
                 }
                 adicionales.setFecha(new Date());
-                Personas personas = new Personas();
-                personas.setEmail(HuellasApplication.getInstance().getProfileEmailFacebook());
-                personas.setTelefono(mEditTextTelefono.getText().toString());
+                Personas personas = new Personas(HuellasApplication.getInstance().getProfileEmailFacebook());
                 adicionales.setPersona(personas);
                 new AsyncTaskSavePublicacionAdicional().execute(adicionales);
             }
         }
 
         @Override
-        protected Void doInBackground(Personas... params) {
-            mIPersonasImpl.registar(params[0]);
+        protected Void doInBackground(String... params) {
+            mIPersonasImpl.editTelefono("", params[0]);
             return null;
         }
     }

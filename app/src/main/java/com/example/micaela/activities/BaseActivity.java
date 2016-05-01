@@ -3,6 +3,9 @@ package com.example.micaela.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -164,6 +167,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void showUpButton() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+            if (upArrow != null) {
+                upArrow.setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.SRC_ATOP);
+            }
+            actionBar.setHomeAsUpIndicator(upArrow);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }

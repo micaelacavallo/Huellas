@@ -14,13 +14,19 @@ public class ComentariosViewHolder  extends RecyclerView.ViewHolder {
     private ImageView mImageViewFoto;
     private TextView mTextViewNombre;
     private TextView mTextViewComentario;
+    private View mViewLine;
 
     public ComentariosViewHolder(View itemView) {
         super(itemView);
+        mViewLine= itemView.findViewById(R.id.view_line);
         mTextViewFecha = (TextView) itemView.findViewById(R.id.textView_fecha);
         mTextViewNombre = (TextView) itemView.findViewById(R.id.textView_nombre_persona);
         mTextViewComentario = (TextView) itemView.findViewById(R.id.textView_comentario);
         mImageViewFoto = (ImageView) itemView.findViewById(R.id.imageView_foto_persona);
+    }
+
+    public View getmViewLine() {
+        return mViewLine;
     }
 
     public TextView getTextViewFecha() {

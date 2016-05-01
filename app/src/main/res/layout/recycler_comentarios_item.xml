@@ -9,6 +9,7 @@
               android:orientation="vertical">
 
     <View
+        android:id="@+id/view_line"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
         android:layout_marginBottom="10dp"
@@ -38,14 +39,14 @@
 
             <TextView
                 android:id="@+id/textView_nombre_persona"
-                style="@style/condensed_bold_17"
+                style="@style/condensed_bold_16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Micaela Cavallo"/>
 
             <TextView
                 android:id="@+id/textView_comentario"
-                style="@style/condensed_normal_small_15"
+                style="@style/condensed_normal_16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="sdkfksdfsdkfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdsdfsdfsdfsd"/>
@@ -55,6 +56,7 @@
                 style="@style/condensed_normal_small_14"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/divider"
                 android:gravity="end"
                 android:text="15/45/5454"/>
         </LinearLayout>

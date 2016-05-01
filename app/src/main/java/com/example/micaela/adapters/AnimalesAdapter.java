@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.micaela.activities.BaseActivity;
+import com.example.micaela.activities.ComentariosActivity;
 import com.example.micaela.activities.DetallePublicacionActivity;
 import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.huellas.R;
@@ -33,7 +34,7 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(AnimalesViewHolder holder, final int position) {
+    public void onBindViewHolder(final AnimalesViewHolder holder, final int position) {
         if (!mPerdidos.get(position).isSolucionado()) {
 
             String raza = mPerdidos.get(position).getRaza().getRaza();
@@ -60,6 +61,14 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
                 }
             }
 
+            holder.getViewComentar().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, ComentariosActivity.class);
+                    intent.putParcelableArrayListExtra(Constants.COMENTARIOS_LIST, mPerdidos.get((int) holder.getCardContainer().getTag()).getComentarios());
+                    mContext.startActivity(intent);
+                }
+            });
             byte[] foto = mPerdidos.get(position).getFoto();
             if (foto != null) {
                 holder.getImageViewFoto().setImageBitmap(((BaseActivity) mContext).convertFromByteToBitmap(foto));

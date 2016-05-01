@@ -83,6 +83,12 @@
         <item name="android:textSize">17sp</item>
     </style>
 
+    <style name="condensed_normal_18">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
     <style name="condensed_normal_19">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">normal</item>
@@ -161,6 +167,13 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">15sp</item>
     </style>
+
+    <style name="condensed_bold_16">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
 
     <style name="condensed_bold_17">
         <item name="android:fontFamily">sans-serif-condensed</item>

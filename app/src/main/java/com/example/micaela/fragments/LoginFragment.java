@@ -1,6 +1,7 @@
 package com.example.micaela.fragments;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.example.micaela.HuellasApplication;
 import com.example.micaela.activities.BaseActivity;
+import com.example.micaela.db.Controladores.IPersonasImpl;
+import com.example.micaela.db.Modelo.Personas;
 import com.example.micaela.huellas.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -33,6 +36,7 @@ public class LoginFragment extends BaseFragment {
     CallbackManager mCallbackManager;
     private LoginButton mLoginButton;
     private Profile mProfile;
+    private IPersonasImpl mIPersonasImpl;
 
     public LoginFragment() {
     }
@@ -41,6 +45,7 @@ public class LoginFragment extends BaseFragment {
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         mLoginButton = (LoginButton) rootView.findViewById(R.id.login_button);
+        mIPersonasImpl = new IPersonasImpl(getBaseActivity());
         mCallbackManager = CallbackManager.Factory.create();
         mLoginButton.setReadPermissions(Arrays.asList("email", "user_birthday", "user_location", "public_profile"));
         // If using in a fragment
@@ -120,6 +125,30 @@ public class LoginFragment extends BaseFragment {
         return rootView;
     }
 
+    private class AsyncTaskRegistrarUsuario extends AsyncTask<Personas, Void, Void> {
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+
+        @Override
+        protected Void doInBackground(Personas... params) {
+            try {
+                mIPersonasImpl.registar(params[0]);
+            } catch (Exception e) {
+                View.OnClickListener listener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getBaseActivity().logOut();
+                    }
+                };
+                ((BaseActivity) getActivity()).showMessageOverlay("Hubo un problema, intente nuevamente", listener);
+            }
+            return null;
+        }
+
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -156,6 +185,9 @@ public class LoginFragment extends BaseFragment {
         }
         HuellasApplication.getInstance().saveProfileFacebook(profile.getProfilePictureUri(400, 400), profile.getName(), email, location,
                 gender);
+        Personas persona = new Personas("",  HuellasApplication.getInstance().getProfileEmailFacebook(), HuellasApplication.getInstance().getProfileNameFacebook(),
+                "", false, false, "", HuellasApplication.getInstance().getProfileImageFacebook());
+        new AsyncTaskRegistrarUsuario().execute(persona);
     }
 
 }

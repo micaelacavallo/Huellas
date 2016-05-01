@@ -2,7 +2,6 @@ package com.example.micaela.activities;
 
 import android.os.Bundle;
 
-import com.example.micaela.fragments.ComentariosFragment;
 import com.example.micaela.huellas.R;
 
 public class ComentariosActivity extends BaseActivity {
@@ -11,8 +10,7 @@ public class ComentariosActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comentarios);
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment, new ComentariosFragment()).commit();
-        showUpButton();
+        getSupportActionBar().hide();
     }
 
     @Override

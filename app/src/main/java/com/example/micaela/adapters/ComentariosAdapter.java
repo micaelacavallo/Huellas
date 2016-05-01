@@ -1,6 +1,7 @@
 package com.example.micaela.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +10,15 @@ import android.view.ViewGroup;
 import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.huellas.R;
+import com.example.micaela.utils.CircleImageTransform;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 /**
  * Created by micaela.cavallo on 4/29/2016.
  */
-public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosViewHolder>  {
+public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosViewHolder> {
     List<Comentarios> mComentarios;
     private Context mContext;
 
@@ -34,9 +37,19 @@ public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosViewHold
     @Override
     public void onBindViewHolder(ComentariosViewHolder holder, final int position) {
 
-      //  Picasso.with(mContext).load(Uri.parse(mComentarios.get(position).getPersona().getFoto())).placeholder(R.mipmap.placeholder).transform(new CircleImageTransform()).into(holder.getImageViewFoto());
-    holder.getTextViewComentario().setText(mComentarios.get(position).getComentario());
-        holder.getTextViewFecha().setText(((BaseActivity)mContext).getFormattedDate2(mComentarios.get(position).getFecha()));
+        if (position == 0) {
+            holder.getmViewLine().setVisibility(View.GONE);
+        }
+
+
+        String mFoto = mComentarios.get(position).getPersona().getmFoto();
+        if (mFoto == null || mFoto.equals("")) {
+            Picasso.with(mContext).load(R.mipmap.placeholder).transform(new CircleImageTransform()).into(holder.getImageViewFoto());
+        } else {
+            Picasso.with(mContext).load(Uri.parse(mFoto)).placeholder(R.mipmap.placeholder).transform(new CircleImageTransform()).into(holder.getImageViewFoto());
+        }
+        holder.getTextViewComentario().setText(mComentarios.get(position).getComentario());
+        holder.getTextViewFecha().setText(((BaseActivity) mContext).getFormattedDate2(mComentarios.get(position).getFecha()));
         holder.getTextViewNombre().setText(mComentarios.get(position).getPersona().getNombre());
     }
 

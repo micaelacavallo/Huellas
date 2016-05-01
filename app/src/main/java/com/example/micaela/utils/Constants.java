@@ -54,5 +54,5 @@ public class Constants {
 
 
     // COMENTARIOS
-    public static final String COMENTARIOS_DATE_FORMAT = "dd/MM/yyyy HH:mm";
+    public static final String COMENTARIOS_DATE_FORMAT = "dd/MM HH:mm";
 }

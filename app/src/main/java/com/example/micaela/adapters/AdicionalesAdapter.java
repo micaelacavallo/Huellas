@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.micaela.activities.BaseActivity;
+import com.example.micaela.activities.ComentariosActivity;
 import com.example.micaela.activities.DetallePublicacionActivity;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.huellas.R;
@@ -33,7 +34,7 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
     }
 
     @Override
-    public void onBindViewHolder(AdicionalesViewHolder holder, int position) {
+    public void onBindViewHolder(final AdicionalesViewHolder holder, int position) {
         holder.getTextViewTitulo().setText(mAdicionales.get(position).getTitulo());
         holder.getTextViewDescripcion().setText(mAdicionales.get(position).getDescripcion());
 
@@ -50,10 +51,18 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
                 holder.getmTextViewComentarios().setText(String.format(mContext.getString(R.string.comentarios_cantidad), cantidadComentarios));
             }
             holder.getmTextViewComentarios().setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             holder.getmTextViewComentarios().setVisibility(View.GONE);
         }
+
+        holder.getViewComentar().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ComentariosActivity.class);
+                intent.putParcelableArrayListExtra(Constants.COMENTARIOS_LIST, mAdicionales.get((int) holder.getCardContainer().getTag()).getComentarios());
+                mContext.startActivity(intent);
+            }
+        });
 
         holder.getCardContainer().setTag(position);
         holder.getCardContainer().setOnClickListener(new View.OnClickListener() {
@@ -75,8 +84,7 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
     public int getItemCount() {
         if (mAdicionales != null) {
             return mAdicionales.size();
-        }
-        else {
+        } else {
             return 0;
         }
     }
