@@ -1,5 +1,6 @@
 package com.example.micaela.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -224,6 +226,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     public String getFormattedDate2(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat(Constants.COMENTARIOS_DATE_FORMAT, Locale.getDefault());
         return sdf.format(date) + " hs.";
+    }
+
+    public void hideKeyboard () {
+        // Check if no view has focus:
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
 

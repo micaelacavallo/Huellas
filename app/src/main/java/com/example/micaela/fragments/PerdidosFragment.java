@@ -25,6 +25,7 @@ import com.example.micaela.adapters.AnimalesAdapter;
 import com.example.micaela.adapters.CustomSpinnerHintAdapter;
 import com.example.micaela.db.Controladores.IPerdidosImpl;
 import com.example.micaela.db.Interfaces.IPerdidos;
+import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Especies;
 import com.example.micaela.db.Modelo.Estados;
@@ -37,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PerdidosFragment extends BaseFragment {
+public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragment.AdapterCallback {
 
     private RecyclerView mRecyclerView;
     private IPerdidos mIperdidosImpl;
@@ -70,12 +71,30 @@ public class PerdidosFragment extends BaseFragment {
     List<Colores> mColores;
     List<Estados> mEstados;
 
+    AnimalesAdapter mAdapterAnimales;
+
     private boolean mFromSwipeRefresh = false;
+    private static PerdidosFragment mInstancePerdidos;
+
+    public static PerdidosFragment getInstance() {
+        if (mInstancePerdidos == null) {
+            mInstancePerdidos = new PerdidosFragment();
+        }
+        return mInstancePerdidos;
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mInstancePerdidos = null;
+    }
 
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_perdidos, container, false);
         mIperdidosImpl = new IPerdidosImpl(getActivity().getApplicationContext());
+
         inicializarSwipeRefresh(mRootView);
         inicializarRecycler(mRootView);
         mTextViewEmpty = (TextView) mRootView.findViewById(R.id.empty_publicaciones);
@@ -306,6 +325,17 @@ public class PerdidosFragment extends BaseFragment {
         }
     }
 
+    public void updatePerdidoAdapter(Perdidos perdido) {
+        List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
+        perdidos.add(0, perdido);
+        mAdapterAnimales.notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateAdicionalAdapter(Adicionales perdido) {
+
+    }
+
     private class AsyncTaskPerdidos extends AsyncTask<Void, Void, List<Perdidos>> {
 
         @Override
@@ -318,8 +348,8 @@ public class PerdidosFragment extends BaseFragment {
         protected void onPostExecute(final List<Perdidos> perdidosList) {
             super.onPostExecute(perdidosList);
             HuellasApplication.getInstance().setmPerdidos(perdidosList);
-            AnimalesAdapter mAdapter = new AnimalesAdapter(perdidosList, getBaseActivity());
-            mRecyclerView.setAdapter(mAdapter);
+            mAdapterAnimales = new AnimalesAdapter(HuellasApplication.getInstance().getmPerdidos(), getBaseActivity());
+            mRecyclerView.setAdapter(mAdapterAnimales);
 
             if (mFromSwipeRefresh) {
                 getActivity().runOnUiThread(new Runnable() {

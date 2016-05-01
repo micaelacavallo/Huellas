@@ -186,10 +186,12 @@ public class DetallePublicacionFragment extends BaseFragment {
             case R.id.action_comment:
                 Intent intent = new Intent(getBaseActivity(), ComentariosActivity.class);
                 if (Constants.PERDIDOS.equals(getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT))) {
-                    intent.putParcelableArrayListExtra(Constants.COMENTARIOS_LIST, mPerdidos.getComentarios());
+                    intent.putExtra(Constants.COMENTARIOS_LIST, mPerdidos);
+                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
                 }
                 else {
-                    intent.putParcelableArrayListExtra(Constants.COMENTARIOS_LIST, mAdicionales.getComentarios());
+                    intent.putExtra(Constants.COMENTARIOS_LIST, mAdicionales);
+                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES);
                 }
                 startActivity(intent);
                 return true;

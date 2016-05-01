@@ -16,16 +16,36 @@ import com.example.micaela.adapters.AdicionalesAdapter;
 import com.example.micaela.db.Controladores.IAdicionalesImpl;
 import com.example.micaela.db.Interfaces.IAdicionales;
 import com.example.micaela.db.Modelo.Adicionales;
+import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.huellas.R;
 import com.parse.ParseException;
 
 import java.util.List;
 
-public class InformacionUtilFragment extends BaseFragment  {
+public class InformacionUtilFragment extends BaseFragment  implements AltaAnimalesFragment.AdapterCallback{
 
     private RecyclerView mRecyclerView;
     private IAdicionales mIAdicionalesImpl;
+    List<Adicionales> adicionales;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    AdicionalesAdapter mAdapterAdicionales;
+
+
+    private static InformacionUtilFragment mInstanceInfo;
+
+    public static InformacionUtilFragment getInstance() {
+        if (mInstanceInfo == null) {
+            mInstanceInfo = new InformacionUtilFragment();
+        }
+        return mInstanceInfo;
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mInstanceInfo = null;
+    }
 
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,6 +59,7 @@ public class InformacionUtilFragment extends BaseFragment  {
         new AsyncTaskAdicionales().execute();
         return view;
     }
+
 
 
     private void inicializarSwipeRefresh(View view) {
@@ -72,13 +93,24 @@ public class InformacionUtilFragment extends BaseFragment  {
         });
     }
 
+    @Override
+    public void updatePerdidoAdapter(Perdidos perdido) {
+
+    }
+
+    public void updateAdicionalAdapter (Adicionales adiocional) {
+        adicionales.add(0, adiocional);
+        mAdapterAdicionales.notifyDataSetChanged();
+    }
+
     private class AsyncTaskAdicionales extends AsyncTask<Void, Void, List<Adicionales>> {
 
         @Override
         protected void onPostExecute(List<Adicionales> adicionalesList) {
             super.onPostExecute(adicionalesList);
-            AdicionalesAdapter mAdapter = new AdicionalesAdapter(adicionalesList, getContext());
-            mRecyclerView.setAdapter(mAdapter);
+            adicionales = adicionalesList;
+            mAdapterAdicionales = new AdicionalesAdapter(adicionales, getContext());
+            mRecyclerView.setAdapter(mAdapterAdicionales);
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

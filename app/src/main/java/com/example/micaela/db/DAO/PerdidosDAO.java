@@ -72,7 +72,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     private IGeneral iGeneral;
     private IPersonas iPersona;
     public PerdidosDAO(Context context) {
-
+        super(context);
         this.context = context;
         init(context);
 

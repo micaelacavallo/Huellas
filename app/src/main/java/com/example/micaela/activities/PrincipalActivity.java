@@ -136,7 +136,7 @@ public class PrincipalActivity extends BaseActivity {
 
                     updateFacebookData();
                     break;
-                case -1:
+                case -10:
                     logOut();
                     break;
 
@@ -264,13 +264,13 @@ public class PrincipalActivity extends BaseActivity {
             Fragment fragment;
             switch (position) {
                 case 0:
-                    fragment = new PerdidosFragment();
+                    fragment = PerdidosFragment.getInstance();
                     break;
                 case 1:
-                    fragment = new DonacionesFragment();
+                    fragment = DonacionesFragment.getInstance();
                     break;
                 default:
-                    fragment = new InformacionUtilFragment();
+                    fragment = InformacionUtilFragment.getInstance();
             }
             return fragment;
         }
