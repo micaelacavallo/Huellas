@@ -17,7 +17,7 @@ public interface IAdicionales {
     public List<Adicionales> getDonaciones() throws ParseException;
     public List<Adicionales> getInfoUtil() throws ParseException;
     public Adicionales getAdicionalById(String idAdicional);
-    public void saveAdicional(Adicionales adicional);
+    public Adicionales saveAdicional(Adicionales adicional) throws ParseException;
     public void editAdicional(Adicionales adicional) throws ParseException;
     public void deleteAdicional(String objectId) throws  ParseException;
     public void AgregarComentarioAdicional(String adicionalObjectId, String comentario, String email) throws ParseException;

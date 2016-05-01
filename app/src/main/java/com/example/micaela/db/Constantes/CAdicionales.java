@@ -14,4 +14,6 @@ public class CAdicionales {
     public static String FOTOS = "foto";
     public static String DONACION = "donacion";
     public static String ID_COMENTARIOS = "Comentarios";
+    public static String CREATEDAT= "createdAt";
+
 }

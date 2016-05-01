@@ -21,7 +21,7 @@ import java.util.List;
 public interface IPerdidos {
 
     public List<Perdidos> getPerdidos() throws ParseException;
-    public void savePerdido(Perdidos perdido);
+    public Perdidos savePerdido(Perdidos perdido) throws ParseException;
     public void editPerdido(Perdidos perdido) throws ParseException;
     public Razas getRaza(String raza) throws ParseException;
     public Colores getColor(String color) throws ParseException;

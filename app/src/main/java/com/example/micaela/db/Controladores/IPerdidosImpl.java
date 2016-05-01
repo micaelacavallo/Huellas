@@ -28,8 +28,8 @@ public class IPerdidosImpl implements IPerdidos {
     }
 
     @Override
-    public void savePerdido(Perdidos perdido) {
-        mPerdidosDAO.savePerdido(perdido);
+    public Perdidos savePerdido(Perdidos perdido) throws ParseException {
+        return mPerdidosDAO.savePerdido(perdido);
     }
 
 

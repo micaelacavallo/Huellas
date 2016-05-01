@@ -138,7 +138,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                 if (foto != null) {
                     image = foto. getData();
                 }
-                adicional = new Adicionales(persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
+                adicional = new Adicionales(object.getObjectId(), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
                 adicionales.add(adicional);
             }
         }
@@ -223,7 +223,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                 if (foto != null) {
                     image = foto.getData();
                 }
-                adicional = new Adicionales(persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
+                adicional = new Adicionales(object.getObjectId(), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
             }
         }
         catch(ParseException e)
@@ -235,7 +235,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     }
 
     @Override
-    public void saveAdicional(Adicionales adicional) {
+    public Adicionales saveAdicional(Adicionales adicional) throws ParseException {
 
         //VALIDAR EN FE
         adicionalObject.put(CAdicionales.TITULO, adicional.getTitulo());
@@ -256,6 +256,8 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         adicionalObject.put(CAdicionales.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(estado.getObjectId())));
         adicionalObject.put(CAdicionales.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
         save(adicionalObject);
+
+        return getAdicionalById(getUltimoObjectId());
     }
 
 
@@ -476,5 +478,22 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         if(!internet(context)) {
             query.fromLocalDatastore();
         }
+    }
+
+    public String getUltimoObjectId() throws ParseException {
+
+        query = ParseQuery.getQuery(Clases.ADICIONALES);
+        query.orderByDescending(CAdicionales.CREATEDAT);
+        String objectId = null;
+        try {
+            if(query.count() != 0) {
+                ParseObject objectAux = query.getFirst();
+                objectId = objectAux.getObjectId();
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
+
+        return objectId;
     }
 }

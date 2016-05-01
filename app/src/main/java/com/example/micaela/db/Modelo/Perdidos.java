@@ -44,7 +44,9 @@ public class Perdidos implements Parcelable {
         mComentarios = new ArrayList<>();
     }
 
-    public Perdidos(Edades edad, Razas raza, Especies especie, Tamaños tamaño, Colores color, Sexos sexo, Estados estado, Personas persona, Date fecha, double latitud, double logitud, String titulo, String descripcion, byte[] foto, ArrayList<Comentarios> comentarios, boolean mSolucionado, boolean mBloqueado) {
+    public Perdidos(String objectId, Edades edad, Razas raza, Especies especie, Tamaños tamaño, Colores color, Sexos sexo, Estados estado, Personas persona, Date fecha, double latitud, double logitud, String titulo, String descripcion, byte[] foto, ArrayList<Comentarios> comentarios, boolean mSolucionado, boolean mBloqueado) {
+
+        this.mObjectId = objectId;
         this.mEdad = edad;
         this.mRaza = raza;
         this.mEspecie = especie;

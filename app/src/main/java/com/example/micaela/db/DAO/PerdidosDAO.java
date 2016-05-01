@@ -177,7 +177,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
                 e.printStackTrace();
             }
         }
-        perdido = new Perdidos(edad, raza, especie, tamaño, color, sexo, estado, persona, object.getDate(CPerdidos.FECHA), object.getParseGeoPoint(CPerdidos.UBICACION).getLatitude(), object.getParseGeoPoint(CPerdidos.UBICACION).getLongitude(), object.getString(CPerdidos.TITULO), object.getString(CPerdidos.DESCRIPCION), image, comentarios, object.getBoolean(CPerdidos.SOLUCIONADO), object.getBoolean(CPerdidos.BLOQUEADO));
+        perdido = new Perdidos(object.getObjectId(), edad, raza, especie, tamaño, color, sexo, estado, persona, object.getDate(CPerdidos.FECHA), object.getParseGeoPoint(CPerdidos.UBICACION).getLatitude(), object.getParseGeoPoint(CPerdidos.UBICACION).getLongitude(), object.getString(CPerdidos.TITULO), object.getString(CPerdidos.DESCRIPCION), image, comentarios, object.getBoolean(CPerdidos.SOLUCIONADO), object.getBoolean(CPerdidos.BLOQUEADO));
         return perdido;
     }
 
@@ -227,7 +227,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
 
 
     @Override
-    public void savePerdido(Perdidos perdido) {
+    public Perdidos savePerdido(Perdidos perdido) throws ParseException {
 
         //VALIDAR EN FE
         perdidosObject.put(CPerdidos.TITULO, perdido.getTitulo());
@@ -262,6 +262,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         save(perdidosObject);
 
+        return getPublicacionPerdidosById(getUltimoObjectId());
     }
 
     public ParseObject cargarPerdido(Perdidos perdido) {
@@ -732,5 +733,24 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         if (!internet(context)) {
             query.fromLocalDatastore();
         }
+
+    }
+
+    public String getUltimoObjectId() throws ParseException {
+
+        query = ParseQuery.getQuery(Clases.PERDIDOS);
+        query.orderByDescending(CPerdidos.CREATEDAT);
+        String objectId = null;
+        try {
+            if(query.count() != 0) {
+                ParseObject objectAux = query.getFirst();
+                objectId = objectAux.getObjectId();
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
+
+        return objectId;
     }
 }
+

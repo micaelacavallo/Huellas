@@ -22,5 +22,7 @@ public class CPerdidos {
     public static String COMENTARIOS = "Comentarios";
     public static String SOLUCIONADO = "solucionado";
     public static String  BLOQUEADO = "bloqueado";
+    public static String CREATEDAT= "createdAt";
+
 
 }
