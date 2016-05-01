@@ -16,8 +16,10 @@ import com.example.micaela.db.Constantes.CMotivo_denuncia;
 import com.example.micaela.db.Constantes.CPerdidos;
 import com.example.micaela.db.Constantes.CPersonas;
 import com.example.micaela.db.Constantes.Clases;
+import com.example.micaela.db.Controladores.IPersonasImpl;
 import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.Interfaces.IGeneral;
+import com.example.micaela.db.Interfaces.IPersonas;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.db.Modelo.MotivoDenuncia;
@@ -44,12 +46,27 @@ public class GeneralDAO implements IGeneral, IDBLocal {
 
     private Context context;
     private ParseQuery<ParseObject> query;
+    private IPersonas mPersonasImpl;
+    private ParseObject objectAux;
+    private List<Comentarios> comentarios;
+    private List<ParseObject> listParseObject;
+    private Comentarios comentario;
+    private Personas persona;
+    private IPersonas iPersona;
 
     public GeneralDAO() {
     }
 
     public GeneralDAO(Context context) {
         this.context = context;
+        objectAux = null;
+        mPersonasImpl = new IPersonasImpl(context);
+        comentarios = new ArrayList<Comentarios>();
+        listParseObject = null;
+        comentario = null;
+        persona = null;
+        iPersona = new IPersonasImpl(context);
+
     }
 
     @Override
@@ -70,25 +87,6 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         return estado;
     }
 
-
-    @Override
-    public Personas getPersona(String email) throws ParseException {
-
-        query = ParseQuery.getQuery(Clases.PERSONAS);
-        query.whereEqualTo(CPersonas.EMAIL, email);
-        Personas persona = null;
-        try {
-            if(query.count() != 0) {
-                ParseObject object = query.getFirst();
-                persona = new Personas(object.getObjectId(), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR), object.getBoolean(CPersonas.BLOQUEADO),  object.getString(CPersonas.CONTRASEÑA), object.getString(CPersonas.FOTO));
-            }
-        } catch (ParseException e) {
-            e.fillInStackTrace();
-        }
-
-        return persona;
-    }
-
     @Override
     public ArrayList<Comentarios> getComentarios(List<ParseObject> listComentarios, ParseObject object) {
 
@@ -102,7 +100,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
             for (ParseObject objectComentario : listComentarios) {
                 objectAux = object.getParseObject(CComentarios.ID_PERSONA);
                 persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO), objectAux.getString(CPersonas.CONTRASEÑA), objectAux.getString(CPersonas.FOTO));
-                comentario = new Comentarios(objectComentario.getObjectId(), objectComentario.getString(CComentarios.COMENTARIO), persona, objectComentario.getDate(CComentarios.FECHA));
+                comentario = new Comentarios(objectComentario.getObjectId(), objectComentario.getString(CComentarios.COMENTARIO), persona, objectComentario.getDate(CComentarios.FECHA), objectComentario.getBoolean(CComentarios.LEIDO));
                 comentarios.add(comentario);
             }
         }
@@ -114,15 +112,11 @@ public class GeneralDAO implements IGeneral, IDBLocal {
 
         ParseObject object = new ParseObject(Clases.COMENTARIOS);
         object.put(CComentarios.COMENTARIO, comentario);
+        object.put(CComentarios.LEIDO, false);
         object.put(CComentarios.FECHA, new Date());
-        Personas persona = getPersona(email);
+        Personas persona = mPersonasImpl.getPersonabyEmail(email);
         object.put(CComentarios.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
-        if (internet(context)) {
-            saveInBackground(object);
-        } else {
-            saveEventually(object);
-        }
-        pinObjectInBackground(object);
+        save(object);
         ParseObject objectComentario = getComentarioById(getUltimoObjectId());
 
         //push notification
@@ -198,10 +192,27 @@ public class GeneralDAO implements IGeneral, IDBLocal {
     @Override
     public void save(ParseObject object) {
 
+        if (internet(context)) {
+            saveInBackground(object);
+        } else {
+            saveEventually(object);
+        }
+
+        pinObjectInBackground(object);
+
     }
 
     @Override
     public void delete(ParseObject object) {
+
+        if(internet(context)) {
+            deleteInBackground(object);
+        }
+        else {
+            deleteEventually(object);
+        }
+
+        unpinObjectInBackground(object);
 
     }
 
@@ -242,12 +253,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
             if(query.count() != 0) {
                 objectAux = query.getFirst();
                 objectAux.put(CPerdidos.SOLUCIONADO, estado);
-                if (internet(context)) {
-                    saveInBackground(objectAux);
-                } else {
-                    saveEventually(objectAux);
-                }
-                pinObjectInBackground(objectAux);
+                save(objectAux);
             }
         } catch (ParseException e) {
             e.fillInStackTrace();
@@ -270,12 +276,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
             objectAux.put(CDenuncias.IS_USER, false);
             objectAux.put(CDenuncias.MOTIVO_DENUNCIA, ParseObject.createWithoutData(Clases.MOTIVODENUNCIA, String.valueOf(motivoDenuncia.getmObjectId())));
 
-            if (internet(context)) {
-                saveInBackground(objectAux);
-            } else {
-                saveEventually(objectAux);
-            }
-            pinObjectInBackground(objectAux);
+            save(objectAux);
         }
 
     }
@@ -318,6 +319,77 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         }
 
         return listMotivoDenuncia;
+    }
+
+    @Override
+    public List<Comentarios> getComentariosNoLeidos(String userObjectId) {
+
+        try {
+            persona = iPersona.getPersonabyId(userObjectId);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        query = ParseQuery.getQuery(Clases.COMENTARIOS);
+        query.include(CComentarios.ID_PERSONA);
+        query.whereEqualTo(CComentarios.ID_PERSONA, persona);
+        query.whereEqualTo(CComentarios.LEIDO, false);
+
+        checkInternetGet(query);
+
+        try{
+            listParseObject = query.find();
+        }
+        catch(ParseException e)
+        {
+            e.printStackTrace();
+        }
+
+        if (listParseObject.size() > 0) {
+            for (ParseObject object : listParseObject) {
+                objectAux = object.getParseObject(CPerdidos.ID_PERSONA);
+                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO), objectAux.getString(CPersonas.CONTRASEÑA), objectAux.getString(CPersonas.FOTO));
+
+                comentario = new Comentarios(object.getObjectId(), object.getString(CComentarios.COMENTARIO), persona, object.getDate(CComentarios.FECHA), object.getBoolean(CComentarios.LEIDO));
+                comentarios.add(comentario);
+            }
+        }
+
+
+        return comentarios;
+    }
+
+    @Override
+    public void cambiarLeidoComentario(String comentarioObjectId, boolean leido) {
+
+        query = ParseQuery.getQuery(Clases.COMENTARIOS);
+        query.whereEqualTo(CComentarios.OBJECT_ID, comentarioObjectId);
+
+        try {
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+                objectAux.put(CComentarios.LEIDO, leido);
+                save(objectAux);
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
+
+    }
+
+    @Override
+    public void borrarComentario(String objectId) {
+
+        query = ParseQuery.getQuery(Clases.COMENTARIOS);
+        query.whereEqualTo(CComentarios.OBJECT_ID, objectId);
+        checkInternetGet(query);
+        try {
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+                delete(objectAux);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -390,4 +462,6 @@ public class GeneralDAO implements IGeneral, IDBLocal {
     public void cargarDBLocal(Context context) throws ParseException {
 
     }
+
+
 }
