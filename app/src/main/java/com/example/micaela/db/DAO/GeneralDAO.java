@@ -53,7 +53,6 @@ public class GeneralDAO implements IGeneral, IDBLocal {
     private List<ParseObject> listParseObject;
     private Comentarios comentario;
     private Personas persona;
-    private IPersonas iPersona;
 
     public GeneralDAO() {
     }
@@ -67,7 +66,6 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         comentario = null;
         persona = null;
         object = null;
-        iPersona = new IPersonasImpl(context);
 
     }
 
@@ -116,20 +114,21 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         object.put(CComentarios.COMENTARIO, comentario);
         object.put(CComentarios.LEIDO, false);
         object.put(CComentarios.FECHA, new Date());
-        Personas persona = mPersonasImpl.getPersonabyEmail(email);
+        persona = mPersonasImpl.getPersonabyEmail(email);
         object.put(CComentarios.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
         save(object);
         ParseObject objectComentario = getComentarioById(getUltimoObjectId());
-
-        //push notification
-        // Create our Installation query
-        ParseQuery pushQuery = ParseInstallation.getQuery();
-        pushQuery.whereEqualTo("user", "Quimey");
 
         // Send push notification to query
 
         JSONObject object2 = new JSONObject();
         try {
+
+            // Create our Installation query
+            ParseQuery pushQuery = ParseInstallation.getQuery();
+            //pushQuery.whereEqualTo("email", persona.getEmail());
+            pushQuery.whereEqualTo("email", "kimy_1_8@hotmail.com");
+
             object2.put("title", "se ha agregado un comentario en una publicacion");
             object2.put("description", "traer comentario de la publicacion");
             ParsePush push = new ParsePush();
@@ -144,7 +143,9 @@ public class GeneralDAO implements IGeneral, IDBLocal {
                 }
             });
         } catch (JSONException e)
-        {e.printStackTrace();}
+        {
+            e.printStackTrace();
+        }
 
 
         return objectComentario;
@@ -323,7 +324,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
     public List<Comentarios> getComentariosNoLeidos(String userObjectId) {
 
         try {
-            persona = iPersona.getPersonabyId(userObjectId);
+            persona = mPersonasImpl.getPersonabyId(userObjectId);
         } catch (ParseException e) {
             e.printStackTrace();
         }
