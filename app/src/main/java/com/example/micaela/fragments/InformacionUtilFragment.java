@@ -16,13 +16,13 @@ import com.example.micaela.adapters.AdicionalesAdapter;
 import com.example.micaela.db.Controladores.IAdicionalesImpl;
 import com.example.micaela.db.Interfaces.IAdicionales;
 import com.example.micaela.db.Modelo.Adicionales;
-import com.example.micaela.db.Modelo.Perdidos;
+import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.huellas.R;
 import com.parse.ParseException;
 
 import java.util.List;
 
-public class InformacionUtilFragment extends BaseFragment  implements AltaAnimalesFragment.AdapterCallback{
+public class InformacionUtilFragment extends BaseFragment implements AltaAnimalesFragment.AdapterCallback, ComentariosFragment.AdapterCallback {
 
     private RecyclerView mRecyclerView;
     private IAdicionales mIAdicionalesImpl;
@@ -61,7 +61,6 @@ public class InformacionUtilFragment extends BaseFragment  implements AltaAnimal
     }
 
 
-
     private void inicializarSwipeRefresh(View view) {
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -93,13 +92,20 @@ public class InformacionUtilFragment extends BaseFragment  implements AltaAnimal
         });
     }
 
-    @Override
-    public void updatePerdidoAdapter(Perdidos perdido) {
 
+    @Override
+    public void updateDataSetAdapterPublicaciones(Object objeto) {
+        adicionales.add(0, (Adicionales) objeto);
+        mAdapterAdicionales.notifyDataSetChanged();
     }
 
-    public void updateAdicionalAdapter (Adicionales adiocional) {
-        adicionales.add(0, adiocional);
+    @Override
+    public void updateDataSetAdapterComentarios(Comentarios comentario, Object object) {
+        for (Adicionales adicional : adicionales) {
+            if (adicional.getObjectId().equals(((Adicionales) object).getObjectId())) {
+                adicional.getComentarios().add(comentario);
+            }
+        }
         mAdapterAdicionales.notifyDataSetChanged();
     }
 

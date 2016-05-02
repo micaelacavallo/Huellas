@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.activities.ComentariosActivity;
 import com.example.micaela.activities.DetallePublicacionActivity;
+import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
@@ -59,7 +60,14 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ComentariosActivity.class);
-                intent.putParcelableArrayListExtra(Constants.COMENTARIOS_LIST, mAdicionales.get((int) holder.getCardContainer().getTag()).getComentarios());
+                intent.putExtra(Constants.COMENTARIOS_LIST, mAdicionales.get((int) holder.getCardContainer().getTag()));
+
+                int page = ((PrincipalActivity) mContext).getCurrentPage();
+                if (page == 1) {
+                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
+                } else {
+                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
+                }
                 mContext.startActivity(intent);
             }
         });
@@ -70,7 +78,13 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, DetallePublicacionActivity.class);
                 intent.putExtra(Constants.OBJETO_PERDIDO, mAdicionales.get((int) view.getTag()));
-                intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES);
+                int page = ((PrincipalActivity)mContext).getCurrentPage();
+                if (page == 1) {
+                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
+                }
+                else {
+                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
+                }
                 mContext.startActivity(intent);
             }
         });

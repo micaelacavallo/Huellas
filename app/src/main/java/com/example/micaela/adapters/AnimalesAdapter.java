@@ -90,7 +90,10 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
             holder.getViewComentar().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-             //       ((BaseActivity)mContext).getSupportFragmentManager().beginTransaction().add()
+                    Intent intent = new Intent(mContext, ComentariosActivity.class);
+                    intent.putExtra(Constants.COMENTARIOS_LIST, mPerdidos.get((int) holder.getCardContainer().getTag()));
+                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
+                    mContext.startActivity(intent);
                 }
             });
 

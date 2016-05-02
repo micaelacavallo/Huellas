@@ -37,8 +37,12 @@ public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosViewHold
     @Override
     public void onBindViewHolder(ComentariosViewHolder holder, final int position) {
 
+
         if (position == 0) {
             holder.getmViewLine().setVisibility(View.GONE);
+        }
+        else {
+            holder.getmViewLine().setVisibility(View.VISIBLE);
         }
 
 

@@ -25,8 +25,8 @@ import com.example.micaela.adapters.AnimalesAdapter;
 import com.example.micaela.adapters.CustomSpinnerHintAdapter;
 import com.example.micaela.db.Controladores.IPerdidosImpl;
 import com.example.micaela.db.Interfaces.IPerdidos;
-import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Colores;
+import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Especies;
 import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.db.Modelo.Perdidos;
@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragment.AdapterCallback {
+public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragment.AdapterCallback, ComentariosFragment.AdapterCallback {
 
     private RecyclerView mRecyclerView;
     private IPerdidos mIperdidosImpl;
@@ -325,15 +325,22 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
         }
     }
 
-    public void updatePerdidoAdapter(Perdidos perdido) {
+    @Override
+    public void updateDataSetAdapterPublicaciones(Object objeto) {
         List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
-        perdidos.add(0, perdido);
+        perdidos.add(0, (Perdidos) objeto);
         mAdapterAnimales.notifyDataSetChanged();
     }
 
     @Override
-    public void updateAdicionalAdapter(Adicionales perdido) {
-
+    public void updateDataSetAdapterComentarios(Comentarios comentario, Object object) {
+        List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
+        for (Perdidos perdido : perdidos) {
+            if (perdido.getObjectId().equals(((Perdidos) object).getObjectId())) {
+                perdido.getComentarios().add(comentario);
+            }
+        }
+        mAdapterAnimales.notifyDataSetChanged();
     }
 
     private class AsyncTaskPerdidos extends AsyncTask<Void, Void, List<Perdidos>> {

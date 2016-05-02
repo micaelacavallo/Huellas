@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -110,8 +109,7 @@ public class AltaAnimalesFragment extends BaseFragment {
     private AdapterCallback mAdapterCallback;
 
     public interface AdapterCallback {
-        void updatePerdidoAdapter (Perdidos perdido);
-        void updateAdicionalAdapter (Adicionales perdido);
+        void updateDataSetAdapterPublicaciones(Object object);
     }
 
     @Override
@@ -524,7 +522,7 @@ public class AltaAnimalesFragment extends BaseFragment {
         @Override
         protected Adicionales doInBackground(Adicionales... params) {
             try {
-                mIAdicionalesImpl.saveAdicional(params[0]);
+               return mIAdicionalesImpl.saveAdicional(params[0]);
             } catch (Exception e) {
                 error = true;
                 getBaseActivity().runOnUiThread(new Runnable() {
@@ -539,16 +537,15 @@ public class AltaAnimalesFragment extends BaseFragment {
                         getBaseActivity().showMessageOverlay("Hubo un problema, por favor intente nuevamente", listener);
                     }
                 });
+                return null;
             }
-
-            return params[0];
         }
 
         @Override
         protected void onPostExecute(Adicionales adicional) {
             super.onPostExecute(adicional);
             if (!error) {
-                mAdapterCallback.updateAdicionalAdapter(adicional);
+                mAdapterCallback.updateDataSetAdapterPublicaciones(adicional);
                 View.OnClickListener listener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -568,7 +565,7 @@ public class AltaAnimalesFragment extends BaseFragment {
         @Override
         protected Perdidos doInBackground(Perdidos... params) {
             try {
-                mIPerdidosImpl.savePerdido(params[0]);
+                return mIPerdidosImpl.savePerdido(params[0]);
             } catch (Exception e) {
                 getBaseActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -583,16 +580,16 @@ public class AltaAnimalesFragment extends BaseFragment {
                         getBaseActivity().showMessageOverlay("Hubo un problema, por favor intente nuevamente", listener);
                     }
                 });
-            }
 
-            return params[0];
+                return null;
+            }
         }
 
         @Override
         protected void onPostExecute(Perdidos perdidos) {
             super.onPostExecute(perdidos);
             if (!error) {
-                mAdapterCallback.updatePerdidoAdapter(perdidos);
+                mAdapterCallback.updateDataSetAdapterPublicaciones(perdidos);
                 View.OnClickListener listener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -633,10 +630,10 @@ public class AltaAnimalesFragment extends BaseFragment {
         Intent cropIntent = new Intent(Constants.IMAGE_CROP);
         cropIntent.setDataAndType(picUri, Constants.URI_NAME);
         cropIntent.putExtra(Constants.EXTRA_CROP, "true");
-        cropIntent.putExtra(Constants.EXTRA_ASPECTX, mImageViewFoto.getWidth()+500);
-        cropIntent.putExtra(Constants.EXTRA_ASPECTY, mImageViewFoto.getHeight()+500);
+        cropIntent.putExtra(Constants.EXTRA_ASPECTX, mImageViewFoto.getWidth() + 500);
+        cropIntent.putExtra(Constants.EXTRA_ASPECTY, mImageViewFoto.getHeight() + 500);
         cropIntent.putExtra(Constants.EXTRA_OUTPUTX, mImageViewFoto.getWidth());
-        cropIntent.putExtra(Constants.EXTRA_OUTPUTY, mImageViewFoto.getHeight() );
+        cropIntent.putExtra(Constants.EXTRA_OUTPUTY, mImageViewFoto.getHeight());
         cropIntent.putExtra(Constants.EXTRA_RETURN_DATA, true);
         startActivityForResult(cropIntent, CROP_PIC);
     }

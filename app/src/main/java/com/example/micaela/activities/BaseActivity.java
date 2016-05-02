@@ -250,26 +250,26 @@ public abstract class BaseActivity extends AppCompatActivity {
             if (diffDays == 0) {
                 if (diffHours == 0) {
                     if (diffMinutes < 1) {
-                        difference = "Hace un momento.";
+                        difference = "Hace un momento";
                     } else {
-                        difference = String.format("Hace %s min.", diffMinutes);
+                        difference = String.format("Hace %s min", diffMinutes);
                     }
                 } else {
-                    difference = String.format("Hace %s hs.", diffHours);
+                    difference = String.format("Hace %s hs", diffHours);
                 }
             } else {
                 int diffMonths = (int) (diffDays / 30);
                 if (diffMonths <= 0) {
                     if (diffDays == 1) {
-                        difference = "Hace 1 día.";
+                        difference = "Hace 1 día";
                     } else {
-                        difference = String.format("Hace %s días.", diffDays);
+                        difference = String.format("Hace %s días", diffDays);
                     }
                 } else {
                     if (diffMonths == 1) {
-                        difference = "Hace 1 mes.";
+                        difference = "Hace 1 mes";
                     } else {
-                        difference = String.format("Hace %s meses.", diffMonths);
+                        difference = String.format("Hace %s meses", diffMonths);
                     }
                 }
             }

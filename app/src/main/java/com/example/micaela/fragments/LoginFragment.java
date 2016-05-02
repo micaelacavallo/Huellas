@@ -183,11 +183,22 @@ public class LoginFragment extends BaseFragment {
                 gender = "masculino";
             }
         }
-        HuellasApplication.getInstance().saveProfileFacebook(profile.getProfilePictureUri(400, 400), profile.getName(), email, location,
-                gender);
-        Personas persona = new Personas("",  HuellasApplication.getInstance().getProfileEmailFacebook(), HuellasApplication.getInstance().getProfileNameFacebook(),
-                "", false, false, "", HuellasApplication.getInstance().getProfileImageFacebook());
-        new AsyncTaskRegistrarUsuario().execute(persona);
+        try {
+            HuellasApplication.getInstance().saveProfileFacebook(profile.getProfilePictureUri(400, 400), profile.getName(), email, location,
+                    gender);
+            Personas persona = new Personas("", HuellasApplication.getInstance().getProfileEmailFacebook(), HuellasApplication.getInstance().getProfileNameFacebook(),
+                    "", false, false, "", HuellasApplication.getInstance().getProfileImageFacebook());
+            new AsyncTaskRegistrarUsuario().execute(persona);
+        }
+        catch (NullPointerException e) {
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getBaseActivity().logOut();
+                }
+            };
+            ((BaseActivity) getActivity()).showMessageOverlay("Hubo un problema, intente nuevamente", listener);
+        }
     }
 
 }

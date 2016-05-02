@@ -89,6 +89,9 @@ public class Personas implements Parcelable {
         dest.writeString(this.telefono);
         dest.writeByte(administrador ? (byte) 1 : (byte) 0);
         dest.writeString(this.objectId);
+        dest.writeByte(mBloqueado ? (byte) 1 : (byte) 0);
+        dest.writeString(this.contraseña);
+        dest.writeString(this.mFoto);
     }
 
     protected Personas(Parcel in) {
@@ -97,6 +100,9 @@ public class Personas implements Parcelable {
         this.telefono = in.readString();
         this.administrador = in.readByte() != 0;
         this.objectId = in.readString();
+        this.mBloqueado = in.readByte() != 0;
+        this.contraseña = in.readString();
+        this.mFoto = in.readString();
     }
 
     public static final Parcelable.Creator<Personas> CREATOR = new Parcelable.Creator<Personas>() {

@@ -71,6 +71,7 @@ public class Comentarios implements Parcelable {
         dest.writeParcelable(this.mPersona, 0);
         dest.writeLong(mFecha != null ? mFecha.getTime() : -1);
         dest.writeString(this.mObjectId);
+        dest.writeByte(mLeido ? (byte) 1 : (byte) 0);
     }
 
     protected Comentarios(Parcel in) {
@@ -79,6 +80,7 @@ public class Comentarios implements Parcelable {
         long tmpMFecha = in.readLong();
         this.mFecha = tmpMFecha == -1 ? null : new Date(tmpMFecha);
         this.mObjectId = in.readString();
+        this.mLeido = in.readByte() != 0;
     }
 
     public static final Parcelable.Creator<Comentarios> CREATOR = new Parcelable.Creator<Comentarios>() {

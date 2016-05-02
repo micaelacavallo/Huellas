@@ -47,13 +47,15 @@ public class DetallePublicacionFragment extends BaseFragment {
     Perdidos mPerdidos;
     Adicionales mAdicionales;
     private View mRootView;
+    private String mFromFragment;
 
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_detalle_publicacion, container, false);
         wireUpViews();
 
-        if (Constants.PERDIDOS.equals(getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT))) {
+        mFromFragment = getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT);
+        if (Constants.PERDIDOS.equals(mFromFragment)) {
             getBaseActivity().getCardEstado().setVisibility(View.VISIBLE);
             mPerdidos = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
             fillViews(mPerdidos.getPersona().getNombre(), mPerdidos.getPersona().getTelefono(),
@@ -165,7 +167,7 @@ public class DetallePublicacionFragment extends BaseFragment {
                 }
             }
         });
-        mTextViewEstado = (TextView) ((CardView)getBaseActivity().getCardEstado()).getChildAt(0);
+        mTextViewEstado = (TextView) ((CardView) getBaseActivity().getCardEstado()).getChildAt(0);
         mTextViewDescripcion = (TextView) mRootView.findViewById(R.id.textView_descripcion);
         mTextViewFecha = (TextView) mRootView.findViewById(R.id.textView_fecha);
         mTextViewDatos = (TextView) mRootView.findViewById(R.id.textView_datos);
@@ -188,10 +190,10 @@ public class DetallePublicacionFragment extends BaseFragment {
                 if (Constants.PERDIDOS.equals(getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT))) {
                     intent.putExtra(Constants.COMENTARIOS_LIST, mPerdidos);
                     intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
-                }
-                else {
+                } else {
                     intent.putExtra(Constants.COMENTARIOS_LIST, mAdicionales);
-                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES);
+                    intent.putExtra(Constants.FROM_FRAGMENT, mFromFragment);
+
                 }
                 startActivity(intent);
                 return true;

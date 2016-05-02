@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.micaela.db.Constantes.CAdicionales;
 import com.example.micaela.db.Constantes.CColores;
+import com.example.micaela.db.Constantes.CComentarios;
 import com.example.micaela.db.Constantes.CEdades;
 import com.example.micaela.db.Constantes.CEspecies;
 import com.example.micaela.db.Constantes.CEstados;
@@ -161,7 +162,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         try {
             objectRelation = object.getRelation(CPerdidos.COMENTARIOS);
-            comentarios = getComentarios(objectRelation.getQuery().find(), object);
+            comentarios = getComentarios(objectRelation.getQuery().addAscendingOrder(CComentarios.FECHA).find(), object);
 
         } catch (Exception e) {
             comentarios = null;
