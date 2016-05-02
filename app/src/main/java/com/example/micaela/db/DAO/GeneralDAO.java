@@ -123,13 +123,15 @@ public class GeneralDAO implements IGeneral, IDBLocal {
 
         JSONObject object2 = new JSONObject();
         try {
+            List<String> emails = new ArrayList<String>();
+            emails.add("micaela.cavallo@outlook.com");
+            emails.add("kimy_1_8@hotmail.com");
 
             // Create our Installation query
             ParseQuery pushQuery = ParseInstallation.getQuery();
             //pushQuery.whereEqualTo("email", persona.getEmail());
-            pushQuery.whereEqualTo("email", "kimy_1_8@hotmail.com");
-           // pushQuery.whereEqualTo("email", "micaela.cavallo@outlook.com");
 
+            pushQuery.whereContainedIn("email", emails);
             object2.put("title", "Se ha agregado un comentario en una publicacion");
             object2.put("description", "traer comentario de la publicacion");
             ParsePush push = new ParsePush();

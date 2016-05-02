@@ -17,6 +17,7 @@ import android.util.Log;
 import com.example.micaela.activities.ComentariosActivity;
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.huellas.R;
+import com.parse.ParseAnalytics;
 import com.parse.ParsePushBroadcastReceiver;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,7 +66,10 @@ public class CustomPushReceiver extends ParsePushBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        try {
+
+        ParseAnalytics.trackAppOpened(intent);
+
+     /*   try {
 
             JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
             Log.d(TAG, json.getString("alert").toString());
@@ -101,14 +105,25 @@ public class CustomPushReceiver extends ParsePushBroadcastReceiver {
 
         } catch (JSONException e) {
             Log.d(TAG, e.getMessage());
-        }
+        }*/
 
     }
 
     @Override
     protected void onPushOpen(Context context, Intent intent) {
 
+        JSONObject pushData = null;
 
+        try {
+            pushData = new JSONObject(intent.getStringExtra(KEY_PUSH_DATA));
+            Intent pushIntent = new Intent(context, ComentariosActivity.class);
+            pushIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            pushIntent.putExtra("store", pushData.getString("data"));
+            context.startActivity(pushIntent);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
-}
+    }
