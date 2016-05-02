@@ -30,7 +30,7 @@ public class IComentariosImpl implements IComentarios{
     }
 
     @Override
-    public ParseObject agregarComentario(String comentario, String email, Context context) throws ParseException {
+    public ParseObject agregarComentario(String publicacionObjectId, String comentario, String email, Context context) throws ParseException {
         return mComentarioDAO.agregarComentario(comentario, email, context);
     }
 

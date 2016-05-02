@@ -37,11 +37,18 @@ import com.example.micaela.db.Modelo.Tamaños;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
+import com.parse.SendCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -78,6 +85,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     private IPersonas iPersona;
     private IComentarios iComentarios;
     private IEstados iEstado;
+    private IPersonas mPersonasImpl;
 
     public PerdidosDAO(Context context) {
         super(context);
@@ -114,6 +122,8 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         iPersona = new IPersonasImpl(context);
         iComentarios = new IComentariosImpl(context);
         iEstado = new IEstadosImpl(context);
+        mPersonasImpl = new IPersonasImpl(context);
+
     }
 
 
@@ -604,11 +614,66 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public void AgregarComentarioPerdido(String perdidoObjectId, String comentario, String email) throws ParseException {
 
-        ParseObject parseObjectComentario = iComentarios.agregarComentario(comentario, email, context);
+        ParseObject parseObjectComentario = agregarComentario(perdidoObjectId, comentario, email, context);
         objectAux = getParseObjectById(perdidoObjectId);
         objectRelation = objectAux.getRelation(CPerdidos.COMENTARIOS);
         objectRelation.add(parseObjectComentario);
         save(objectAux);
+    }
+
+    public ParseObject agregarComentario(String perdidoObjectId, String comentario, String email, Context context) throws ParseException {
+
+        ParseObject object = new ParseObject(Clases.COMENTARIOS);
+        object.put(CComentarios.COMENTARIO, comentario);
+        object.put(CComentarios.LEIDO, false);
+        object.put(CComentarios.FECHA, new Date());
+        persona = mPersonasImpl.getPersonabyEmail(email);
+        object.put(CComentarios.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
+        save(object);
+        ParseObject objectComentario = iComentarios.getComentarioById(getUltimoObjectId());
+
+        // Send push notification to query
+        List<String> emails = new ArrayList<String>();
+        List<Personas> personas = new ArrayList<Personas>();
+        perdido = getPublicacionPerdidosById(perdidoObjectId);
+        for(Comentarios comentarioAux : perdido.getComentarios()){ //email de las personas que comentaron
+            if(!personas.contains(comentarioAux.getPersona())){
+                personas.add(comentarioAux.getPersona());
+                emails.add(comentarioAux.getPersona().getEmail());
+            }
+        }
+
+        JSONObject object2 = new JSONObject();
+        try {
+
+            //emails.add("micaela.cavallo@outlook.com");
+            //emails.add("kimy_1_8@hotmail.com");
+
+            // Create our Installation query
+            ParseQuery pushQuery = ParseInstallation.getQuery();
+            //pushQuery.whereEqualTo("email", persona.getEmail());
+
+            pushQuery.whereContainedIn("email", emails);
+            object2.put("title", "Se ha agregado un comentario en una publicacion");
+            object2.put("description", "traer comentario de la publicacion");
+            ParsePush push = new ParsePush();
+            push.setQuery(pushQuery); // Set our Installation query
+            push.setData(object2);
+            push.sendInBackground(new SendCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+
+        return objectComentario;
     }
 
     public ParseObject getParseObjectById(String objectId) {

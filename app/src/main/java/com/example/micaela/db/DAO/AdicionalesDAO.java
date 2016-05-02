@@ -315,7 +315,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     @Override
     public void AgregarComentarioAdicional(String adicionalObjectId, String comentarioText, String email) throws ParseException {
 
-        ParseObject parseObjectComentario = iComentarios.agregarComentario(comentarioText, email, context);
+        ParseObject parseObjectComentario = iComentarios.agregarComentario(adicionalObjectId, comentarioText, email, context);
         objectAux = getParseObjectById(adicionalObjectId);
         objectRelation = objectAux.getRelation(CAdicionales.ID_COMENTARIOS);
         objectRelation.add(parseObjectComentario);
