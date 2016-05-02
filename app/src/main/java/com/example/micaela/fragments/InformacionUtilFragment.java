@@ -56,6 +56,7 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
         inicializarRecycler(view);
 
         setHasOptionsMenu(false);
+        getBaseActivity().showOverlay(getString(R.string.cargando_publicaciones_mensaje));
         new AsyncTaskAdicionales().execute();
         return view;
     }
