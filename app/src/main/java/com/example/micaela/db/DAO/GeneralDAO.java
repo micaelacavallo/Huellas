@@ -98,7 +98,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         if (listComentarios != null) {
             comentarios = new ArrayList<>();
             for (ParseObject objectComentario : listComentarios) {
-                objectAux = object.getParseObject(CComentarios.ID_PERSONA);
+                objectAux = objectComentario.getParseObject(CComentarios.ID_PERSONA);
                 persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO), objectAux.getString(CPersonas.CONTRASEÑA), objectAux.getString(CPersonas.FOTO));
                 comentario = new Comentarios(objectComentario.getObjectId(), objectComentario.getString(CComentarios.COMENTARIO), persona, objectComentario.getDate(CComentarios.FECHA), objectComentario.getBoolean(CComentarios.LEIDO));
                 comentarios.add(comentario);
@@ -128,6 +128,7 @@ public class GeneralDAO implements IGeneral, IDBLocal {
             ParseQuery pushQuery = ParseInstallation.getQuery();
             //pushQuery.whereEqualTo("email", persona.getEmail());
             pushQuery.whereEqualTo("email", "kimy_1_8@hotmail.com");
+           // pushQuery.whereEqualTo("email", "micaela.cavallo@outlook.com");
 
             object2.put("title", "Se ha agregado un comentario en una publicacion");
             object2.put("description", "traer comentario de la publicacion");
