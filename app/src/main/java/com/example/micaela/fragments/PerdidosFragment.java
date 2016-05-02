@@ -177,7 +177,6 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
 
         setUpSpinners();
 
-        getBaseActivity().showOverlay(getString(R.string.cargando_publicaciones_mensaje));
         new AsyncTaskPerdidos().execute();
         return mRootView;
     }
@@ -346,6 +345,11 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
 
     private class AsyncTaskPerdidos extends AsyncTask<Void, Void, List<Perdidos>> {
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            getBaseActivity().showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+        }
 
         @Override
         protected void onPostExecute(final List<Perdidos> perdidosList) {

@@ -113,6 +113,12 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
     private class AsyncTaskAdicionales extends AsyncTask<Void, Void, List<Adicionales>> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            getBaseActivity().showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+        }
+        
+        @Override
         protected void onPostExecute(List<Adicionales> adicionalesList) {
             super.onPostExecute(adicionalesList);
             adicionales = adicionalesList;

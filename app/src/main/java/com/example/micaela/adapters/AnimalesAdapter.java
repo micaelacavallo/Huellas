@@ -111,6 +111,12 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
         }
     }
 
+    public void clear () {
+        if (mPerdidos != null) {
+            mPerdidos.clear();
+            notifyDataSetChanged();
+        }
+    }
 
     @Override
     public int getItemCount() {
