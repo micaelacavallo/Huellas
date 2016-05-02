@@ -4,11 +4,8 @@ import android.content.Context;
 
 import com.example.micaela.db.Constantes.CPersonas;
 import com.example.micaela.db.Constantes.Clases;
-import com.example.micaela.db.Modelo.Personas;
-import com.example.micaela.db.Modelo.Sexos;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.SaveCallback;
 
 import java.text.ParseException;
 
@@ -27,6 +24,7 @@ public class AdminDAO {
 
         this.context = context;
         mGeneralDAO = new GeneralDAO(context);
+        objectAux = null;
 
 
     }

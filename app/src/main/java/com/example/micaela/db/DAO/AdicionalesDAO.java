@@ -7,10 +7,14 @@ import com.example.micaela.db.Constantes.CColores;
 import com.example.micaela.db.Constantes.CEstados;
 import com.example.micaela.db.Constantes.CPersonas;
 import com.example.micaela.db.Constantes.Clases;
+import com.example.micaela.db.Controladores.IComentariosImpl;
+import com.example.micaela.db.Controladores.IEstadosImpl;
 import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Controladores.IPersonasImpl;
 import com.example.micaela.db.Interfaces.IAdicionales;
+import com.example.micaela.db.Interfaces.IComentarios;
 import com.example.micaela.db.Interfaces.IDBLocal;
+import com.example.micaela.db.Interfaces.IEstados;
 import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Interfaces.IPersonas;
 import com.example.micaela.db.Modelo.Adicionales;
@@ -45,9 +49,12 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     private ArrayList<Comentarios> comentarios;
     private List<Adicionales> adicionales = new ArrayList<>();
     private Adicionales adicional = null;
-    private Comentarios comentario;
     private IGeneral iGeneral;
     private IPersonas iPersona;
+    private IComentarios iComentarios;
+    private IEstados iEstado;
+
+
 
     public AdicionalesDAO(Context context)
     {
@@ -63,7 +70,6 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         objectAux = null;
         persona = new Personas();
         estado = null;
-        comentario = null;
         foto = null;
         listParseObject = null;
         objectRelation = null;
@@ -72,7 +78,8 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         adicional = null;
         iGeneral = new IGeneralImpl(context);
         iPersona = new IPersonasImpl(context);
-
+        iComentarios = new IComentariosImpl(context);
+        iEstado = new IEstadosImpl(context);
     }
 
     public void saveColor(Colores color)
@@ -125,7 +132,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
                 try {
                     objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
-                    comentarios = getComentarios(objectRelation.getQuery().find(), object);
+                    comentarios = iComentarios.getComentarios(objectRelation.getQuery().find(), object);
                 }catch (Exception e)
                 {
                     comentarios = null;
@@ -217,7 +224,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                 objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
                 estado = new Estados(objectAux.getObjectId(), objectAux.getString(CEstados.SITUACION));
                 objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
-                comentarios = getComentarios(objectRelation.getQuery().find(), object);
+                comentarios = iComentarios.getComentarios(objectRelation.getQuery().find(), object);
                 foto = object.getParseFile(CAdicionales.FOTOS);
                 byte[] image = null;
                 if (foto != null) {
@@ -248,7 +255,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
         try {
             persona = iPersona.getPersonabyEmail(adicional.getPersona().getEmail());
-            estado = iGeneral.getEstado("-");
+            estado = iEstado.getEstado("-");
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -308,7 +315,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     @Override
     public void AgregarComentarioAdicional(String adicionalObjectId, String comentarioText, String email) throws ParseException {
 
-        ParseObject parseObjectComentario = agregarComentario(comentarioText, email, context);
+        ParseObject parseObjectComentario = iComentarios.agregarComentario(comentarioText, email, context);
         objectAux = getParseObjectById(adicionalObjectId);
         objectRelation = objectAux.getRelation(CAdicionales.ID_COMENTARIOS);
         objectRelation.add(parseObjectComentario);
@@ -471,8 +478,6 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         unpinObjectInBackground(object);
     }
 
-
-    @Override
     public void checkInternetGet(ParseQuery<ParseObject> query)
     {
         if(!internet(context)) {

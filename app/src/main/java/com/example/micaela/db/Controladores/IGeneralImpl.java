@@ -30,27 +30,6 @@ public class IGeneralImpl implements IGeneral {
     }
 
     @Override
-    public Estados getEstado(String situacion) throws ParseException {
-        return mGeneralDAO.getEstado(situacion);
-    }
-
-
-    @Override
-    public ArrayList<Comentarios> getComentarios(List<ParseObject> listComentarios, ParseObject object ) {
-        return mGeneralDAO.getComentarios(listComentarios, object);
-    }
-
-    @Override
-    public ParseObject agregarComentario(String comentario, String email, Context context) throws ParseException {
-        return mGeneralDAO.agregarComentario(comentario, email, context);
-    }
-
-    @Override
-    public ParseObject getComentarioById(String objectId) throws ParseException {
-        return mGeneralDAO.getComentarioById(objectId);
-    }
-
-    @Override
     public boolean internet(Context context) {
         mGeneralDAO = new GeneralDAO(context);
         return mGeneralDAO.internet(context);
@@ -65,54 +44,6 @@ public class IGeneralImpl implements IGeneral {
     @Override
     public void delete(ParseObject object) {
 
-    }
-
-    @Override
-    public void checkInternetGet(ParseQuery<ParseObject> query) {
-
-    }
-
-    @Override
-    public List<Estados> getEstados() {
-
-        return mGeneralDAO.getEstados();
-    }
-
-    @Override
-    public void cambiarEstado(String idpublicacion, boolean estado) {
-        mGeneralDAO.cambiarEstado(idpublicacion, estado);
-    }
-
-    @Override
-    public void denunciar(String id, String motivo) throws ParseException{
-
-        mGeneralDAO.denunciar(id, motivo);
-    }
-
-    @Override
-    public MotivoDenuncia getMotivoDenuncia(String motivo) {
-        return mGeneralDAO.getMotivoDenuncia(motivo);
-    }
-
-    @Override
-    public List<MotivoDenuncia> getMotivoDenuncias() {
-
-        return mGeneralDAO.getMotivoDenuncias();
-    }
-
-    @Override
-    public List<Comentarios> getComentariosNoLeidos(String userObjectId) {
-        return mGeneralDAO.getComentariosNoLeidos(userObjectId);
-    }
-
-    @Override
-    public void cambiarLeidoComentario(String comentarioObjectId, boolean leido) {
-        mGeneralDAO.cambiarLeidoComentario(comentarioObjectId, leido);
-    }
-
-    @Override
-    public void borrarComentario(String objectId) {
-        mGeneralDAO.borrarComentario(objectId);
     }
 
     @Override

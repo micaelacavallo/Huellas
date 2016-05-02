@@ -25,8 +25,12 @@ import android.widget.TextView;
 
 import com.example.micaela.HuellasApplication;
 import com.example.micaela.ZoomOutPageTransformer;
+import com.example.micaela.db.Controladores.IEstadosImpl;
 import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Controladores.IPerdidosImpl;
+import com.example.micaela.db.Interfaces.IEstados;
+import com.example.micaela.db.Interfaces.IGeneral;
+import com.example.micaela.db.Interfaces.IPerdidos;
 import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.fragments.DonacionesFragment;
 import com.example.micaela.fragments.InformacionUtilFragment;
@@ -49,8 +53,10 @@ public class PrincipalActivity extends BaseActivity {
     private TextView mUserNameTextView;
     private ImageView mUserPhotoImageView;
 
-    private IPerdidosImpl mIPerdidosImpl;
-    private IGeneralImpl mIGeneralImpl;
+    private IPerdidos mIPerdidosImpl;
+    private IGeneral mIGeneralImpl;
+    private IEstados mIEstadosImpl;
+
 
     private boolean thereWasError = false;
 
@@ -62,6 +68,7 @@ public class PrincipalActivity extends BaseActivity {
 
         mIPerdidosImpl = new IPerdidosImpl(this);
         mIGeneralImpl = new IGeneralImpl(this);
+        mIEstadosImpl = new IEstadosImpl(this);
         showOverlay(getString(R.string.cargando_publicaciones_mensaje));
 
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -351,7 +358,7 @@ public class PrincipalActivity extends BaseActivity {
                 HuellasApplication.getInstance().setmTamanios(mIPerdidosImpl.getTamaños());
                 HuellasApplication.getInstance().setmSexos(mIPerdidosImpl.getSexos());
 
-                List<Estados> estados = mIGeneralImpl.getEstados();
+                List<Estados> estados = mIEstadosImpl.getEstados();
                 for (int x = 0; x < estados.size(); x++) {
                     if (estados.get(x).getSituacion().equals("-")) {
                         estados.remove(x);

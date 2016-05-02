@@ -14,9 +14,13 @@ import com.example.micaela.db.Constantes.CRazas;
 import com.example.micaela.db.Constantes.CSexos;
 import com.example.micaela.db.Constantes.CTamaños;
 import com.example.micaela.db.Constantes.Clases;
+import com.example.micaela.db.Controladores.IComentariosImpl;
+import com.example.micaela.db.Controladores.IEstadosImpl;
 import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Controladores.IPersonasImpl;
+import com.example.micaela.db.Interfaces.IComentarios;
 import com.example.micaela.db.Interfaces.IDBLocal;
+import com.example.micaela.db.Interfaces.IEstados;
 import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Interfaces.IPerdidos;
 import com.example.micaela.db.Interfaces.IPersonas;
@@ -72,6 +76,9 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     private List<Edades> edades;
     private IGeneral iGeneral;
     private IPersonas iPersona;
+    private IComentarios iComentarios;
+    private IEstados iEstado;
+
     public PerdidosDAO(Context context) {
         super(context);
         this.context = context;
@@ -105,6 +112,8 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         edades = new ArrayList<>();
         iGeneral = new IGeneralImpl(context);
         iPersona = new IPersonasImpl(context);
+        iComentarios = new IComentariosImpl(context);
+        iEstado = new IEstadosImpl(context);
     }
 
 
@@ -162,7 +171,8 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         try {
             objectRelation = object.getRelation(CPerdidos.COMENTARIOS);
-            comentarios = getComentarios(objectRelation.getQuery().addAscendingOrder(CComentarios.FECHA).find(), object);
+
+            comentarios = iComentarios.getComentarios(objectRelation.getQuery().addAscendingOrder(CComentarios.FECHA).find(), object);
 
         } catch (Exception e) {
             comentarios = null;
@@ -247,7 +257,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
             tamaño = getTamaño(perdido.getTamaño().getTamaño());
             edad = getEdad(perdido.getEdad().getEdad());
             especie = getEspecie(perdido.getEspecie().getEspecie());
-            estado = getEstado(perdido.getEstado().getSituacion());
+            estado = iEstado.getEstado(perdido.getEstado().getSituacion());
             persona = iPersona.getPersonabyEmail(perdido.getPersona().getEmail());
         } catch (ParseException e) {
             e.printStackTrace();
@@ -594,7 +604,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public void AgregarComentarioPerdido(String perdidoObjectId, String comentario, String email) throws ParseException {
 
-        ParseObject parseObjectComentario = agregarComentario(comentario, email, context);
+        ParseObject parseObjectComentario = iComentarios.agregarComentario(comentario, email, context);
         objectAux = getParseObjectById(perdidoObjectId);
         objectRelation = objectAux.getRelation(CPerdidos.COMENTARIOS);
         objectRelation.add(parseObjectComentario);
@@ -729,7 +739,6 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     }
 
 
-    @Override
     public void checkInternetGet(ParseQuery<ParseObject> query) {
         if (!internet(context)) {
             query.fromLocalDatastore();
