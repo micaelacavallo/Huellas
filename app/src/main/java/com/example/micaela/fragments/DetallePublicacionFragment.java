@@ -76,6 +76,11 @@ public class DetallePublicacionFragment extends BaseFragment {
         return mRootView;
     }
 
+    @Override
+    public boolean onBackPressed() {
+        return false;
+    }
+
     private void fillViews(String nombre, final String telefono, String situacion, byte[] foto,
                            String titulo, String descripcion, String raza, String especie, String color,
                            String tamaño, String edad, String sexo, double latitud, double longitud, Date fecha) {

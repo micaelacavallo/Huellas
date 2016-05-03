@@ -45,4 +45,9 @@ public class MisDatosFragment extends BaseFragment {
         mTextViewCiudad.setText(HuellasApplication.getInstance().getProfileLocationFacebook());
         return view;
     }
+
+    @Override
+    public boolean onBackPressed() {
+        return false;
+    }
 }

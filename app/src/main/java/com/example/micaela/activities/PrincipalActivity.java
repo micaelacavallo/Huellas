@@ -32,6 +32,7 @@ import com.example.micaela.db.Interfaces.IEstados;
 import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Interfaces.IPerdidos;
 import com.example.micaela.db.Modelo.Estados;
+import com.example.micaela.fragments.BaseFragment;
 import com.example.micaela.fragments.DonacionesFragment;
 import com.example.micaela.fragments.InformacionUtilFragment;
 import com.example.micaela.fragments.PerdidosFragment;
@@ -153,10 +154,19 @@ public class PrincipalActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        boolean backPressed = false;
         if (mIsDrawerOpen) {
             mDrawerLayout.closeDrawers();
         } else {
-            super.onBackPressed();
+            for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                if (((BaseFragment) fragment).onBackPressed()) {
+                    backPressed =true;
+                }
+            }
+
+            if (!backPressed) {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -366,7 +376,7 @@ public class PrincipalActivity extends BaseActivity {
                 }
                 HuellasApplication.getInstance().setmEstados(estados);
             } catch (Exception e) {
-                thereWasError= true;
+                thereWasError = true;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

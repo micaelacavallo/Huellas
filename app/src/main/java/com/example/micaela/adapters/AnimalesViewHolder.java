@@ -18,6 +18,7 @@ public class AnimalesViewHolder extends RecyclerView.ViewHolder {
     private View mViewComentar;
     private View mCardContainer;
     private TextView mTextViewComentarios;
+    private ImageView mImageViewOpciones;
 
     public AnimalesViewHolder(View itemView) {
         super(itemView);
@@ -30,6 +31,11 @@ public class AnimalesViewHolder extends RecyclerView.ViewHolder {
         mViewComentar =  itemView.findViewById(R.id.layout_comentar);
         mCardContainer = itemView.findViewById(R.id.cardView_container);
         mTextViewComentarios = (TextView) itemView.findViewById(R.id.textView_comentarios);
+        mImageViewOpciones = (ImageView) itemView.findViewById(R.id.imageView_options);
+    }
+
+    public ImageView getmImageViewOpciones() {
+        return mImageViewOpciones;
     }
 
     public TextView getmTextViewComentarios() {

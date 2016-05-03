@@ -2,11 +2,15 @@ package com.example.micaela.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.micaela.HuellasApplication;
 import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.activities.ComentariosActivity;
 import com.example.micaela.activities.DetallePublicacionActivity;
@@ -20,16 +24,26 @@ import java.util.List;
 public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
     List<Perdidos> mPerdidos;
     private Context mContext;
+    private PopupMenu mPopupMenu;
+    private Fragment mFragment;
+    private PopupMenuCallback mPopupMenuCallback;
 
-    public AnimalesAdapter(List<Perdidos> perdidos, Context context) {
+
+    public AnimalesAdapter(List<Perdidos> perdidos, Context context, Fragment fragment) {
         mPerdidos = perdidos;
         mContext = context;
+        mFragment = fragment;
+    }
+
+    public interface PopupMenuCallback {
+        void onClickItem (int idItem, Perdidos perdido);
     }
 
     @Override
     public AnimalesViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycler_animales_item, viewGroup, false);
+        mPopupMenuCallback = (PopupMenuCallback) mFragment;
         return new AnimalesViewHolder(view);
     }
 
@@ -97,6 +111,14 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
                 }
             });
 
+            holder.getmImageViewOpciones().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    v.setTag(position);
+                    setUpPopupMenu(v, position);
+                }
+            });
+
             holder.getTextViewHora().setText(((BaseActivity) mContext).getPublicationTime(mPerdidos.get(position).getFecha()));
             holder.getCardContainer().setTag(position);
             holder.getCardContainer().setOnClickListener(new View.OnClickListener() {
@@ -111,12 +133,26 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
         }
     }
 
-    public void clear () {
-        if (mPerdidos != null) {
-            mPerdidos.clear();
-            notifyDataSetChanged();
+    private void setUpPopupMenu(final View view, int position) {
+        mPopupMenu = new PopupMenu(mContext, view);
+        mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                mPopupMenuCallback.onClickItem(item.getItemId(), mPerdidos.get((Integer) view.getTag()));
+                return true;
+            }
+        });
+        mPopupMenu.inflate(R.menu.menu_popup);
+        if (!mPerdidos.get(position).getPersona().getEmail().equals(HuellasApplication.getInstance().getProfileEmailFacebook())) {
+            mPopupMenu.getMenu().removeItem(R.id.item_editar);
+            mPopupMenu.getMenu().removeItem(R.id.item_eliminar);
         }
+        else {
+            mPopupMenu.getMenu().removeItem(R.id.item_reportar);
+        }
+        mPopupMenu.show();
     }
+
 
     @Override
     public int getItemCount() {

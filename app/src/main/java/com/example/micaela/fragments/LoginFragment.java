@@ -125,6 +125,11 @@ public class LoginFragment extends BaseFragment {
         return rootView;
     }
 
+    @Override
+    public boolean onBackPressed() {
+        return false;
+    }
+
     private class AsyncTaskRegistrarUsuario extends AsyncTask<Personas, Void, Void> {
         @Override
         protected void onPostExecute(Void aVoid) {

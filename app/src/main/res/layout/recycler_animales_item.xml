@@ -64,6 +64,7 @@
                     android:textColor="@color/icons" />
 
                 <ImageView
+                    android:id="@+id/imageView_options"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_gravity="end|center"

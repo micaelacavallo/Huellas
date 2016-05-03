@@ -112,6 +112,11 @@ public class ComentariosFragment extends BaseFragment {
         return mRootView;
     }
 
+    @Override
+    public boolean onBackPressed() {
+        return false;
+    }
+
     private void inicializarSwipeRefresh() {
         mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
