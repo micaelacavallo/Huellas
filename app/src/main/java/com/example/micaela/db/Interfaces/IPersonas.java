@@ -27,6 +27,6 @@ public interface IPersonas {
     public Personas getPersonabyEmail(String email) throws ParseException;
     public Personas getPersonabyId(String objectId) throws ParseException;
     public void editTelefono(String objectId, String telefono);
-
+    public ParseObject getParseObjectById(String objectId);
 
 }

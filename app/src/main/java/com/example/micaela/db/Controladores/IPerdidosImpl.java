@@ -12,6 +12,8 @@ import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.db.Modelo.Sexos;
 import com.example.micaela.db.Modelo.Tamaños;
 import com.parse.ParseException;
+import com.parse.ParseObject;
+
 import java.util.List;
 
 public class IPerdidosImpl implements IPerdidos {
@@ -123,4 +125,8 @@ public class IPerdidosImpl implements IPerdidos {
         return mPerdidosDAO.getPublicacionPerdidosById(objectId);
     }
 
+    @Override
+    public ParseObject getParseObjectById(String objectId){
+        return mPerdidosDAO.getParseObjectById(objectId);
+    }
 }

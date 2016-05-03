@@ -72,4 +72,9 @@ public class IPersonasImpl implements IPersonas {
     public List<Personas> getPersonas() {
         return mPersonasDAO.getPersonas();
     }
+
+    @Override
+    public ParseObject getParseObjectById(String objectId){
+        return mPersonasDAO.getParseObjectById(objectId);
+    }
 }

@@ -11,17 +11,19 @@ public class Denuncias {
     private boolean mUser;
     private Date mFecha;
     private String mId;
+    private String mTabla;
     private MotivoDenuncia MmotivoDenuncia;
 
     public Denuncias() {
     }
 
-    public Denuncias(String mObjectId, boolean mUser, Date mFecha, String mId, MotivoDenuncia mmotivoDenuncia) {
+    public Denuncias(String mObjectId, boolean mUser, Date mFecha, String mId, MotivoDenuncia mmotivoDenuncia, String tabla) {
         this.mObjectId = mObjectId;
         this.mUser = mUser;
         this.mFecha = mFecha;
         this.mId = mId;
         MmotivoDenuncia = mmotivoDenuncia;
+        this.setmTabla(tabla);
     }
 
     public String getmObjectId() {
@@ -62,5 +64,14 @@ public class Denuncias {
 
     public void setMmotivoDenuncia(MotivoDenuncia mmotivoDenuncia) {
         MmotivoDenuncia = mmotivoDenuncia;
+    }
+
+
+    public String getmTabla() {
+        return mTabla;
+    }
+
+    public void setmTabla(String mTabla) {
+        this.mTabla = mTabla;
     }
 }

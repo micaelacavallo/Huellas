@@ -678,6 +678,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         }
     }
 
+    @Override
     public ParseObject getParseObjectById(String objectId) {
 
         query = ParseQuery.getQuery(Clases.PERDIDOS);

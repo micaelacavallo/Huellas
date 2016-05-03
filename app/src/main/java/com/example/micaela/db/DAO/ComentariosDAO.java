@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by quimey.arozarena on 5/2/2016.
  */
-public abstract class ComentariosDAO extends IGeneralImpl implements IComentarios, IGeneral, IDBLocal {
+public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGeneral, IDBLocal {
 
     private Context context;
     private ParseQuery<ParseObject> query;
