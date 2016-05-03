@@ -1,0 +1,38 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+              android:orientation="vertical"
+                tools:context="com.example.micaela.fragments.LoginFragment">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/street_dog"
+        android:scaleType="centerCrop"
+        android:alpha="0.75"
+        android:adjustViewBounds="false" />
+
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/textView_nombre_app"
+    android:text="Huellas"
+    style="@style/condensed_normal_52"
+    android:textColor="@color/primary_text"
+    android:layout_gravity="center_vertical"
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="40dp" />
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        style="@style/FacebookLoginButton"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="70dp" />
+
+</FrameLayout>

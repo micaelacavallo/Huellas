@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/layout_foto_container"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#4D000000"
+              android:gravity="center"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:background="@drawable/rounded_corner_white"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView_tomar_foto"
+            style="@style/condensed_normal_19"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/ripple_button_white"
+            android:padding="15dp"
+            android:text="Tomar foto"/>
+
+        <TextView
+            android:id="@+id/textView_escoger_foto"
+            style="@style/condensed_normal_19"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/ripple_button_white"
+            android:padding="15dp"
+            android:text="Escoger foto existente"/>
+
+    </LinearLayout>
+
+</LinearLayout>
