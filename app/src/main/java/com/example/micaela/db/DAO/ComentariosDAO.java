@@ -1,47 +1,30 @@
 package com.example.micaela.db.DAO;
-
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
-import com.example.micaela.db.AlarmManager.AlarmReceiver;
 import com.example.micaela.db.Constantes.CComentarios;
 import com.example.micaela.db.Constantes.CPerdidos;
 import com.example.micaela.db.Constantes.CPersonas;
 import com.example.micaela.db.Constantes.Clases;
-import com.example.micaela.db.Controladores.IPersonasImpl;
+import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Interfaces.IComentarios;
 import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.Interfaces.IGeneral;
-import com.example.micaela.db.Interfaces.IPersonas;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Personas;
 import com.parse.ParseException;
-import com.parse.ParseInstallation;
 import com.parse.ParseObject;
-import com.parse.ParsePush;
 import com.parse.ParseQuery;
-import com.parse.SendCallback;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by quimey.arozarena on 5/2/2016.
  */
-public class ComentariosDAO implements IComentarios, IGeneral, IDBLocal {
+public abstract class ComentariosDAO extends IGeneralImpl implements IComentarios, IGeneral, IDBLocal {
 
     private Context context;
     private ParseQuery<ParseObject> query;
-    private IPersonas mPersonasImpl;
     private ParseObject objectAux;
     private ParseObject object;
     private List<Comentarios> comentarios;
@@ -55,14 +38,11 @@ public class ComentariosDAO implements IComentarios, IGeneral, IDBLocal {
     public ComentariosDAO(Context context) {
         this.context = context;
         objectAux = null;
-        mPersonasImpl = new IPersonasImpl(context);
         comentarios = new ArrayList<Comentarios>();
         listParseObject = null;
         comentario = null;
         persona = null;
         object = null;
-
-
     }
 
     @Override
@@ -84,53 +64,6 @@ public class ComentariosDAO implements IComentarios, IGeneral, IDBLocal {
         }
         return comentarios;
     }
-
-   /* @Override
-    public ParseObject agregarComentario(String publicacionObjectId, String comentario, String email, Context context) throws ParseException {
-
-        ParseObject object = new ParseObject(Clases.COMENTARIOS);
-        object.put(CComentarios.COMENTARIO, comentario);
-        object.put(CComentarios.LEIDO, false);
-        object.put(CComentarios.FECHA, new Date());
-        persona = mPersonasImpl.getPersonabyEmail(email);
-        object.put(CComentarios.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
-        save(object);
-        ParseObject objectComentario = getComentarioById(getUltimoObjectId());
-
-        // Send push notification to query
-
-        JSONObject object2 = new JSONObject();
-        try {
-            List<String> emails = new ArrayList<String>();
-            emails.add("micaela.cavallo@outlook.com");
-            emails.add("kimy_1_8@hotmail.com");
-
-            // Create our Installation query
-            ParseQuery pushQuery = ParseInstallation.getQuery();
-            //pushQuery.whereEqualTo("email", persona.getEmail());
-
-            pushQuery.whereContainedIn("email", emails);
-            object2.put("title", "Se ha agregado un comentario en una publicacion");
-            object2.put("description", "traer comentario de la publicacion");
-            ParsePush push = new ParsePush();
-            push.setQuery(pushQuery); // Set our Installation query
-            push.setData(object2);
-            push.sendInBackground(new SendCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-
-
-        return objectComentario;
-    }*/
 
     @Override
     public ParseObject getComentarioById(String objectId) throws ParseException {
@@ -219,74 +152,6 @@ public class ComentariosDAO implements IComentarios, IGeneral, IDBLocal {
     }
 
     @Override
-    public boolean internet(Context context) {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
-
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
-    }
-
-    @Override
-    public void save(ParseObject object) {
-
-        if (internet(context)) {
-            saveInBackground(object);
-        } else {
-            saveEventually(object);
-        }
-
-        pinObjectInBackground(object);
-
-    }
-
-    @Override
-    public void delete(ParseObject object) {
-
-        if(internet(context)) {
-            deleteInBackground(object);
-        }
-        else {
-            deleteEventually(object);
-        }
-
-        unpinObjectInBackground(object);
-
-    }
-
-    public String getUltimoObjectId() throws ParseException {
-
-        query = ParseQuery.getQuery(Clases.COMENTARIOS);
-        query.orderByDescending(CComentarios.CREATEDAT);
-        String objectId = null;
-        try {
-            if(query.count() != 0) {
-                ParseObject objectAux = query.getFirst();
-                objectId = objectAux.getObjectId();
-            }
-        } catch (ParseException e) {
-            e.fillInStackTrace();
-        }
-
-        return objectId;
-    }
-
-    public void checkInternetGet(ParseQuery<ParseObject> query) {
-        if (!internet(context)) {
-            query.fromLocalDatastore();
-        }
-    }
-
-    @Override
     public void pinObjectInBackground(ParseObject object) {
         object.pinInBackground();
     }
@@ -325,18 +190,5 @@ public class ComentariosDAO implements IComentarios, IGeneral, IDBLocal {
     @Override
     public void cargarDBLocal(Context context) throws ParseException {
 
-    }
-
-    @Override
-    public void startAlert() {
-
-        long repeatTime = TimeUnit.MINUTES.toMillis(180);
-
-        AlarmManager service = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        PendingIntent pending = PendingIntent.getBroadcast(context, 0, intent, 0);
-
-        //AlarmManager.RTC_WAKEUP se sigue ejecutando por mas que este apagado
-        service.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), repeatTime, pending);
     }
 }

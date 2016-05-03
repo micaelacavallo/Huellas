@@ -63,8 +63,6 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     private IComentarios iComentarios;
     private IEstados iEstado;
 
-
-
     public AdicionalesDAO(Context context)
     {
         super(context);
@@ -273,7 +271,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         adicionalObject.put(CAdicionales.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
         save(adicionalObject);
 
-        return getAdicionalById(getUltimoObjectId());
+        return getAdicionalById(getUltimoObjectId(Clases.ADICIONALES));
     }
 
 
@@ -341,7 +339,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         persona = iPersona.getPersonabyEmail(email);
         object.put(CComentarios.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
         save(object);
-        ParseObject objectComentario = iComentarios.getComentarioById(getUltimoObjectIdComentario());
+        ParseObject objectComentario = iComentarios.getComentarioById(getUltimoObjectId(Clases.COMENTARIOS));
 
         return objectComentario;
     }
@@ -385,7 +383,6 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         }
 
     }
-
 
     public ParseObject getParseObjectById(String objectId) {
 
@@ -513,75 +510,5 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
         return listAdicionales;
 
-    }
-
-    @Override
-    public void save(ParseObject object) {
-
-        if(internet(context)) {
-            saveInBackground(object);
-        }
-        else
-        {
-            saveEventually(object);
-        }
-
-        pinObjectInBackground(object);
-
-    }
-
-    @Override
-    public void delete(ParseObject object) {
-
-        if(internet(context)) {
-            deleteInBackground(object);
-        }
-        else {
-            deleteEventually(object);
-        }
-
-        unpinObjectInBackground(object);
-    }
-
-    public void checkInternetGet(ParseQuery<ParseObject> query)
-    {
-        if(!internet(context)) {
-            query.fromLocalDatastore();
-        }
-    }
-
-    public String getUltimoObjectId() throws ParseException {
-
-        query = ParseQuery.getQuery(Clases.ADICIONALES);
-        query.orderByDescending(CAdicionales.CREATEDAT);
-        String objectId = null;
-        try {
-            if(query.count() != 0) {
-                ParseObject objectAux = query.getFirst();
-                objectId = objectAux.getObjectId();
-            }
-        } catch (ParseException e) {
-            e.fillInStackTrace();
-        }
-
-        return objectId;
-    }
-
-
-    public String getUltimoObjectIdComentario() throws ParseException {
-
-        query = ParseQuery.getQuery(Clases.COMENTARIOS);
-        query.orderByDescending(CAdicionales.CREATEDAT);
-        String objectId = null;
-        try {
-            if(query.count() != 0) {
-                ParseObject objectAux = query.getFirst();
-                objectId = objectAux.getObjectId();
-            }
-        } catch (ParseException e) {
-            e.fillInStackTrace();
-        }
-
-        return objectId;
     }
 }

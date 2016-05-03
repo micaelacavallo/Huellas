@@ -7,17 +7,11 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import com.example.micaela.db.AlarmManager.AlarmReceiver;
-import com.example.micaela.db.Controladores.IPersonasImpl;
 import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.Interfaces.IGeneral;
-import com.example.micaela.db.Interfaces.IPersonas;
-import com.example.micaela.db.Modelo.Comentarios;
-import com.example.micaela.db.Modelo.Personas;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,12 +20,14 @@ import java.util.concurrent.TimeUnit;
 public class GeneralDAO implements IGeneral, IDBLocal {
 
     private Context context;
+    private ParseQuery<ParseObject> query;
 
     public GeneralDAO() {
     }
 
     public GeneralDAO(Context context) {
         this.context = context;
+        query = null;
     }
 
 
@@ -93,6 +89,30 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         service.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), repeatTime, pending);
     }
 
+    @Override
+    public String getUltimoObjectId(String clase) {
+        query = ParseQuery.getQuery(clase);
+        query.orderByDescending("createdAt");
+
+        String objectId = null;
+        try {
+            if(query.count() != 0) {
+                ParseObject objectAux = query.getFirst();
+                objectId = objectAux.getObjectId();
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
+
+        return objectId;
+    }
+
+    @Override
+    public void checkInternetGet(ParseQuery<ParseObject> query) {
+        if (!internet(context)) {
+            query.fromLocalDatastore();
+        }
+    }
 
     @Override
     public void pinObjectInBackground(ParseObject object) {

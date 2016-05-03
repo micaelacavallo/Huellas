@@ -1,12 +1,12 @@
 package com.example.micaela.db.DAO;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 import com.example.micaela.db.Constantes.CDenuncias;
 import com.example.micaela.db.Constantes.CMotivo_denuncia;
 import com.example.micaela.db.Constantes.Clases;
+import com.example.micaela.db.Controladores.IGeneralImpl;
+import com.example.micaela.db.Interfaces.IDBLocal;
 import com.example.micaela.db.Interfaces.IDenuncias;
 import com.example.micaela.db.Modelo.MotivoDenuncia;
 import com.parse.ParseException;
@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by quimey.arozarena on 5/2/2016.
  */
-public class DenunciasDAO implements IDenuncias {
+public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDBLocal {
 
 
     private Context context;
@@ -95,48 +95,45 @@ public class DenunciasDAO implements IDenuncias {
         return listMotivoDenuncia;
     }
 
-    public boolean internet(Context context) {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
-
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
-    }
-
-    public void save(ParseObject object) {
-
-        if (internet(context)) {
-            saveInBackground(object);
-        } else {
-            saveEventually(object);
-        }
-
-        pinObjectInBackground(object);
-
-    }
-
+    @Override
     public void saveEventually(ParseObject object) {
         object.saveEventually();
     }
 
+    @Override
     public void saveInBackground(ParseObject object) {
 
         object.saveInBackground();
     }
 
+    @Override
+    public void deleteEventually(ParseObject object) {
+        object.deleteEventually();
+    }
+
+    @Override
+    public void deleteInBackground(ParseObject object) {
+        object.deleteInBackground();
+    }
+
+    @Override
+    public void cargarDBLocal(Context context) throws ParseException {
+    }
+
+    @Override
     public void pinObjectInBackground(ParseObject object) {
         object.pinInBackground();
     }
 
+    @Override
+    public void unpinObjectInBackground(ParseObject object) {
+        object.unpinInBackground();
+    }
+
+    @Override
+    public void queryFromLocalDatastore(ParseQuery query) {
+        query.fromLocalDatastore();
+    }
 
 
 }

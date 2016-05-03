@@ -21,5 +21,6 @@ public interface IGeneral {
     public void save(ParseObject object);
     public void delete(ParseObject object);
     public void startAlert();
-
+    public String getUltimoObjectId(String clase);
+    public void checkInternetGet(ParseQuery<ParseObject> query);
 }

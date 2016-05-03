@@ -38,17 +38,28 @@ public class IGeneralImpl implements IGeneral {
 
     @Override
     public void save(ParseObject object) {
+        mGeneralDAO.save(object);
 
     }
 
     @Override
     public void delete(ParseObject object) {
-
+        mGeneralDAO.delete(object);
     }
 
     @Override
     public void startAlert() {
         mGeneralDAO.startAlert();
+    }
+
+    @Override
+    public String getUltimoObjectId(String clase) {
+        return mGeneralDAO.getUltimoObjectId(clase);
+    }
+
+    @Override
+    public void checkInternetGet(ParseQuery<ParseObject> query) {
+        mGeneralDAO.checkInternetGet(query);
     }
 
 }

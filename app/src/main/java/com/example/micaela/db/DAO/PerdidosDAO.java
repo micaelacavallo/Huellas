@@ -284,7 +284,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         save(perdidosObject);
 
-        return getPublicacionPerdidosById(getUltimoObjectId());
+        return getPublicacionPerdidosById(getUltimoObjectId(Clases.PERDIDOS));
     }
 
     public ParseObject cargarPerdido(Perdidos perdido) {
@@ -632,7 +632,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         persona = mPersonasImpl.getPersonabyEmail(email);
         object.put(CComentarios.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
         save(object);
-        ParseObject objectComentario = iComentarios.getComentarioById(getUltimoObjectIdComentario());
+        ParseObject objectComentario = iComentarios.getComentarioById(getUltimoObjectId(Clases.COMENTARIOS));
 
         return objectComentario;
     }
@@ -779,73 +779,6 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         return perdido;
 
-    }
-
-    @Override
-    public void save(ParseObject object) {
-
-        if (internet(context)) {
-            saveInBackground(object);
-        } else {
-            saveEventually(object);
-        }
-
-        pinObjectInBackground(object);
-    }
-
-
-    @Override
-    public void delete(ParseObject object) {
-
-        if (internet(context)) {
-            deleteInBackground(object);
-        } else {
-            deleteEventually(object);
-        }
-
-        unpinObjectInBackground(object);
-    }
-
-
-    public void checkInternetGet(ParseQuery<ParseObject> query) {
-        if (!internet(context)) {
-            query.fromLocalDatastore();
-        }
-
-    }
-
-    public String getUltimoObjectId() throws ParseException {
-
-        query = ParseQuery.getQuery(Clases.PERDIDOS);
-        query.orderByDescending(CPerdidos.CREATEDAT);
-        String objectId = null;
-        try {
-            if(query.count() != 0) {
-                ParseObject objectAux = query.getFirst();
-                objectId = objectAux.getObjectId();
-            }
-        } catch (ParseException e) {
-            e.fillInStackTrace();
-        }
-
-        return objectId;
-    }
-
-    public String getUltimoObjectIdComentario() throws ParseException {
-
-        query = ParseQuery.getQuery(Clases.COMENTARIOS);
-        query.orderByDescending(CPerdidos.CREATEDAT);
-        String objectId = null;
-        try {
-            if(query.count() != 0) {
-                ParseObject objectAux = query.getFirst();
-                objectId = objectAux.getObjectId();
-            }
-        } catch (ParseException e) {
-            e.fillInStackTrace();
-        }
-
-        return objectId;
     }
 }
 
