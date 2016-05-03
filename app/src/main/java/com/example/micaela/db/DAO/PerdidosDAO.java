@@ -614,15 +614,15 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public void AgregarComentarioPerdido(String perdidoObjectId, String comentario, String email) throws ParseException {
 
-        ParseObject parseObjectComentario = agregarComentario(perdidoObjectId, comentario, email, context);
+        ParseObject parseObjectComentario = agregarComentario(comentario, email);
         objectAux = getParseObjectById(perdidoObjectId);
         objectRelation = objectAux.getRelation(CPerdidos.COMENTARIOS);
         objectRelation.add(parseObjectComentario);
         save(objectAux);
-        pushNotification(perdidoObjectId);
+        pushNotification(perdidoObjectId, email);
     }
 
-    public ParseObject agregarComentario(String perdidoObjectId, String comentario, String email, Context context) throws ParseException {
+    public ParseObject agregarComentario(String comentario, String email) throws ParseException {
 
         ParseObject object = new ParseObject(Clases.COMENTARIOS);
         object.put(CComentarios.COMENTARIO, comentario);
@@ -636,31 +636,27 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         return objectComentario;
     }
 
-    public void pushNotification(String perdidoObjectId){
-        // Send push notification to query
+    public void pushNotification(String perdidoObjectId, String mailLogueado){
+
         List<String> emails = new ArrayList<String>();
-        List<Personas> personas = new ArrayList<Personas>();
         try {
             perdido = getPublicacionPerdidosById(perdidoObjectId);
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        if(!perdido.getPersona().getEmail().equals(mailLogueado))
+        emails.add(perdido.getPersona().getEmail());
         for(Comentarios comentarioAux : perdido.getComentarios()){ //email de las personas que comentaron
-            if(!personas.contains(comentarioAux.getPersona())){
-                personas.add(comentarioAux.getPersona());
-                emails.add(comentarioAux.getPersona().getEmail());
+            if(!comentarioAux.getPersona().getEmail().equals(mailLogueado)){
+                    emails.add(comentarioAux.getPersona().getEmail());
             }
         }
 
         JSONObject object2 = new JSONObject();
         try {
 
-            //emails.add("micaela.cavallo@outlook.com");
-            //emails.add("kimy_1_8@hotmail.com");
-
             // Create our Installation query
             ParseQuery pushQuery = ParseInstallation.getQuery();
-            //pushQuery.whereEqualTo("email", persona.getEmail());
 
             pushQuery.whereContainedIn("email", emails);
             object2.put("title", "Se ha agregado un comentario en una publicacion");
