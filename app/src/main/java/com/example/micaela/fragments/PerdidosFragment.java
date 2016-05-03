@@ -372,7 +372,9 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
         switch (idItem) {
             case R.id.item_editar:
                 break;
-            case R.id.item_reportar:
+            case R.id.item_reportar_publicacion:
+                break;
+            case R.id.item_reportar_usuario:
                 break;
             case R.id.item_eliminar:
                 mDialogContainer.setVisibility(View.VISIBLE);

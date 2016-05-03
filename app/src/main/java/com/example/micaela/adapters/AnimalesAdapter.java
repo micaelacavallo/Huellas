@@ -148,7 +148,8 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
             mPopupMenu.getMenu().removeItem(R.id.item_eliminar);
         }
         else {
-            mPopupMenu.getMenu().removeItem(R.id.item_reportar);
+            mPopupMenu.getMenu().removeItem(R.id.item_reportar_publicacion);
+            mPopupMenu.getMenu().removeItem(R.id.item_reportar_usuario);
         }
         mPopupMenu.show();
     }

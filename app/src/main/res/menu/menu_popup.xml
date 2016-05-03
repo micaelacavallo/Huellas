@@ -3,9 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/item_reportar"
+        android:id="@+id/item_reportar_publicacion"
         app:showAsAction="ifRoom|withText"
-        android:title="Reportar"
+        android:title="Reportar publicación"
+        android:visible="true"/>
+    <item
+        android:id="@+id/item_reportar_usuario"
+        app:showAsAction="ifRoom|withText"
+        android:title="Reportar usuario"
         android:visible="true"/>
     <item
         android:id="@+id/item_editar"
