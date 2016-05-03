@@ -141,6 +141,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
     public void updateDataSetAdapterPublicaciones(Object objeto) {
         adicionales.add(0, (Adicionales) objeto);
         mAdapterAdicionales.notifyDataSetChanged();
+        Toast.makeText(getBaseActivity(), "Publicación realizada con éxito!", Toast.LENGTH_LONG).show();
     }
 
     @Override

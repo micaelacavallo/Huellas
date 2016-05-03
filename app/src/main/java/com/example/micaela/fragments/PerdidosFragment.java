@@ -353,6 +353,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
         List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
         perdidos.add(0, (Perdidos) objeto);
         mAdapterAnimales.notifyDataSetChanged();
+        Toast.makeText(getBaseActivity(), "Publicación realizada con éxito!", Toast.LENGTH_LONG).show();
     }
 
     @Override

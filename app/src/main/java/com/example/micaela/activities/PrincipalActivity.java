@@ -141,7 +141,6 @@ public class PrincipalActivity extends BaseActivity {
             switch (resultCode) {
                 case 0:
                     hideOverlay();
-
                     updateFacebookData();
                     break;
                 case -10:
