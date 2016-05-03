@@ -2,6 +2,7 @@ package com.example.micaela.db.DAO;
 
 import android.content.Context;
 
+import com.example.micaela.HuellasApplication;
 import com.example.micaela.db.Constantes.CAdicionales;
 import com.example.micaela.db.Constantes.CColores;
 import com.example.micaela.db.Constantes.CComentarios;
@@ -631,51 +632,51 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         persona = mPersonasImpl.getPersonabyEmail(email);
         object.put(CComentarios.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
         save(object);
-        ParseObject objectComentario = iComentarios.getComentarioById(getUltimoObjectId());
+        ParseObject objectComentario = iComentarios.getComentarioById(getUltimoObjectIdComentario());
 
         return objectComentario;
     }
 
     public void pushNotification(String perdidoObjectId, String mailLogueado){
 
-        List<String> emails = new ArrayList<String>();
-        try {
-            perdido = getPublicacionPerdidosById(perdidoObjectId);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        if(!perdido.getPersona().getEmail().equals(mailLogueado))
-        emails.add(perdido.getPersona().getEmail());
-        for(Comentarios comentarioAux : perdido.getComentarios()){ //email de las personas que comentaron
-            if(!comentarioAux.getPersona().getEmail().equals(mailLogueado)){
+        if(!HuellasApplication.getInstance().getProfileEmailFacebook().equals("")) {
+            List<String> emails = new ArrayList<String>();
+            try {
+                perdido = getPublicacionPerdidosById(perdidoObjectId);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (!perdido.getPersona().getEmail().equals(mailLogueado))
+                emails.add(perdido.getPersona().getEmail());
+            for (Comentarios comentarioAux : perdido.getComentarios()) { //email de las personas que comentaron
+                if (!comentarioAux.getPersona().getEmail().equals(mailLogueado)) {
                     emails.add(comentarioAux.getPersona().getEmail());
+                }
+            }
+
+            JSONObject object2 = new JSONObject();
+            try {
+
+                // Create our Installation query
+                ParseQuery pushQuery = ParseInstallation.getQuery();
+
+                pushQuery.whereContainedIn("email", emails);
+                object2.put("title", "Nuevo comentario");
+                ParsePush push = new ParsePush();
+                push.setQuery(pushQuery); // Set our Installation query
+                push.setData(object2);
+                push.sendInBackground(new SendCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
-
-        JSONObject object2 = new JSONObject();
-        try {
-
-            // Create our Installation query
-            ParseQuery pushQuery = ParseInstallation.getQuery();
-
-            pushQuery.whereContainedIn("email", emails);
-            object2.put("title", "Nuevo comentario");
-            ParsePush push = new ParsePush();
-            push.setQuery(pushQuery); // Set our Installation query
-            push.setData(object2);
-            push.sendInBackground(new SendCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-
     }
 
     public ParseObject getParseObjectById(String objectId) {
@@ -814,6 +815,23 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     }
 
     public String getUltimoObjectId() throws ParseException {
+
+        query = ParseQuery.getQuery(Clases.PERDIDOS);
+        query.orderByDescending(CPerdidos.CREATEDAT);
+        String objectId = null;
+        try {
+            if(query.count() != 0) {
+                ParseObject objectAux = query.getFirst();
+                objectId = objectAux.getObjectId();
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
+
+        return objectId;
+    }
+
+    public String getUltimoObjectIdComentario() throws ParseException {
 
         query = ParseQuery.getQuery(Clases.COMENTARIOS);
         query.orderByDescending(CPerdidos.CREATEDAT);

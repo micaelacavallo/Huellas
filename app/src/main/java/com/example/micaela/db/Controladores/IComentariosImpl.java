@@ -29,10 +29,10 @@ public class IComentariosImpl implements IComentarios{
         return mComentarioDAO.getComentarios(listComentarios, object);
     }
 
-    @Override
+    /*@Override
     public ParseObject agregarComentario(String publicacionObjectId, String comentario, String email, Context context) throws ParseException {
         return mComentarioDAO.agregarComentario(publicacionObjectId,comentario, email, context);
-    }
+    }*/
 
     @Override
     public ParseObject getComentarioById(String objectId) throws ParseException {

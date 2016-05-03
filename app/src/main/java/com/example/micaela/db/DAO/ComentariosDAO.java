@@ -85,7 +85,7 @@ public class ComentariosDAO implements IComentarios, IGeneral, IDBLocal {
         return comentarios;
     }
 
-    @Override
+   /* @Override
     public ParseObject agregarComentario(String publicacionObjectId, String comentario, String email, Context context) throws ParseException {
 
         ParseObject object = new ParseObject(Clases.COMENTARIOS);
@@ -130,7 +130,7 @@ public class ComentariosDAO implements IComentarios, IGeneral, IDBLocal {
 
 
         return objectComentario;
-    }
+    }*/
 
     @Override
     public ParseObject getComentarioById(String objectId) throws ParseException {

@@ -2,6 +2,7 @@ package com.example.micaela.db.DAO;
 
 import android.content.Context;
 
+import com.example.micaela.HuellasApplication;
 import com.example.micaela.db.Constantes.CAdicionales;
 import com.example.micaela.db.Constantes.CColores;
 import com.example.micaela.db.Constantes.CComentarios;
@@ -323,12 +324,12 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     @Override
     public void AgregarComentarioAdicional(String adicionalObjectId, String comentarioText, String email) throws ParseException {
 
-        ParseObject parseObjectComentario = agregarComentario(comentarioText, email);
-        objectAux = getParseObjectById(adicionalObjectId);
-        objectRelation = objectAux.getRelation(CAdicionales.ID_COMENTARIOS);
-        objectRelation.add(parseObjectComentario);
-        save(objectAux);
-        pushNotification(adicionalObjectId, email);
+            ParseObject parseObjectComentario = agregarComentario(comentarioText, email);
+            objectAux = getParseObjectById(adicionalObjectId);
+            objectRelation = objectAux.getRelation(CAdicionales.ID_COMENTARIOS);
+            objectRelation.add(parseObjectComentario);
+            save(objectAux);
+            pushNotification(adicionalObjectId, email);
     }
 
     public ParseObject agregarComentario(String comentario, String email) throws ParseException {
@@ -340,48 +341,48 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         persona = iPersona.getPersonabyEmail(email);
         object.put(CComentarios.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
         save(object);
-        ParseObject objectComentario = iComentarios.getComentarioById(getUltimoObjectId());
+        ParseObject objectComentario = iComentarios.getComentarioById(getUltimoObjectIdComentario());
 
         return objectComentario;
     }
 
     public void pushNotification(String adicionalObjectId, String mailLogueado){
 
-        List<String> emails = new ArrayList<String>();
-        adicional = getAdicionalById(adicionalObjectId);
+        if(!HuellasApplication.getInstance().getProfileEmailFacebook().equals("")) {
+            List<String> emails = new ArrayList<String>();
+            adicional = getAdicionalById(adicionalObjectId);
 
-        if(!adicional.getPersona().getEmail().equals(mailLogueado))
-            emails.add(adicional.getPersona().getEmail());
-        for(Comentarios comentarioAux : adicional.getComentarios()){ //email de las personas que comentaron
-            if(!comentarioAux.getPersona().getEmail().equals(mailLogueado)){
-                emails.add(comentarioAux.getPersona().getEmail());
+            if (!adicional.getPersona().getEmail().equals(mailLogueado))
+                emails.add(adicional.getPersona().getEmail());
+            for (Comentarios comentarioAux : adicional.getComentarios()) { //email de las personas que comentaron
+                if (!comentarioAux.getPersona().getEmail().equals(mailLogueado)) {
+                    emails.add(comentarioAux.getPersona().getEmail());
+                }
+            }
+
+            JSONObject object2 = new JSONObject();
+            try {
+
+                // Create our Installation query
+                ParseQuery pushQuery = ParseInstallation.getQuery();
+
+                pushQuery.whereContainedIn("email", emails);
+                object2.put("title", "Nuevo comentario");
+                ParsePush push = new ParsePush();
+                push.setQuery(pushQuery); // Set our Installation query
+                push.setData(object2);
+                push.sendInBackground(new SendCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
-
-        JSONObject object2 = new JSONObject();
-        try {
-
-            // Create our Installation query
-            ParseQuery pushQuery = ParseInstallation.getQuery();
-
-            pushQuery.whereContainedIn("email", emails);
-            object2.put("title", "Nuevo comentario");
-            ParsePush push = new ParsePush();
-            push.setQuery(pushQuery); // Set our Installation query
-            push.setData(object2);
-            push.sendInBackground(new SendCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-
 
     }
 
@@ -552,6 +553,24 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     public String getUltimoObjectId() throws ParseException {
 
         query = ParseQuery.getQuery(Clases.ADICIONALES);
+        query.orderByDescending(CAdicionales.CREATEDAT);
+        String objectId = null;
+        try {
+            if(query.count() != 0) {
+                ParseObject objectAux = query.getFirst();
+                objectId = objectAux.getObjectId();
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
+
+        return objectId;
+    }
+
+
+    public String getUltimoObjectIdComentario() throws ParseException {
+
+        query = ParseQuery.getQuery(Clases.COMENTARIOS);
         query.orderByDescending(CAdicionales.CREATEDAT);
         String objectId = null;
         try {
