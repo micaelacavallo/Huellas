@@ -115,7 +115,12 @@ public class CustomPushReceiver extends ParsePushBroadcastReceiver {
 
     @Override
     protected Bitmap getLargeIcon(Context context, Intent intent) {
-        return BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            return BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
+        }
+        else{
+            return BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
+        }
     }
 
     @Override
