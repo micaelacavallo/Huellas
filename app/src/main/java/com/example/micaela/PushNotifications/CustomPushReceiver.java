@@ -9,6 +9,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.app.NotificationCompat;
@@ -24,15 +26,13 @@ import org.json.JSONObject;
 
 public class CustomPushReceiver extends ParsePushBroadcastReceiver {
 
-    private final String TAG = CustomPushReceiver.class.getSimpleName();
-    private static final int NOTIFICATION_ID = 1;
-    public static int numMessages = 0;
+
 
     public CustomPushReceiver() {
         super();
     }
 
-    @Override
+  /*  @Override
     protected Notification getNotification(Context context, Intent intent) {
 
         JSONObject pushData = null;
@@ -107,6 +107,15 @@ public class CustomPushReceiver extends ParsePushBroadcastReceiver {
             Log.d(TAG, e.getMessage());
         }*/
 
+
+    @Override
+    protected int getSmallIconId(Context context, Intent intent) {
+        return R.mipmap.ic_launcher;
+    }
+
+    @Override
+    protected Bitmap getLargeIcon(Context context, Intent intent) {
+        return BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
     }
 
     @Override
