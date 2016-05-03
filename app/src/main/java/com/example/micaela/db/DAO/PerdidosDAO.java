@@ -659,8 +659,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
             ParseQuery pushQuery = ParseInstallation.getQuery();
 
             pushQuery.whereContainedIn("email", emails);
-            object2.put("title", "Se ha agregado un comentario en una publicacion");
-            object2.put("description", "traer comentario de la publicacion");
+            object2.put("title", "Nuevo comentario");
             ParsePush push = new ParsePush();
             push.setQuery(pushQuery); // Set our Installation query
             push.setData(object2);
