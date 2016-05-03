@@ -676,7 +676,6 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
             e.printStackTrace();
         }
 
-
     }
 
     public ParseObject getParseObjectById(String objectId) {

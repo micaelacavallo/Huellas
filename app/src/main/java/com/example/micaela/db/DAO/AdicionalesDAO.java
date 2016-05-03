@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.micaela.db.Constantes.CAdicionales;
 import com.example.micaela.db.Constantes.CColores;
+import com.example.micaela.db.Constantes.CComentarios;
 import com.example.micaela.db.Constantes.CEstados;
 import com.example.micaela.db.Constantes.CPersonas;
 import com.example.micaela.db.Constantes.Clases;
@@ -24,11 +25,18 @@ import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.db.Modelo.Personas;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
+import com.parse.SendCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -315,12 +323,68 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     @Override
     public void AgregarComentarioAdicional(String adicionalObjectId, String comentarioText, String email) throws ParseException {
 
-        ParseObject parseObjectComentario = iComentarios.agregarComentario(adicionalObjectId, comentarioText, email, context);
+        ParseObject parseObjectComentario = agregarComentario(comentarioText, email);
         objectAux = getParseObjectById(adicionalObjectId);
         objectRelation = objectAux.getRelation(CAdicionales.ID_COMENTARIOS);
         objectRelation.add(parseObjectComentario);
         save(objectAux);
+        pushNotification(adicionalObjectId, email);
     }
+
+    public ParseObject agregarComentario(String comentario, String email) throws ParseException {
+
+        ParseObject object = new ParseObject(Clases.COMENTARIOS);
+        object.put(CComentarios.COMENTARIO, comentario);
+        object.put(CComentarios.LEIDO, false);
+        object.put(CComentarios.FECHA, new Date());
+        persona = iPersona.getPersonabyEmail(email);
+        object.put(CComentarios.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
+        save(object);
+        ParseObject objectComentario = iComentarios.getComentarioById(getUltimoObjectId());
+
+        return objectComentario;
+    }
+
+    public void pushNotification(String adicionalObjectId, String mailLogueado){
+
+        List<String> emails = new ArrayList<String>();
+        adicional = getAdicionalById(adicionalObjectId);
+
+        if(!adicional.getPersona().getEmail().equals(mailLogueado))
+            emails.add(adicional.getPersona().getEmail());
+        for(Comentarios comentarioAux : adicional.getComentarios()){ //email de las personas que comentaron
+            if(!comentarioAux.getPersona().getEmail().equals(mailLogueado)){
+                emails.add(comentarioAux.getPersona().getEmail());
+            }
+        }
+
+        JSONObject object2 = new JSONObject();
+        try {
+
+            // Create our Installation query
+            ParseQuery pushQuery = ParseInstallation.getQuery();
+
+            pushQuery.whereContainedIn("email", emails);
+            object2.put("title", "Nuevo comentario");
+            ParsePush push = new ParsePush();
+            push.setQuery(pushQuery); // Set our Installation query
+            push.setData(object2);
+            push.sendInBackground(new SendCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     public ParseObject getParseObjectById(String objectId) {
 
