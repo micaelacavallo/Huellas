@@ -619,6 +619,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         objectRelation = objectAux.getRelation(CPerdidos.COMENTARIOS);
         objectRelation.add(parseObjectComentario);
         save(objectAux);
+        pushNotification(perdidoObjectId);
     }
 
     public ParseObject agregarComentario(String perdidoObjectId, String comentario, String email, Context context) throws ParseException {
@@ -632,10 +633,18 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         save(object);
         ParseObject objectComentario = iComentarios.getComentarioById(getUltimoObjectId());
 
+        return objectComentario;
+    }
+
+    public void pushNotification(String perdidoObjectId){
         // Send push notification to query
         List<String> emails = new ArrayList<String>();
         List<Personas> personas = new ArrayList<Personas>();
-        perdido = getPublicacionPerdidosById(perdidoObjectId);
+        try {
+            perdido = getPublicacionPerdidosById(perdidoObjectId);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         for(Comentarios comentarioAux : perdido.getComentarios()){ //email de las personas que comentaron
             if(!personas.contains(comentarioAux.getPersona())){
                 personas.add(comentarioAux.getPersona());
@@ -673,7 +682,6 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         }
 
 
-        return objectComentario;
     }
 
     public ParseObject getParseObjectById(String objectId) {
@@ -813,7 +821,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
 
     public String getUltimoObjectId() throws ParseException {
 
-        query = ParseQuery.getQuery(Clases.PERDIDOS);
+        query = ParseQuery.getQuery(Clases.COMENTARIOS);
         query.orderByDescending(CPerdidos.CREATEDAT);
         String objectId = null;
         try {
