@@ -152,7 +152,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                 if (foto != null) {
                     image = foto. getData();
                 }
-                adicional = new Adicionales(object.getObjectId(), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
+                adicional = new Adicionales(object.getObjectId(), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios, object.getBoolean(CAdicionales.BLOQUEADO));
                 adicionales.add(adicional);
             }
         }
@@ -166,14 +166,14 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         query.include(CAdicionales.ID_PERSONA);
         query.include(CAdicionales.ID_ESTADO);
         query.whereEqualTo(CAdicionales.DONACION, false);
-        //  query.whereEqualTo(CAdicionales.ID_ESTADO, getEstadoByID("D4ATvjnhj4"));
+        query.whereEqualTo(CAdicionales.BLOQUEADO, false);
 
         return query;
     }
 
     public List<ParseObject> getInfoUtilParseObject() throws ParseException {
 
-       query = getQueryForInfoUtil();
+        query = getQueryForInfoUtil();
         query.orderByDescending(CAdicionales.FECHA);
         checkInternetGet(query);
 
@@ -198,7 +198,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         query.include(CAdicionales.ID_PERSONA);
         query.include(CAdicionales.ID_ESTADO);
         query.whereEqualTo(CAdicionales.DONACION, true);
-        //  query.whereEqualTo(CAdicionales.ID_ESTADO, getEstadoByID("D4ATvjnhj4"));
+        query.whereEqualTo(CAdicionales.BLOQUEADO, false);
 
         return query;
     }
@@ -237,7 +237,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                 if (foto != null) {
                     image = foto.getData();
                 }
-                adicional = new Adicionales(object.getObjectId(), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios);
+                adicional = new Adicionales(object.getObjectId(), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios, object.getBoolean(CAdicionales.BLOQUEADO));
             }
         }
         catch(ParseException e)

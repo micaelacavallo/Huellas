@@ -12,6 +12,7 @@ import com.example.micaela.db.Modelo.MotivoDenuncia;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +26,9 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDBLocal {
 
     private Context context;
     private ParseQuery<ParseObject> query;
+    private ParseObject objectAux;
+    private ParseRelation objectRelation;
+    private List<ParseObject> listParseObject;
 
     public DenunciasDAO() {
     }
@@ -32,13 +36,16 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDBLocal {
     public DenunciasDAO(Context context) {
         this.context = context;
         query = null;
+        objectAux = null;
+        objectRelation = null;
+        listParseObject = null;
     }
 
     @Override
     public void denunciar(String id, String motivo) throws ParseException {
 
         query = ParseQuery.getQuery(Clases.DENUNCIAS);
-        query.whereEqualTo(CDenuncias.ID, id);
+        query.whereEqualTo(CDenuncias.ID_REFERENCIA, id);
 
         if(query.count() == 0) {
 
@@ -46,7 +53,7 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDBLocal {
 
             ParseObject objectAux = new ParseObject(Clases.DENUNCIAS);
             objectAux.put(CDenuncias.FECHA, new Date());
-            objectAux.put(CDenuncias.ID, id);
+            objectAux.put(CDenuncias.ID_REFERENCIA, id);
             objectAux.put(CDenuncias.IS_USER, false);
             objectAux.put(CDenuncias.MOTIVO_DENUNCIA, ParseObject.createWithoutData(Clases.MOTIVODENUNCIA, String.valueOf(motivoDenuncia.getmObjectId())));
 
@@ -93,6 +100,22 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDBLocal {
             }
         }
         return listMotivoDenuncia;
+    }
+
+    @Override
+    public void borrarDenuncia(String denunciaObjectId) {
+
+        query = ParseQuery.getQuery(Clases.DENUNCIAS);
+        query.whereEqualTo(CDenuncias.OBJECT_ID, denunciaObjectId);
+        checkInternetGet(query);
+        try {
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+                delete(objectAux);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -124,9 +124,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         iComentarios = new IComentariosImpl(context);
         iEstado = new IEstadosImpl(context);
         mPersonasImpl = new IPersonasImpl(context);
-
     }
-
 
     public List<ParseObject> findQuery(){
         try{
@@ -239,6 +237,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         query = getQueryPerdidos();
         query.whereEqualTo(CPerdidos.SOLUCIONADO, false);
+        query.whereEqualTo(CPerdidos.BLOQUEADO, false);
         query.orderByDescending(CPerdidos.FECHA);
         checkInternetGet(query);
 

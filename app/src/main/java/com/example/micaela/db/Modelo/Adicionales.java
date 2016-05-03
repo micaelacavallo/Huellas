@@ -20,6 +20,7 @@ public class Adicionales implements Parcelable {
     private byte[] mFoto;
     private boolean mDonacion;
     private ArrayList<Comentarios> mComentarios;
+    private boolean mBloqueado;
 
     public Adicionales() {
         mPersona = new Personas();
@@ -27,7 +28,7 @@ public class Adicionales implements Parcelable {
         mFoto = null;
         mComentarios = new ArrayList<Comentarios>();
     }
-    public Adicionales(String objectId, Personas persona, Estados estado, Date fecha, String titulo, String descripcion, byte[] foto, boolean donacion, ArrayList<Comentarios> comentarios) {
+    public Adicionales(String objectId, Personas persona, Estados estado, Date fecha, String titulo, String descripcion, byte[] foto, boolean donacion, ArrayList<Comentarios> comentarios, boolean bloqueado) {
 
         this.mObjectId = objectId;
         this.mPersona = persona;
@@ -38,6 +39,7 @@ public class Adicionales implements Parcelable {
         this.mFoto = foto;
         this.mDonacion = donacion;
         this.mComentarios = comentarios;
+        this.mBloqueado = bloqueado;
     }
 
 
@@ -111,6 +113,14 @@ public class Adicionales implements Parcelable {
 
     public void setDonacion(boolean mDonacion) {
         this.mDonacion = mDonacion;
+    }
+
+    public boolean isBloqueado() {
+        return mBloqueado;
+    }
+
+    public void setBloqueado(boolean bloqueado) {
+        this.mBloqueado = bloqueado;
     }
 
     @Override

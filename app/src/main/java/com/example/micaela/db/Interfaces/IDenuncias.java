@@ -17,4 +17,5 @@ public interface IDenuncias {
     public void denunciar(String id, String motivo) throws ParseException;
     public MotivoDenuncia getMotivoDenuncia(String motivo);
     public List<MotivoDenuncia> getMotivoDenuncias();
+    public void borrarDenuncia(String denunciaObjectId);
 }

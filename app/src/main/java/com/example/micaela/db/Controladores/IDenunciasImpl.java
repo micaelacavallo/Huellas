@@ -41,4 +41,9 @@ public class IDenunciasImpl implements IDenuncias {
         return mDenunciasDAO.getMotivoDenuncias();
     }
 
+    @Override
+    public void borrarDenuncia(String denunciaObjectId) {
+        mDenunciasDAO.borrarDenuncia(denunciaObjectId);
+    }
+
 }
