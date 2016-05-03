@@ -3,6 +3,7 @@ package com.example.micaela.db.Interfaces;
 import android.content.Context;
 
 import com.example.micaela.db.Modelo.Adicionales;
+import com.example.micaela.db.Modelo.Denuncias;
 import com.example.micaela.db.Modelo.MotivoDenuncia;
 import com.parse.ParseException;
 
@@ -14,8 +15,11 @@ import java.util.List;
  */
 public interface IDenuncias {
 
-    public void denunciar(String id, String motivo) throws ParseException;
+    public void denunciar(String id, String motivo, String tabla) throws ParseException;
     public MotivoDenuncia getMotivoDenuncia(String motivo);
     public List<MotivoDenuncia> getMotivoDenuncias();
     public void borrarDenuncia(String denunciaObjectId);
+    public void confirmarDenuncia(String denunciaObjectId) throws ParseException;
+    public Denuncias getDenunciaById(String objectId);
+    public List<Denuncias> getDenuncias() throws ParseException;
 }

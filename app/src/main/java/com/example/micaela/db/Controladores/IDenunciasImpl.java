@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.micaela.db.DAO.DenunciasDAO;
 import com.example.micaela.db.Interfaces.IDenuncias;
+import com.example.micaela.db.Modelo.Denuncias;
 import com.example.micaela.db.Modelo.MotivoDenuncia;
 import com.parse.ParseException;
 
@@ -25,9 +26,9 @@ public class IDenunciasImpl implements IDenuncias {
     }
 
     @Override
-    public void denunciar(String id, String motivo) throws ParseException {
+    public void denunciar(String id, String motivo, String tabla) throws ParseException {
 
-        mDenunciasDAO.denunciar(id, motivo);
+        mDenunciasDAO.denunciar(id, motivo, tabla);
     }
 
     @Override
@@ -44,6 +45,21 @@ public class IDenunciasImpl implements IDenuncias {
     @Override
     public void borrarDenuncia(String denunciaObjectId) {
         mDenunciasDAO.borrarDenuncia(denunciaObjectId);
+    }
+
+    @Override
+    public void confirmarDenuncia(String denunciaObjectId) throws ParseException {
+        mDenunciasDAO.confirmarDenuncia(denunciaObjectId);
+    }
+
+    @Override
+    public Denuncias getDenunciaById(String objectId) {
+        return  mDenunciasDAO.getDenunciaById(objectId);
+    }
+
+    @Override
+    public List<Denuncias> getDenuncias() throws ParseException {
+        return mDenunciasDAO.getDenuncias();
     }
 
 }

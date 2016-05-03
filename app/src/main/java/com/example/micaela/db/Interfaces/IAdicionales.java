@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.MotivoDenuncia;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 
 import java.util.List;
 
@@ -24,5 +25,5 @@ public interface IAdicionales {
     public void cargarDBLocalDonaciones(Context context) throws ParseException;
     public void cargarDBLocalInfoUtil(Context context) throws ParseException;
     public List<Adicionales> getPublicacionesAdicionalesPropias(String objectId);
-
+    public ParseObject getParseObjectById(String objectId);
 }

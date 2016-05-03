@@ -50,7 +50,7 @@ public class PersonasDAO implements IPersonas {
 
 
         query = ParseQuery.getQuery(Clases.DENUNCIAS);
-        query.whereEqualTo(CDenuncias.ID, id);
+        query.whereEqualTo(CDenuncias.ID_REFERENCIA, id);
 
         if(query.count() == 0) {
 
@@ -58,7 +58,7 @@ public class PersonasDAO implements IPersonas {
 
             ParseObject objectAux = new ParseObject(Clases.DENUNCIAS);
             objectAux.put(CDenuncias.FECHA, new Date());
-            objectAux.put(CDenuncias.ID, id);
+            objectAux.put(CDenuncias.ID_REFERENCIA, id);
             objectAux.put(CDenuncias.IS_USER, true);
             objectAux.put(CDenuncias.MOTIVO_DENUNCIA, ParseObject.createWithoutData(Clases.MOTIVODENUNCIA, String.valueOf(motivoDenuncia.getmObjectId())));
 
@@ -147,6 +147,25 @@ public class PersonasDAO implements IPersonas {
         }
 
         return persona;
+    }
+
+    public ParseObject getParseObjectById(String objectId) {
+
+        query = ParseQuery.getQuery(Clases.PERSONAS);
+        query.whereEqualTo(CPersonas.OBJECT_ID, objectId);
+        checkInternetGet(query);
+
+        try{
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+            }
+        }
+        catch(ParseException e)
+        {
+            e.printStackTrace();
+        }
+
+        return objectAux;
     }
 
     @Override

@@ -78,5 +78,8 @@ public class IAdicionalesImpl implements IAdicionales {
         return mAdicionalesDAO.getPublicacionesAdicionalesPropias(objectId);
     }
 
-
+    @Override
+    public ParseObject getParseObjectById(String objectId){
+        return getParseObjectById(objectId);
+    }
 }

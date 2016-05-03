@@ -12,6 +12,7 @@ import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.db.Modelo.Sexos;
 import com.example.micaela.db.Modelo.Tamaños;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 
 import java.util.List;
 
@@ -40,5 +41,5 @@ public interface IPerdidos {
     public void cargarDBLocal(Context context) throws ParseException;
     public List<Perdidos> getPublicacionesPerdidosPropias(String objectId) throws ParseException;
     public Perdidos getPublicacionPerdidosById(String objectId) throws ParseException;
-
+    public ParseObject getParseObjectById(String objectId);
 }
