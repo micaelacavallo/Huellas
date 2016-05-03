@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -42,6 +43,7 @@ import java.util.List;
 public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragment.AdapterCallback, ComentariosFragment.AdapterCallback, AnimalesAdapter.PopupMenuCallback {
 
     private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLinearLayoutManager;
     private IPerdidos mIperdidosImpl;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Spinner mSpinnerRazas;
@@ -222,7 +224,14 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
 
     private void inicializarRecycler(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return mSwipeRefreshLayout.isRefreshing();
+            }
+        });
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -452,26 +461,26 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            getBaseActivity().showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+            if (!mFromSwipeRefresh) {
+                getBaseActivity().showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+            }
         }
 
         @Override
         protected void onPostExecute(final List<Perdidos> perdidosList) {
             super.onPostExecute(perdidosList);
             HuellasApplication.getInstance().setmPerdidos(perdidosList);
-            mAdapterAnimales = new AnimalesAdapter(HuellasApplication.getInstance().getmPerdidos(), getBaseActivity(), PerdidosFragment.this);
-            mRecyclerView.setAdapter(mAdapterAnimales);
-
             if (mFromSwipeRefresh) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                        getBaseActivity().hideOverlay();
-                        mFromSwipeRefresh = false;
-                    }
-                });
+                mSwipeRefreshLayout.setRefreshing(false);
+                mAdapterAnimales.notifyDataSetChanged();
+                mFromSwipeRefresh = false;
+
+            } else {
+                mAdapterAnimales = new AnimalesAdapter(HuellasApplication.getInstance().getmPerdidos(), getBaseActivity(), PerdidosFragment.this);
+                mRecyclerView.setAdapter(mAdapterAnimales);
+                getBaseActivity().hideOverlay();
             }
+
         }
 
         @Override

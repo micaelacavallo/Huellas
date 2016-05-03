@@ -7,6 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -39,6 +40,8 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
     private TextView mTextViewDialogMsg;
     private TextView mTextViewConfirmar;
     private TextView mTextViewCancelar;
+
+    private boolean mFromSwipeRefresh = false;
 
     public static InformacionUtilFragment getInstance() {
         if (mInstanceInfo == null) {
@@ -131,6 +134,7 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
             @Override
             public void onRefresh() {
                 new AsyncTaskAdicionales().execute();
+                mFromSwipeRefresh = true;
             }
         });
         mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
@@ -140,6 +144,12 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
     private void inicializarRecycler(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return mSwipeRefreshLayout.isRefreshing();
+            }
+        });
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -217,22 +227,22 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            getBaseActivity().showOverlay(getString(R.string.cargando_publicaciones_mensaje));
         }
 
         @Override
         protected void onPostExecute(List<Adicionales> adicionalesList) {
             super.onPostExecute(adicionalesList);
             adicionales = adicionalesList;
-            mAdapterAdicionales = new AdicionalesAdapter(adicionales, getContext(), InformacionUtilFragment.this);
-            mRecyclerView.setAdapter(mAdapterAdicionales);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ((BaseActivity) getActivity()).hideOverlay();
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            });
+            if (mFromSwipeRefresh) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                mAdapterAdicionales.notifyDataSetChanged();
+                mFromSwipeRefresh = false;
+            }
+            else {
+                mAdapterAdicionales = new AdicionalesAdapter(adicionales, getContext(), InformacionUtilFragment.this);
+                mRecyclerView.setAdapter(mAdapterAdicionales);
+                ((BaseActivity) getActivity()).hideOverlay();
+            }
         }
 
         @Override

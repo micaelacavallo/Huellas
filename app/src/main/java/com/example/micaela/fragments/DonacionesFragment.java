@@ -7,6 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
     private TextView mTextViewConfirmar;
     private TextView mTextViewCancelar;
     private boolean isDialogOpen = false;
+    private boolean mFromSwipeRefresh = false;
 
     public static DonacionesFragment getInstance() {
         if (mInstanceDonacion == null) {
@@ -130,6 +132,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mFromSwipeRefresh = true;
                 new AsyncTaskAdicionales().execute();
             }
         });
@@ -156,6 +159,12 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
 
     private void inicializarRecycler(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_recycler_view);
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return mSwipeRefreshLayout.isRefreshing();
+            }
+        });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -214,21 +223,21 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            getBaseActivity().showOverlay(getString(R.string.cargando_publicaciones_mensaje));
         }
         @Override
         protected void onPostExecute(List<Adicionales> adicionalesList) {
             super.onPostExecute(adicionalesList);
             adicionales = adicionalesList;
-            mAdapterAdicionales = new AdicionalesAdapter(adicionales, getContext(), DonacionesFragment.this);
-            mRecyclerView.setAdapter(mAdapterAdicionales);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    getBaseActivity().hideOverlay();
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            });
+            if (mFromSwipeRefresh) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                mAdapterAdicionales.notifyDataSetChanged();
+                mFromSwipeRefresh = false;
+            }
+            else {
+                mAdapterAdicionales = new AdicionalesAdapter(adicionales, getContext(), DonacionesFragment.this);
+                mRecyclerView.setAdapter(mAdapterAdicionales);
+            }
+
         }
 
         @Override
