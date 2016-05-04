@@ -71,7 +71,7 @@ public class Colores implements Parcelable{
     public static int returnPositionElement (List<Colores> colores, String color) {
         int position = -1;
         for (int x = 0; x<colores.size(); x++) {
-            if (colores.get(0).getColor().equals(color)) {
+            if (colores.get(x).getColor().equals(color)) {
                 position = x;
             }
         }

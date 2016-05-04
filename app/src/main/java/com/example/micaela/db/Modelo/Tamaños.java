@@ -73,7 +73,7 @@ public class Tamaños implements Parcelable{
     public static int returnPositionElement (List<Tamaños> tamaños, String tamaño) {
         int position = -1;
         for (int x = 0; x<tamaños.size(); x++) {
-            if (tamaños.get(0).getTamaño().equals(tamaño)) {
+            if (tamaños.get(x).getTamaño().equals(tamaño)) {
                 position = x;
             }
         }

@@ -105,7 +105,8 @@ public class LoginFragment extends BaseFragment {
 
                     @Override
                     public void onCancel() {
-                        getBaseActivity().setResult(-10);
+                        getActivity().setResult(-10);
+                        getActivity().finish();
                     }
 
                     @Override
@@ -114,6 +115,7 @@ public class LoginFragment extends BaseFragment {
                             @Override
                             public void onClick(View v) {
                                 getBaseActivity().setResult(-10);
+                                getActivity().finish();
                             }
                         };
                         ((BaseActivity) getActivity()).showMessageOverlay("Hubo un problema, intente nuevamente", listener);

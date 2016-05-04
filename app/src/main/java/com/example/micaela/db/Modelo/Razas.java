@@ -104,7 +104,7 @@ public class Razas implements Parcelable{
                 filterRazas.add(razas.get(x));
         }
         for (int x = 0; x<filterRazas.size(); x++) {
-            if (filterRazas.get(0).getRaza().equals(raza)) {
+            if (filterRazas.get(x).getRaza().equals(raza)) {
                 position = x;
             }
         }

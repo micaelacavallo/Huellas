@@ -73,7 +73,7 @@ public class Sexos implements Parcelable {
     public static int returnPositionElement (List<Sexos> sexos, String sexo) {
         int position = -1;
         for (int x = 0; x<sexos.size(); x++) {
-            if (sexos.get(0).getSexo().equals(sexo)) {
+            if (sexos.get(x).getSexo().equals(sexo)) {
                 position = x;
             }
         }

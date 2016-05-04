@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.micaela.HuellasApplication;
@@ -58,8 +59,13 @@ public class PrincipalActivity extends BaseActivity {
     private IGeneral mIGeneralImpl;
     private IEstados mIEstadosImpl;
 
+    private View mDialogContainer;
+    private TextView mTextViewDialogMsg;
+    private TextView mTextViewConfirmar;
+    private TextView mTextViewCancelar;
 
     private boolean thereWasError = false;
+    private boolean isDialogOpen = false;
 
 
     @Override
@@ -122,6 +128,39 @@ public class PrincipalActivity extends BaseActivity {
         } else {
             updateFacebookData();
         }
+
+
+        mDialogContainer = findViewById(R.id.layout_dialog_container);
+        mTextViewCancelar = (TextView) findViewById(R.id.textView_cancelar);
+        mTextViewConfirmar = (TextView) findViewById(R.id.textView_confirmar);
+        mTextViewDialogMsg = (TextView) findViewById(R.id.textView_confirmar_mensaje);
+    }
+
+    public void showLoadDialog() {
+        findViewById(R.id.dialog_content).setVisibility(View.GONE);
+        findViewById(R.id.dialog_load).setVisibility(View.VISIBLE);
+        ((ProgressBar) findViewById(R.id.progress_bar_dialog)).getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.accent), android.graphics.PorterDuff.Mode.MULTIPLY);
+    }
+
+    public void hideLoadDialog() {
+        findViewById(R.id.dialog_content).setVisibility(View.VISIBLE);
+        findViewById(R.id.dialog_load).setVisibility(View.GONE);
+    }
+
+
+    public void showDialog(String text, View.OnClickListener listener) {
+        mDialogContainer.setVisibility(View.VISIBLE);
+        isDialogOpen = true;
+        mTextViewDialogMsg.setText(text);
+        mTextViewCancelar.setVisibility(View.VISIBLE);
+        mTextViewCancelar.setOnClickListener(listener);
+        mTextViewConfirmar.setOnClickListener(listener);
+    }
+
+    public void closeDialog() {
+        hideLoadDialog();
+        isDialogOpen = false;
+        mDialogContainer.setVisibility(View.GONE);
     }
 
     @Override
@@ -157,14 +196,18 @@ public class PrincipalActivity extends BaseActivity {
         if (mIsDrawerOpen) {
             mDrawerLayout.closeDrawers();
         } else {
-            for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-                if (((BaseFragment) fragment).onBackPressed()) {
-                    backPressed =true;
+            if (isDialogOpen) {
+               closeDialog();
+            } else {
+                for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                    if (((BaseFragment) fragment).onBackPressed()) {
+                        backPressed = true;
+                    }
                 }
-            }
 
-            if (!backPressed) {
-                super.onBackPressed();
+                if (!backPressed) {
+                    super.onBackPressed();
+                }
             }
         }
     }

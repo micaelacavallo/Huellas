@@ -72,7 +72,7 @@ public class Edades implements Parcelable{
     public static int returnPositionElement (List<Edades> edades, String edad) {
         int position = -1;
         for (int x = 0; x<edades.size(); x++) {
-            if (edades.get(0).getEdad().equals(edad)) {
+            if (edades.get(x).getEdad().equals(edad)) {
                 position = x;
             }
         }

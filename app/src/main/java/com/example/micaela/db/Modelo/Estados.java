@@ -72,7 +72,7 @@ public class Estados implements Parcelable {
     public static int returnPositionElement (List<Estados> estados, String estado) {
         int position = -1;
         for (int x = 0; x<estados.size(); x++) {
-            if (estados.get(0).getSituacion().equals(estado)) {
+            if (estados.get(x).getSituacion().equals(estado)) {
                 position = x;
             }
         }

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -124,13 +125,15 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
             }
         });
         mPopupMenu.inflate(R.menu.menu_popup);
+        Menu menu = mPopupMenu.getMenu();
+        menu.removeItem(R.id.item_solucionado);
         if (!mAdicionales.get(position).getPersona().getEmail().equals(HuellasApplication.getInstance().getProfileEmailFacebook())) {
-            mPopupMenu.getMenu().removeItem(R.id.item_editar);
-            mPopupMenu.getMenu().removeItem(R.id.item_eliminar);
+            menu.removeItem(R.id.item_editar);
+            menu.removeItem(R.id.item_eliminar);
         }
         else {
-            mPopupMenu.getMenu().removeItem(R.id.item_reportar_publicacion);
-            mPopupMenu.getMenu().removeItem(R.id.item_reportar_usuario);
+            menu.removeItem(R.id.item_reportar_publicacion);
+            menu.removeItem(R.id.item_reportar_usuario);
         }
         mPopupMenu.show();
     }

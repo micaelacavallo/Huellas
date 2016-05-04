@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,19 +89,22 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
                 holder.getImageViewFoto().setImageBitmap(((BaseActivity) mContext).convertFromByteToBitmap(foto));
             }
 
-            int cantidadComentarios = mPerdidos.get(position).getComentarios().size();
-            if (cantidadComentarios > 0) {
-                if (cantidadComentarios == 1) {
-                    holder.getmTextViewComentarios().setText(mContext.getString(R.string.un_comentario));
+            try {
+                int cantidadComentarios = mPerdidos.get(position).getComentarios().size();
+                if (cantidadComentarios > 0) {
+                    if (cantidadComentarios == 1) {
+                        holder.getmTextViewComentarios().setText(mContext.getString(R.string.un_comentario));
+                    } else {
+                        holder.getmTextViewComentarios().setText(String.format(mContext.getString(R.string.comentarios_cantidad), cantidadComentarios));
+                    }
+                    holder.getmTextViewComentarios().setVisibility(View.VISIBLE);
                 } else {
-                    holder.getmTextViewComentarios().setText(String.format(mContext.getString(R.string.comentarios_cantidad), cantidadComentarios));
+                    holder.getmTextViewComentarios().setVisibility(View.GONE);
                 }
-                holder.getmTextViewComentarios().setVisibility(View.VISIBLE);
             }
-            else {
+            catch (NullPointerException e) {
                 holder.getmTextViewComentarios().setVisibility(View.GONE);
             }
-
             holder.getViewComentar().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -143,13 +147,15 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
             }
         });
         mPopupMenu.inflate(R.menu.menu_popup);
+        Menu menu = mPopupMenu.getMenu();
         if (!mPerdidos.get(position).getPersona().getEmail().equals(HuellasApplication.getInstance().getProfileEmailFacebook())) {
-            mPopupMenu.getMenu().removeItem(R.id.item_editar);
-            mPopupMenu.getMenu().removeItem(R.id.item_eliminar);
+            menu.removeItem(R.id.item_editar);
+            menu.removeItem(R.id.item_eliminar);
+            menu.removeItem(R.id.item_solucionado);
         }
         else {
-            mPopupMenu.getMenu().removeItem(R.id.item_reportar_publicacion);
-            mPopupMenu.getMenu().removeItem(R.id.item_reportar_usuario);
+            menu.removeItem(R.id.item_reportar_publicacion);
+            menu.removeItem(R.id.item_reportar_usuario);
         }
         mPopupMenu.show();
     }

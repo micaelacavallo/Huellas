@@ -27,6 +27,7 @@ import com.example.micaela.activities.AltaAnimalesActivity;
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.adapters.AnimalesAdapter;
 import com.example.micaela.adapters.CustomSpinnerHintAdapter;
+import com.example.micaela.db.Controladores.IEstadosImpl;
 import com.example.micaela.db.Controladores.IPerdidosImpl;
 import com.example.micaela.db.Interfaces.IPerdidos;
 import com.example.micaela.db.Modelo.Colores;
@@ -68,7 +69,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
     private boolean isFilterApplied = false;
     private boolean isItemSelected = false;
     private boolean isFilterCardVisible = false;
-    private boolean isDialogOpen = false;
+
     private TextView mTextViewEmpty;
 
     private ImageView mImageViewClear;
@@ -82,11 +83,6 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
 
     private boolean mFromSwipeRefresh = false;
     private static PerdidosFragment mInstancePerdidos;
-
-    private View mDialogContainer;
-    private TextView mTextViewDialogMsg;
-    private TextView mTextViewConfirmar;
-    private TextView mTextViewCancelar;
 
     public static PerdidosFragment getInstance() {
         if (mInstancePerdidos == null) {
@@ -189,24 +185,13 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
 
         setUpSpinners();
 
-        mDialogContainer = mRootView.findViewById(R.id.layout_dialog_container);
-        mTextViewCancelar = (TextView) mRootView.findViewById(R.id.textView_cancelar);
-        mTextViewConfirmar = (TextView) mRootView.findViewById(R.id.textView_confirmar);
-        mTextViewDialogMsg = (TextView) mRootView.findViewById(R.id.textView_confirmar_mensaje);
-
         new AsyncTaskPerdidos().execute();
         return mRootView;
     }
 
     @Override
     public boolean onBackPressed() {
-        if (isDialogOpen) {
-            mDialogContainer.setVisibility(View.GONE);
-            isDialogOpen = false;
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
 
     private void inicializarSwipeRefresh(View view) {
@@ -370,7 +355,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
 
     @Override
     public void updateElementAdapterPublicacion(Object object) {
-        for (Perdidos perdido :  HuellasApplication.getInstance().getmPerdidos()) {
+        for (Perdidos perdido : HuellasApplication.getInstance().getmPerdidos()) {
             if (perdido.getObjectId().equals(((Perdidos) object).getObjectId())) {
                 perdido.setFoto(((Perdidos) object).getFoto());
                 perdido.setDescripcion(((Perdidos) object).getDescripcion());
@@ -412,66 +397,109 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
                 intent.putExtra(Constants.ACTION, Constants.EDITAR);
                 intent.putExtra(Constants.OBJETO_PERDIDO, perdido);
                 getBaseActivity().startActivity(intent);
+                getBaseActivity().hideOverlay();
                 break;
             case R.id.item_reportar_publicacion:
                 break;
             case R.id.item_reportar_usuario:
                 break;
+            case R.id.item_solucionado:
+                View.OnClickListener onClickSolucionadoListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        switch (v.getId()) {
+                            case R.id.textView_cancelar:
+                                ((PrincipalActivity) getBaseActivity()).closeDialog();
+                                break;
+                            case R.id.textView_confirmar:
+                                ((PrincipalActivity) getBaseActivity()).showLoadDialog();
+                                new AsyncPublicacionSolucionada().execute(perdido.getObjectId());
+                                break;
+                        }
+                    }
+                };
+                ((PrincipalActivity) getBaseActivity()).showDialog(getBaseActivity().getString(R.string.dialog_solucionado_descripcion), onClickSolucionadoListener);
+
+                break;
             case R.id.item_eliminar:
-                mDialogContainer.setVisibility(View.VISIBLE);
-                isDialogOpen = true;
-                mTextViewDialogMsg.setText("¿Está seguro que desea eliminar la publicación?");
-                mTextViewCancelar.setVisibility(View.VISIBLE);
+                View.OnClickListener onClickEliminarListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        switch (v.getId()) {
+                            case R.id.textView_cancelar:
+                                ((PrincipalActivity) getBaseActivity()).closeDialog();
+                                break;
+                            case R.id.textView_confirmar:
+                                ((PrincipalActivity) getBaseActivity()).showLoadDialog();
+                                new AsyncTaskDeletePerdido().execute(perdido);
+                                break;
+                        }
+                    }
+                };
+                ((PrincipalActivity) getBaseActivity()).showDialog(getBaseActivity().getString(R.string.dialog_eliminar_descripcion), onClickEliminarListener);
                 break;
         }
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.textView_cancelar:
-                        isDialogOpen = false;
-                        mDialogContainer.setVisibility(View.GONE);
-                        break;
-                    case R.id.textView_confirmar:
-                        new AsyncTaskDeletePerdido().execute(perdido);
-
-
-                        break;
-                }
-            }
-        };
-        mTextViewCancelar.setOnClickListener(onClickListener);
-        mTextViewConfirmar.setOnClickListener(onClickListener);
-
     }
 
-    private class AsyncTaskDeletePerdido extends AsyncTask<Perdidos, Perdidos, Perdidos> {
+
+    private class AsyncPublicacionSolucionada extends AsyncTask<String, Void, Void> {
         private boolean error = false;
+        private String perdidoId = "";
 
         @Override
-        protected Perdidos doInBackground(Perdidos... params) {
-            IPerdidosImpl iPerdidos = new IPerdidosImpl(getBaseActivity());
+        protected Void doInBackground(String... params) {
+            perdidoId = params[0];
+            IEstadosImpl iEstados = new IEstadosImpl(getBaseActivity());
             try {
-                iPerdidos.deletePerdido(params[0].getObjectId());
-            } catch (ParseException e) {
-                getBaseActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        error = true;
-                    }
-                });
-
+                iEstados.cambiarEstado(perdidoId, true);
+            } catch (Exception e) {
+                error = true;
             }
-            return params[0];
+            return null;
         }
 
         @Override
-        protected void onPostExecute(Perdidos perdido) {
-            super.onPostExecute(perdido);
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            ((PrincipalActivity) getBaseActivity()).closeDialog();
             if (!error) {
-                mDialogContainer.setVisibility(View.GONE);
-                isDialogOpen = false;
+                List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
+                for (int x = 0; x< perdidos.size(); x++) {
+                    if (perdidoId.equals(perdidos.get(x).getObjectId())) {
+                        perdidos.remove(x);
+                    }
+                }
+                mAdapterAnimales.notifyDataSetChanged();
+                Toast.makeText(getBaseActivity(), "Estado modificado con éxito!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getBaseActivity(), "No se modificar el estado de la publicación", Toast.LENGTH_LONG).show();
+            }
+
+        }
+
+    }
+    private class AsyncTaskDeletePerdido extends AsyncTask<Perdidos, Void, Void> {
+        private boolean error = false;
+        private Perdidos perdido = null;
+
+        @Override
+        protected Void doInBackground(Perdidos... params) {
+            perdido = params[0];
+            IPerdidosImpl iPerdidos = new IPerdidosImpl(getBaseActivity());
+            try {
+                iPerdidos.deletePerdido(perdido.getObjectId());
+            } catch (ParseException e) {
+                error = true;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            ((PrincipalActivity) getBaseActivity()).closeDialog();
+            if (!error) {
                 List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
                 for (int x = 0; x < perdidos.size(); x++) {
                     if (perdido.getObjectId().equals(perdidos.get(x).getObjectId())) {

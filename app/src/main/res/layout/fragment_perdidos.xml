@@ -139,8 +139,6 @@
 
         <include layout="@layout/swipe_refresh_layout" />
 
-        <include layout="@layout/dialog_confirmar_cancelar" />
-
         <TextView
             android:id="@+id/empty_publicaciones"
             style="@style/condensed_bold_22"

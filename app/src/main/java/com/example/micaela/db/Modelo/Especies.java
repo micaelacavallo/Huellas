@@ -72,7 +72,7 @@ public class Especies implements Parcelable{
     public static int returnPositionElement (List<Especies> especies, String especie) {
         int position = -1;
         for (int x = 0; x<especies.size(); x++) {
-            if (especies.get(0).getEspecie().equals(especie)) {
+            if (especies.get(x).getEspecie().equals(especie)) {
                 position = x;
             }
         }
