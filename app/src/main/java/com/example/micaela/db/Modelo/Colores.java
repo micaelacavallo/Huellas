@@ -3,8 +3,7 @@ package com.example.micaela.db.Modelo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.parse.ParseClassName;
-import com.parse.ParseObject;
+import java.util.List;
 
 /**
  * Created by Quimey on 13/09/2015.
@@ -68,4 +67,14 @@ public class Colores implements Parcelable{
             return new Colores[size];
         }
     };
+
+    public static int returnPositionElement (List<Colores> colores, String color) {
+        int position = -1;
+        for (int x = 0; x<colores.size(); x++) {
+            if (colores.get(0).getColor().equals(color)) {
+                position = x;
+            }
+        }
+        return position;
+    }
 }

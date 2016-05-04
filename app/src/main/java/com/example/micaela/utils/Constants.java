@@ -11,7 +11,7 @@ public class Constants {
     //  DETALLE PUBLICACION
     public static final String FROM_FRAGMENT = "FROM_FRAGMENT";
     public static final String PERDIDOS = "PERDIDOS";
-    public static final String ADICIONALES ="ADICIONALES";
+    public static final String ADICIONALES = "ADICIONALES";
     public static final String ADICIONALES_INFO = "ADICIONALES_INFO";
     public static final String ADICIONALES_DONACIONES = "ADICIONALES_DONACINES";
     public static final String LATITUD = "LATITUD";
@@ -27,7 +27,7 @@ public class Constants {
     public static final String ACCESS_TOKEN_FCB = "Access Token";
     public static final String PROFILE_NAME = "Profile Name";
     public static final String PROFILE_IMAGE = "Profile Image";
-    public static final String PROFILE_EMAIL = "Profile Email" ;
+    public static final String PROFILE_EMAIL = "Profile Email";
     public static final String PROFILE_GENDER = "Profile Gender";
     public static final String PROFILE_LOCATION = "Profile Location";
     public static final String PROFILE_BIRTHDAY = "Profile Birthday";
@@ -48,10 +48,12 @@ public class Constants {
     public static final String EXTRA_ASPECTX = "aspectX";
     public static final String EXTRA_ASPECTY = "aspectY";
     public static final String EXTRA_OUTPUTX = "outputX";
-    public static final String EXTRA_OUTPUTY= "outputY";
-    public static final String EXTRA_RETURN_DATA= "return-data";
-    public static final String DATA= "data";
-
+    public static final String EXTRA_OUTPUTY = "outputY";
+    public static final String EXTRA_RETURN_DATA = "return-data";
+    public static final String DATA = "data";
+    public static final String ACTION = "Action";
+    public static final String EDITAR = "Editar";
+    public static final String ALTA = "Alta";
 
     // COMENTARIOS
     public static final String COMENTARIOS_DATE_FORMAT = "dd/MM HH:mm";

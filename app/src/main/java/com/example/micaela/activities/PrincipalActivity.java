@@ -222,6 +222,7 @@ public class PrincipalActivity extends BaseActivity {
                         intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_INFO);
                         break;
                 }
+                intent.putExtra(Constants.ACTION, Constants.ALTA);
                 startActivity(intent);
             }
         });

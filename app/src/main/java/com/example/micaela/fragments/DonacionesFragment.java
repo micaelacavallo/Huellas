@@ -1,5 +1,6 @@
 package com.example.micaela.fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.micaela.activities.AltaAnimalesActivity;
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.adapters.AdicionalesAdapter;
 import com.example.micaela.db.Controladores.IAdicionalesImpl;
@@ -20,6 +22,7 @@ import com.example.micaela.db.Interfaces.IAdicionales;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.huellas.R;
+import com.example.micaela.utils.Constants;
 import com.parse.ParseException;
 
 import java.util.List;
@@ -141,10 +144,24 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
 
 
     @Override
-    public void updateDataSetAdapterPublicaciones(Object objeto) {
+    public void addElementAdapterPublicaciones(Object objeto) {
         adicionales.add(0, (Adicionales) objeto);
         mAdapterAdicionales.notifyDataSetChanged();
         Toast.makeText(getBaseActivity(), "Publicación realizada con éxito!", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void updateElementAdapterPublicacion(Object object) {
+        for (Adicionales adicional : adicionales) {
+            if (adicional.getObjectId().equals(((Adicionales) object).getObjectId())) {
+                adicional.setFoto(((Adicionales) object).getFoto());
+                adicional.setDescripcion(((Adicionales) object).getDescripcion());
+                adicional.setTitulo(((Adicionales) object).getTitulo());
+            }
+        }
+
+        mAdapterAdicionales.notifyDataSetChanged();
+        Toast.makeText(getBaseActivity(), "Publicación editada con éxito!", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -186,6 +203,11 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
     public void onClickItem(int idItem, final Adicionales adicional) {
         switch (idItem) {
             case R.id.item_editar:
+                Intent intent = new Intent(getBaseActivity(), AltaAnimalesActivity.class);
+                intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
+                intent.putExtra(Constants.ACTION, Constants.EDITAR);
+                intent.putExtra(Constants.OBJETO_PERDIDO, adicional);
+                getBaseActivity().startActivity(intent);
                 break;
             case R.id.item_reportar_publicacion:
                 break;

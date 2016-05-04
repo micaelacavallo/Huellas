@@ -55,13 +55,20 @@ import java.util.List;
 
 public class AltaAnimalesFragment extends BaseFragment {
 
+    private List<Razas> mRazas;
+    private List<Especies> mEspecies;
+    private List<Tamaños> mTamanios;
+    private List<Edades> mEdades;
+    private List<Colores> mColores;
+    private List<Estados> mEstados;
+    private List<Sexos> mSexos;
+
     private TextView mTextViewTakePicture;
     private TextView mTextViewSelectPicture;
     private View mViewDialogCamera;
     private boolean mIsDialogVisible = false;
 
     private ImageView mImageViewFoto;
-    private View mLayoutUbicacionContainer;
     private Spinner mSpinnerEdades;
     private Spinner mSpinnerRazas;
     private Spinner mSpinnerEspecies;
@@ -93,6 +100,7 @@ public class AltaAnimalesFragment extends BaseFragment {
     private Location mLastLocation;
 
     private String mFromFragment;
+    private String mAction;
     private boolean mIsEverythingOK = true;
     private boolean mIsLocationOK = true;
 
@@ -106,24 +114,27 @@ public class AltaAnimalesFragment extends BaseFragment {
     private Adicionales mAdicionales;
     private Perdidos mPerdidos;
 
+    private Adicionales mAdicionalEdit;
+    private Perdidos mPerdidoEdit;
+
     private AdapterCallback mAdapterCallback;
 
     public interface AdapterCallback {
-        void updateDataSetAdapterPublicaciones(Object object);
+        void addElementAdapterPublicaciones(Object object);
+
+        void updateElementAdapterPublicacion(Object object);
     }
 
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_alta_animales, container, false);
-
-        getBaseActivity().setUpCollapsingToolbar(getBaseActivity().getString(R.string.crear_publicacion));
-
         mIPerdidosImpl = new IPerdidosImpl(getBaseActivity());
         mIAdicionalesImpl = new IAdicionalesImpl(getBaseActivity());
         mIPersonasImpl = new IPersonasImpl(getBaseActivity());
         wireUpViews();
 
         mFromFragment = getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT);
+        mAction = getBaseActivity().getIntent().getStringExtra(Constants.ACTION);
         if (mFromFragment.equals(Constants.PERDIDOS)) {
             setUpSpinners();
             mAdapterCallback = PerdidosFragment.getInstance();
@@ -131,7 +142,6 @@ public class AltaAnimalesFragment extends BaseFragment {
             mRootView.findViewById(R.id.layout_detalle_mascota_container).setVisibility(View.GONE);
             mRootView.findViewById(R.id.layout_estado_container).setVisibility(View.GONE);
             mRootView.findViewById(R.id.layout_ubicacion_container).setVisibility(View.GONE);
-
             if (mFromFragment.equals(Constants.ADICIONALES_DONACIONES)) {
 
                 mAdapterCallback = DonacionesFragment.getInstance();
@@ -139,18 +149,63 @@ public class AltaAnimalesFragment extends BaseFragment {
                 mAdapterCallback = InformacionUtilFragment.getInstance();
             }
         }
+
+        if (mAction.equals(Constants.EDITAR)) {
+            getBaseActivity().showOverlay("Cargando...");
+            getBaseActivity().setUpCollapsingToolbar(getBaseActivity().getString(R.string.editar_publicacion));
+            populateViews();
+        } else {
+            getBaseActivity().setUpCollapsingToolbar(getBaseActivity().getString(R.string.crear_publicacion));
+        }
         return mRootView;
 
     }
 
+    private void populateViews() {
+        mButtonPublicar.setText("Editar");
+        mImageViewFoto.setTag(false);
+        if (mFromFragment.equals(Constants.PERDIDOS)) {
+            mPerdidoEdit = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
+            mImageViewFoto.setImageBitmap(getBaseActivity().convertFromByteToBitmap(mPerdidoEdit.getFoto()));
+            mEditTextDescripcion.setText(mPerdidoEdit.getDescripcion());
+            mEditTextTitulo.setText(mPerdidoEdit.getTitulo());
+            mEditTextTelefono.setEnabled(true);
+            mEditTextTelefono.setText(HuellasApplication.getInstance().getProfileTelefono());
+            Address address = getBaseActivity().getLocation(mPerdidoEdit.getLatitud(), mPerdidoEdit.getLongitud());
+            try {
+                mEditTextDireccion.setText(address.getThoroughfare());
+                mEditTextNumero.setText(address.getSubThoroughfare());
+            } catch (NullPointerException e) {
+                mEditTextDireccion.setText("");
+                mEditTextNumero.setText("");
+            }
+            mSpinnerEdades.setSelection(Edades.returnPositionElement(mEdades, mPerdidoEdit.getEdad().getEdad()));
+            mSpinnerRazas.setSelection(Razas.returnPositionElement(mRazas, mPerdidoEdit.getRaza().getmRaza(), mPerdidoEdit.getEspecie().getEspecie()));
+            mSpinnerEspecies.setSelection(Especies.returnPositionElement(mEspecies, mPerdidoEdit.getEspecie().getEspecie()));
+            mSpinnerTamanios.setSelection(Tamaños.returnPositionElement(mTamanios, mPerdidoEdit.getTamaño().getTamaño()));
+            mSpinnerColores.setSelection(Colores.returnPositionElement(mColores, mPerdidoEdit.getColor().getColor()));
+            mSpinnerSexos.setSelection(Sexos.returnPositionElement(mSexos, mPerdidoEdit.getSexo().getSexo()));
+            mSpinnerEstado.setSelection(Estados.returnPositionElement(mEstados, mPerdidoEdit.getEstado().getSituacion()));
+        } else {
+            mAdicionalEdit = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
+            mImageViewFoto.setImageBitmap(getBaseActivity().convertFromByteToBitmap(mAdicionalEdit.getFoto()));
+            mEditTextDescripcion.setText(mAdicionalEdit.getDescripcion());
+            mEditTextTitulo.setText(mAdicionalEdit.getTitulo());
+            mEditTextTelefono.setEnabled(true);
+            mEditTextTelefono.setText(HuellasApplication.getInstance().getProfileTelefono());
+
+        }
+        getBaseActivity().hideOverlay();
+    }
+
     private void setUpSpinners() {
-        final List<Razas> mRazas = HuellasApplication.getInstance().getmRazas();
-        List<Especies> mEspecies = HuellasApplication.getInstance().getmEspecies();
-        List<Tamaños> mTamanios = HuellasApplication.getInstance().getmTamanios();
-        List<Edades> mEdades = HuellasApplication.getInstance().getmEdades();
-        List<Colores> mColores = HuellasApplication.getInstance().getmColores();
-        List<Estados> mEstados = HuellasApplication.getInstance().getmEstados();
-        List<Sexos> mSexos = HuellasApplication.getInstance().getmSexos();
+        mRazas = HuellasApplication.getInstance().getmRazas();
+        mEspecies = HuellasApplication.getInstance().getmEspecies();
+        mTamanios = HuellasApplication.getInstance().getmTamanios();
+        mEdades = HuellasApplication.getInstance().getmEdades();
+        mColores = HuellasApplication.getInstance().getmColores();
+        mEstados = HuellasApplication.getInstance().getmEstados();
+        mSexos = HuellasApplication.getInstance().getmSexos();
 
         mSpinnerRazas = (Spinner) mRootView.findViewById(R.id.spinner_razas);
         mSpinnerEdades = (Spinner) mRootView.findViewById(R.id.spinner_edades);
@@ -384,6 +439,7 @@ public class AltaAnimalesFragment extends BaseFragment {
         mButtonPublicar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mTextViewError.setVisibility(View.GONE);
                 if (mFromFragment.equals(Constants.PERDIDOS)) {
                     if (TextUtils.isEmpty(mEditTextTitulo.getText()) ||
                             TextUtils.isEmpty(mEditTextDescripcion.getText()) ||
@@ -415,9 +471,13 @@ public class AltaAnimalesFragment extends BaseFragment {
                                     .duration(700)
                                     .playOn(mTextViewError);
                         } else {
-                            (getBaseActivity()).showOverlay(getString(R.string.publicando));
+                            if (mAction.equals(Constants.ALTA)) {
+                                (getBaseActivity()).showOverlay(getString(R.string.publicando));
+                            } else {
+                                (getBaseActivity()).showOverlay(getString(R.string.editando));
+                            }
                             HuellasApplication.getInstance().saveProfileTelefono(mEditTextTelefono.getText().toString());
-                            new AsyncTaskRegistrarUsuario().execute(mEditTextTelefono.getText().toString());
+                            new AsyncTaskModificarTelUsuario().execute(mEditTextTelefono.getText().toString());
                         }
                     } else {
                         mIsEverythingOK = true;
@@ -450,9 +510,13 @@ public class AltaAnimalesFragment extends BaseFragment {
                                     .duration(700)
                                     .playOn(mTextViewError);
                         } else {
-                            (getBaseActivity()).showOverlay(getString(R.string.publicando));
+                            if (mAction.equals(Constants.ALTA)) {
+                                (getBaseActivity()).showOverlay(getString(R.string.publicando));
+                            } else {
+                                (getBaseActivity()).showOverlay(getString(R.string.editando));
+                            }
                             HuellasApplication.getInstance().saveProfileTelefono(mEditTextTelefono.getText().toString());
-                            new AsyncTaskRegistrarUsuario().execute(mEditTextTelefono.getText().toString());
+                            new AsyncTaskModificarTelUsuario().execute(mEditTextTelefono.getText().toString());
                         }
                     } else {
                         mIsEverythingOK = true;
@@ -467,7 +531,7 @@ public class AltaAnimalesFragment extends BaseFragment {
         });
     }
 
-    private class AsyncTaskRegistrarUsuario extends AsyncTask<String, Void, Void> {
+    private class AsyncTaskModificarTelUsuario extends AsyncTask<String, Void, Void> {
         private boolean error = false;
 
         @Override
@@ -488,25 +552,41 @@ public class AltaAnimalesFragment extends BaseFragment {
                         mPerdidos.setLongitud(latLng.longitude);
                     }
                     mPerdidos.setEspecie(new Especies(mSpinnerEspecies.getSelectedItem().toString()));
-                    mPerdidos.setFecha(new Date());
                     mPerdidos.setRaza(new Razas(mSpinnerRazas.getSelectedItem().toString()));
                     mPerdidos.setSexo(new Sexos(mSpinnerSexos.getSelectedItem().toString()));
-                    Personas personas = new Personas(HuellasApplication.getInstance().getProfileEmailFacebook());
-                    mPerdidos.setPersona(personas);
+                    if (mAction.equals(Constants.ALTA)) {
+                        mPerdidos.setFecha(new Date());
+                        Personas personas = new Personas(HuellasApplication.getInstance().getProfileEmailFacebook());
+                        mPerdidos.setPersona(personas);
+                    }
+                    else {
+                        mPerdidos.setObjectId(mPerdidoEdit.getObjectId());
+                        mPerdidos.setFecha(mPerdidoEdit.getFecha());
+                        mPerdidos.setPersona(mPerdidoEdit.getPersona());
+                        mPerdidos.setComentarios(mPerdidoEdit.getComentarios());
+                    }
                     new AsyncTaskSavePublicacionPerdido().execute(mPerdidos);
                 } else {
                     mAdicionales = new Adicionales();
                     mAdicionales.setFoto(getBaseActivity().convertFromBitmapToByte(((BitmapDrawable) mImageViewFoto.getDrawable()).getBitmap()));
                     mAdicionales.setDescripcion(mEditTextDescripcion.getText().toString());
                     mAdicionales.setTitulo(mEditTextTitulo.getText().toString());
-                    if (mFromFragment.equals(Constants.ADICIONALES_DONACIONES)) {
-                        mAdicionales.setDonacion(true);
+                    if (mAction.equals(Constants.ALTA)) {
+                        if (mFromFragment.equals(Constants.ADICIONALES_DONACIONES)) {
+                            mAdicionales.setDonacion(true);
+                        } else {
+                            mAdicionales.setDonacion(false);
+                        }
+                        mAdicionales.setFecha(new Date());
+                        Personas personas = new Personas(HuellasApplication.getInstance().getProfileEmailFacebook());
+                        mAdicionales.setPersona(personas);
                     } else {
-                        mAdicionales.setDonacion(false);
+                        mAdicionales.setObjectId(mAdicionalEdit.getObjectId());
+                        mAdicionales.setDonacion(mAdicionalEdit.isDonacion());
+                        mAdicionales.setFecha(mAdicionalEdit.getFecha());
+                        mAdicionales.setPersona(mAdicionalEdit.getPersona());
+                        mAdicionales.setComentarios(mAdicionalEdit.getComentarios());
                     }
-                    mAdicionales.setFecha(new Date());
-                    Personas personas = new Personas(HuellasApplication.getInstance().getProfileEmailFacebook());
-                    mAdicionales.setPersona(personas);
                     new AsyncTaskSavePublicacionAdicional().execute(mAdicionales);
                 }
             } else {
@@ -517,7 +597,7 @@ public class AltaAnimalesFragment extends BaseFragment {
         @Override
         protected Void doInBackground(String... params) {
             try {
-                mIPersonasImpl.editTelefono("", params[0]);
+                mIPersonasImpl.editTelefono(HuellasApplication.getInstance().getProfileEmailFacebook(), params[0]);
             } catch (Exception e) {
                 error = true;
             }
@@ -532,7 +612,12 @@ public class AltaAnimalesFragment extends BaseFragment {
         @Override
         protected Adicionales doInBackground(Adicionales... params) {
             try {
-                return mIAdicionalesImpl.saveAdicional(params[0]);
+                if (mAction.equals(Constants.ALTA)) {
+                    return mIAdicionalesImpl.saveAdicional(params[0]);
+                } else {
+                    mIAdicionalesImpl.editAdicional(params[0]);
+                    return mAdicionales;
+                }
             } catch (Exception e) {
                 error = true;
                 return null;
@@ -543,12 +628,22 @@ public class AltaAnimalesFragment extends BaseFragment {
         protected void onPostExecute(Adicionales adicional) {
             super.onPostExecute(adicional);
             if (!error) {
-                mAdapterCallback.updateDataSetAdapterPublicaciones(adicional);
-                getBaseActivity().finish();
-                getBaseActivity().setResult(2);
+                if (mAction.equals(Constants.ALTA)) {
+                    mAdapterCallback.addElementAdapterPublicaciones(adicional);
+                    getBaseActivity().finish();
+                    getBaseActivity().setResult(2);
+                } else {
+                    mAdapterCallback.updateElementAdapterPublicacion(adicional);
+                    getBaseActivity().finish();
+                    getBaseActivity().setResult(3);
+                }
             } else {
-                getBaseActivity().hideKeyboard();
-                Toast.makeText(getBaseActivity(), "No se pudo dar de alta la publicación.", Toast.LENGTH_LONG).show();
+                getBaseActivity().hideOverlay();
+                if (mAction.equals(Constants.ALTA)) {
+                    Toast.makeText(getBaseActivity(), "No se pudo dar de alta la publicación.", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getBaseActivity(), "No se pudo editar la publicación.", Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
@@ -559,7 +654,12 @@ public class AltaAnimalesFragment extends BaseFragment {
         @Override
         protected Perdidos doInBackground(Perdidos... params) {
             try {
-                return mIPerdidosImpl.savePerdido(params[0]);
+                if (mAction.equals(Constants.ALTA)) {
+                    return mIPerdidosImpl.savePerdido(params[0]);
+                } else {
+                    mIPerdidosImpl.editPerdido(params[0]);
+                    return mPerdidos;
+                }
             } catch (Exception e) {
                 error = true;
                 return null;
@@ -570,12 +670,22 @@ public class AltaAnimalesFragment extends BaseFragment {
         protected void onPostExecute(Perdidos perdidos) {
             super.onPostExecute(perdidos);
             if (!error) {
-                getBaseActivity().finish();
-                getBaseActivity().setResult(2);
-                mAdapterCallback.updateDataSetAdapterPublicaciones(perdidos);
+                if (mAction.equals(Constants.ALTA)) {
+                    mAdapterCallback.addElementAdapterPublicaciones(perdidos);
+                    getBaseActivity().finish();
+                    getBaseActivity().setResult(2);
+                } else {
+                    mAdapterCallback.updateElementAdapterPublicacion(perdidos);
+                    getBaseActivity().finish();
+                    getBaseActivity().setResult(3);
+                }
             } else {
-                getBaseActivity().hideKeyboard();
-                Toast.makeText(getBaseActivity(), "No se pudo dar de alta la publicación.", Toast.LENGTH_LONG).show();
+                getBaseActivity().hideOverlay();
+                if (mAction.equals(Constants.ALTA)) {
+                    Toast.makeText(getBaseActivity(), "No se pudo dar de alta la publicación.", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getBaseActivity(), "No se pudo editar la publicación.", Toast.LENGTH_LONG).show();
+                }
             }
         }
 
@@ -608,10 +718,10 @@ public class AltaAnimalesFragment extends BaseFragment {
         Intent cropIntent = new Intent(Constants.IMAGE_CROP);
         cropIntent.setDataAndType(picUri, Constants.URI_NAME);
         cropIntent.putExtra(Constants.EXTRA_CROP, "true");
-        cropIntent.putExtra(Constants.EXTRA_ASPECTX, mImageViewFoto.getWidth() + 500);
-        cropIntent.putExtra(Constants.EXTRA_ASPECTY, mImageViewFoto.getHeight() + 500);
-        cropIntent.putExtra(Constants.EXTRA_OUTPUTX, mImageViewFoto.getWidth());
-        cropIntent.putExtra(Constants.EXTRA_OUTPUTY, mImageViewFoto.getHeight());
+        cropIntent.putExtra(Constants.EXTRA_ASPECTX, 1);
+        cropIntent.putExtra(Constants.EXTRA_ASPECTY, 1);
+        cropIntent.putExtra(Constants.EXTRA_OUTPUTX, 400);
+        cropIntent.putExtra(Constants.EXTRA_OUTPUTY, 400);
         cropIntent.putExtra(Constants.EXTRA_RETURN_DATA, true);
         startActivityForResult(cropIntent, CROP_PIC);
     }

@@ -169,10 +169,10 @@ public class PersonasDAO implements IPersonas {
     }
 
     @Override
-    public void editTelefono(String objectId, String telefono) {
+    public void editTelefono(String email, String telefono) {
 
         query = ParseQuery.getQuery(Clases.PERSONAS);
-        query.whereEqualTo(CPersonas.OBJECT_ID, objectId);
+        query.whereEqualTo(CPersonas.EMAIL, email);
 
         try {
             if(query.count() != 0) {

@@ -36,6 +36,8 @@
     <string name="buscar">Buscar</string>
     <string name="title_activity_comentarios">ComentariosActivity</string>
     <string name="comentar">Comentar</string>
+    <string name="editar_publicacion">Editar publicación</string>
+    <string name="editando">Editando publicación</string>
     google_api_key
 
 </resources>

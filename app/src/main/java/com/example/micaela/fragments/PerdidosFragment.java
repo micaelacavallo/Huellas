@@ -1,5 +1,6 @@
 package com.example.micaela.fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.micaela.HuellasApplication;
+import com.example.micaela.activities.AltaAnimalesActivity;
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.adapters.AnimalesAdapter;
 import com.example.micaela.adapters.CustomSpinnerHintAdapter;
@@ -34,6 +36,7 @@ import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.huellas.R;
+import com.example.micaela.utils.Constants;
 import com.parse.ParseException;
 
 import java.util.ArrayList;
@@ -358,12 +361,35 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
     }
 
     @Override
-    public void updateDataSetAdapterPublicaciones(Object objeto) {
+    public void addElementAdapterPublicaciones(Object objeto) {
         List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
         perdidos.add(0, (Perdidos) objeto);
         mAdapterAnimales.notifyDataSetChanged();
         Toast.makeText(getBaseActivity(), "Publicación realizada con éxito!", Toast.LENGTH_LONG).show();
     }
+
+    @Override
+    public void updateElementAdapterPublicacion(Object object) {
+        for (Perdidos perdido :  HuellasApplication.getInstance().getmPerdidos()) {
+            if (perdido.getObjectId().equals(((Perdidos) object).getObjectId())) {
+                perdido.setFoto(((Perdidos) object).getFoto());
+                perdido.setDescripcion(((Perdidos) object).getDescripcion());
+                perdido.setTitulo(((Perdidos) object).getTitulo());
+                perdido.setColor(((Perdidos) object).getColor());
+                perdido.setEstado(((Perdidos) object).getEstado());
+                perdido.setEdad(((Perdidos) object).getEdad());
+                perdido.setTamaño(((Perdidos) object).getTamaño());
+                perdido.setLatitud(((Perdidos) object).getLatitud());
+                perdido.setLongitud(((Perdidos) object).getLongitud());
+                perdido.setEspecie(((Perdidos) object).getEspecie());
+                perdido.setRaza(((Perdidos) object).getRaza());
+                perdido.setSexo(((Perdidos) object).getSexo());
+            }
+            Toast.makeText(getBaseActivity(), "Publicación editada con éxito!", Toast.LENGTH_LONG).show();
+        }
+        mAdapterAnimales.notifyDataSetChanged();
+    }
+
 
     @Override
     public void updateDataSetAdapterComentarios(Comentarios comentario, Object object) {
@@ -380,6 +406,12 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
     public void onClickItem(int idItem, final Perdidos perdido) {
         switch (idItem) {
             case R.id.item_editar:
+                getBaseActivity().showOverlay("Cargando...");
+                Intent intent = new Intent(getBaseActivity(), AltaAnimalesActivity.class);
+                intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
+                intent.putExtra(Constants.ACTION, Constants.EDITAR);
+                intent.putExtra(Constants.OBJETO_PERDIDO, perdido);
+                getBaseActivity().startActivity(intent);
                 break;
             case R.id.item_reportar_publicacion:
                 break;
