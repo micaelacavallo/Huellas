@@ -129,4 +129,9 @@ public class IPerdidosImpl implements IPerdidos {
     public ParseObject getParseObjectById(String objectId){
         return mPerdidosDAO.getParseObjectById(objectId);
     }
+
+    @Override
+    public void bloquearPerdido(String objectId) {
+        mPerdidosDAO.bloquearPerdido(objectId);
+    }
 }

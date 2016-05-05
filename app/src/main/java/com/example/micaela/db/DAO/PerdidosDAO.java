@@ -35,6 +35,7 @@ import com.example.micaela.db.Modelo.Personas;
 import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.db.Modelo.Sexos;
 import com.example.micaela.db.Modelo.Tamaños;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -250,7 +251,11 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public Perdidos savePerdido(Perdidos perdido) throws ParseException {
 
-        //VALIDAR EN FE
+        savePerdidoParseObject(perdido);
+        return getPublicacionPerdidosById(getUltimoObjectId(Clases.PERDIDOS));
+    }
+
+    public void savePerdidoParseObject(Perdidos perdido){
         perdidosObject.put(CPerdidos.TITULO, perdido.getTitulo());
         perdidosObject.put(CPerdidos.DESCRIPCION, perdido.getDescripcion());
         perdidosObject.put(CPerdidos.FECHA, perdido.getFecha());
@@ -282,8 +287,6 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         perdidosObject.put(CPerdidos.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
 
         save(perdidosObject);
-
-        return getPublicacionPerdidosById(getUltimoObjectId(Clases.PERDIDOS));
     }
 
     public ParseObject cargarPerdido(Perdidos perdido) {
@@ -306,9 +309,8 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
 
     @Override
     public void editPerdido(Perdidos perdido) throws ParseException {
-        objectAux = cargarPerdido(perdido);
-        deletePerdido(perdido.getObjectId());
-        savePerdido(perdido);
+
+        savePerdidoParseObject(perdido);
     }
 
 
@@ -630,6 +632,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         object.put(CComentarios.COMENTARIO, comentario);
         object.put(CComentarios.LEIDO, false);
         object.put(CComentarios.FECHA, new Date());
+        object.put(CComentarios.BLOQUEADO, false);
         persona = mPersonasImpl.getPersonabyEmail(email);
         object.put(CComentarios.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
         save(object);
@@ -697,6 +700,22 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         return objectAux;
 
+    }
+
+    @Override
+    public void bloquearPerdido(String objectId) {
+        query = ParseQuery.getQuery(Clases.PERDIDOS);
+        query.whereEqualTo(CPerdidos.OBJECT_ID, objectId);
+
+        try {
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+                objectAux.put(CPerdidos.BLOQUEADO, true);
+                save(objectAux);
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
     }
 
     @Override

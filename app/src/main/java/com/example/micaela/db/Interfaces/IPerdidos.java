@@ -42,4 +42,5 @@ public interface IPerdidos {
     public List<Perdidos> getPublicacionesPerdidosPropias(String objectId) throws ParseException;
     public Perdidos getPublicacionPerdidosById(String objectId) throws ParseException;
     public ParseObject getParseObjectById(String objectId);
+    public void bloquearPerdido(String objectId);
 }
