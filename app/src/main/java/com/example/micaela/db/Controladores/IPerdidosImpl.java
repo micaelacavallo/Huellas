@@ -30,7 +30,7 @@ public class IPerdidosImpl implements IPerdidos {
     }
 
     @Override
-    public Perdidos savePerdido(Perdidos perdido) throws ParseException {
+    public String savePerdido(Perdidos perdido) throws ParseException {
         return mPerdidosDAO.savePerdido(perdido);
     }
 

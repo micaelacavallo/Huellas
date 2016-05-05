@@ -31,6 +31,7 @@ import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
+import com.parse.SaveCallback;
 import com.parse.SendCallback;
 
 import org.json.JSONException;
@@ -254,14 +255,15 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     }
 
     @Override
-    public Adicionales saveAdicional(Adicionales adicional) throws ParseException {
+    public String saveAdicional(Adicionales adicional) throws ParseException {
 
-        saveAdicionalParseObject(adicional);
+        return saveAdicionalParseObject(adicional);
 
-        return getAdicionalById(getUltimoObjectId(Clases.ADICIONALES));
     }
 
-    public void saveAdicionalParseObject(Adicionales adicional){
+    public String saveAdicionalParseObject(Adicionales adicional){
+        final String[] objectID = {""};
+
         adicionalObject.put(CAdicionales.TITULO, adicional.getTitulo());
         adicionalObject.put(CAdicionales.DESCRIPCION, adicional.getDescripcion());
         adicionalObject.put(CAdicionales.FECHA, adicional.getFecha());
@@ -279,7 +281,15 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
         adicionalObject.put(CAdicionales.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(estado.getObjectId())));
         adicionalObject.put(CAdicionales.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
-        save(adicionalObject);
+        adicionalObject.saveInBackground(new SaveCallback() {
+            public void done(ParseException e) {
+                if (e == null) {
+                    // Saved successfully.
+                    objectID[0] = adicionalObject.getObjectId();
+                }
+            }
+        });
+        return objectID[0];
     }
 
 

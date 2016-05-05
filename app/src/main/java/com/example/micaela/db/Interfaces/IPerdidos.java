@@ -2,11 +2,9 @@ package com.example.micaela.db.Interfaces;
 
 import android.content.Context;
 
-import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Edades;
 import com.example.micaela.db.Modelo.Especies;
-import com.example.micaela.db.Modelo.MotivoDenuncia;
 import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.db.Modelo.Sexos;
@@ -22,7 +20,7 @@ import java.util.List;
 public interface IPerdidos {
 
     public List<Perdidos> getPerdidos() throws ParseException;
-    public Perdidos savePerdido(Perdidos perdido) throws ParseException;
+    public String savePerdido(Perdidos perdido) throws ParseException;
     public void editPerdido(Perdidos perdido) throws ParseException;
     public Razas getRaza(String raza) throws ParseException;
     public Colores getColor(String color) throws ParseException;

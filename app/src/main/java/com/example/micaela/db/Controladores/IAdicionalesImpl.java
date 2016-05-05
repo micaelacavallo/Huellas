@@ -38,7 +38,7 @@ public class IAdicionalesImpl implements IAdicionales {
     }
 
     @Override
-    public Adicionales saveAdicional(Adicionales adicional) throws ParseException {
+    public String saveAdicional(Adicionales adicional) throws ParseException {
         return mAdicionalesDAO.saveAdicional(adicional);
     }
 

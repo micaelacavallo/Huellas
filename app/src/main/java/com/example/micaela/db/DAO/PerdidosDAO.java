@@ -42,6 +42,7 @@ import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
+import com.parse.SaveCallback;
 import com.parse.SendCallback;
 
 import org.json.JSONException;
@@ -247,13 +248,14 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
 
 
     @Override
-    public Perdidos savePerdido(Perdidos perdido) throws ParseException {
+    public String savePerdido(Perdidos perdido) throws ParseException {
 
-        savePerdidoParseObject(perdido);
-        return getPublicacionPerdidosById(getUltimoObjectId(Clases.PERDIDOS));
+        return savePerdidoParseObject(perdido);
     }
 
-    public String savePerdidoParseObject(Perdidos perdido){
+    public String savePerdidoParseObject(Perdidos perdido) throws ParseException{
+        final String[] objectID = {""};
+
         perdidosObject.put(CPerdidos.TITULO, perdido.getTitulo());
         perdidosObject.put(CPerdidos.DESCRIPCION, perdido.getDescripcion());
         perdidosObject.put(CPerdidos.FECHA, perdido.getFecha());
@@ -284,9 +286,15 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         perdidosObject.put(CPerdidos.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(estado.getObjectId())));
         perdidosObject.put(CPerdidos.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
 
-        save(perdidosObject);
-
-        return perdidosObject.getObjectId();
+        perdidosObject.saveInBackground(new SaveCallback() {
+            public void done(ParseException e) {
+                if (e == null) {
+                    // Saved successfully.
+                    objectID[0] = perdidosObject.getObjectId();
+                }
+            }
+        });
+        return objectID[0];
     }
 
     public ParseObject cargarPerdido(Perdidos perdido) {

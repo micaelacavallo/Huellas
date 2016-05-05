@@ -101,7 +101,6 @@ public class AltaAnimalesFragment extends BaseFragment {
     private String mFromFragment;
     private String mAction;
     private boolean mIsEverythingOK = true;
-    private boolean mIsLocationOK = true;
 
     private boolean mIsFromResource = true;
     private LatLng latLng;
@@ -443,13 +442,6 @@ public class AltaAnimalesFragment extends BaseFragment {
                         mIsEverythingOK = false;
                     }
 
-                    if (!TextUtils.isEmpty(mEditTextDireccion.getText())) {
-                        latLng = getBaseActivity().convertAddress(mEditTextDireccion.getText().toString());
-                        if (latLng == null) {
-                            mIsEverythingOK = false;
-                            mIsLocationOK = false;
-                        }
-                    }
                     if (mIsEverythingOK) {
                         if (((boolean) mImageViewFoto.getTag())) {
                             mTextViewError.setVisibility(View.VISIBLE);
@@ -468,19 +460,11 @@ public class AltaAnimalesFragment extends BaseFragment {
                         }
                     } else {
                         mIsEverythingOK = true;
-                        if (mIsLocationOK) {
                             mTextViewError.setVisibility(View.VISIBLE);
                             mTextViewError.setText("Todos los campos son requeridos.");
                             YoYo.with(Techniques.Tada)
                                     .duration(700)
                                     .playOn(mTextViewError);
-                        } else {
-                            mTextViewError.setVisibility(View.VISIBLE);
-                            mTextViewError.setText("No se pudo encontrar la ubicación ingresada, intente nuevamente.");
-                            YoYo.with(Techniques.Tada)
-                                    .duration(700)
-                                    .playOn(mTextViewError);
-                        }
                     }
                 } else {
                     if (TextUtils.isEmpty(mEditTextTitulo.getText()) ||
@@ -540,7 +524,8 @@ public class AltaAnimalesFragment extends BaseFragment {
                     mPerdidos.setSexo(new Sexos(mSpinnerSexos.getSelectedItem().toString()));
                     if (mAction.equals(Constants.ALTA)) {
                         mPerdidos.setFecha(new Date());
-                        Personas personas = new Personas(HuellasApplication.getInstance().getProfileEmailFacebook());
+                        Personas personas = new Personas("", HuellasApplication.getInstance().getProfileEmailFacebook(), HuellasApplication.getInstance().getProfileNameFacebook(),
+                                HuellasApplication.getInstance().getProfileTelefono(), false, false, "", "");
                         mPerdidos.setPersona(personas);
                     } else {
                         mPerdidos.setObjectId(mPerdidoEdit.getObjectId());
@@ -596,7 +581,8 @@ public class AltaAnimalesFragment extends BaseFragment {
             try {
                 if (mAction.equals(Constants.ALTA)) {
 
-                    return mIAdicionalesImpl.saveAdicional(params[0]);
+                    mAdicionales.setObjectId(mIAdicionalesImpl.saveAdicional(params[0]));
+                    return mAdicionales;
                 } else {
                     mIAdicionalesImpl.editAdicional(params[0]);
                     return mAdicionales;
@@ -638,7 +624,8 @@ public class AltaAnimalesFragment extends BaseFragment {
         protected Perdidos doInBackground(Perdidos... params) {
             try {
                 if (mAction.equals(Constants.ALTA)) {
-                    return  mIPerdidosImpl.savePerdido(params[0]);
+                    mPerdidos.setObjectId(mIPerdidosImpl.savePerdido(params[0]));
+                    return mPerdidos;
 
                 } else {
                     mIPerdidosImpl.editPerdido(params[0]);
