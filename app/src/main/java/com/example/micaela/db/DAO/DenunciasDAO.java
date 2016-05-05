@@ -85,6 +85,7 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDBLocal {
             ParseObject objectAux = new ParseObject(Clases.DENUNCIAS);
             objectAux.put(CDenuncias.FECHA, new Date());
             objectAux.put(CDenuncias.ID_REFERENCIA, id);
+            objectAux.put(CDenuncias.CONTADOR, 1);
             if(tabla.equals("Personas")){
             objectAux.put(CDenuncias.IS_USER, true);
             }else {
@@ -94,6 +95,12 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDBLocal {
             objectAux.put(CDenuncias.TABLA, tabla);
             objectAux.put(CDenuncias.MOTIVO_DENUNCIA, ParseObject.createWithoutData(Clases.MOTIVODENUNCIA, String.valueOf(motivoDenuncia.getmObjectId())));
 
+            save(objectAux);
+        }
+        else{
+            objectAux = query.getFirst();
+            int contador = objectAux.getInt(CDenuncias.CONTADOR);
+            objectAux.put(CPerdidos.SOLUCIONADO, contador++);
             save(objectAux);
         }
 
