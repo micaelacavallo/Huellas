@@ -35,10 +35,8 @@ import com.example.micaela.db.Modelo.Personas;
 import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.db.Modelo.Sexos;
 import com.example.micaela.db.Modelo.Tamaños;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
@@ -255,7 +253,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         return getPublicacionPerdidosById(getUltimoObjectId(Clases.PERDIDOS));
     }
 
-    public void savePerdidoParseObject(Perdidos perdido){
+    public String savePerdidoParseObject(Perdidos perdido){
         perdidosObject.put(CPerdidos.TITULO, perdido.getTitulo());
         perdidosObject.put(CPerdidos.DESCRIPCION, perdido.getDescripcion());
         perdidosObject.put(CPerdidos.FECHA, perdido.getFecha());
@@ -263,7 +261,9 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         perdidosObject.put(CPerdidos.UBICACION, perdido.getUbicacion());
         perdidosObject.put(CPerdidos.SOLUCIONADO, false);
         perdidosObject.put(CPerdidos.BLOQUEADO, false);
-
+        if(perdido.getObjectId() != null) {
+            perdidosObject.put(CPerdidos.OBJECT_ID, perdido.getObjectId());
+        }
 
         try {
             raza = getRaza(perdido.getRaza().getRaza());
@@ -287,6 +287,8 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         perdidosObject.put(CPerdidos.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
 
         save(perdidosObject);
+
+        return perdidosObject.getObjectId();
     }
 
     public ParseObject cargarPerdido(Perdidos perdido) {

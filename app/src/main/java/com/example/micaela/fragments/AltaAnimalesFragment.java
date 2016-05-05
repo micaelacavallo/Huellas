@@ -426,6 +426,7 @@ public class AltaAnimalesFragment extends BaseFragment {
         mButtonPublicar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getBaseActivity().hideKeyboard();
                 mTextViewError.setVisibility(View.GONE);
                 if (mFromFragment.equals(Constants.PERDIDOS)) {
                     if (TextUtils.isEmpty(mEditTextTitulo.getText()) ||
@@ -594,6 +595,7 @@ public class AltaAnimalesFragment extends BaseFragment {
         protected Adicionales doInBackground(Adicionales... params) {
             try {
                 if (mAction.equals(Constants.ALTA)) {
+
                     return mIAdicionalesImpl.saveAdicional(params[0]);
                 } else {
                     mIAdicionalesImpl.editAdicional(params[0]);
@@ -636,7 +638,8 @@ public class AltaAnimalesFragment extends BaseFragment {
         protected Perdidos doInBackground(Perdidos... params) {
             try {
                 if (mAction.equals(Constants.ALTA)) {
-                    return mIPerdidosImpl.savePerdido(params[0]);
+                    return  mIPerdidosImpl.savePerdido(params[0]);
+
                 } else {
                     mIPerdidosImpl.editPerdido(params[0]);
                     return mPerdidos;

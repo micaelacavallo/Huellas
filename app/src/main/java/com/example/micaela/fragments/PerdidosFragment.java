@@ -350,7 +350,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
         List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
         perdidos.add(0, (Perdidos) objeto);
         mAdapterAnimales.notifyDataSetChanged();
-        Toast.makeText(getBaseActivity(), "Publicación realizada con éxito!", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseActivity(), "Publicación realizada con éxito!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -368,8 +368,8 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
                 perdido.setEspecie(((Perdidos) object).getEspecie());
                 perdido.setRaza(((Perdidos) object).getRaza());
                 perdido.setSexo(((Perdidos) object).getSexo());
+                Toast.makeText(getBaseActivity(), "Publicación editada con éxito!", Toast.LENGTH_SHORT).show();
             }
-            Toast.makeText(getBaseActivity(), "Publicación editada con éxito!", Toast.LENGTH_LONG).show();
         }
         mAdapterAnimales.notifyDataSetChanged();
     }

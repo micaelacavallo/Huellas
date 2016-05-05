@@ -15,7 +15,6 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,7 +112,7 @@ public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGener
         return comentarios;
     }
 
-    public Comentarios getComentario(ParseObject objectAux){
+    public Comentarios getComentario(ParseObject object){
 
         objectAux = object.getParseObject(CPerdidos.ID_PERSONA);
         persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO), objectAux.getString(CPersonas.CONTRASEÑA), objectAux.getString(CPersonas.FOTO));

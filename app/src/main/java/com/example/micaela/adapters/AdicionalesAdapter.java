@@ -58,17 +58,22 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
             holder.getImageViewFoto().setImageBitmap(((BaseActivity) mContext).convertFromByteToBitmap(foto));
         }
 
-        int cantidadComentarios = mAdicionales.get(position).getComentarios().size();
-        if (cantidadComentarios > 0) {
-            if (cantidadComentarios == 1) {
-                holder.getmTextViewComentarios().setText(mContext.getString(R.string.un_comentario));
+        try {
+            int cantidadComentarios = mAdicionales.get(position).getComentarios().size();
+            if (cantidadComentarios > 0) {
+                if (cantidadComentarios == 1) {
+                    holder.getmTextViewComentarios().setText(mContext.getString(R.string.un_comentario));
+                } else {
+                    holder.getmTextViewComentarios().setText(String.format(mContext.getString(R.string.comentarios_cantidad), cantidadComentarios));
+                }
+                holder.getmTextViewComentarios().setVisibility(View.VISIBLE);
             } else {
-                holder.getmTextViewComentarios().setText(String.format(mContext.getString(R.string.comentarios_cantidad), cantidadComentarios));
+                holder.getmTextViewComentarios().setVisibility(View.GONE);
             }
-            holder.getmTextViewComentarios().setVisibility(View.VISIBLE);
-        } else {
-            holder.getmTextViewComentarios().setVisibility(View.GONE);
         }
+            catch (NullPointerException e) {
+                holder.getmTextViewComentarios().setVisibility(View.GONE);
+            }
 
         holder.getViewComentar().setOnClickListener(new View.OnClickListener() {
             @Override

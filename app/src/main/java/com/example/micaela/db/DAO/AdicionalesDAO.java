@@ -173,6 +173,8 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
     public List<ParseObject> getInfoUtilParseObject() throws ParseException {
 
+        adicionales.clear();
+
         query = getQueryForInfoUtil();
         query.orderByDescending(CAdicionales.FECHA);
         checkInternetGet(query);
@@ -205,7 +207,10 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
     public List<ParseObject> getDonacionesParseObject() throws ParseException {
 
+        adicionales.clear();
         query = getQueryForDonaciones();
+        query.orderByDescending(CAdicionales.FECHA);
+        checkInternetGet(query);
 
         listParseObject = findQuery();
 
@@ -251,6 +256,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     @Override
     public Adicionales saveAdicional(Adicionales adicional) throws ParseException {
 
+        saveAdicionalParseObject(adicional);
 
         return getAdicionalById(getUltimoObjectId(Clases.ADICIONALES));
     }
@@ -261,7 +267,6 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         adicionalObject.put(CAdicionales.FECHA, adicional.getFecha());
         adicionalObject.put(CAdicionales.BLOQUEADO, false);
         adicionalObject.put(CAdicionales.FOTOS, new ParseFile("picture.jpg", adicional.getFoto()));
-
 
         adicionalObject.put(CAdicionales.DONACION, adicional.isDonacion());
 
@@ -292,8 +297,9 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     }
 
     @Override
-    public void editAdicional(Adicionales adicional) throws ParseException {
+    public void editAdicional(Adicionales adicionalAux) throws ParseException {
 
+        adicional = getAdicionalById(adicionalAux.getObjectId());
         saveAdicionalParseObject(adicional);
     }
 

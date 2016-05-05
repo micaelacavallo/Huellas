@@ -85,6 +85,7 @@ public class Comentarios implements Parcelable {
         this.mFecha = tmpMFecha == -1 ? null : new Date(tmpMFecha);
         this.mObjectId = in.readString();
         this.mLeido = in.readByte() != 0;
+        this.mBloqueado = in.readByte() != 0;
     }
 
     public static final Parcelable.Creator<Comentarios> CREATOR = new Parcelable.Creator<Comentarios>() {

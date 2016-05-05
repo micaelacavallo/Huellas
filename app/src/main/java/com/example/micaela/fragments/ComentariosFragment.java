@@ -103,7 +103,7 @@ public class ComentariosFragment extends BaseFragment {
             public void onClick(View v) {
                 mButtonSend.setVisibility(View.GONE);
                 Comentarios comentarios = new Comentarios("", mEditTextComentario.getText().toString(),
-                        new Personas(HuellasApplication.getInstance().getProfileEmailFacebook()), new Date(), false);
+                        new Personas(HuellasApplication.getInstance().getProfileEmailFacebook()), new Date(), false, false);
                 comentarios.getPersona().setNombre(HuellasApplication.getInstance().getProfileNameFacebook());
                 comentarios.getPersona().setmFoto(HuellasApplication.getInstance().getProfileImageFacebook());
                 new AsyncTaskSaveComentario().execute(comentarios);

@@ -115,6 +115,7 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
     public void addElementAdapterPublicaciones(Object objeto) {
         adicionales.add(0, (Adicionales) objeto);
         mAdapterAdicionales.notifyDataSetChanged();
+        Toast.makeText(getBaseActivity(), "Publicación realizada con éxito!", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -124,6 +125,7 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
                 adicional.setFoto(((Adicionales) object).getFoto());
                 adicional.setDescripcion(((Adicionales) object).getDescripcion());
                 adicional.setTitulo(((Adicionales) object).getTitulo());
+                Toast.makeText(getBaseActivity(), "Publicación editada con éxito!", Toast.LENGTH_LONG).show();
             }
         }
 
