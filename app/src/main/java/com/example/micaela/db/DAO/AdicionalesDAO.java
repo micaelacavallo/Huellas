@@ -299,8 +299,24 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     @Override
     public void editAdicional(Adicionales adicionalAux) throws ParseException {
 
-        adicional = getAdicionalById(adicionalAux.getObjectId());
-        saveAdicionalParseObject(adicional);
+        query = ParseQuery.getQuery(Clases.ADICIONALES);
+        query.whereEqualTo(CAdicionales.OBJECT_ID, adicionalAux.getObjectId());
+
+        try {
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+                objectAux.put(CAdicionales.TITULO, adicionalAux.getTitulo());
+                objectAux.put(CAdicionales.DESCRIPCION, adicionalAux.getDescripcion());
+                objectAux.put(CAdicionales.FOTOS, new ParseFile("picture.jpg", adicionalAux.getFoto()));
+                objectAux.put(CAdicionales.OBJECT_ID, adicionalAux.getObjectId());
+
+                save(objectAux);
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
+
+        //saveAdicionalParseObject(adicionalAux);
     }
 
     @Override

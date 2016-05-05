@@ -261,9 +261,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         perdidosObject.put(CPerdidos.UBICACION, perdido.getUbicacion());
         perdidosObject.put(CPerdidos.SOLUCIONADO, false);
         perdidosObject.put(CPerdidos.BLOQUEADO, false);
-        if(perdido.getObjectId() != null) {
-            perdidosObject.put(CPerdidos.OBJECT_ID, perdido.getObjectId());
-        }
+
 
         try {
             raza = getRaza(perdido.getRaza().getRaza());
@@ -310,9 +308,47 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     }
 
     @Override
-    public void editPerdido(Perdidos perdido) throws ParseException {
+    public void editPerdido(Perdidos perdidoAux) throws ParseException {
 
-        savePerdidoParseObject(perdido);
+        query = ParseQuery.getQuery(Clases.PERDIDOS);
+        query.whereEqualTo(CAdicionales.OBJECT_ID, perdidoAux.getObjectId());
+
+        try {
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+                objectAux.put(CPerdidos.TITULO, perdidoAux.getTitulo());
+                objectAux.put(CPerdidos.DESCRIPCION, perdidoAux.getDescripcion());
+                objectAux.put(CPerdidos.FOTOS, new ParseFile("picture.jpg", perdidoAux.getFoto()));
+                objectAux.put(CPerdidos.OBJECT_ID, perdidoAux.getObjectId());
+                objectAux.put(CPerdidos.UBICACION, perdidoAux.getUbicacion());
+
+                try {
+                    raza = getRaza(perdidoAux.getRaza().getRaza());
+                    color = getColor(perdidoAux.getColor().getColor());
+                    sexo = getSexo(perdidoAux.getSexo().getSexo());
+                    tamaño = getTamaño(perdidoAux.getTamaño().getTamaño());
+                    edad = getEdad(perdidoAux.getEdad().getEdad());
+                    especie = getEspecie(perdidoAux.getEspecie().getEspecie());
+                    estado = iEstado.getEstado(perdidoAux.getEstado().getSituacion());
+                    persona = iPersona.getPersonabyEmail(perdidoAux.getPersona().getEmail());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                objectAux.put(CPerdidos.ID_RAZA, ParseObject.createWithoutData(Clases.RAZAS, String.valueOf(raza.getObjectId())));
+                objectAux.put(CPerdidos.ID_COLOR, ParseObject.createWithoutData(Clases.COLORES, String.valueOf(color.getObjectId())));
+                objectAux.put(CPerdidos.ID_SEXO, ParseObject.createWithoutData(Clases.SEXOS, String.valueOf(sexo.getObjectId())));
+                objectAux.put(CPerdidos.ID_TAMAÑO, ParseObject.createWithoutData(Clases.TAMAÑOS, String.valueOf(tamaño.getObjectId())));
+                objectAux.put(CPerdidos.ID_EDAD, ParseObject.createWithoutData(Clases.EDADES, String.valueOf(edad.getObjectId())));
+                objectAux.put(CPerdidos.ID_ESPECIE, ParseObject.createWithoutData(Clases.ESPECIES, String.valueOf(especie.getObjectId())));
+                objectAux.put(CPerdidos.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(estado.getObjectId())));
+                objectAux.put(CPerdidos.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
+
+                save(objectAux);
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
+
     }
 
 
