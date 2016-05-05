@@ -31,16 +31,15 @@ public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGener
     private List<ParseObject> listParseObject;
     private Comentarios comentario;
     private Personas persona;
-    private IGeneral iGeneral;
 
     public ComentariosDAO() {
     }
 
     public ComentariosDAO(Context context) {
+        super();
         this.context = context;
         objectAux = null;
         comentarios = new ArrayList<Comentarios>();
-        iGeneral = new IGeneralImpl(context);
         listParseObject = null;
         comentario = null;
         persona = null;
@@ -73,7 +72,7 @@ public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGener
         query = ParseQuery.getQuery(Clases.COMENTARIOS);
         query.include(CComentarios.ID_PERSONA);
         query.whereEqualTo(CComentarios.OBJECT_ID, objectId);
-        iGeneral.checkInternetGet(query);
+        checkInternetGet(query);
 
         try {
             if(query.count() != 0) {
