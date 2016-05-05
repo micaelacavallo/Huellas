@@ -80,11 +80,9 @@ public class AltaAnimalesFragment extends BaseFragment {
     private TextInputLayout mTextInputLayoutTitulo;
     private TextInputLayout mTextInputLayoutDescription;
     private TextInputLayout mTextInputLayoutUbicacion;
-    private TextInputLayout mTextInputLayoutNumero;
     private TextInputLayout mTextInputLayoutTelefono;
     private EditText mEditTextTitulo;
     private EditText mEditTextDescripcion;
-    private EditText mEditTextNumero;
     private EditText mEditTextDireccion;
     private EditText mEditTextNombre;
     private EditText mEditTextTelefono;
@@ -168,7 +166,6 @@ public class AltaAnimalesFragment extends BaseFragment {
         mEditTextTelefono.setEnabled(true);
         if (mFromFragment.equals(Constants.PERDIDOS)) {
             mPerdidoEdit = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
-            Address address = getBaseActivity().getLocation(mPerdidoEdit.getLatitud(), mPerdidoEdit.getLongitud());
             mImageViewFoto.setImageBitmap(getBaseActivity().convertFromByteToBitmap(mPerdidoEdit.getFoto()));
             mEditTextDescripcion.setText(mPerdidoEdit.getDescripcion());
             mEditTextTitulo.setText(mPerdidoEdit.getTitulo());
@@ -185,14 +182,7 @@ public class AltaAnimalesFragment extends BaseFragment {
                     mSpinnerRazas.setSelection(Razas.returnPositionElement(mRazas, mPerdidoEdit.getRaza().getmRaza(), mPerdidoEdit.getEspecie().getEspecie()) + 1);
                 }
             }, 300);
-            try {
-                mEditTextDireccion.setText(address.getThoroughfare());
-                mEditTextNumero.setText(address.getSubThoroughfare());
-                getBaseActivity().hideOverlay();
-            } catch (NullPointerException e) {
-                mEditTextDireccion.setText("");
-                mEditTextNumero.setText("");
-            }
+            mEditTextDireccion.setText(mPerdidoEdit.getUbicacion());
         } else {
             mAdicionalEdit = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
             mImageViewFoto.setImageBitmap(getBaseActivity().convertFromByteToBitmap(mAdicionalEdit.getFoto()));
@@ -350,31 +340,26 @@ public class AltaAnimalesFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 mEditTextDireccion.setEnabled(false);
-                mEditTextNumero.setEnabled(false);
                 mImageViewMap.setVisibility(View.GONE);
                 mProgressBar.setVisibility(View.VISIBLE);
                 if (!((AltaAnimalesActivity) getBaseActivity()).isConnected()) {
                     Toast.makeText(getBaseActivity(), "No es posible encontrar tu ubicación", Toast.LENGTH_SHORT).show();
                     mEditTextDireccion.setEnabled(true);
-                    mEditTextNumero.setEnabled(true);
                 } else {
                     mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                             ((AltaAnimalesActivity) getBaseActivity()).getmGoogleApiClient());
                     if (mLastLocation != null) {
                         Address address = getBaseActivity().getLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                         try {
-                            mEditTextDireccion.setText(address.getThoroughfare());
-                            mEditTextNumero.setText(address.getSubThoroughfare());
+                            mEditTextDireccion.setText(address.getThoroughfare() + " " + address.getSubThoroughfare());
                         } catch (NullPointerException e) {
                             mEditTextDireccion.setText("");
-                            mEditTextNumero.setText("");
                         }
                     } else {
                         Toast.makeText(getBaseActivity(), "No es posible encontrar tu ubicación", Toast.LENGTH_SHORT).show();
 
                     }
                     mEditTextDireccion.setEnabled(true);
-                    mEditTextNumero.setEnabled(true);
                     mProgressBar.setVisibility(View.GONE);
                     mImageViewMap.setVisibility(View.VISIBLE);
                 }
@@ -385,12 +370,10 @@ public class AltaAnimalesFragment extends BaseFragment {
         mTextInputLayoutDescription = (TextInputLayout) mRootView.findViewById(R.id.textInputLayout_descripcion);
         mTextInputLayoutTitulo = (TextInputLayout) mRootView.findViewById(R.id.textInputLayout_titulo);
         mTextInputLayoutUbicacion = (TextInputLayout) mRootView.findViewById(R.id.textInputLayout_direccion);
-        mTextInputLayoutNumero = (TextInputLayout) mRootView.findViewById(R.id.textInputLayout_numero);
         mTextInputLayoutTelefono = (TextInputLayout) mRootView.findViewById(R.id.textInputLayout_telefono);
         mEditTextDescripcion = (EditText) mTextInputLayoutDescription.findViewById(R.id.editText_descripcion);
         mEditTextTitulo = (EditText) mTextInputLayoutTitulo.findViewById(R.id.editText_titulo);
         mEditTextDireccion = (EditText) mTextInputLayoutUbicacion.findViewById(R.id.editText_direccion);
-        mEditTextNumero = (EditText) mTextInputLayoutNumero.findViewById(R.id.editText_numero);
         mEditTextNombre = (EditText) mRootView.findViewById(R.id.editText_nombre);
         mEditTextNombre.setText(HuellasApplication.getInstance().getProfileNameFacebook());
         mEditTextMail = (EditText) mRootView.findViewById(R.id.editText_mail);
@@ -448,7 +431,6 @@ public class AltaAnimalesFragment extends BaseFragment {
                     if (TextUtils.isEmpty(mEditTextTitulo.getText()) ||
                             TextUtils.isEmpty(mEditTextDescripcion.getText()) ||
                             TextUtils.isEmpty(mEditTextDireccion.getText()) ||
-                            TextUtils.isEmpty(mEditTextNumero.getText()) ||
                             TextUtils.isEmpty(mEditTextTelefono.getText()) ||
                             mSpinnerEstado.getSelectedItem().equals(getString(R.string.tipo_publicacion)) ||
                             mSpinnerRazas.getSelectedItem().equals(getString(R.string.raza)) ||
@@ -460,8 +442,8 @@ public class AltaAnimalesFragment extends BaseFragment {
                         mIsEverythingOK = false;
                     }
 
-                    if (!TextUtils.isEmpty(mEditTextDireccion.getText()) && !TextUtils.isEmpty(mEditTextNumero.getText())) {
-                        latLng = getBaseActivity().convertAddress(mEditTextDireccion.getText().toString() + " " + mEditTextNumero.getText().toString());
+                    if (!TextUtils.isEmpty(mEditTextDireccion.getText())) {
+                        latLng = getBaseActivity().convertAddress(mEditTextDireccion.getText().toString());
                         if (latLng == null) {
                             mIsEverythingOK = false;
                             mIsLocationOK = false;
@@ -551,10 +533,7 @@ public class AltaAnimalesFragment extends BaseFragment {
                     mPerdidos.setEstado(new Estados(mSpinnerEstado.getSelectedItem().toString()));
                     mPerdidos.setEdad(new Edades(mSpinnerEdades.getSelectedItem().toString()));
                     mPerdidos.setTamaño(new Tamaños(mSpinnerTamanios.getSelectedItem().toString()));
-                    if (latLng != null) {
-                        mPerdidos.setLatitud(latLng.latitude);
-                        mPerdidos.setLongitud(latLng.longitude);
-                    }
+                    mPerdidos.setUbicacion(mEditTextDireccion.getText().toString());
                     mPerdidos.setEspecie(new Especies(mSpinnerEspecies.getSelectedItem().toString()));
                     mPerdidos.setRaza(new Razas(mSpinnerRazas.getSelectedItem().toString()));
                     mPerdidos.setSexo(new Sexos(mSpinnerSexos.getSelectedItem().toString()));

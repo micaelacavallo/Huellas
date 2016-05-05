@@ -364,8 +364,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
                 perdido.setEstado(((Perdidos) object).getEstado());
                 perdido.setEdad(((Perdidos) object).getEdad());
                 perdido.setTamaño(((Perdidos) object).getTamaño());
-                perdido.setLatitud(((Perdidos) object).getLatitud());
-                perdido.setLongitud(((Perdidos) object).getLongitud());
+                perdido.setUbicacion(((Perdidos) object).getUbicacion());
                 perdido.setEspecie(((Perdidos) object).getEspecie());
                 perdido.setRaza(((Perdidos) object).getRaza());
                 perdido.setSexo(((Perdidos) object).getSexo());

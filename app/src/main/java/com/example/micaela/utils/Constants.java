@@ -14,8 +14,7 @@ public class Constants {
     public static final String ADICIONALES = "ADICIONALES";
     public static final String ADICIONALES_INFO = "ADICIONALES_INFO";
     public static final String ADICIONALES_DONACIONES = "ADICIONALES_DONACINES";
-    public static final String LATITUD = "LATITUD";
-    public static final String LONGITUD = "LONGITUD";
+    public static final String DIRECCION = "DIRECCION";
     public static final String ADDRESS = "ADDRESS";
     public static final String COMENTARIOS_LIST = "COMENTARIOS_LIST";
 

@@ -2,7 +2,6 @@ package com.example.micaela.fragments;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.Address;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -62,13 +61,13 @@ public class DetallePublicacionFragment extends BaseFragment {
                     mPerdidos.getEstado().getSituacion(), mPerdidos.getFoto(), mPerdidos.getTitulo(),
                     mPerdidos.getDescripcion(), mPerdidos.getRaza().getmRaza(), mPerdidos.getEspecie().getEspecie(),
                     mPerdidos.getColor().getColor(), mPerdidos.getTamaño().getTamaño(), mPerdidos.getEdad().getEdad(),
-                    mPerdidos.getSexo().getSexo(), mPerdidos.getLatitud(), mPerdidos.getLongitud(), mPerdidos.getFecha());
+                    mPerdidos.getSexo().getSexo(), mPerdidos.getUbicacion(), mPerdidos.getFecha());
         } else {
             mAdicionales = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
             mTextViewDatos.setVisibility(View.GONE);
             mViewLocation.setVisibility(View.GONE);
             fillViews(mAdicionales.getPersona().getNombre(), mAdicionales.getPersona().getTelefono(), "", mAdicionales.getFoto(),
-                    mAdicionales.getTitulo(), mAdicionales.getDescripcion(), "", "", "", "", "", "", 0, 0, mAdicionales.getFecha());
+                    mAdicionales.getTitulo(), mAdicionales.getDescripcion(), "", "", "", "", "", "", "", mAdicionales.getFecha());
         }
 
         setHasOptionsMenu(true);
@@ -83,7 +82,7 @@ public class DetallePublicacionFragment extends BaseFragment {
 
     private void fillViews(String nombre, final String telefono, String situacion, byte[] foto,
                            String titulo, String descripcion, String raza, String especie, String color,
-                           String tamaño, String edad, String sexo, double latitud, double longitud, Date fecha) {
+                           String tamaño, String edad, String sexo, String ubicacion, Date fecha) {
 
         if (!situacion.equals("")) {
             if (situacion.equals(getString(R.string.buscado_minus))) {
@@ -113,24 +112,12 @@ public class DetallePublicacionFragment extends BaseFragment {
 
         mTextViewFecha.setText(TextUtils.concat(bold("Fecha de publicación: "), ((BaseActivity) getActivity()).getFormattedDate(fecha)));
 
-        if (latitud != 0 & longitud != 0) {
-            Address address = getBaseActivity().getLocation(latitud, longitud);
-
-            try {
-                String location = address.getThoroughfare() + " " + address.getSubThoroughfare();
-                if (!location.equals("")) {
-                    mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), location));
-                } else {
-                    mImageViewLocation.setVisibility(View.GONE);
-                    mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), "No especificada"));
-
-                }
-            } catch (NullPointerException e) {
-                mImageViewLocation.setVisibility(View.GONE);
-                mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), "No especificada"));
-            }
+        if (!ubicacion.equals("")) {
+            mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), ubicacion));
+        } else {
+            mImageViewLocation.setVisibility(View.GONE);
+            mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), "No especificada"));
         }
-
         String infoContacto = "Contacto: " + nombre + " (tel: " + telefono + ")";
 
         SpannableString ss = new SpannableString(TextUtils.concat(bold("Contacto: "), nombre + " (tel: " + telefono + ")"));
@@ -165,9 +152,7 @@ public class DetallePublicacionFragment extends BaseFragment {
             public void onClick(View v) {
                 if (mImageViewLocation.getVisibility() == View.VISIBLE) {
                     Intent intent = new Intent(getBaseActivity(), MapActivity.class);
-                    intent.putExtra(Constants.LATITUD, mPerdidos.getLatitud());
-                    intent.putExtra(Constants.LONGITUD, mPerdidos.getLongitud());
-                    intent.putExtra(Constants.ADDRESS, mTextViewDireccion.getText().toString());
+                    intent.putExtra(Constants.DIRECCION, mPerdidos.getUbicacion());
                     startActivity(intent);
                 }
             }

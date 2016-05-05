@@ -14,9 +14,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
-    private double mLatitud;
-    private double mLongitud;
-    private String mAddress;
+    private String mUbicacion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +26,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
-        mLatitud = getIntent().getDoubleExtra(Constants.LATITUD, 0);
-        mLongitud = getIntent().getDoubleExtra(Constants.LONGITUD, 0);
-        mAddress = getIntent().getStringExtra(Constants.ADDRESS);
+        mUbicacion = getIntent().getStringExtra(Constants.DIRECCION);
 
         mapFragment.getMapAsync(this);
 
@@ -38,14 +34,14 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
+        LatLng latLng = convertAddress(mUbicacion);
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(mLatitud, mLongitud))
-                .title(mAddress));
+                .position(latLng)
+                .title(mUbicacion));
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(mLatitud, mLongitud))
+                .target(latLng)
                 .zoom(17).build();
         //Zoom in and animate the camera.
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
