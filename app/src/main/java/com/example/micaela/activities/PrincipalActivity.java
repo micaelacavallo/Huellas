@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.micaela.HuellasApplication;
@@ -68,7 +69,7 @@ public class PrincipalActivity extends BaseActivity {
     private TextView mTextViewDialogMsg;
     private TextView mTextViewConfirmar;
     private TextView mTextViewCancelar;
-    private ViewGroup mItemsDenunciaContainer;
+    private RadioGroup mItemsDenunciaContainer;
 
     private boolean thereWasError = false;
     private boolean isDialogOpen = false;
@@ -82,7 +83,7 @@ public class PrincipalActivity extends BaseActivity {
         mIPerdidosImpl = new IPerdidosImpl(this);
         mIGeneralImpl = new IGeneralImpl(this);
         mIEstadosImpl = new IEstadosImpl(this);
-        mIDenunciasImpl= new IDenunciasImpl(this);
+        mIDenunciasImpl = new IDenunciasImpl(this);
 
         showOverlay(getString(R.string.cargando_publicaciones_mensaje));
 
@@ -141,7 +142,7 @@ public class PrincipalActivity extends BaseActivity {
         mTextViewCancelar = (TextView) findViewById(R.id.textView_cancelar);
         mTextViewConfirmar = (TextView) findViewById(R.id.textView_confirmar);
         mTextViewDialogMsg = (TextView) findViewById(R.id.textView_confirmar_mensaje);
-        mItemsDenunciaContainer = (ViewGroup)  findViewById(R.id.items_denuncia_container);
+        mItemsDenunciaContainer = (RadioGroup) findViewById(R.id.items_denuncia_container);
     }
 
 
@@ -168,14 +169,15 @@ public class PrincipalActivity extends BaseActivity {
         mTextViewConfirmar.setOnClickListener(listener);
     }
 
-    public void showDenunciasDialog (View.OnClickListener listener) {
+    public void showDenunciasDialog(View.OnClickListener listener) {
         showNormalDialog("¿Cuál es el problema?", listener);
         mTextViewConfirmar.setEnabled(false);
         mItemsDenunciaContainer.setVisibility(View.VISIBLE);
-        mItemsDenunciaContainer.setOnClickListener(new View.OnClickListener() {
+        mItemsDenunciaContainer.clearCheck();
+        mItemsDenunciaContainer.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                mTextViewConfirmar.setEnabled(true);
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+            mTextViewConfirmar.setEnabled(true);
             }
         });
         findViewById(R.id.view_line).setVisibility(View.VISIBLE);
@@ -221,7 +223,7 @@ public class PrincipalActivity extends BaseActivity {
             mDrawerLayout.closeDrawers();
         } else {
             if (isDialogOpen) {
-               closeDialog();
+                closeDialog();
             } else {
                 for (Fragment fragment : getSupportFragmentManager().getFragments()) {
                     if (((BaseFragment) fragment).onBackPressed()) {
@@ -467,10 +469,10 @@ public class PrincipalActivity extends BaseActivity {
             super.onPostExecute(aVoid);
 
             for (MotivoDenuncia motivoDenuncia : HuellasApplication.getInstance().getmMotivosDenuncia()) {
-                RadioButton radioButton =new RadioButton(PrincipalActivity.this);
+                RadioButton radioButton = new RadioButton(PrincipalActivity.this);
                 radioButton.setTextAppearance(getBaseContext(), R.style.condensed_normal_18);
                 radioButton.setTextColor(getResources().getColor(R.color.primary_text));
-                radioButton.setPadding(0, 5,0,5);
+                radioButton.setPadding(0, 5, 0, 5);
                 radioButton.setText(motivoDenuncia.getmMotivo());
                 radioButton.setTag(motivoDenuncia.getmObjectId());
                 mItemsDenunciaContainer.addView(radioButton);
