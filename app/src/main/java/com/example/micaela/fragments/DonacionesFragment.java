@@ -101,7 +101,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
                 mAdapterAdicionales.notifyDataSetChanged();
                 Toast.makeText(getBaseActivity(), "Publicación eliminada con éxito!", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getBaseActivity(), "No se pudo eliminar la publicación", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseActivity(), "No se pudo eliminar la publicación. Intente de nuevo más tarde", Toast.LENGTH_LONG).show();
             }
 
         }
@@ -124,7 +124,6 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
     public void addElementAdapterPublicaciones(Object objeto) {
         adicionales.add(0, (Adicionales) objeto);
         mAdapterAdicionales.notifyDataSetChanged();
-        Toast.makeText(getBaseActivity(), "Publicación realizada con éxito!", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -136,9 +135,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
                 adicional.setTitulo(((Adicionales) object).getTitulo());
             }
         }
-
         mAdapterAdicionales.notifyDataSetChanged();
-        Toast.makeText(getBaseActivity(), "Publicación editada con éxito!", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -187,8 +184,10 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
                 getBaseActivity().startActivity(intent);
                 break;
             case R.id.item_reportar_publicacion:
+                ((PrincipalActivity) getActivity()).showDenunciasDialog(Constants.TABLA_ADICIONALES, adicional.getObjectId());
                 break;
             case R.id.item_reportar_usuario:
+                ((PrincipalActivity) getActivity()).showDenunciasDialog(Constants.TABLA_PERSONAS, adicional.getPersona().getObjectId());
                 break;
             case R.id.item_eliminar:
                 View.OnClickListener onClickEliminarListener = new View.OnClickListener() {

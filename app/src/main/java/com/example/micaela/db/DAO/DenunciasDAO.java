@@ -99,8 +99,8 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDBLocal {
         }
         else{
             objectAux = query.getFirst();
-            int contador = objectAux.getInt(CDenuncias.CONTADOR);
-            objectAux.put(CDenuncias.CONTADOR, contador++);
+            int contador = objectAux.getInt(CDenuncias.CONTADOR) + 1;
+            objectAux.put(CDenuncias.CONTADOR, contador);
             save(objectAux);
         }
 

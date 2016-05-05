@@ -399,22 +399,10 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
                 getBaseActivity().hideOverlay();
                 break;
             case R.id.item_reportar_publicacion:
+                ((PrincipalActivity) getActivity()).showDenunciasDialog(Constants.TABLA_PERDIDOS, perdido.getObjectId());
                 break;
             case R.id.item_reportar_usuario:
-                ((PrincipalActivity) getActivity()).showDenunciasDialog(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        switch (v.getId()) {
-                            case R.id.textView_cancelar:
-                                ((PrincipalActivity) getBaseActivity()).closeDialog();
-                                break;
-                            case R.id.textView_confirmar:
-                                ((PrincipalActivity) getBaseActivity()).showLoadDialog();
-                     //           new AsyncPublicacionSolucionada().execute(perdido.getObjectId());
-                                break;
-                        }
-                    }
-                });
+                ((PrincipalActivity) getActivity()).showDenunciasDialog(Constants.TABLA_PERSONAS, perdido.getPersona().getObjectId());
                 break;
             case R.id.item_solucionado:
                 ((PrincipalActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_solucionado_descripcion), new View.OnClickListener() {
@@ -484,7 +472,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
                 mAdapterAnimales.notifyDataSetChanged();
                 Toast.makeText(getBaseActivity(), "Estado modificado con éxito!", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getBaseActivity(), "No se modificar el estado de la publicación", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseActivity(), "No se pudo modificar el estado de la publicación. Intente de nuevo más tarde", Toast.LENGTH_LONG).show();
             }
 
         }
@@ -521,7 +509,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
                 mAdapterAnimales.notifyDataSetChanged();
                 Toast.makeText(getBaseActivity(), "Publicación eliminada con éxito!", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getBaseActivity(), "No se pudo eliminar la publicación", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseActivity(), "No se pudo eliminar la publicación. Intente de nuevo más tarde", Toast.LENGTH_LONG).show();
             }
 
         }

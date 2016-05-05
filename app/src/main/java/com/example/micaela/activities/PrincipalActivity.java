@@ -25,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.micaela.HuellasApplication;
 import com.example.micaela.ZoomOutPageTransformer;
@@ -73,6 +74,8 @@ public class PrincipalActivity extends BaseActivity {
 
     private boolean thereWasError = false;
     private boolean isDialogOpen = false;
+
+    private String mDestinoDenuncia = "";
 
 
     @Override
@@ -169,15 +172,29 @@ public class PrincipalActivity extends BaseActivity {
         mTextViewConfirmar.setOnClickListener(listener);
     }
 
-    public void showDenunciasDialog(View.OnClickListener listener) {
-        showNormalDialog("¿Cuál es el problema?", listener);
+    public void showDenunciasDialog(String destinoDenuncia, final String objectId) {
+        mDestinoDenuncia = destinoDenuncia;
+        showNormalDialog("¿Cuál es el problema?", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.textView_cancelar:
+                        closeDialog();
+                        break;
+                    case R.id.textView_confirmar:
+                        mItemsDenunciaContainer.clearCheck();
+                        showLoadDialog();
+                        new AsyncDenunciarPublicacion().execute(objectId);
+                        break;
+                }
+            }
+        });
         mTextViewConfirmar.setEnabled(false);
         mItemsDenunciaContainer.setVisibility(View.VISIBLE);
-        mItemsDenunciaContainer.clearCheck();
         mItemsDenunciaContainer.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-            mTextViewConfirmar.setEnabled(true);
+                mTextViewConfirmar.setEnabled(true);
             }
         });
         findViewById(R.id.view_line).setVisibility(View.VISIBLE);
@@ -480,4 +497,49 @@ public class PrincipalActivity extends BaseActivity {
         }
     }
 
+    private class AsyncDenunciarPublicacion extends AsyncTask<String, Void, Void> {
+        private String mMotivoDenuncia = "";
+        private boolean error = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            int selectedId = mItemsDenunciaContainer.getCheckedRadioButtonId();
+            RadioButton radioButtonSelected = (RadioButton) findViewById(selectedId);
+            mMotivoDenuncia = radioButtonSelected.getText().toString();
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                mIDenunciasImpl.denunciar(params[0], mMotivoDenuncia, mDestinoDenuncia);
+            } catch (Exception e) {
+                error = true;
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            closeDialog();
+            if (!error) {
+                if (mDestinoDenuncia.equals(Constants.TABLA_PERSONAS)) {
+                    Toast.makeText(PrincipalActivity.this, "Usuario reportado con éxito!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(PrincipalActivity.this, "Publicación reportada con éxito!", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                if (mDestinoDenuncia.equals(Constants.TABLA_PERSONAS)) {
+                    Toast.makeText(PrincipalActivity.this, "No se pudo reportar al usuario. Intente de nuevo más tarde", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(PrincipalActivity.this, "No se pudo reportar la publicación. Intente de nuevo más tarde", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
+    }
 }

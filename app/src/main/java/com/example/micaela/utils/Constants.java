@@ -56,4 +56,10 @@ public class Constants {
 
     // COMENTARIOS
     public static final String COMENTARIOS_DATE_FORMAT = "dd/MM HH:mm";
+
+    // DENUNCIAS
+    public static final String DESTINO_DENUNCIA = "DestinoDenuncia";
+    public static final String TABLA_PERSONAS = "Personas";
+    public static final String TABLA_ADICIONALES = "Adicionales";
+    public static final String TABLA_PERDIDOS = "Perdidos";
 }
