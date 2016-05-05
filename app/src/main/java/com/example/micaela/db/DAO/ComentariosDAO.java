@@ -15,6 +15,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGener
     private ParseQuery<ParseObject> query;
     private ParseObject objectAux;
     private ParseObject object;
-    private List<Comentarios> comentarios;
+    private ArrayList<Comentarios> comentarios;
     private List<ParseObject> listParseObject;
     private Comentarios comentario;
     private Personas persona;
@@ -39,7 +40,7 @@ public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGener
         super(context);
         this.context = context;
         objectAux = null;
-        comentarios = new ArrayList<Comentarios>();
+        comentarios = null;
         listParseObject = null;
         comentario = null;
         persona = null;
@@ -52,14 +53,11 @@ public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGener
         Comentarios comentario = null;
         ParseObject objectAux = null;
         Personas persona = null;
-        ArrayList<Comentarios> comentarios = null;
 
         if (listComentarios != null) {
             comentarios = new ArrayList<>();
             for (ParseObject objectComentario : listComentarios) {
-                objectAux = objectComentario.getParseObject(CComentarios.ID_PERSONA);
-                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO), objectAux.getString(CPersonas.CONTRASEÑA), objectAux.getString(CPersonas.FOTO));
-                comentario = new Comentarios(objectComentario.getObjectId(), objectComentario.getString(CComentarios.COMENTARIO), persona, objectComentario.getDate(CComentarios.FECHA), objectComentario.getBoolean(CComentarios.LEIDO));
+                comentario = getComentario(objectComentario);
                 comentarios.add(comentario);
             }
         }
@@ -85,7 +83,7 @@ public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGener
 
     }
     @Override
-    public List<Comentarios> getComentariosNoLeidos(String userObjectId) {
+    public ArrayList<Comentarios> getComentariosNoLeidos(String userObjectId) {
 
         ParseObject obj = ParseObject.createWithoutData(Clases.PERSONAS, userObjectId);
 
@@ -106,10 +104,7 @@ public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGener
 
         if (listParseObject.size() > 0) {
             for (ParseObject object : listParseObject) {
-                objectAux = object.getParseObject(CPerdidos.ID_PERSONA);
-                persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO), objectAux.getString(CPersonas.CONTRASEÑA), objectAux.getString(CPersonas.FOTO));
-
-                comentario = new Comentarios(object.getObjectId(), object.getString(CComentarios.COMENTARIO), persona, object.getDate(CComentarios.FECHA), object.getBoolean(CComentarios.LEIDO));
+                comentario = getComentario(object);
                 comentarios.add(comentario);
             }
         }
@@ -118,6 +113,15 @@ public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGener
         return comentarios;
     }
 
+    public Comentarios getComentario(ParseObject objectAux){
+
+        objectAux = object.getParseObject(CPerdidos.ID_PERSONA);
+        persona = new Personas(objectAux.getObjectId(), objectAux.getString(CPersonas.EMAIL), objectAux.getString(CPersonas.NOMBRE), objectAux.getString(CPersonas.TELEFONO), objectAux.getBoolean(CPersonas.ADMINISTRADOR), objectAux.getBoolean(CPersonas.BLOQUEADO), objectAux.getString(CPersonas.CONTRASEÑA), objectAux.getString(CPersonas.FOTO));
+
+        comentario = new Comentarios(object.getObjectId(), object.getString(CComentarios.COMENTARIO), persona, object.getDate(CComentarios.FECHA), object.getBoolean(CComentarios.LEIDO), object.getBoolean(CComentarios.BLOQUEADO));
+
+        return comentario;
+    }
     @Override
     public void cambiarLeidoComentario(String comentarioObjectId, boolean leido) {
 
@@ -152,6 +156,55 @@ public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGener
         }
     }
 
+    @Override
+    public ArrayList<Comentarios> getComentariosByPersonaObjectId(String objectId) {
+
+        ParseObject obj = ParseObject.createWithoutData(Clases.PERSONAS,objectId);
+
+        query = ParseQuery.getQuery(Clases.COMENTARIOS);
+        query.whereEqualTo(CComentarios.ID_PERSONA, obj);
+        checkInternetGet(query);
+
+        try{
+            listParseObject = query.find();
+        }
+        catch(ParseException e)
+        {
+            e.printStackTrace();
+        }
+
+        return getListComentarios(listParseObject);
+
+    }
+
+    @Override
+    public void bloquearComentario(String objectId) {
+        query = ParseQuery.getQuery(Clases.COMENTARIOS);
+        query.whereEqualTo(CComentarios.OBJECT_ID, objectId);
+
+        try {
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+                objectAux.put(CComentarios.BLOQUEADO, true);
+                save(objectAux);
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
+    }
+
+    public ArrayList<Comentarios> getListComentarios(List<ParseObject> listParseObject){
+
+        if (listParseObject.size() > 0) {
+            comentarios = new ArrayList<Comentarios>();
+            for (ParseObject object : listParseObject) {
+                comentario = getComentario(object);
+                comentarios.add(comentario);
+            }
+        }
+
+        return comentarios;
+    }
     @Override
     public void pinObjectInBackground(ParseObject object) {
         object.pinInBackground();

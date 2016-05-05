@@ -12,17 +12,19 @@ public class Denuncias {
     private Date mFecha;
     private String mId;
     private String mTabla;
+    private int mContador;
     private MotivoDenuncia MmotivoDenuncia;
 
     public Denuncias() {
     }
 
-    public Denuncias(String mObjectId, boolean mUser, Date mFecha, String mId, MotivoDenuncia mmotivoDenuncia, String tabla) {
+    public Denuncias(String mObjectId, boolean mUser, Date mFecha, String mId, MotivoDenuncia mmotivoDenuncia, String tabla, int contador) {
         this.mObjectId = mObjectId;
         this.mUser = mUser;
         this.mFecha = mFecha;
         this.mId = mId;
         MmotivoDenuncia = mmotivoDenuncia;
+        this.mContador = contador;
         this.setmTabla(tabla);
     }
 
@@ -66,12 +68,19 @@ public class Denuncias {
         MmotivoDenuncia = mmotivoDenuncia;
     }
 
-
     public String getmTabla() {
         return mTabla;
     }
 
     public void setmTabla(String mTabla) {
         this.mTabla = mTabla;
+    }
+
+    public int getContador() {
+        return mContador;
+    }
+
+    public void setContador(int mContador) {
+        this.mContador = mContador;
     }
 }

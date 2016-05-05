@@ -54,4 +54,14 @@ public class IComentariosImpl implements IComentarios{
     public void borrarComentario(String objectId) {
         mComentarioDAO.borrarComentario(objectId);
     }
+
+    @Override
+    public List<Comentarios> getComentariosByPersonaObjectId(String objectId) {
+        return mComentarioDAO.getComentariosByPersonaObjectId(objectId);
+    }
+
+    @Override
+    public void bloquearComentario(String objectId) {
+        mComentarioDAO.bloquearComentario(objectId);
+    }
 }

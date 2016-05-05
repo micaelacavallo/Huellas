@@ -251,7 +251,11 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     @Override
     public Adicionales saveAdicional(Adicionales adicional) throws ParseException {
 
-        //VALIDAR EN FE
+
+        return getAdicionalById(getUltimoObjectId(Clases.ADICIONALES));
+    }
+
+    public void saveAdicionalParseObject(Adicionales adicional){
         adicionalObject.put(CAdicionales.TITULO, adicional.getTitulo());
         adicionalObject.put(CAdicionales.DESCRIPCION, adicional.getDescripcion());
         adicionalObject.put(CAdicionales.FECHA, adicional.getFecha());
@@ -271,8 +275,6 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         adicionalObject.put(CAdicionales.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(estado.getObjectId())));
         adicionalObject.put(CAdicionales.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
         save(adicionalObject);
-
-        return getAdicionalById(getUltimoObjectId(Clases.ADICIONALES));
     }
 
 
@@ -292,9 +294,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     @Override
     public void editAdicional(Adicionales adicional) throws ParseException {
 
-        objectAux = cargarAdicional(adicional);
-        deleteAdicional(adicional.getObjectId());
-        saveAdicional(adicional);
+        saveAdicionalParseObject(adicional);
     }
 
     @Override
@@ -337,6 +337,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         object.put(CComentarios.COMENTARIO, comentario);
         object.put(CComentarios.LEIDO, false);
         object.put(CComentarios.FECHA, new Date());
+        object.put(CComentarios.BLOQUEADO, false);
         persona = iPersona.getPersonabyEmail(email);
         object.put(CComentarios.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
         save(object);
@@ -402,6 +403,22 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         }
 
         return objectAux;
+    }
+
+    @Override
+    public void bloquearAdicional(String objectId) {
+        query = ParseQuery.getQuery(Clases.ADICIONALES);
+        query.whereEqualTo(CAdicionales.OBJECT_ID, objectId);
+
+        try {
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+                objectAux.put(CAdicionales.BLOQUEADO, true);
+                save(objectAux);
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
     }
 
 

@@ -82,4 +82,9 @@ public class IAdicionalesImpl implements IAdicionales {
     public ParseObject getParseObjectById(String objectId){
         return getParseObjectById(objectId);
     }
+
+    @Override
+    public void bloquearAdicional(String objectId) {
+        mAdicionalesDAO.bloquearAdicional(objectId);
+    }
 }
