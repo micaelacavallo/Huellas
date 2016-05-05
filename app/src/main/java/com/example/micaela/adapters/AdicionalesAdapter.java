@@ -80,7 +80,7 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
                 if (page == 1) {
                     intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
                 } else {
-                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
+                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_INFO);
                 }
                 mContext.startActivity(intent);
             }
@@ -96,7 +96,7 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
                 if (page == 1) {
                     intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
                 } else {
-                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
+                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_INFO);
                 }
                 mContext.startActivity(intent);
             }

@@ -205,7 +205,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
                         }
                     }
                 };
-                ((PrincipalActivity) getBaseActivity()).showDialog(getBaseActivity().getString(R.string.dialog_eliminar_descripcion), onClickEliminarListener);
+                ((PrincipalActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_eliminar_descripcion), onClickEliminarListener);
 
                 break;
         }

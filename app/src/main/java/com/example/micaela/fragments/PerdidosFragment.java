@@ -401,9 +401,23 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
             case R.id.item_reportar_publicacion:
                 break;
             case R.id.item_reportar_usuario:
+                ((PrincipalActivity) getActivity()).showDenunciasDialog(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        switch (v.getId()) {
+                            case R.id.textView_cancelar:
+                                ((PrincipalActivity) getBaseActivity()).closeDialog();
+                                break;
+                            case R.id.textView_confirmar:
+                                ((PrincipalActivity) getBaseActivity()).showLoadDialog();
+                     //           new AsyncPublicacionSolucionada().execute(perdido.getObjectId());
+                                break;
+                        }
+                    }
+                });
                 break;
             case R.id.item_solucionado:
-                View.OnClickListener onClickSolucionadoListener = new View.OnClickListener() {
+                ((PrincipalActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_solucionado_descripcion), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         switch (v.getId()) {
@@ -416,12 +430,11 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
                                 break;
                         }
                     }
-                };
-                ((PrincipalActivity) getBaseActivity()).showDialog(getBaseActivity().getString(R.string.dialog_solucionado_descripcion), onClickSolucionadoListener);
+                });
 
                 break;
             case R.id.item_eliminar:
-                View.OnClickListener onClickEliminarListener = new View.OnClickListener() {
+                ((PrincipalActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_eliminar_descripcion), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         switch (v.getId()) {
@@ -434,8 +447,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
                                 break;
                         }
                     }
-                };
-                ((PrincipalActivity) getBaseActivity()).showDialog(getBaseActivity().getString(R.string.dialog_eliminar_descripcion), onClickEliminarListener);
+                });
                 break;
         }
 
@@ -464,7 +476,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
             ((PrincipalActivity) getBaseActivity()).closeDialog();
             if (!error) {
                 List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
-                for (int x = 0; x< perdidos.size(); x++) {
+                for (int x = 0; x < perdidos.size(); x++) {
                     if (perdidoId.equals(perdidos.get(x).getObjectId())) {
                         perdidos.remove(x);
                     }
@@ -478,6 +490,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
         }
 
     }
+
     private class AsyncTaskDeletePerdido extends AsyncTask<Perdidos, Void, Void> {
         private boolean error = false;
         private Perdidos perdido = null;

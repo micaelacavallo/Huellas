@@ -6,9 +6,11 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 
 import com.example.micaela.db.Modelo.Colores;
+import com.example.micaela.db.Modelo.Denuncias;
 import com.example.micaela.db.Modelo.Edades;
 import com.example.micaela.db.Modelo.Especies;
 import com.example.micaela.db.Modelo.Estados;
+import com.example.micaela.db.Modelo.MotivoDenuncia;
 import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.db.Modelo.Sexos;
@@ -35,6 +37,7 @@ public class HuellasApplication extends Application {
     private List<Estados> mEstados = new ArrayList<>();
     private List<Sexos> mSexos = new ArrayList<>();
     private List<Perdidos> mPerdidos = new ArrayList<>();
+    private List<MotivoDenuncia> mMotivosDenuncia = new ArrayList<>();
 
     public static HuellasApplication getInstance() {
         return instance;
@@ -51,7 +54,13 @@ public class HuellasApplication extends Application {
         AppEventsLogger.activateApp(this);
     }
 
+    public List<MotivoDenuncia> getmMotivosDenuncia() {
+        return mMotivosDenuncia;
+    }
 
+    public void setmMotivosDenuncia(List<MotivoDenuncia> mMotivosDenuncia) {
+        this.mMotivosDenuncia = mMotivosDenuncia;
+    }
 
     public List<Perdidos> getmPerdidos() {
         return mPerdidos;

@@ -22,17 +22,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.micaela.HuellasApplication;
 import com.example.micaela.ZoomOutPageTransformer;
+import com.example.micaela.db.Controladores.IDenunciasImpl;
 import com.example.micaela.db.Controladores.IEstadosImpl;
 import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Controladores.IPerdidosImpl;
+import com.example.micaela.db.Interfaces.IDenuncias;
 import com.example.micaela.db.Interfaces.IEstados;
 import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Interfaces.IPerdidos;
 import com.example.micaela.db.Modelo.Estados;
+import com.example.micaela.db.Modelo.MotivoDenuncia;
 import com.example.micaela.fragments.BaseFragment;
 import com.example.micaela.fragments.DonacionesFragment;
 import com.example.micaela.fragments.InformacionUtilFragment;
@@ -58,11 +62,13 @@ public class PrincipalActivity extends BaseActivity {
     private IPerdidos mIPerdidosImpl;
     private IGeneral mIGeneralImpl;
     private IEstados mIEstadosImpl;
+    private IDenuncias mIDenunciasImpl;
 
     private View mDialogContainer;
     private TextView mTextViewDialogMsg;
     private TextView mTextViewConfirmar;
     private TextView mTextViewCancelar;
+    private ViewGroup mItemsDenunciaContainer;
 
     private boolean thereWasError = false;
     private boolean isDialogOpen = false;
@@ -76,6 +82,8 @@ public class PrincipalActivity extends BaseActivity {
         mIPerdidosImpl = new IPerdidosImpl(this);
         mIGeneralImpl = new IGeneralImpl(this);
         mIEstadosImpl = new IEstadosImpl(this);
+        mIDenunciasImpl= new IDenunciasImpl(this);
+
         showOverlay(getString(R.string.cargando_publicaciones_mensaje));
 
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -129,12 +137,13 @@ public class PrincipalActivity extends BaseActivity {
             updateFacebookData();
         }
 
-
         mDialogContainer = findViewById(R.id.layout_dialog_container);
         mTextViewCancelar = (TextView) findViewById(R.id.textView_cancelar);
         mTextViewConfirmar = (TextView) findViewById(R.id.textView_confirmar);
         mTextViewDialogMsg = (TextView) findViewById(R.id.textView_confirmar_mensaje);
+        mItemsDenunciaContainer = (ViewGroup)  findViewById(R.id.items_denuncia_container);
     }
+
 
     public void showLoadDialog() {
         findViewById(R.id.dialog_content).setVisibility(View.GONE);
@@ -148,13 +157,28 @@ public class PrincipalActivity extends BaseActivity {
     }
 
 
-    public void showDialog(String text, View.OnClickListener listener) {
+    public void showNormalDialog(String text, View.OnClickListener listener) {
         mDialogContainer.setVisibility(View.VISIBLE);
         isDialogOpen = true;
         mTextViewDialogMsg.setText(text);
+        mItemsDenunciaContainer.setVisibility(View.GONE);
+        findViewById(R.id.view_line).setVisibility(View.GONE);
         mTextViewCancelar.setVisibility(View.VISIBLE);
         mTextViewCancelar.setOnClickListener(listener);
         mTextViewConfirmar.setOnClickListener(listener);
+    }
+
+    public void showDenunciasDialog (View.OnClickListener listener) {
+        showNormalDialog("¿Cuál es el problema?", listener);
+        mTextViewConfirmar.setEnabled(false);
+        mItemsDenunciaContainer.setVisibility(View.VISIBLE);
+        mItemsDenunciaContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTextViewConfirmar.setEnabled(true);
+            }
+        });
+        findViewById(R.id.view_line).setVisibility(View.VISIBLE);
     }
 
     public void closeDialog() {
@@ -410,6 +434,7 @@ public class PrincipalActivity extends BaseActivity {
                 HuellasApplication.getInstance().setmEdades(mIPerdidosImpl.getEdades());
                 HuellasApplication.getInstance().setmTamanios(mIPerdidosImpl.getTamaños());
                 HuellasApplication.getInstance().setmSexos(mIPerdidosImpl.getSexos());
+                HuellasApplication.getInstance().setmMotivosDenuncia(mIDenunciasImpl.getMotivoDenuncias());
 
                 List<Estados> estados = mIEstadosImpl.getEstados();
                 for (int x = 0; x < estados.size(); x++) {
@@ -440,6 +465,16 @@ public class PrincipalActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+
+            for (MotivoDenuncia motivoDenuncia : HuellasApplication.getInstance().getmMotivosDenuncia()) {
+                RadioButton radioButton =new RadioButton(PrincipalActivity.this);
+                radioButton.setTextAppearance(getBaseContext(), R.style.condensed_normal_18);
+                radioButton.setTextColor(getResources().getColor(R.color.primary_text));
+                radioButton.setPadding(0, 5,0,5);
+                radioButton.setText(motivoDenuncia.getmMotivo());
+                radioButton.setTag(motivoDenuncia.getmObjectId());
+                mItemsDenunciaContainer.addView(radioButton);
+            }
         }
     }
 

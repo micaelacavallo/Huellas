@@ -171,7 +171,7 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
                         }
                     }
                 };
-                ((PrincipalActivity) getBaseActivity()).showDialog(getBaseActivity().getString(R.string.dialog_eliminar_descripcion), onClickEliminarListener);
+                ((PrincipalActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_eliminar_descripcion), onClickEliminarListener);
 
                 break;
         }

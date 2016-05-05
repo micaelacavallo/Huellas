@@ -139,7 +139,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
                 try {
                     objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
-                    comentarios = iComentarios.getComentarios(objectRelation.getQuery().find(), object);
+                    comentarios = iComentarios.getComentarios(objectRelation.getQuery().addAscendingOrder(CComentarios.FECHA).find(), object);
                 }catch (Exception e)
                 {
                     comentarios = null;
