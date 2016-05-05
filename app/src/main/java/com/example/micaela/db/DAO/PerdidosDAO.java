@@ -320,13 +320,15 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         query.whereEqualTo(CRazas.RAZA, raza);
         checkInternetGet(query);
         Razas razaObject = null;
-
         try {
             if(query.count() != 0) {
                 objectAux = query.getFirst();
-                ParseObject object = objectAux.getParseObject(CPerdidos.ID_ESPECIE);
-                especie = new Especies(object.getString(CEspecies.ESPECIE), object.getObjectId());
-
+                if(!raza.equals("Otra")) {
+                    if(!raza.equals("Mestizo")) {
+                        ParseObject object = objectAux.getParseObject(CPerdidos.ID_ESPECIE);
+                        especie = new Especies(object.getString(CEspecies.ESPECIE), object.getObjectId());
+                    }
+                }
                 razaObject = new Razas(objectAux.getString(CRazas.RAZA), objectAux.getObjectId(), especie);
             }
         } catch (ParseException e) {

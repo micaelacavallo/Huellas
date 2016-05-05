@@ -36,7 +36,7 @@ public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGener
     }
 
     public ComentariosDAO(Context context) {
-        super();
+        super(context);
         this.context = context;
         objectAux = null;
         comentarios = new ArrayList<Comentarios>();
