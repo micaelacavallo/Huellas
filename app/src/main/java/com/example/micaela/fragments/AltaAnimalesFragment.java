@@ -180,7 +180,7 @@ public class AltaAnimalesFragment extends BaseFragment {
                 public void run() {
                     mSpinnerRazas.setSelection(Razas.returnPositionElement(mRazas, mPerdidoEdit.getRaza().getmRaza(), mPerdidoEdit.getEspecie().getEspecie()) + 1);
                 }
-            }, 600);
+            }, 1000);
             mEditTextDireccion.setText(mPerdidoEdit.getUbicacion());
         } else {
             mAdicionalEdit = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);

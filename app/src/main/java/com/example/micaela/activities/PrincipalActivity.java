@@ -182,7 +182,6 @@ public class PrincipalActivity extends BaseActivity {
                         closeDialog();
                         break;
                     case R.id.textView_confirmar:
-                        mItemsDenunciaContainer.clearCheck();
                         showLoadDialog();
                         new AsyncDenunciarPublicacion().execute(objectId);
                         break;
@@ -523,6 +522,7 @@ public class PrincipalActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            mItemsDenunciaContainer.clearCheck();
             closeDialog();
             if (!error) {
                 if (mDestinoDenuncia.equals(Constants.TABLA_PERSONAS)) {
