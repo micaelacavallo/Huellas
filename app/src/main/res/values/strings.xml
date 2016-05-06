@@ -40,6 +40,10 @@
     <string name="editando">Editando publicación</string>
     <string name="dialog_solucionado_descripcion">¿Está seguro que desea cambiar el estado de la publicación a solucionado? Este cambio no se podrá revertir.</string>
     <string name="dialog_eliminar_descripcion">¿Está seguro que desea eliminar la publicación?</string>
-    google_api_key
+    <string-array name="spinner_tipo_publicacion">
+        <item>Perdidos</item>
+        <item>Donaciones</item>
+        <item>Información útil</item>
+    </string-array>
 
 </resources>

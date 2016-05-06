@@ -14,6 +14,7 @@ import com.example.micaela.db.Modelo.Tamaños;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
+import java.util.Date;
 import java.util.List;
 
 public class IPerdidosImpl implements IPerdidos {
@@ -30,8 +31,13 @@ public class IPerdidosImpl implements IPerdidos {
     }
 
     @Override
-    public String savePerdido(Perdidos perdido) throws ParseException {
-        return mPerdidosDAO.savePerdido(perdido);
+    public void savePerdido(Perdidos perdido) throws ParseException {
+     mPerdidosDAO.savePerdido(perdido);
+    }
+
+    @Override
+    public String getInsertedID(Date date) throws ParseException {
+      return  mPerdidosDAO.getInsertedID(date);
     }
 
 
@@ -111,8 +117,13 @@ public class IPerdidosImpl implements IPerdidos {
     }
 
     @Override
-    public void cargarDBLocal(Context context) throws ParseException {
-        mPerdidosDAO.cargarDBLocal(context);
+    public void cargarDBLocalListaPerdidos(Context context) throws ParseException {
+        mPerdidosDAO.cargarDBLocalListaPerdidos(context);
+    }
+
+    @Override
+    public void cargarDBLocalCaracteristicasPerdidos(Context context) {
+        mPerdidosDAO.cargarDBLocalCaracteristicasPerdidos(context);
     }
 
     @Override

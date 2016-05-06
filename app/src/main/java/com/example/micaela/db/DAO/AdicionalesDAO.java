@@ -7,6 +7,7 @@ import com.example.micaela.db.Constantes.CAdicionales;
 import com.example.micaela.db.Constantes.CColores;
 import com.example.micaela.db.Constantes.CComentarios;
 import com.example.micaela.db.Constantes.CEstados;
+import com.example.micaela.db.Constantes.CPerdidos;
 import com.example.micaela.db.Constantes.CPersonas;
 import com.example.micaela.db.Constantes.Clases;
 import com.example.micaela.db.Controladores.IComentariosImpl;
@@ -31,7 +32,6 @@ import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
-import com.parse.SaveCallback;
 import com.parse.SendCallback;
 
 import org.json.JSONException;
@@ -255,15 +255,23 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     }
 
     @Override
-    public String saveAdicional(Adicionales adicional) throws ParseException {
-
-        return saveAdicionalParseObject(adicional);
-
+    public void saveAdicional(Adicionales adicional) throws ParseException {
+        saveAdicionalParseObject(adicional);
     }
 
-    public String saveAdicionalParseObject(Adicionales adicional){
-        final String[] objectID = {""};
 
+    public String getInsertedID(Date date) throws ParseException {
+        query = ParseQuery.getQuery(Clases.ADICIONALES);
+        query.whereEqualTo(CPerdidos.FECHA, date);
+        checkInternetGet(query);
+        if (query.count() != 0) {
+            return query.getFirst().getObjectId();
+        } else {
+            return "";
+        }
+    }
+
+    public void saveAdicionalParseObject(Adicionales adicional) throws ParseException {
         adicionalObject.put(CAdicionales.TITULO, adicional.getTitulo());
         adicionalObject.put(CAdicionales.DESCRIPCION, adicional.getDescripcion());
         adicionalObject.put(CAdicionales.FECHA, adicional.getFecha());
@@ -281,15 +289,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
         adicionalObject.put(CAdicionales.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(estado.getObjectId())));
         adicionalObject.put(CAdicionales.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
-        adicionalObject.saveInBackground(new SaveCallback() {
-            public void done(ParseException e) {
-                if (e == null) {
-                    // Saved successfully.
-                    objectID[0] = adicionalObject.getObjectId();
-                }
-            }
-        });
-        return objectID[0];
+        adicionalObject.save();
     }
 
 
@@ -492,10 +492,6 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         object.deleteInBackground();
     }
 
-    @Override
-    public void cargarDBLocal(Context context) throws ParseException {
-
-    }
 
     @Override
     public void cargarDBLocalDonaciones(Context context) throws ParseException {

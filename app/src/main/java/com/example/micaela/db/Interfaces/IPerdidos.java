@@ -12,6 +12,7 @@ import com.example.micaela.db.Modelo.Tamaños;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,7 +21,8 @@ import java.util.List;
 public interface IPerdidos {
 
     public List<Perdidos> getPerdidos() throws ParseException;
-    public String savePerdido(Perdidos perdido) throws ParseException;
+    public void savePerdido(Perdidos perdido) throws ParseException;
+    public String getInsertedID(Date date) throws ParseException;
     public void editPerdido(Perdidos perdido) throws ParseException;
     public Razas getRaza(String raza) throws ParseException;
     public Colores getColor(String color) throws ParseException;
@@ -36,7 +38,8 @@ public interface IPerdidos {
     public List<Especies> getEspecies();
     public void deletePerdido(String objectId) throws ParseException;
     public void AgregarComentarioPerdido(String perdidoObjectId, String comentario, String email) throws ParseException;
-    public void cargarDBLocal(Context context) throws ParseException;
+    public void cargarDBLocalListaPerdidos(Context context) throws ParseException;
+    public void cargarDBLocalCaracteristicasPerdidos(Context context);
     public List<Perdidos> getPublicacionesPerdidosPropias(String objectId) throws ParseException;
     public Perdidos getPublicacionPerdidosById(String objectId) throws ParseException;
     public ParseObject getParseObjectById(String objectId);

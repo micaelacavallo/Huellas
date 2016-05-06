@@ -555,7 +555,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
         @Override
         protected List<Perdidos> doInBackground(Void... voids) {
             try {
-                mIperdidosImpl.cargarDBLocal(getBaseActivity());
+                mIperdidosImpl.cargarDBLocalListaPerdidos(getBaseActivity());
                 return mIperdidosImpl.getPerdidos();
             } catch (ParseException e) {
                 e.printStackTrace();

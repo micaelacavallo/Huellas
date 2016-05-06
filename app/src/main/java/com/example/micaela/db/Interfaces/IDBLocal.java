@@ -18,6 +18,4 @@ public interface IDBLocal {
     public void saveInBackground(ParseObject object);
     public void deleteEventually(ParseObject object);
     public void deleteInBackground(ParseObject object);
-    public void cargarDBLocal(Context context) throws ParseException;
-
 }

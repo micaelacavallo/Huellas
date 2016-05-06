@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.micaela.HuellasApplication;
 import com.example.micaela.activities.AltaAnimalesActivity;
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.adapters.AdicionalesAdapter;
@@ -30,8 +31,6 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
     private RecyclerView mRecyclerView;
     private IAdicionales mIAdicionalesImpl;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
-    private List<Adicionales> adicionales;
 
     private AdicionalesAdapter mAdapterAdicionales;
 
@@ -93,6 +92,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
             ((PrincipalActivity) getBaseActivity()).closeDialog();
             if (!error) {
                 ((PrincipalActivity) getBaseActivity()).closeDialog();
+                List<Adicionales> adicionales = HuellasApplication.getInstance().getDonaciones();
                 for (int x = 0; x < adicionales.size(); x++) {
                     if (adicional.getObjectId().equals(adicionales.get(x).getObjectId())) {
                         adicionales.remove(x);
@@ -122,6 +122,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
 
     @Override
     public void addElementAdapterPublicaciones(Object objeto) {
+        List<Adicionales> adicionales = HuellasApplication.getInstance().getDonaciones();
         adicionales.add(0, (Adicionales) objeto);
         mAdapterAdicionales.notifyDataSetChanged();
         Toast.makeText(getBaseActivity(), "Publicación realizada con éxito!", Toast.LENGTH_LONG).show();
@@ -129,6 +130,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
 
     @Override
     public void updateElementAdapterPublicacion(Object object) {
+        List<Adicionales> adicionales = HuellasApplication.getInstance().getDonaciones();
         for (Adicionales adicional : adicionales) {
             if (adicional.getObjectId().equals(((Adicionales) object).getObjectId())) {
                 adicional.setFoto(((Adicionales) object).getFoto());
@@ -143,6 +145,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
 
     @Override
     public void updateDataSetAdapterComentarios(Comentarios comentario, Object object) {
+        List<Adicionales> adicionales = HuellasApplication.getInstance().getDonaciones();
         for (Adicionales adicional : adicionales) {
             if (adicional.getObjectId().equals(((Adicionales) object).getObjectId())) {
                 adicional.getComentarios().add(comentario);
@@ -155,7 +158,8 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
     public void onResume() {
         super.onResume();
         if (mAdapterAdicionales == null) {
-            mAdapterAdicionales = new AdicionalesAdapter(adicionales, getBaseActivity(), DonacionesFragment.this);
+            List<Adicionales> adicionales = HuellasApplication.getInstance().getDonaciones();
+            mAdapterAdicionales = new AdicionalesAdapter(adicionales, getBaseActivity(), DonacionesFragment.this, Constants.ADICIONALES_DONACIONES);
             mRecyclerView.setAdapter(mAdapterAdicionales);
         }
     }
@@ -231,13 +235,13 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
         @Override
         protected void onPostExecute(List<Adicionales> adicionalesList) {
             super.onPostExecute(adicionalesList);
-            adicionales = adicionalesList;
+            HuellasApplication.getInstance().setDonaciones(adicionalesList);
             if (mFromSwipeRefresh) {
                 mSwipeRefreshLayout.setRefreshing(false);
                 mAdapterAdicionales.notifyDataSetChanged();
                 mFromSwipeRefresh = false;
             } else {
-                mAdapterAdicionales = new AdicionalesAdapter(adicionales, getContext(), DonacionesFragment.this);
+                mAdapterAdicionales = new AdicionalesAdapter(HuellasApplication.getInstance().getDonaciones(), getContext(), DonacionesFragment.this, Constants.ADICIONALES_DONACIONES);
                 mRecyclerView.setAdapter(mAdapterAdicionales);
             }
 

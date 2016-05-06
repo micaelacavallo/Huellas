@@ -240,8 +240,5 @@ public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGener
         object.deleteInBackground();
     }
 
-    @Override
-    public void cargarDBLocal(Context context) throws ParseException {
 
-    }
 }

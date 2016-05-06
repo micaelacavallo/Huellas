@@ -150,10 +150,6 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         object.deleteInBackground();
     }
 
-    @Override
-    public void cargarDBLocal(Context context) throws ParseException {
-
-    }
 
 
 }

@@ -307,10 +307,6 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDBLocal {
     }
 
     @Override
-    public void cargarDBLocal(Context context) throws ParseException {
-    }
-
-    @Override
     public void pinObjectInBackground(ParseObject object) {
         object.pinInBackground();
     }

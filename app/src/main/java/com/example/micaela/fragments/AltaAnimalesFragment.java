@@ -31,6 +31,7 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.micaela.HuellasApplication;
 import com.example.micaela.activities.AltaAnimalesActivity;
+import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.adapters.CustomSpinnerHintAdapter;
 import com.example.micaela.db.Controladores.IAdicionalesImpl;
 import com.example.micaela.db.Controladores.IPerdidosImpl;
@@ -49,6 +50,7 @@ import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.ParseException;
 
 import java.io.File;
 import java.util.Date;
@@ -460,11 +462,11 @@ public class AltaAnimalesFragment extends BaseFragment {
                         }
                     } else {
                         mIsEverythingOK = true;
-                            mTextViewError.setVisibility(View.VISIBLE);
-                            mTextViewError.setText("Todos los campos son requeridos.");
-                            YoYo.with(Techniques.Tada)
-                                    .duration(700)
-                                    .playOn(mTextViewError);
+                        mTextViewError.setVisibility(View.VISIBLE);
+                        mTextViewError.setText("Todos los campos son requeridos.");
+                        YoYo.with(Techniques.Tada)
+                                .duration(700)
+                                .playOn(mTextViewError);
                     }
                 } else {
                     if (TextUtils.isEmpty(mEditTextTitulo.getText()) ||
@@ -581,8 +583,7 @@ public class AltaAnimalesFragment extends BaseFragment {
         protected Adicionales doInBackground(Adicionales... params) {
             try {
                 if (mAction.equals(Constants.ALTA)) {
-
-                    mAdicionales.setObjectId(mIAdicionalesImpl.saveAdicional(params[0]));
+                    mIAdicionalesImpl.saveAdicional(params[0]);
                     return mAdicionales;
                 } else {
                     mIAdicionalesImpl.editAdicional(params[0]);
@@ -599,9 +600,17 @@ public class AltaAnimalesFragment extends BaseFragment {
             super.onPostExecute(adicional);
             if (!error) {
                 if (mAction.equals(Constants.ALTA)) {
-                    mAdapterCallback.addElementAdapterPublicaciones(adicional);
-                    getBaseActivity().finish();
-                    getBaseActivity().setResult(2);
+                    try {
+                        mAdicionales.setObjectId(mIAdicionalesImpl.getInsertedID(adicional.getFecha()));
+                        mAdapterCallback.addElementAdapterPublicaciones(adicional);
+                        getBaseActivity().finish();
+                        getBaseActivity().setResult(2);
+                        if (mAdicionales.getObjectId().equals("")) {
+                            showErrorOverlay();
+                        }
+                    } catch (ParseException e) {
+                        showErrorOverlay();
+                    }
                 } else {
                     mAdapterCallback.updateElementAdapterPublicacion(adicional);
                     getBaseActivity().finish();
@@ -625,7 +634,7 @@ public class AltaAnimalesFragment extends BaseFragment {
         protected Perdidos doInBackground(Perdidos... params) {
             try {
                 if (mAction.equals(Constants.ALTA)) {
-                    mPerdidos.setObjectId(mIPerdidosImpl.savePerdido(params[0]));
+                    mIPerdidosImpl.savePerdido(params[0]);
                     return mPerdidos;
 
                 } else {
@@ -643,9 +652,18 @@ public class AltaAnimalesFragment extends BaseFragment {
             super.onPostExecute(perdidos);
             if (!error) {
                 if (mAction.equals(Constants.ALTA)) {
-                    mAdapterCallback.addElementAdapterPublicaciones(perdidos);
-                    getBaseActivity().finish();
-                    getBaseActivity().setResult(2);
+                    try {
+                        mPerdidos.setObjectId(mIPerdidosImpl.getInsertedID(perdidos.getFecha()));
+                        mAdapterCallback.addElementAdapterPublicaciones(perdidos);
+                        getBaseActivity().finish();
+                        getBaseActivity().setResult(2);
+                        if (mPerdidos.getObjectId().equals("")) {
+                            showErrorOverlay();
+                        }
+                    } catch (ParseException e) {
+                        showErrorOverlay();
+                    }
+
                 } else {
                     mAdapterCallback.updateElementAdapterPublicacion(perdidos);
                     getBaseActivity().finish();
@@ -661,6 +679,17 @@ public class AltaAnimalesFragment extends BaseFragment {
             }
         }
 
+    }
+
+    public void showErrorOverlay() {
+        getBaseActivity().showMessageOverlay("Problema inesperado. Intente nuevamente", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent aIntent = new Intent(getBaseActivity(), PrincipalActivity.class);
+                aIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(aIntent);
+            }
+        });
     }
 
     @Override

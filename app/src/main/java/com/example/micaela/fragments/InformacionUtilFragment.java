@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.micaela.HuellasApplication;
 import com.example.micaela.activities.AltaAnimalesActivity;
 import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.activities.PrincipalActivity;
@@ -31,7 +32,6 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
 
     private RecyclerView mRecyclerView;
     private IAdicionales mIAdicionalesImpl;
-    List<Adicionales> adicionales;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     AdicionalesAdapter mAdapterAdicionales;
 
@@ -115,13 +115,15 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
     public void onResume() {
         super.onResume();
         if (mAdapterAdicionales == null) {
-            mAdapterAdicionales = new AdicionalesAdapter(adicionales, getBaseActivity(), InformacionUtilFragment.this);
+            List<Adicionales> adicionales = HuellasApplication.getInstance().getInfoUtil();
+            mAdapterAdicionales = new AdicionalesAdapter(adicionales, getBaseActivity(), InformacionUtilFragment.this, Constants.ADICIONALES_INFO);
             mRecyclerView.setAdapter(mAdapterAdicionales);
         }
     }
 
     @Override
     public void addElementAdapterPublicaciones(Object objeto) {
+        List<Adicionales> adicionales = HuellasApplication.getInstance().getInfoUtil();
         adicionales.add(0, (Adicionales) objeto);
         mAdapterAdicionales.notifyDataSetChanged();
         Toast.makeText(getBaseActivity(), "Publicación realizada con éxito!", Toast.LENGTH_LONG).show();
@@ -129,6 +131,7 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
 
     @Override
     public void updateElementAdapterPublicacion(Object object) {
+        List<Adicionales> adicionales = HuellasApplication.getInstance().getInfoUtil();
         for (Adicionales adicional : adicionales) {
             if (adicional.getObjectId().equals(((Adicionales) object).getObjectId())) {
                 adicional.setFoto(((Adicionales) object).getFoto());
@@ -143,6 +146,7 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
 
     @Override
     public void updateDataSetAdapterComentarios(Comentarios comentario, Object object) {
+        List<Adicionales> adicionales = HuellasApplication.getInstance().getInfoUtil();
         for (Adicionales adicional : adicionales) {
             if (adicional.getObjectId().equals(((Adicionales) object).getObjectId())) {
                 adicional.getComentarios().add(comentario);
@@ -212,6 +216,7 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
             ((PrincipalActivity) getBaseActivity()).closeDialog();
             if (!error) {
                 ((PrincipalActivity)getBaseActivity()).closeDialog();
+                List<Adicionales> adicionales = HuellasApplication.getInstance().getInfoUtil();
                 for (int x = 0; x < adicionales.size(); x++) {
                     if (adicional.getObjectId().equals(adicionales.get(x).getObjectId())) {
                         adicionales.remove(x);
@@ -236,14 +241,14 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
         @Override
         protected void onPostExecute(List<Adicionales> adicionalesList) {
             super.onPostExecute(adicionalesList);
-            adicionales = adicionalesList;
+            HuellasApplication.getInstance().setInfoUtil(adicionalesList);
             if (mFromSwipeRefresh) {
                 mSwipeRefreshLayout.setRefreshing(false);
                 mAdapterAdicionales.notifyDataSetChanged();
                 mFromSwipeRefresh = false;
             }
             else {
-                mAdapterAdicionales = new AdicionalesAdapter(adicionales, getContext(), InformacionUtilFragment.this);
+                mAdapterAdicionales = new AdicionalesAdapter(HuellasApplication.getInstance().getInfoUtil(), getContext(), InformacionUtilFragment.this, Constants.ADICIONALES_INFO);
                 mRecyclerView.setAdapter(mAdapterAdicionales);
                 ((BaseActivity) getActivity()).hideOverlay();
             }

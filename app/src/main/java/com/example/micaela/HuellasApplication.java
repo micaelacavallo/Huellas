@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Colores;
-import com.example.micaela.db.Modelo.Denuncias;
 import com.example.micaela.db.Modelo.Edades;
 import com.example.micaela.db.Modelo.Especies;
 import com.example.micaela.db.Modelo.Estados;
@@ -37,6 +37,8 @@ public class HuellasApplication extends Application {
     private List<Estados> mEstados = new ArrayList<>();
     private List<Sexos> mSexos = new ArrayList<>();
     private List<Perdidos> mPerdidos = new ArrayList<>();
+    private List<Adicionales> mDonaciones = new ArrayList<>();
+    private List<Adicionales> mInfoUtil = new ArrayList<>();
     private List<MotivoDenuncia> mMotivosDenuncia = new ArrayList<>();
 
     public static HuellasApplication getInstance() {
@@ -52,6 +54,22 @@ public class HuellasApplication extends Application {
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+    }
+
+    public List<Adicionales> getInfoUtil() {
+        return mInfoUtil;
+    }
+
+    public void setInfoUtil(List<Adicionales> infoUtil) {
+        mInfoUtil = infoUtil;
+    }
+
+    public List<Adicionales> getDonaciones() {
+        return mDonaciones;
+    }
+
+    public void setDonaciones(List<Adicionales> donaciones) {
+        mDonaciones = donaciones;
     }
 
     public List<MotivoDenuncia> getmMotivosDenuncia() {

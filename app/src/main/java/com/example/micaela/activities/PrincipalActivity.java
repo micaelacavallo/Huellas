@@ -446,6 +446,7 @@ public class PrincipalActivity extends BaseActivity {
         protected Void doInBackground(Void... params) {
 
             try {
+               mIPerdidosImpl.cargarDBLocalCaracteristicasPerdidos(PrincipalActivity.this);
                 HuellasApplication.getInstance().setmEspecies(mIPerdidosImpl.getEspecies());
                 HuellasApplication.getInstance().setmRazas(mIPerdidosImpl.getRazas());
                 HuellasApplication.getInstance().setmColores(mIPerdidosImpl.getColores());
