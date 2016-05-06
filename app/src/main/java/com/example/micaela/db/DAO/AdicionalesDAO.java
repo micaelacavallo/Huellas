@@ -320,6 +320,9 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                 objectAux.put(CAdicionales.FOTOS, new ParseFile("picture.jpg", adicionalAux.getFoto()));
                 objectAux.put(CAdicionales.OBJECT_ID, adicionalAux.getObjectId());
 
+                persona = iPersona.getPersonabyEmail(adicionalAux.getPersona().getEmail());
+                objectAux.put(CAdicionales.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
+
                 save(objectAux);
             }
         } catch (ParseException e) {
