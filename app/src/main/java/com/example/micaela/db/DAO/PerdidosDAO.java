@@ -319,7 +319,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     public void editPerdido(Perdidos perdidoAux) throws ParseException {
 
         query = ParseQuery.getQuery(Clases.PERDIDOS);
-        query.whereEqualTo(CAdicionales.OBJECT_ID, perdidoAux.getObjectId());
+        query.whereEqualTo(CPerdidos.OBJECT_ID, perdidoAux.getObjectId());
 
         try {
             if(query.count() != 0) {
