@@ -1,4 +1,4 @@
-package com.example.micaela;
+package com.example.micaela.utils;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;

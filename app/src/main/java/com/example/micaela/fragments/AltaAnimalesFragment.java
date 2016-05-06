@@ -546,7 +546,9 @@ public class AltaAnimalesFragment extends BaseFragment {
                             mAdicionales.setDonacion(false);
                         }
                         mAdicionales.setFecha(new Date());
-                        Personas personas = new Personas(HuellasApplication.getInstance().getProfileEmailFacebook());
+                        Personas personas = new Personas("", HuellasApplication.getInstance().getProfileEmailFacebook(), HuellasApplication.getInstance().getProfileNameFacebook(),
+                                HuellasApplication.getInstance().getProfileTelefono(), false, false, "", "");
+                        mPerdidos.setPersona(personas);
                         mAdicionales.setPersona(personas);
                     } else {
                         mAdicionales.setObjectId(mAdicionalEdit.getObjectId());

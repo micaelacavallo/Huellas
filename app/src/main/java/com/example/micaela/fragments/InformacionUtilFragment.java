@@ -112,6 +112,15 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
 
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdapterAdicionales == null) {
+            mAdapterAdicionales = new AdicionalesAdapter(adicionales, getBaseActivity(), InformacionUtilFragment.this);
+            mRecyclerView.setAdapter(mAdapterAdicionales);
+        }
+    }
+
+    @Override
     public void addElementAdapterPublicaciones(Object objeto) {
         adicionales.add(0, (Adicionales) objeto);
         mAdapterAdicionales.notifyDataSetChanged();

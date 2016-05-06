@@ -320,6 +320,14 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
         mSpinnerColores.setAdapter(mAdapterColores);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdapterAnimales == null) {
+            mAdapterAnimales = new AnimalesAdapter(HuellasApplication.getInstance().getmPerdidos(), getBaseActivity(), PerdidosFragment.this);
+            mRecyclerView.setAdapter(mAdapterAnimales);
+        }
+    }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -350,6 +358,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
         List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
         perdidos.add(0, (Perdidos) objeto);
         mAdapterAnimales.notifyDataSetChanged();
+
         Toast.makeText(getBaseActivity(), "Publicación realizada con éxito!", Toast.LENGTH_SHORT).show();
     }
 

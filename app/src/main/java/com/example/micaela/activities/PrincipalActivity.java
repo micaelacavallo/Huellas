@@ -28,7 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.micaela.HuellasApplication;
-import com.example.micaela.ZoomOutPageTransformer;
+import com.example.micaela.utils.ZoomOutPageTransformer;
 import com.example.micaela.db.Controladores.IDenunciasImpl;
 import com.example.micaela.db.Controladores.IEstadosImpl;
 import com.example.micaela.db.Controladores.IGeneralImpl;

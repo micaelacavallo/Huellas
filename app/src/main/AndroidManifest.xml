@@ -128,6 +128,12 @@
         <activity
             android:name="com.example.micaela.activities.ComentariosActivity"
             android:label="@string/title_activity_comentarios"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity
+            android:name="com.example.micaela.activities.HistorialPublicacionesActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
         </activity>
     </application>

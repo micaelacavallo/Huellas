@@ -151,6 +151,15 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
         mAdapterAdicionales.notifyDataSetChanged();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdapterAdicionales == null) {
+            mAdapterAdicionales = new AdicionalesAdapter(adicionales, getBaseActivity(), DonacionesFragment.this);
+            mRecyclerView.setAdapter(mAdapterAdicionales);
+        }
+    }
+
     private void inicializarRecycler(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_recycler_view);
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
