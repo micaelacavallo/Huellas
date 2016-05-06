@@ -329,7 +329,6 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
             e.fillInStackTrace();
         }
 
-        //saveAdicionalParseObject(adicionalAux);
     }
 
     @Override

@@ -318,17 +318,18 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     @Override
     public void editPerdido(Perdidos perdidoAux) throws ParseException {
 
+        ParseObject objectPerdido;
         query = ParseQuery.getQuery(Clases.PERDIDOS);
         query.whereEqualTo(CPerdidos.OBJECT_ID, perdidoAux.getObjectId());
 
         try {
             if(query.count() != 0) {
-                objectAux = query.getFirst();
-                objectAux.put(CPerdidos.TITULO, perdidoAux.getTitulo());
-                objectAux.put(CPerdidos.DESCRIPCION, perdidoAux.getDescripcion());
-                objectAux.put(CPerdidos.FOTOS, new ParseFile("picture.jpg", perdidoAux.getFoto()));
-                objectAux.put(CPerdidos.OBJECT_ID, perdidoAux.getObjectId());
-                objectAux.put(CPerdidos.UBICACION, perdidoAux.getUbicacion());
+                objectPerdido = query.getFirst();
+                objectPerdido.put(CPerdidos.TITULO, perdidoAux.getTitulo());
+                objectPerdido.put(CPerdidos.DESCRIPCION, perdidoAux.getDescripcion());
+                objectPerdido.put(CPerdidos.FOTOS, new ParseFile("picture.jpg", perdidoAux.getFoto()));
+                objectPerdido.put(CPerdidos.OBJECT_ID, perdidoAux.getObjectId());
+                objectPerdido.put(CPerdidos.UBICACION, perdidoAux.getUbicacion());
 
                 try {
                     raza = getRaza(perdidoAux.getRaza().getRaza());
@@ -342,16 +343,16 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                objectAux.put(CPerdidos.ID_RAZA, ParseObject.createWithoutData(Clases.RAZAS, String.valueOf(raza.getObjectId())));
-                objectAux.put(CPerdidos.ID_COLOR, ParseObject.createWithoutData(Clases.COLORES, String.valueOf(color.getObjectId())));
-                objectAux.put(CPerdidos.ID_SEXO, ParseObject.createWithoutData(Clases.SEXOS, String.valueOf(sexo.getObjectId())));
-                objectAux.put(CPerdidos.ID_TAMAÑO, ParseObject.createWithoutData(Clases.TAMAÑOS, String.valueOf(tamaño.getObjectId())));
-                objectAux.put(CPerdidos.ID_EDAD, ParseObject.createWithoutData(Clases.EDADES, String.valueOf(edad.getObjectId())));
-                objectAux.put(CPerdidos.ID_ESPECIE, ParseObject.createWithoutData(Clases.ESPECIES, String.valueOf(especie.getObjectId())));
-                objectAux.put(CPerdidos.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(estado.getObjectId())));
-                objectAux.put(CPerdidos.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
+                objectPerdido.put(CPerdidos.ID_RAZA, ParseObject.createWithoutData(Clases.RAZAS, String.valueOf(raza.getObjectId())));
+                objectPerdido.put(CPerdidos.ID_COLOR, ParseObject.createWithoutData(Clases.COLORES, String.valueOf(color.getObjectId())));
+                objectPerdido.put(CPerdidos.ID_SEXO, ParseObject.createWithoutData(Clases.SEXOS, String.valueOf(sexo.getObjectId())));
+                objectPerdido.put(CPerdidos.ID_TAMAÑO, ParseObject.createWithoutData(Clases.TAMAÑOS, String.valueOf(tamaño.getObjectId())));
+                objectPerdido.put(CPerdidos.ID_EDAD, ParseObject.createWithoutData(Clases.EDADES, String.valueOf(edad.getObjectId())));
+                objectPerdido.put(CPerdidos.ID_ESPECIE, ParseObject.createWithoutData(Clases.ESPECIES, String.valueOf(especie.getObjectId())));
+                objectPerdido.put(CPerdidos.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(estado.getObjectId())));
+                objectPerdido.put(CPerdidos.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
 
-                save(objectAux);
+                save(objectPerdido);
             }
         } catch (ParseException e) {
             e.fillInStackTrace();
