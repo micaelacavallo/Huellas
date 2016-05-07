@@ -824,6 +824,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
 
         query = getQueryPerdidos();
         query.whereEqualTo(CPerdidos.ID_PERSONA, obj);
+        query.whereEqualTo(CPerdidos.SOLUCIONADO, true);
         query.orderByDescending(CPerdidos.FECHA);
         checkInternetGet(query);
 
