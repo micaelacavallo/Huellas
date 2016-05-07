@@ -1,8 +1,10 @@
 package com.example.micaela.db.DAO;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.example.micaela.HuellasApplication;
+import com.example.micaela.activities.ComentariosActivity;
 import com.example.micaela.db.Constantes.CAdicionales;
 import com.example.micaela.db.Constantes.CColores;
 import com.example.micaela.db.Constantes.CComentarios;
@@ -35,6 +37,7 @@ import com.example.micaela.db.Modelo.Personas;
 import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.db.Modelo.Sexos;
 import com.example.micaela.db.Modelo.Tamaños;
+import com.example.micaela.utils.Constants;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseInstallation;
@@ -690,6 +693,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
 
     public void pushNotification(String perdidoObjectId, String mailLogueado) {
 
+
         if (!HuellasApplication.getInstance().getProfileEmailFacebook().equals("")) {
             List<String> emails = new ArrayList<String>();
             try {
@@ -708,11 +712,17 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
             JSONObject object2 = new JSONObject();
             try {
 
+                Intent intent = new Intent(context, ComentariosActivity.class);
+                intent.putExtra(Constants.COMENTARIOS_LIST, perdido.getComentarios());
+                intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
+
+
                 // Create our Installation query
                 ParseQuery pushQuery = ParseInstallation.getQuery();
 
                 pushQuery.whereContainedIn("email", emails);
                 object2.put("title", "Nuevo comentario");
+                object2.put("intent", intent);
                 ParsePush push = new ParsePush();
                 push.setQuery(pushQuery); // Set our Installation query
                 push.setData(object2);
