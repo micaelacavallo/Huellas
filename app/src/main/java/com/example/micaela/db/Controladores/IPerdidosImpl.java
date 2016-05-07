@@ -132,6 +132,11 @@ public class IPerdidosImpl implements IPerdidos {
     }
 
     @Override
+    public List<Perdidos> getPublicacionPerdidosPropiasById(String personaObjectId) throws ParseException {
+        return  mPerdidosDAO.getPublicacionPerdidosPropiasById(personaObjectId);
+    }
+
+    @Override
     public Perdidos getPublicacionPerdidosById(String objectId) throws ParseException {
         return mPerdidosDAO.getPublicacionPerdidosById(objectId);
     }

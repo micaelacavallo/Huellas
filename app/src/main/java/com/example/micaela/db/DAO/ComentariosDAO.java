@@ -7,7 +7,7 @@ import com.example.micaela.db.Constantes.CPersonas;
 import com.example.micaela.db.Constantes.Clases;
 import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Interfaces.IComentarios;
-import com.example.micaela.db.Interfaces.IDBLocal;
+import com.example.micaela.db.Interfaces.IDB;
 import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Personas;
@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by quimey.arozarena on 5/2/2016.
  */
-public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGeneral, IDBLocal {
+public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGeneral, IDB {
 
     private Context context;
     private ParseQuery<ParseObject> query;
@@ -215,24 +215,9 @@ public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGener
     }
 
     @Override
-    public void queryFromLocalDatastore(ParseQuery query) {
-        query.fromLocalDatastore();
-    }
-
-    @Override
-    public void saveEventually(ParseObject object) {
-        object.saveEventually();
-    }
-
-    @Override
     public void saveInBackground(ParseObject object) {
 
         object.saveInBackground();
-    }
-
-    @Override
-    public void deleteEventually(ParseObject object) {
-        object.deleteEventually();
     }
 
     @Override

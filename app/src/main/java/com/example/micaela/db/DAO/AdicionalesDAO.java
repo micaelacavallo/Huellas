@@ -16,7 +16,7 @@ import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Controladores.IPersonasImpl;
 import com.example.micaela.db.Interfaces.IAdicionales;
 import com.example.micaela.db.Interfaces.IComentarios;
-import com.example.micaela.db.Interfaces.IDBLocal;
+import com.example.micaela.db.Interfaces.IDB;
 import com.example.micaela.db.Interfaces.IEstados;
 import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Interfaces.IPersonas;
@@ -44,7 +44,7 @@ import java.util.List;
 /**
  * Created by quimey.arozarena on 12/22/2015.
  */
-public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLocal {
+public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDB {
 
 
     private ParseObject adicionalObject;
@@ -138,20 +138,24 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                 objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
                 estado = new Estados(objectAux.getObjectId(), objectAux.getString(CEstados.SITUACION));
 
+                if(internet(context)){
                 try {
                     objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
                     comentarios = iComentarios.getComentarios(objectRelation.getQuery().addAscendingOrder(CComentarios.FECHA).find(), object);
                 }catch (Exception e)
                 {
                     comentarios = null;
-                }
+                }}
+            else{
+                comentarios = null;
+            }
 
                 foto = object.getParseFile(CAdicionales.FOTOS);
 
 
                 byte[] image = null;
                 if (foto != null) {
-                    image = foto. getData();
+                    image = foto.getData();
                 }
                 adicional = new Adicionales(object.getObjectId(), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios, object.getBoolean(CAdicionales.BLOQUEADO));
                 adicionales.add(adicional);
@@ -289,7 +293,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
         adicionalObject.put(CAdicionales.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(estado.getObjectId())));
         adicionalObject.put(CAdicionales.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
-        adicionalObject.save();
+        save(adicionalObject);
     }
 
 
@@ -467,24 +471,9 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     }
 
     @Override
-    public void queryFromLocalDatastore(ParseQuery query) {
-        query.fromLocalDatastore();
-    }
-
-    @Override
-    public void saveEventually(ParseObject object) {
-        object.saveEventually();
-    }
-
-    @Override
     public void saveInBackground(ParseObject object) {
 
         object.saveInBackground();
-    }
-
-    @Override
-    public void deleteEventually(ParseObject object) {
-        object.deleteEventually();
     }
 
     @Override

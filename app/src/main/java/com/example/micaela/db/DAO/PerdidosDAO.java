@@ -20,7 +20,7 @@ import com.example.micaela.db.Controladores.IEstadosImpl;
 import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Controladores.IPersonasImpl;
 import com.example.micaela.db.Interfaces.IComentarios;
-import com.example.micaela.db.Interfaces.IDBLocal;
+import com.example.micaela.db.Interfaces.IDB;
 import com.example.micaela.db.Interfaces.IEstados;
 import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Interfaces.IPerdidos;
@@ -55,7 +55,7 @@ import java.util.List;
  * Created by quimey.arozarena on 12/22/2015.
  */
 
-public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
+public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
 
     private ParseObject perdidosObject;
     private Context context;
@@ -175,15 +175,19 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         objectAux = object.getParseObject(CPerdidos.ID_ESTADO);
         estado = new Estados(objectAux.getObjectId(), objectAux.getString(CEstados.SITUACION));
 
-        try {
-            objectRelation = object.getRelation(CPerdidos.COMENTARIOS);
+        if(internet(context)) {
+            try {
+                objectRelation = object.getRelation(CPerdidos.COMENTARIOS);
 
-            comentarios = iComentarios.getComentarios(objectRelation.getQuery().addAscendingOrder(CComentarios.FECHA).find(), object);
+                comentarios = iComentarios.getComentarios(objectRelation.getQuery().addAscendingOrder(CComentarios.FECHA).find(), object);
 
-        } catch (Exception e) {
+            } catch (Exception e) {
+                comentarios = null;
+            }
+        }
+        else{
             comentarios = null;
         }
-
 
         foto = object.getParseFile(CPerdidos.FOTOS);
         byte[] image = null;
@@ -291,7 +295,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         perdidosObject.put(CPerdidos.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(estado.getObjectId())));
         perdidosObject.put(CPerdidos.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
 
-        perdidosObject.save();
+        save(perdidosObject);
     }
 
     public ParseObject cargarPerdido(Perdidos perdido) {
@@ -772,23 +776,8 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     }
 
     @Override
-    public void queryFromLocalDatastore(ParseQuery query) {
-        query.fromLocalDatastore();
-    }
-
-    @Override
-    public void saveEventually(ParseObject object) {
-        object.saveEventually();
-    }
-
-    @Override
     public void saveInBackground(ParseObject object) {
         object.saveInBackground();
-    }
-
-    @Override
-    public void deleteEventually(ParseObject object) {
-        object.deleteEventually();
     }
 
     @Override
@@ -826,6 +815,21 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
         query = getQueryPerdidos();
         query.whereEqualTo(CPerdidos.OBJECT_ID, obj);
         query.whereEqualTo(CPerdidos.SOLUCIONADO, true);
+        query.orderByDescending(CPerdidos.FECHA);
+        checkInternetGet(query);
+
+        listParseObject = findQuery();
+
+        return getListPerdidos(listParseObject);
+    }
+
+    @Override
+    public List<Perdidos> getPublicacionPerdidosPropiasById(String personaObjectId) throws ParseException {
+
+        ParseObject obj = ParseObject.createWithoutData(Clases.PERSONAS, personaObjectId);
+
+        query = getQueryPerdidos();
+        query.whereEqualTo(CPerdidos.OBJECT_ID, obj);
         query.orderByDescending(CPerdidos.FECHA);
         checkInternetGet(query);
 

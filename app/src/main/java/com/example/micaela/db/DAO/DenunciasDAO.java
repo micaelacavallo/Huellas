@@ -15,7 +15,7 @@ import com.example.micaela.db.Controladores.IPerdidosImpl;
 import com.example.micaela.db.Controladores.IPersonasImpl;
 import com.example.micaela.db.Interfaces.IAdicionales;
 import com.example.micaela.db.Interfaces.IComentarios;
-import com.example.micaela.db.Interfaces.IDBLocal;
+import com.example.micaela.db.Interfaces.IDB;
 import com.example.micaela.db.Interfaces.IDenuncias;
 import com.example.micaela.db.Interfaces.IPerdidos;
 import com.example.micaela.db.Interfaces.IPersonas;
@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * Created by quimey.arozarena on 5/2/2016.
  */
-public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDBLocal {
+public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
 
 
     private Context context;
@@ -183,8 +183,7 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDBLocal {
             objectAux = iPersonas.getParseObjectById(denuncia.getmId());
             objectAux.put(CPersonas.BLOQUEADO, true);
 
-            //HACER METODO QUE TRAIGA TODOS
-            perdidos = iPerdidos.getPublicacionPerdidosByEmail(objectAux.getString(CPersonas.EMAIL));
+            perdidos = iPerdidos.getPublicacionPerdidosPropiasById(objectAux.getString(CPersonas.OBJECT_ID));
             if(perdidos!= null) {
                 for (Perdidos perdidoAux : perdidos) {
                     iPerdidos.bloquearPerdido(perdidoAux.getObjectId());
@@ -287,19 +286,9 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDBLocal {
 
 
     @Override
-    public void saveEventually(ParseObject object) {
-        object.saveEventually();
-    }
-
-    @Override
     public void saveInBackground(ParseObject object) {
 
         object.saveInBackground();
-    }
-
-    @Override
-    public void deleteEventually(ParseObject object) {
-        object.deleteEventually();
     }
 
     @Override
@@ -315,11 +304,6 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDBLocal {
     @Override
     public void unpinObjectInBackground(ParseObject object) {
         object.unpinInBackground();
-    }
-
-    @Override
-    public void queryFromLocalDatastore(ParseQuery query) {
-        query.fromLocalDatastore();
     }
 
 

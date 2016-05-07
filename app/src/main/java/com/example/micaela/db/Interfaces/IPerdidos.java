@@ -41,6 +41,7 @@ public interface IPerdidos {
     public void cargarDBLocalListaPerdidos(Context context) throws ParseException;
     public void cargarDBLocalCaracteristicasPerdidos(Context context);
     public List<Perdidos> getPublicacionPerdidosByEmail(String email) throws ParseException;
+    public List<Perdidos> getPublicacionPerdidosPropiasById(String personaObjectId) throws ParseException;
     public Perdidos getPublicacionPerdidosById(String objectId) throws ParseException;
     public ParseObject getParseObjectById(String objectId);
     public void bloquearPerdido(String objectId);
