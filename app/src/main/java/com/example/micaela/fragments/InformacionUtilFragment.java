@@ -125,7 +125,7 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
     public void addElementAdapterPublicaciones(Object objeto) {
         List<Adicionales> adicionales = HuellasApplication.getInstance().getInfoUtil();
         adicionales.add(0, (Adicionales) objeto);
-        mAdapterAdicionales.notifyDataSetChanged();
+        notifyAdapter(adicionales);
         Toast.makeText(getBaseActivity(), "Publicación realizada con éxito!", Toast.LENGTH_LONG).show();
     }
 
@@ -141,7 +141,7 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
             }
         }
 
-        mAdapterAdicionales.notifyDataSetChanged();
+        notifyAdapter(adicionales);
     }
 
     @Override
@@ -152,7 +152,16 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
                 adicional.getComentarios().add(comentario);
             }
         }
-        mAdapterAdicionales.notifyDataSetChanged();
+        notifyAdapter(adicionales);
+    }
+
+    private void notifyAdapter(List<Adicionales> adicionales) {
+        if (mAdapterAdicionales == null) {
+            mAdapterAdicionales = new AdicionalesAdapter(adicionales,getBaseActivity(), InformacionUtilFragment.this, Constants.ADICIONALES_INFO);
+
+        } else {
+            mAdapterAdicionales.notifyDataSetChanged();
+        }
     }
 
     @Override

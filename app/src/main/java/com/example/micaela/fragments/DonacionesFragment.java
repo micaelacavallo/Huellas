@@ -122,8 +122,17 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
     public void addElementAdapterPublicaciones(Object objeto) {
         List<Adicionales> adicionales = HuellasApplication.getInstance().getDonaciones();
         adicionales.add(0, (Adicionales) objeto);
-        mAdapterAdicionales.notifyDataSetChanged();
+        notifyAdapter(adicionales);
         Toast.makeText(getBaseActivity(), "Publicación realizada con éxito!", Toast.LENGTH_LONG).show();
+    }
+
+    private void notifyAdapter(List<Adicionales> adicionales) {
+        if (mAdapterAdicionales == null) {
+            mAdapterAdicionales = new AdicionalesAdapter(adicionales,getBaseActivity(), DonacionesFragment.this, Constants.ADICIONALES_DONACIONES);
+
+        } else {
+            mAdapterAdicionales.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -138,7 +147,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
             }
         }
 
-        mAdapterAdicionales.notifyDataSetChanged();
+        notifyAdapter(adicionales);
     }
 
     @Override
@@ -149,7 +158,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
                 adicional.getComentarios().add(comentario);
             }
         }
-        mAdapterAdicionales.notifyDataSetChanged();
+        notifyAdapter(adicionales);
     }
 
     @Override

@@ -361,14 +361,15 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
     public void addElementAdapterPublicaciones(Object objeto) {
         List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
         perdidos.add(0, (Perdidos) objeto);
-        mAdapterAnimales.notifyDataSetChanged();
+        notifyAdapter(perdidos);
 
         Toast.makeText(getBaseActivity(), "Publicación realizada con éxito!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void updateElementAdapterPublicacion(Object object) {
-        for (Perdidos perdido : HuellasApplication.getInstance().getmPerdidos()) {
+        List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
+        for (Perdidos perdido : perdidos) {
             if (perdido.getObjectId().equals(((Perdidos) object).getObjectId())) {
                 perdido.setFoto(((Perdidos) object).getFoto());
                 perdido.setDescripcion(((Perdidos) object).getDescripcion());
@@ -384,7 +385,16 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
                 Toast.makeText(getBaseActivity(), "Publicación editada con éxito!", Toast.LENGTH_SHORT).show();
             }
         }
-        mAdapterAnimales.notifyDataSetChanged();
+        notifyAdapter(perdidos);
+    }
+
+    private void notifyAdapter(List<Perdidos> perdidos) {
+        if (mAdapterAnimales == null) {
+            mAdapterAnimales = new AnimalesAdapter(perdidos,getBaseActivity(), PerdidosFragment.this);
+
+        } else {
+            mAdapterAnimales.notifyDataSetChanged();
+        }
     }
 
 
@@ -396,7 +406,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
                 perdido.getComentarios().add(comentario);
             }
         }
-        mAdapterAnimales.notifyDataSetChanged();
+        notifyAdapter(perdidos);
     }
 
     @Override
