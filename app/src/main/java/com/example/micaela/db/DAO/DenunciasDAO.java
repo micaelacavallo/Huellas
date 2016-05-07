@@ -183,7 +183,8 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDBLocal {
             objectAux = iPersonas.getParseObjectById(denuncia.getmId());
             objectAux.put(CPersonas.BLOQUEADO, true);
 
-            perdidos = iPerdidos.getPublicacionesPerdidosPropias(objectAux.getString(CPersonas.OBJECT_ID));
+            //HACER METODO QUE TRAIGA TODOS
+            perdidos = iPerdidos.getPublicacionPerdidosByEmail(objectAux.getString(CPersonas.EMAIL));
             if(perdidos!= null) {
                 for (Perdidos perdidoAux : perdidos) {
                     iPerdidos.bloquearPerdido(perdidoAux.getObjectId());

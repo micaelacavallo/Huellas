@@ -377,7 +377,7 @@ public class HistorialPublicacionesFragment extends BaseFragment implements Adic
         protected Void doInBackground(Void... params) {
             IPerdidos iPerdidos = new IPerdidosImpl(getBaseActivity());
             try {
-                HuellasApplication.getInstance().setmMisSolucionados(iPerdidos.getPublicacionesPerdidosPropias(HuellasApplication.getInstance().getProfileEmailFacebook()));
+                HuellasApplication.getInstance().setmMisSolucionados(iPerdidos.getPublicacionPerdidosByEmail(HuellasApplication.getInstance().getProfileEmailFacebook()));
             } catch (ParseException e) {
                 error = true;
             }

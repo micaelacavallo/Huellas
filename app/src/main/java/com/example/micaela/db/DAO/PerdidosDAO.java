@@ -818,12 +818,13 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDBLocal {
     }
 
     @Override
-    public List<Perdidos> getPublicacionesPerdidosPropias(String objectId) throws ParseException {
+    public List<Perdidos> getPublicacionPerdidosByEmail(String email) throws ParseException {
 
-        ParseObject obj = ParseObject.createWithoutData(Clases.PERSONAS, objectId);
+        persona = iPersona.getPersonabyEmail(email);
+        ParseObject obj = ParseObject.createWithoutData(Clases.PERSONAS, persona.getObjectId());
 
         query = getQueryPerdidos();
-        query.whereEqualTo(CPerdidos.ID_PERSONA, obj);
+        query.whereEqualTo(CPerdidos.OBJECT_ID, obj);
         query.whereEqualTo(CPerdidos.SOLUCIONADO, true);
         query.orderByDescending(CPerdidos.FECHA);
         checkInternetGet(query);
