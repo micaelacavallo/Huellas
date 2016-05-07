@@ -45,7 +45,6 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
         return mInstanceDonacion;
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -70,7 +69,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
 
     }
 
-    private class AsyncTaskDeletePerdido extends AsyncTask<Adicionales, Void, Void> {
+    private class AsyncTaskDeleteDonacion extends AsyncTask<Adicionales, Void, Void> {
         private boolean error = false;
         private Adicionales adicional = null;
 
@@ -91,7 +90,6 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
             super.onPostExecute(aVoid);
             ((PrincipalActivity) getBaseActivity()).closeDialog();
             if (!error) {
-                ((PrincipalActivity) getBaseActivity()).closeDialog();
                 List<Adicionales> adicionales = HuellasApplication.getInstance().getDonaciones();
                 for (int x = 0; x < adicionales.size(); x++) {
                     if (adicional.getObjectId().equals(adicionales.get(x).getObjectId())) {
@@ -162,6 +160,9 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
             mAdapterAdicionales = new AdicionalesAdapter(adicionales, getBaseActivity(), DonacionesFragment.this, Constants.ADICIONALES_DONACIONES);
             mRecyclerView.setAdapter(mAdapterAdicionales);
         }
+        else {
+            mAdapterAdicionales.notifyDataSetChanged();
+        }
     }
 
     private void inicializarRecycler(View view) {
@@ -215,7 +216,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
                                 break;
                             case R.id.textView_confirmar:
                                 ((PrincipalActivity) getBaseActivity()).showLoadDialog();
-                                new AsyncTaskDeletePerdido().execute(adicional);
+                                new AsyncTaskDeleteDonacion().execute(adicional);
                                 break;
                         }
                     }
@@ -243,6 +244,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
             } else {
                 mAdapterAdicionales = new AdicionalesAdapter(HuellasApplication.getInstance().getDonaciones(), getContext(), DonacionesFragment.this, Constants.ADICIONALES_DONACIONES);
                 mRecyclerView.setAdapter(mAdapterAdicionales);
+                ((PrincipalActivity) getBaseActivity()).setCountInfoLoaded();
             }
 
         }

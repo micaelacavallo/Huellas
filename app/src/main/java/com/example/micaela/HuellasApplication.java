@@ -37,6 +37,7 @@ public class HuellasApplication extends Application {
     private List<Estados> mEstados = new ArrayList<>();
     private List<Sexos> mSexos = new ArrayList<>();
     private List<Perdidos> mPerdidos = new ArrayList<>();
+    private List<Perdidos> mMisSolucionados = null;
     private List<Adicionales> mDonaciones = new ArrayList<>();
     private List<Adicionales> mInfoUtil = new ArrayList<>();
     private List<MotivoDenuncia> mMotivosDenuncia = new ArrayList<>();
@@ -58,6 +59,14 @@ public class HuellasApplication extends Application {
 
     public List<Adicionales> getInfoUtil() {
         return mInfoUtil;
+    }
+
+    public List<Perdidos> getmMisSolucionados() {
+        return mMisSolucionados;
+    }
+
+    public void setmMisSolucionados(List<Perdidos> mMisSolucionados) {
+        this.mMisSolucionados = mMisSolucionados;
     }
 
     public void setInfoUtil(List<Adicionales> infoUtil) {

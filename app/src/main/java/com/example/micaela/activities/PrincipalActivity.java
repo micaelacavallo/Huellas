@@ -77,6 +77,14 @@ public class PrincipalActivity extends BaseActivity {
 
     private String mDestinoDenuncia = "";
 
+    private int mCountInfoLoaded;
+
+    public void setCountInfoLoaded () {
+        mCountInfoLoaded ++;
+        if (mCountInfoLoaded == 3) {
+            hideOverlay();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +97,7 @@ public class PrincipalActivity extends BaseActivity {
         mIDenunciasImpl = new IDenunciasImpl(this);
 
         showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+        mCountInfoLoaded = 0;
 
         mPager = (ViewPager) findViewById(R.id.pager);
 
@@ -328,8 +337,13 @@ public class PrincipalActivity extends BaseActivity {
                                 break;
 
                             case R.id.nav_drawer_perfil:
-                                Intent intent = new Intent(PrincipalActivity.this, MisDatosActivity.class);
-                                startActivity(intent);
+                                Intent intentPrincipal = new Intent(PrincipalActivity.this, MisDatosActivity.class);
+                                startActivity(intentPrincipal);
+                                break;
+
+                            case R.id.nav_drawer_historial:
+                                Intent intentHistorial = new Intent(PrincipalActivity.this, HistorialPublicacionesActivity.class);
+                                startActivity(intentHistorial);
                                 break;
                         }
 

@@ -60,6 +60,9 @@ public class ComentariosFragment extends BaseFragment {
         mFromFragment = getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT);
         if (Constants.PERDIDOS.equals(mFromFragment)) {
             mPerdido = getBaseActivity().getIntent().getParcelableExtra(Constants.COMENTARIOS_LIST);
+            if (mPerdido.isSolucionado()) {
+                mRootView.findViewById(R.id.linear_escribir_comentario).setVisibility(View.GONE);
+            }
             mIPerdidosImpl = new IPerdidosImpl(getBaseActivity());
             mAdapter = new ComentariosAdapter(mPerdido.getComentarios(), getBaseActivity());
 

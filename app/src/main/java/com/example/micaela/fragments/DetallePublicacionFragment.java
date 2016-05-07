@@ -57,6 +57,12 @@ public class DetallePublicacionFragment extends BaseFragment {
         if (Constants.PERDIDOS.equals(mFromFragment)) {
             getBaseActivity().getCardEstado().setVisibility(View.VISIBLE);
             mPerdidos = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
+            if (mPerdidos.isSolucionado() && (mPerdidos.getComentarios() == null || mPerdidos.getComentarios().size() == 0)) {
+                setHasOptionsMenu(false);
+            }
+            else {
+                setHasOptionsMenu(true);
+            }
             fillViews(mPerdidos.getPersona().getNombre(), mPerdidos.getPersona().getTelefono(),
                     mPerdidos.getEstado().getSituacion(), mPerdidos.getFoto(), mPerdidos.getTitulo(),
                     mPerdidos.getDescripcion(), mPerdidos.getRaza().getmRaza(), mPerdidos.getEspecie().getEspecie(),
@@ -68,9 +74,8 @@ public class DetallePublicacionFragment extends BaseFragment {
             mViewLocation.setVisibility(View.GONE);
             fillViews(mAdicionales.getPersona().getNombre(), mAdicionales.getPersona().getTelefono(), "", mAdicionales.getFoto(),
                     mAdicionales.getTitulo(), mAdicionales.getDescripcion(), "", "", "", "", "", "", "", mAdicionales.getFecha());
+            setHasOptionsMenu(true);
         }
-
-        setHasOptionsMenu(true);
 
         return mRootView;
     }

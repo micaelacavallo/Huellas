@@ -38,6 +38,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linear_escribir_comentario"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_gravity="bottom"

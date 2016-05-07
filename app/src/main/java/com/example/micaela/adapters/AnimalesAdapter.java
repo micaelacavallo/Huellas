@@ -38,7 +38,7 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
     }
 
     public interface PopupMenuCallback {
-        void onClickItem (int idItem, Perdidos perdido);
+        void onClickItem(int idItem, Perdidos perdido);
     }
 
     @Override
@@ -51,73 +51,83 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
 
     @Override
     public void onBindViewHolder(final AnimalesViewHolder holder, final int position) {
-        if (!mPerdidos.get(position).isSolucionado()) {
+        String raza = mPerdidos.get(position).getRaza().getRaza();
+        if (raza.equals("Otra")) {
+            raza = "";
+        }
+        String title = mPerdidos.get(position).getEspecie().getEspecie() + " " + raza + " " + mPerdidos.get(position).getColor().getColor();
+        holder.getTextViewTitulo().setText(title);
+        holder.getTextViewDescripcion().setText(mPerdidos.get(position).getDescripcion());
+        holder.getCardEstado().setVisibility(View.VISIBLE);
 
-            String raza = mPerdidos.get(position).getRaza().getRaza();
-            if (raza.equals("Otra")) {
-                raza = "";
-            }
-            String title = mPerdidos.get(position).getEspecie().getEspecie() + " " + raza + " " + mPerdidos.get(position).getColor().getColor();
-            holder.getTextViewTitulo().setText(title);
-            holder.getTextViewDescripcion().setText(mPerdidos.get(position).getDescripcion());
-            holder.getCardEstado().setVisibility(View.VISIBLE);
-
-            if (mPerdidos.get(position).getEstado().getSituacion().equals(mContext.getString(R.string.buscado_minus))) {
-                holder.getTextViewEstado().setText(mContext.getString(R.string.buscado_mayus));
-                holder.getTextViewEstado().setBackgroundResource(R.color.orange_light);
+        if (mPerdidos.get(position).getEstado().getSituacion().equals(mContext.getString(R.string.buscado_minus))) {
+            holder.getTextViewEstado().setText(mContext.getString(R.string.buscado_mayus));
+            holder.getTextViewEstado().setBackgroundResource(R.color.orange_light);
+        } else {
+            if (mPerdidos.get(position).getEstado().getSituacion().equals(mContext.getString(R.string.encontrado_minus))) {
+                holder.getTextViewEstado().setText(mContext.getString(R.string.encontrado_mayus));
+                holder.getTextViewEstado().setBackgroundResource(R.color.blue_light);
             } else {
-                if (mPerdidos.get(position).getEstado().getSituacion().equals(mContext.getString(R.string.encontrado_minus))) {
-                    holder.getTextViewEstado().setText(mContext.getString(R.string.encontrado_mayus));
-                    holder.getTextViewEstado().setBackgroundResource(R.color.blue_light);
-                } else {
-                    if (mPerdidos.get(position).getEstado().getSituacion().equals(mContext.getString(R.string.adopcion_minus))) {
-                        holder.getTextViewEstado().setText(mContext.getString(R.string.adopcion_mayus));
-                        holder.getTextViewEstado().setBackgroundResource(R.color.green_light);
-                    }
+                if (mPerdidos.get(position).getEstado().getSituacion().equals(mContext.getString(R.string.adopcion_minus))) {
+                    holder.getTextViewEstado().setText(mContext.getString(R.string.adopcion_mayus));
+                    holder.getTextViewEstado().setBackgroundResource(R.color.green_light);
                 }
             }
+        }
 
-            holder.getViewComentar().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, ComentariosActivity.class);
-                    intent.putParcelableArrayListExtra(Constants.COMENTARIOS_LIST, mPerdidos.get((int) holder.getCardContainer().getTag()).getComentarios());
-                    mContext.startActivity(intent);
-                }
-            });
-            byte[] foto = mPerdidos.get(position).getFoto();
-            if (foto != null) {
-                holder.getImageViewFoto().setImageBitmap(((BaseActivity) mContext).convertFromByteToBitmap(foto));
+        holder.getViewComentar().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ComentariosActivity.class);
+                intent.putParcelableArrayListExtra(Constants.COMENTARIOS_LIST, mPerdidos.get((int) holder.getCardContainer().getTag()).getComentarios());
+                mContext.startActivity(intent);
             }
-            else {
-                holder.getImageViewFoto().setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.placeholder));
-            }
-            try {
-                int cantidadComentarios = mPerdidos.get(position).getComentarios().size();
-                if (cantidadComentarios > 0) {
-                    if (cantidadComentarios == 1) {
-                        holder.getmTextViewComentarios().setText(mContext.getString(R.string.un_comentario));
-                    } else {
-                        holder.getmTextViewComentarios().setText(String.format(mContext.getString(R.string.comentarios_cantidad), cantidadComentarios));
-                    }
-                    holder.getmTextViewComentarios().setVisibility(View.VISIBLE);
+        });
+        byte[] foto = mPerdidos.get(position).getFoto();
+        if (foto != null) {
+            holder.getImageViewFoto().setImageBitmap(((BaseActivity) mContext).convertFromByteToBitmap(foto));
+        } else {
+            holder.getImageViewFoto().setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.placeholder));
+        }
+        try {
+            int cantidadComentarios = mPerdidos.get(position).getComentarios().size();
+            if (cantidadComentarios > 0) {
+                if (cantidadComentarios == 1) {
+                    holder.getmTextViewComentarios().setText(mContext.getString(R.string.un_comentario));
                 } else {
-                    holder.getmTextViewComentarios().setVisibility(View.GONE);
+                    holder.getmTextViewComentarios().setText(String.format(mContext.getString(R.string.comentarios_cantidad), cantidadComentarios));
                 }
-            }
-            catch (NullPointerException e) {
+                holder.getmTextViewComentarios().setVisibility(View.VISIBLE);
+            } else {
                 holder.getmTextViewComentarios().setVisibility(View.GONE);
             }
-            holder.getViewComentar().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(mContext, ComentariosActivity.class);
-                    intent.putExtra(Constants.COMENTARIOS_LIST, mPerdidos.get((int) holder.getCardContainer().getTag()));
-                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
-                    mContext.startActivity(intent);
-                }
-            });
+        } catch (NullPointerException e) {
+            holder.getmTextViewComentarios().setVisibility(View.GONE);
+        }
 
+        holder.getTextViewHora().setText(((BaseActivity) mContext).getPublicationTime(mPerdidos.get(position).getFecha()));
+        holder.getCardContainer().setTag(position);
+        holder.getCardContainer().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, DetallePublicacionActivity.class);
+                intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
+                intent.putExtra(Constants.OBJETO_PERDIDO, mPerdidos.get((int) view.getTag()));
+                mContext.startActivity(intent);
+            }
+        });
+
+
+        if (mPerdidos.get(position).isSolucionado()) {
+            holder.getmImageViewOpciones().setVisibility(View.GONE);
+            holder.getViewComentar().setVisibility(View.GONE);
+            if (mPerdidos.get(position).getComentarios() == null || mPerdidos.get(position).getComentarios().size() == 0) {
+                holder.getmLineSeparator().setVisibility(View.GONE);
+            }
+            else {
+                holder.getmLineSeparator().setVisibility(View.VISIBLE);
+            }
+        } else {
             holder.getmImageViewOpciones().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -126,14 +136,12 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
                 }
             });
 
-            holder.getTextViewHora().setText(((BaseActivity) mContext).getPublicationTime(mPerdidos.get(position).getFecha()));
-            holder.getCardContainer().setTag(position);
-            holder.getCardContainer().setOnClickListener(new View.OnClickListener() {
+            holder.getViewComentar().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(mContext, DetallePublicacionActivity.class);
+                    Intent intent = new Intent(mContext, ComentariosActivity.class);
+                    intent.putExtra(Constants.COMENTARIOS_LIST, mPerdidos.get((int) holder.getCardContainer().getTag()));
                     intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
-                    intent.putExtra(Constants.OBJETO_PERDIDO, mPerdidos.get((int) view.getTag()));
                     mContext.startActivity(intent);
                 }
             });
@@ -155,8 +163,7 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
             menu.removeItem(R.id.item_editar);
             menu.removeItem(R.id.item_eliminar);
             menu.removeItem(R.id.item_solucionado);
-        }
-        else {
+        } else {
             menu.removeItem(R.id.item_reportar_publicacion);
             menu.removeItem(R.id.item_reportar_usuario);
         }

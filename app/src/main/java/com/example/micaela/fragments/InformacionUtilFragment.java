@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.example.micaela.HuellasApplication;
 import com.example.micaela.activities.AltaAnimalesActivity;
-import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.adapters.AdicionalesAdapter;
 import com.example.micaela.db.Controladores.IAdicionalesImpl;
@@ -44,13 +43,6 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
             mInstanceInfo = new InformacionUtilFragment();
         }
         return mInstanceInfo;
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mInstanceInfo = null;
     }
 
     @Override
@@ -110,6 +102,11 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mInstanceInfo =null;
+    }
 
     @Override
     public void onResume() {
@@ -118,6 +115,9 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
             List<Adicionales> adicionales = HuellasApplication.getInstance().getInfoUtil();
             mAdapterAdicionales = new AdicionalesAdapter(adicionales, getBaseActivity(), InformacionUtilFragment.this, Constants.ADICIONALES_INFO);
             mRecyclerView.setAdapter(mAdapterAdicionales);
+        }
+        else {
+            mAdapterAdicionales.notifyDataSetChanged();
         }
     }
 
@@ -181,7 +181,7 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
                                 break;
                             case R.id.textView_confirmar:
                                 ((PrincipalActivity) getBaseActivity()).showLoadDialog();
-                                new AsyncTaskDeletePerdido().execute(adicional);
+                                new AsyncTaskDeleteInfoUtil().execute(adicional);
                                 break;
                         }
                     }
@@ -190,10 +190,9 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
 
                 break;
         }
-
-
     }
-    private class AsyncTaskDeletePerdido extends AsyncTask<Adicionales, Void, Void> {
+
+    private class AsyncTaskDeleteInfoUtil extends AsyncTask<Adicionales, Void, Void> {
         private boolean error = false;
         private Adicionales adicional = null;
 
@@ -215,7 +214,6 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
             super.onPostExecute(aVoid);
             ((PrincipalActivity) getBaseActivity()).closeDialog();
             if (!error) {
-                ((PrincipalActivity)getBaseActivity()).closeDialog();
                 List<Adicionales> adicionales = HuellasApplication.getInstance().getInfoUtil();
                 for (int x = 0; x < adicionales.size(); x++) {
                     if (adicional.getObjectId().equals(adicionales.get(x).getObjectId())) {
@@ -250,7 +248,7 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
             else {
                 mAdapterAdicionales = new AdicionalesAdapter(HuellasApplication.getInstance().getInfoUtil(), getContext(), InformacionUtilFragment.this, Constants.ADICIONALES_INFO);
                 mRecyclerView.setAdapter(mAdapterAdicionales);
-                ((BaseActivity) getActivity()).hideOverlay();
+                ((PrincipalActivity)getBaseActivity()).setCountInfoLoaded();
             }
         }
 

@@ -91,20 +91,21 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
         return mInstancePerdidos;
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         mInstancePerdidos = null;
     }
 
+
+
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_perdidos, container, false);
         mIperdidosImpl = new IPerdidosImpl(getActivity().getApplicationContext());
 
-        inicializarSwipeRefresh(mRootView);
-        inicializarRecycler(mRootView);
+        inicializarSwipeRefresh();
+        inicializarRecycler();
         mTextViewEmpty = (TextView) mRootView.findViewById(R.id.empty_publicaciones);
         mViewCardFilter = mRootView.findViewById(R.id.cardView_filter);
         mViewFilerContainer = mRootView.findViewById(R.id.layout_filter_container);
@@ -194,8 +195,8 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
         return false;
     }
 
-    private void inicializarSwipeRefresh(View view) {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+    private void inicializarSwipeRefresh() {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -210,8 +211,8 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
         mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
     }
 
-    private void inicializarRecycler(View view) {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.list_recycler_view);
+    private void inicializarRecycler() {
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.list_recycler_view);
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -327,6 +328,9 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
             mAdapterAnimales = new AnimalesAdapter(HuellasApplication.getInstance().getmPerdidos(), getBaseActivity(), PerdidosFragment.this);
             mRecyclerView.setAdapter(mAdapterAnimales);
         }
+        else {
+            mAdapterAnimales.notifyDataSetChanged();
+        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -399,13 +403,11 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
     public void onClickItem(int idItem, final Perdidos perdido) {
         switch (idItem) {
             case R.id.item_editar:
-                getBaseActivity().showOverlay("Cargando...");
                 Intent intent = new Intent(getBaseActivity(), AltaAnimalesActivity.class);
                 intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
                 intent.putExtra(Constants.ACTION, Constants.EDITAR);
                 intent.putExtra(Constants.OBJETO_PERDIDO, perdido);
                 getBaseActivity().startActivity(intent);
-                getBaseActivity().hideOverlay();
                 break;
             case R.id.item_reportar_publicacion:
                 ((PrincipalActivity) getActivity()).showDenunciasDialog(Constants.TABLA_PERDIDOS, perdido.getObjectId());
@@ -475,6 +477,8 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
                 List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
                 for (int x = 0; x < perdidos.size(); x++) {
                     if (perdidoId.equals(perdidos.get(x).getObjectId())) {
+                        perdidos.get(x).setSolucionado(true);
+                        HuellasApplication.getInstance().getmMisSolucionados().add(0, perdidos.get(x));
                         perdidos.remove(x);
                     }
                 }
@@ -547,7 +551,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
             } else {
                 mAdapterAnimales = new AnimalesAdapter(HuellasApplication.getInstance().getmPerdidos(), getBaseActivity(), PerdidosFragment.this);
                 mRecyclerView.setAdapter(mAdapterAnimales);
-                getBaseActivity().hideOverlay();
+                ((PrincipalActivity)getBaseActivity()).setCountInfoLoaded();
             }
 
         }

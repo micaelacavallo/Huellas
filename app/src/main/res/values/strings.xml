@@ -40,6 +40,11 @@
     <string name="editando">Editando publicación</string>
     <string name="dialog_solucionado_descripcion">¿Está seguro que desea cambiar el estado de la publicación a solucionado? Este cambio no se podrá revertir.</string>
     <string name="dialog_eliminar_descripcion">¿Está seguro que desea eliminar la publicación?</string>
+    <string name="ver_solucionadas">Publicaciones solucionadas</string>
+    <string name="solucionados_title">Solucionados</string>
+    <string name="mis_publicaciones_title">Mis publicaciones</string>
+    <string name="empty_publicaciones_msg">Todavía no realizaste ninguna publicación de este tipo.</string>
+    <string name="empty_solucionados_msg">No tenés publicaciones solucionadas.</string>
     <string-array name="spinner_tipo_publicacion">
         <item>Perdidos</item>
         <item>Donaciones</item>

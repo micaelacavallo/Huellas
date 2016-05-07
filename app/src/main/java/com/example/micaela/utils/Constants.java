@@ -10,10 +10,9 @@ public class Constants {
 
     //  DETALLE PUBLICACION
     public static final String FROM_FRAGMENT = "FROM_FRAGMENT";
-    public static final String PERDIDOS = "PERDIDOS";
-    public static final String ADICIONALES = "ADICIONALES";
-    public static final String ADICIONALES_INFO = "ADICIONALES_INFO";
-    public static final String ADICIONALES_DONACIONES = "ADICIONALES_DONACINES";
+    public static final String PERDIDOS = "Perdidos";
+    public static final String ADICIONALES_INFO = "Información útil";
+    public static final String ADICIONALES_DONACIONES = "Donaciones";
     public static final String DIRECCION = "DIRECCION";
     public static final String ADDRESS = "ADDRESS";
     public static final String COMENTARIOS_LIST = "COMENTARIOS_LIST";
@@ -58,8 +57,10 @@ public class Constants {
     public static final String COMENTARIOS_DATE_FORMAT = "dd/MM HH:mm";
 
     // DENUNCIAS
-    public static final String DESTINO_DENUNCIA = "DestinoDenuncia";
     public static final String TABLA_PERSONAS = "Personas";
     public static final String TABLA_ADICIONALES = "Adicionales";
     public static final String TABLA_PERDIDOS = "Perdidos";
+
+    // HISTORIAL
+    public static final String SOLUCIONADOS = "Solucionados" ;
 }
