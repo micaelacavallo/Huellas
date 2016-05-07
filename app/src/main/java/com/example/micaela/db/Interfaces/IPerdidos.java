@@ -40,7 +40,7 @@ public interface IPerdidos {
     public void AgregarComentarioPerdido(String perdidoObjectId, String comentario, String email) throws ParseException;
     public void cargarDBLocalListaPerdidos(Context context) throws ParseException;
     public void cargarDBLocalCaracteristicasPerdidos(Context context);
-    public List<Perdidos> getPublicacionesPerdidosPropias(String objectId) throws ParseException;
+    public List<Perdidos> getPublicacionPerdidosByEmail(String email) throws ParseException;
     public Perdidos getPublicacionPerdidosById(String objectId) throws ParseException;
     public ParseObject getParseObjectById(String objectId);
     public void bloquearPerdido(String objectId);
