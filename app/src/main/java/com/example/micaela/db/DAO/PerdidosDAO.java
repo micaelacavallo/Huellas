@@ -1,10 +1,8 @@
 package com.example.micaela.db.DAO;
 
 import android.content.Context;
-import android.content.Intent;
 
 import com.example.micaela.HuellasApplication;
-import com.example.micaela.activities.ComentariosActivity;
 import com.example.micaela.db.Constantes.CAdicionales;
 import com.example.micaela.db.Constantes.CColores;
 import com.example.micaela.db.Constantes.CComentarios;
@@ -711,18 +709,18 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
 
             JSONObject object2 = new JSONObject();
             try {
-
-                Intent intent = new Intent(context, ComentariosActivity.class);
+               /* Intent intent = new Intent(context, ComentariosActivity.class);
                 intent.putExtra(Constants.COMENTARIOS_LIST, perdido.getComentarios());
                 intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
-
+*/
 
                 // Create our Installation query
                 ParseQuery pushQuery = ParseInstallation.getQuery();
 
                 pushQuery.whereContainedIn("email", emails);
                 object2.put("title", "Nuevo comentario");
-                object2.put("intent", intent);
+                object2.putOpt(Constants.COMENTARIOS_LIST, perdido.getComentarios());
+                object2.putOpt(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
                 ParsePush push = new ParsePush();
                 push.setQuery(pushQuery); // Set our Installation query
                 push.setData(object2);
