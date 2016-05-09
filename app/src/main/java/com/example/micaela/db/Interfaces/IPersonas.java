@@ -22,7 +22,7 @@ public interface IPersonas {
     public List<MotivoDenuncia> getMotivoDenuncias();
     public void checkInternetGet(ParseQuery<ParseObject> query);
     public boolean internet(Context context);
-    public void registar(Personas personas);
+    public boolean registar(Personas personas) throws ParseException;
     public List<Personas> getPersonas();
     public Personas getPersonabyEmail(String email) throws ParseException;
     public Personas getPersonabyId(String objectId) throws ParseException;

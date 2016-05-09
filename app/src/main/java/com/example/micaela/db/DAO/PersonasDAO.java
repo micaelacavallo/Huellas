@@ -211,12 +211,16 @@ public class PersonasDAO implements IPersonas {
     }
 
     @Override
-    public void registar(Personas persona) {
+    public boolean registar(Personas persona) throws ParseException {
 
+        boolean bloqueado = false;
         boolean flag = false;
         personas = this.getPersonas();
+        Personas personaAux = null;
         for (int x = 0; x<personas.size();x++) {
             if (persona.getEmail().equals(personas.get(x).getEmail())) {
+                personaAux = this.getPersonabyEmail(persona.getEmail());
+                bloqueado = personaAux.isBloqueado();
                 flag = true;
             }
         }
@@ -233,6 +237,8 @@ public class PersonasDAO implements IPersonas {
 
             save(parseObject);
         }
+
+        return bloqueado;
     }
 
     @Override
