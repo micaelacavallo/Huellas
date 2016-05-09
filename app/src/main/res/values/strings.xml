@@ -52,4 +52,8 @@
         <item>Información útil</item>
     </string-array>
 
+    <string name="customactivityoncrash_error_activity_error_occurred_explanation">Error inesperado. Disculpa por el inconveniente.</string>
+    <string name="customactivityoncrash_error_activity_restart_app">Reiniciar aplicación</string>
+
+
 </resources>

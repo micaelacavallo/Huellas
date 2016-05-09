@@ -28,6 +28,7 @@ import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
+import com.example.micaela.utils.CustomDialog;
 
 import java.util.Date;
 
@@ -166,10 +167,15 @@ public class DetallePublicacionFragment extends BaseFragment implements Comentar
         mViewLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mImageViewLocation.getVisibility() == View.VISIBLE) {
-                    Intent intent = new Intent(getBaseActivity(), MapActivity.class);
-                    intent.putExtra(Constants.DIRECCION, mPerdidos.getUbicacion());
-                    startActivity(intent);
+                if (getBaseActivity().internet()) {
+                    if (mImageViewLocation.getVisibility() == View.VISIBLE) {
+                        Intent intent = new Intent(getBaseActivity(), MapActivity.class);
+                        intent.putExtra(Constants.DIRECCION, mPerdidos.getUbicacion());
+                        startActivity(intent);
+                    }
+                }
+                else {
+                    CustomDialog.showDialog(getBaseActivity());
                 }
             }
         });
@@ -192,16 +198,21 @@ public class DetallePublicacionFragment extends BaseFragment implements Comentar
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_comment:
-                Intent intent = new Intent(getBaseActivity(), ComentariosActivity.class);
-                if (Constants.PERDIDOS.equals(getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT))) {
-                    intent.putExtra(Constants.COMENTARIOS_LIST, mPerdidos);
-                    intent.putExtra(Constants.FROM_FRAGMENT, mFromFragment);
-                } else {
-                    intent.putExtra(Constants.COMENTARIOS_LIST, mAdicionales);
-                    intent.putExtra(Constants.FROM_FRAGMENT, mFromFragment);
+                if (getBaseActivity().internet()) {
+                    Intent intent = new Intent(getBaseActivity(), ComentariosActivity.class);
+                    if (Constants.PERDIDOS.equals(getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT))) {
+                        intent.putExtra(Constants.COMENTARIOS_LIST, mPerdidos);
+                        intent.putExtra(Constants.FROM_FRAGMENT, mFromFragment);
+                    } else {
+                        intent.putExtra(Constants.COMENTARIOS_LIST, mAdicionales);
+                        intent.putExtra(Constants.FROM_FRAGMENT, mFromFragment);
+                    }
+                    intent.putExtra(Constants.FROM_DETALLE, true);
+                    startActivity(intent);
                 }
-                intent.putExtra(Constants.FROM_DETALLE, true);
-                startActivity(intent);
+                else {
+                    CustomDialog.showDialog(getBaseActivity());
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

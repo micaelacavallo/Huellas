@@ -19,6 +19,7 @@ import com.example.micaela.activities.DetallePublicacionActivity;
 import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
+import com.example.micaela.utils.CustomDialog;
 
 import java.util.List;
 
@@ -123,8 +124,7 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
             holder.getViewComentar().setVisibility(View.GONE);
             if (mPerdidos.get(position).getComentarios() == null || mPerdidos.get(position).getComentarios().size() == 0) {
                 holder.getmLineSeparator().setVisibility(View.GONE);
-            }
-            else {
+            } else {
                 holder.getmLineSeparator().setVisibility(View.VISIBLE);
             }
         } else {
@@ -139,10 +139,14 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
             holder.getViewComentar().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(mContext, ComentariosActivity.class);
-                    intent.putExtra(Constants.COMENTARIOS_LIST, mPerdidos.get((int) holder.getCardContainer().getTag()));
-                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
-                    mContext.startActivity(intent);
+                    if (((BaseActivity) mContext).internet()) {
+                        Intent intent = new Intent(mContext, ComentariosActivity.class);
+                        intent.putExtra(Constants.COMENTARIOS_LIST, mPerdidos.get((int) holder.getCardContainer().getTag()));
+                        intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
+                        mContext.startActivity(intent);
+                    } else {
+                        CustomDialog.showDialog(mContext);
+                    }
                 }
             });
         }
@@ -153,7 +157,11 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
         mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                mPopupMenuCallback.onClickItem(item.getItemId(), mPerdidos.get((Integer) view.getTag()));
+                if (((BaseActivity) mContext).internet()) {
+                    mPopupMenuCallback.onClickItem(item.getItemId(), mPerdidos.get((Integer) view.getTag()));
+                } else {
+                    CustomDialog.showDialog(mContext);
+                }
                 return true;
             }
         });

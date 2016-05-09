@@ -176,7 +176,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
         objectAux = object.getParseObject(CPerdidos.ID_ESTADO);
         estado = new Estados(objectAux.getObjectId(), objectAux.getString(CEstados.SITUACION));
 
-        if(internet(context)) {
+        if (internet(context)) {
             try {
                 objectRelation = object.getRelation(CPerdidos.COMENTARIOS);
 
@@ -185,8 +185,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
             } catch (Exception e) {
                 comentarios = null;
             }
-        }
-        else{
+        } else {
             comentarios = null;
         }
 
@@ -700,7 +699,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
                 e.printStackTrace();
             }
            /* if (!perdido.getPersona().getEmail().equals(mailLogueado))*/
-                emails.add(perdido.getPersona().getEmail());
+            emails.add(perdido.getPersona().getEmail());
             for (Comentarios comentarioAux : perdido.getComentarios()) { //email de las personas que comentaron
                 if (!comentarioAux.getPersona().getEmail().equals(mailLogueado)) {
                     emails.add(comentarioAux.getPersona().getEmail());
@@ -799,15 +798,15 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
     }
 
     @Override
-    public void cargarDBLocalCaracteristicasPerdidos(Context context){
-        if(internet(context)){
-            ParseObject.pinAllInBackground(getRazasParseObject());
-            ParseObject.pinAllInBackground(getColoresParseObject());
-            ParseObject.pinAllInBackground(getSexosParseObject());
-            ParseObject.pinAllInBackground(getTamañosParseObject());
-            ParseObject.pinAllInBackground(getEdadesParseObject());
-            ParseObject.pinAllInBackground(getEspeciesParseObject());
-        }
+    public void cargarDBLocalCaracteristicasPerdidos(Context context) {
+            if (internet(context)) {
+                ParseObject.pinAllInBackground(getRazasParseObject());
+                ParseObject.pinAllInBackground(getColoresParseObject());
+                ParseObject.pinAllInBackground(getSexosParseObject());
+                ParseObject.pinAllInBackground(getTamañosParseObject());
+                ParseObject.pinAllInBackground(getEdadesParseObject());
+                ParseObject.pinAllInBackground(getEspeciesParseObject());
+            }
     }
 
     @Override

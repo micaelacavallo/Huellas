@@ -18,6 +18,7 @@ import com.example.micaela.activities.DetallePublicacionActivity;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
+import com.example.micaela.utils.CustomDialog;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
     }
 
     public interface PopupMenuCallback {
-        void onClickItem (int idItem, Adicionales adicional);
+        void onClickItem(int idItem, Adicionales adicional);
     }
 
     @Override
@@ -71,14 +72,14 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
             } else {
                 holder.getmTextViewComentarios().setVisibility(View.GONE);
             }
+        } catch (NullPointerException e) {
+            holder.getmTextViewComentarios().setVisibility(View.GONE);
         }
-            catch (NullPointerException e) {
-                holder.getmTextViewComentarios().setVisibility(View.GONE);
-            }
 
         holder.getViewComentar().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (((BaseActivity) mContext).internet()) {
                 Intent intent = new Intent(mContext, ComentariosActivity.class);
                 intent.putExtra(Constants.COMENTARIOS_LIST, mAdicionales.get((int) holder.getCardContainer().getTag()));
 
@@ -88,6 +89,9 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
                     intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_INFO);
                 }
                 mContext.startActivity(intent);
+            } else {
+                CustomDialog.showDialog(mContext);
+            }
             }
         });
 
@@ -124,7 +128,11 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
         mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                mPopupMenuCallback.onClickItem(item.getItemId(),mAdicionales.get((Integer) view.getTag()));
+                if (((BaseActivity) mContext).internet()) {
+                    mPopupMenuCallback.onClickItem(item.getItemId(), mAdicionales.get((Integer) view.getTag()));
+                } else {
+                    CustomDialog.showDialog(mContext);
+                }
                 return true;
             }
         });
@@ -134,8 +142,7 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
         if (!mAdicionales.get(position).getPersona().getEmail().equals(HuellasApplication.getInstance().getProfileEmailFacebook())) {
             menu.removeItem(R.id.item_editar);
             menu.removeItem(R.id.item_eliminar);
-        }
-        else {
+        } else {
             menu.removeItem(R.id.item_reportar_publicacion);
             menu.removeItem(R.id.item_reportar_usuario);
         }

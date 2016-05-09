@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+import com.example.micaela.activities.CustomErrorActivity;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Edades;
@@ -23,6 +24,8 @@ import com.parse.ParseInstallation;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 
 
 public class HuellasApplication extends Application {
@@ -52,6 +55,8 @@ public class HuellasApplication extends Application {
 
         instance = this;
         initParse();
+        CustomActivityOnCrash.install(this);
+        CustomActivityOnCrash.setErrorActivityClass(CustomErrorActivity.class);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);

@@ -30,6 +30,7 @@ import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
+import com.example.micaela.utils.CustomDialog;
 import com.parse.ParseException;
 
 import java.util.ArrayList;
@@ -221,10 +222,14 @@ public class HistorialPublicacionesFragment extends BaseFragment implements Adic
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_solucionadas:
-                if (isSolucionadosOpen) {
-                    showLayoutHistorial();
+                if (getBaseActivity().internet()) {
+                    if (isSolucionadosOpen) {
+                        showLayoutHistorial();
+                    } else {
+                        showLayoutSolucionados();
+                    }
                 } else {
-                    showLayoutSolucionados();
+                    CustomDialog.showDialog(getBaseActivity());
                 }
                 return true;
             default:
