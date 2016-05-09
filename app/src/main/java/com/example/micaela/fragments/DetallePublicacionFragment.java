@@ -175,7 +175,7 @@ public class DetallePublicacionFragment extends BaseFragment implements Comentar
                     }
                 }
                 else {
-                    CustomDialog.showDialog(getBaseActivity());
+                    CustomDialog.showConnectionDialog(getBaseActivity());
                 }
             }
         });
@@ -211,7 +211,7 @@ public class DetallePublicacionFragment extends BaseFragment implements Comentar
                     startActivity(intent);
                 }
                 else {
-                    CustomDialog.showDialog(getBaseActivity());
+                    CustomDialog.showConnectionDialog(getBaseActivity());
                 }
                 return true;
             default:

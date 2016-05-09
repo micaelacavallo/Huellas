@@ -1,5 +1,6 @@
 package com.example.micaela.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.db.Controladores.IPersonasImpl;
 import com.example.micaela.db.Modelo.Personas;
 import com.example.micaela.huellas.R;
+import com.example.micaela.utils.CustomDialog;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -20,6 +22,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -90,8 +93,7 @@ public class LoginFragment extends BaseFragment {
                                         @Override
                                         public void onCompleted(JSONObject object, GraphResponse response) {
                                             getFacebookData(object, mProfile);
-                                            getActivity().setResult(0);
-                                            getActivity().finish();
+
 
                                         }
                                     });
@@ -133,15 +135,31 @@ public class LoginFragment extends BaseFragment {
     }
 
     private class AsyncTaskRegistrarUsuario extends AsyncTask<Personas, Void, Void> {
+        private boolean blocked = false;
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if (blocked) {
+                CustomDialog.showDialog("Usuario bloqueado", "Lo sentimos pero tu cuenta fue bloqueada.", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        LoginManager.getInstance().logOut();
+                        HuellasApplication.getInstance().clearProfileFacebook();
+                        getBaseActivity().finishAffinity();
+                    }
+                }, getBaseActivity());
+            }
+            else {
+                getActivity().setResult(0);
+                getActivity().finish();
+            }
         }
 
         @Override
         protected Void doInBackground(Personas... params) {
             try {
-                mIPersonasImpl.registar(params[0]);
+              blocked = mIPersonasImpl.registar(params[0]);
+
             } catch (Exception e) {
                 View.OnClickListener listener = new View.OnClickListener() {
                     @Override
@@ -149,7 +167,7 @@ public class LoginFragment extends BaseFragment {
                         getBaseActivity().logOut();
                     }
                 };
-                ((BaseActivity) getActivity()).showMessageOverlay("Hubo un problema, intente nuevamente", listener);
+              getBaseActivity().showMessageOverlay("Hubo un problema, intente nuevamente", listener);
             }
             return null;
         }

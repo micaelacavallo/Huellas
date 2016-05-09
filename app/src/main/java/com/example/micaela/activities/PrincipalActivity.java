@@ -1,5 +1,6 @@
 package com.example.micaela.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -31,14 +32,15 @@ import android.widget.Toast;
 import com.example.micaela.HuellasApplication;
 import com.example.micaela.db.Controladores.IDenunciasImpl;
 import com.example.micaela.db.Controladores.IEstadosImpl;
-import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Controladores.IPerdidosImpl;
+import com.example.micaela.db.Controladores.IPersonasImpl;
 import com.example.micaela.db.Interfaces.IDenuncias;
 import com.example.micaela.db.Interfaces.IEstados;
-import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Interfaces.IPerdidos;
+import com.example.micaela.db.Interfaces.IPersonas;
 import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.db.Modelo.MotivoDenuncia;
+import com.example.micaela.db.Modelo.Personas;
 import com.example.micaela.fragments.BaseFragment;
 import com.example.micaela.fragments.DonacionesFragment;
 import com.example.micaela.fragments.InformacionUtilFragment;
@@ -46,7 +48,9 @@ import com.example.micaela.fragments.PerdidosFragment;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.CircleImageTransform;
 import com.example.micaela.utils.Constants;
+import com.example.micaela.utils.CustomDialog;
 import com.example.micaela.utils.ZoomOutPageTransformer;
+import com.facebook.login.LoginManager;
 import com.software.shell.fab.ActionButton;
 import com.squareup.picasso.Picasso;
 
@@ -63,7 +67,7 @@ public class PrincipalActivity extends BaseActivity {
     private ImageView mUserPhotoImageView;
 
     private IPerdidos mIPerdidosImpl;
-    private IGeneral mIGeneralImpl;
+    private IPersonas mIPersonasImpl;
     private IEstados mIEstadosImpl;
     private IDenuncias mIDenunciasImpl;
 
@@ -80,8 +84,8 @@ public class PrincipalActivity extends BaseActivity {
 
     private int mCountInfoLoaded;
 
-    public void setCountInfoLoaded () {
-        mCountInfoLoaded ++;
+    public void setCountInfoLoaded() {
+        mCountInfoLoaded++;
         if (mCountInfoLoaded == 3) {
             hideOverlay();
         }
@@ -93,21 +97,20 @@ public class PrincipalActivity extends BaseActivity {
         setContentView(R.layout.activity_principal);
 
         mIPerdidosImpl = new IPerdidosImpl(this);
-        mIGeneralImpl = new IGeneralImpl(this);
+        mIPersonasImpl = new IPersonasImpl(this);
         mIEstadosImpl = new IEstadosImpl(this);
         mIDenunciasImpl = new IDenunciasImpl(this);
-        showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+
         mCountInfoLoaded = 0;
 
-        mPager = (ViewPager) findViewById(R.id.pager);
+        new AsyncTaskPerdidosInfo().execute();
 
-        PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-        mPager.setPageTransformer(false, new ZoomOutPageTransformer());
-        mPager.setOffscreenPageLimit(3);
-
-        setUpTabs();
-        setUpFAB();
+        if (HuellasApplication.getInstance().getAccessTokenFacebook().equals("")) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, Constants.REQUEST_CODE_OK);
+        } else {
+            new AsyncGetUser().execute();
+        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -142,13 +145,6 @@ public class PrincipalActivity extends BaseActivity {
 
         mUserNameTextView = (TextView) header.findViewById(R.id.nav_drawer_nombre_cuenta);
         mUserPhotoImageView = (ImageView) header.findViewById(R.id.nav_drawer_foto_perfil);
-        new AsyncTaskPerdidosInfo().execute();
-        if (HuellasApplication.getInstance().getAccessTokenFacebook().equals("")) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivityForResult(intent, Constants.REQUEST_CODE_OK);
-        } else {
-            updateFacebookData();
-        }
 
         mDialogContainer = findViewById(R.id.layout_dialog_container);
         mTextViewCancelar = (TextView) findViewById(R.id.textView_cancelar);
@@ -157,8 +153,17 @@ public class PrincipalActivity extends BaseActivity {
         mItemsDenunciaContainer = (RadioGroup) findViewById(R.id.items_denuncia_container);
     }
 
+    private void setUpPager() {
+        mPager = (ViewPager) findViewById(R.id.pager);
+        PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setPageTransformer(false, new ZoomOutPageTransformer());
+        mPager.setOffscreenPageLimit(3);
 
+        setUpTabs();
+        setUpFAB();
 
+    }
 
 
     public void showLoadDialog() {
@@ -234,6 +239,7 @@ public class PrincipalActivity extends BaseActivity {
             switch (resultCode) {
                 case 0:
                     hideOverlay();
+                    setUpPager();
                     updateFacebookData();
                     break;
                 case -10:
@@ -446,7 +452,6 @@ public class PrincipalActivity extends BaseActivity {
         }
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -465,17 +470,7 @@ public class PrincipalActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_dashboard, menu);
-            switch (getCurrentPage()) {
-                case 0:
-                    menu.findItem(R.id.action_search).setVisible(true);
-                    break;
-                case 1:
-                case 2:
-                    menu.findItem(R.id.action_search).setVisible(false);
-                    break;
-            }
-
-        return true;
+         return true;
     }
 
 
@@ -485,7 +480,7 @@ public class PrincipalActivity extends BaseActivity {
         protected Void doInBackground(Void... params) {
 
             try {
-               mIPerdidosImpl.cargarDBLocalCaracteristicasPerdidos(PrincipalActivity.this);
+                mIPerdidosImpl.cargarDBLocalCaracteristicasPerdidos(PrincipalActivity.this);
                 HuellasApplication.getInstance().setmEspecies(mIPerdidosImpl.getEspecies());
                 HuellasApplication.getInstance().setmRazas(mIPerdidosImpl.getRazas());
                 HuellasApplication.getInstance().setmColores(mIPerdidosImpl.getColores());
@@ -567,16 +562,66 @@ public class PrincipalActivity extends BaseActivity {
             if (!error) {
                 if (mDestinoDenuncia.equals(Constants.TABLA_PERSONAS)) {
                     Toast.makeText(PrincipalActivity.this, "Usuario reportado con éxito!", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     Toast.makeText(PrincipalActivity.this, "Publicación reportada con éxito!", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 if (mDestinoDenuncia.equals(Constants.TABLA_PERSONAS)) {
                     Toast.makeText(PrincipalActivity.this, "No se pudo reportar al usuario. Intente de nuevo más tarde", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     Toast.makeText(PrincipalActivity.this, "No se pudo reportar la publicación. Intente de nuevo más tarde", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
+    }
+
+    private class AsyncGetUser extends AsyncTask<String, Void, Void> {
+        private boolean error = false;
+        private Personas mPersona;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                mPersona = mIPersonasImpl.getPersonabyEmail(HuellasApplication.getInstance().getProfileEmailFacebook());
+            } catch (Exception e) {
+                error = true;
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (error) {
+                View.OnClickListener listener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        loadMainScreen();
+                    }
+                };
+                showMessageOverlay("Hubo un problema, por favor intente nuevamente", listener);
+            } else {
+                if (mPersona.isBloqueado()) {
+                    CustomDialog.showDialog("Usuario bloqueado", "Lo sentimos pero tu cuenta fue bloqueada.", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            LoginManager.getInstance().logOut();
+                            HuellasApplication.getInstance().clearProfileFacebook();
+                            finishAffinity();
+                        }
+                    }, PrincipalActivity.this);
+
+                } else {
+                    updateFacebookData();
+                    setUpPager();
                 }
             }
 

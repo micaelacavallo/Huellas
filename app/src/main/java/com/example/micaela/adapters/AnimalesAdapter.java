@@ -145,7 +145,7 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
                         intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
                         mContext.startActivity(intent);
                     } else {
-                        CustomDialog.showDialog(mContext);
+                        CustomDialog.showConnectionDialog(mContext);
                     }
                 }
             });
@@ -160,7 +160,7 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
                 if (((BaseActivity) mContext).internet()) {
                     mPopupMenuCallback.onClickItem(item.getItemId(), mPerdidos.get((Integer) view.getTag()));
                 } else {
-                    CustomDialog.showDialog(mContext);
+                    CustomDialog.showConnectionDialog(mContext);
                 }
                 return true;
             }

@@ -229,7 +229,7 @@ public class HistorialPublicacionesFragment extends BaseFragment implements Adic
                         showLayoutSolucionados();
                     }
                 } else {
-                    CustomDialog.showDialog(getBaseActivity());
+                    CustomDialog.showConnectionDialog(getBaseActivity());
                 }
                 return true;
             default:

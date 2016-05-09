@@ -90,7 +90,7 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
                 }
                 mContext.startActivity(intent);
             } else {
-                CustomDialog.showDialog(mContext);
+                CustomDialog.showConnectionDialog(mContext);
             }
             }
         });
@@ -131,7 +131,7 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
                 if (((BaseActivity) mContext).internet()) {
                     mPopupMenuCallback.onClickItem(item.getItemId(), mAdicionales.get((Integer) view.getTag()));
                 } else {
-                    CustomDialog.showDialog(mContext);
+                    CustomDialog.showConnectionDialog(mContext);
                 }
                 return true;
             }
