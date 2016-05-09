@@ -24,6 +24,7 @@ import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.activities.ComentariosActivity;
 import com.example.micaela.activities.MapActivity;
 import com.example.micaela.db.Modelo.Adicionales;
+import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
@@ -32,7 +33,7 @@ import java.util.Date;
 
 import static com.example.micaela.utils.SpannableUtils.bold;
 
-public class DetallePublicacionFragment extends BaseFragment {
+public class DetallePublicacionFragment extends BaseFragment implements ComentariosFragment.AdapterCallback{
 
     TextView mTextViewEstado;
     TextView mTextViewDescripcion;
@@ -47,6 +48,8 @@ public class DetallePublicacionFragment extends BaseFragment {
     Adicionales mAdicionales;
     private View mRootView;
     private String mFromFragment;
+
+    private static DetallePublicacionFragment mInstanceFragment;
 
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,6 +81,14 @@ public class DetallePublicacionFragment extends BaseFragment {
         }
 
         return mRootView;
+    }
+
+    public static DetallePublicacionFragment getInstance ()  {
+        if (mInstanceFragment == null) {
+            mInstanceFragment = new DetallePublicacionFragment();
+        }
+
+        return mInstanceFragment;
     }
 
     @Override
@@ -184,16 +195,21 @@ public class DetallePublicacionFragment extends BaseFragment {
                 Intent intent = new Intent(getBaseActivity(), ComentariosActivity.class);
                 if (Constants.PERDIDOS.equals(getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT))) {
                     intent.putExtra(Constants.COMENTARIOS_LIST, mPerdidos);
-                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
+                    intent.putExtra(Constants.FROM_FRAGMENT, mFromFragment);
                 } else {
                     intent.putExtra(Constants.COMENTARIOS_LIST, mAdicionales);
                     intent.putExtra(Constants.FROM_FRAGMENT, mFromFragment);
-
                 }
+                intent.putExtra(Constants.FROM_DETALLE, true);
                 startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void updateDataSetAdapterComentarios(Comentarios comentario, Object object) {
+        mPerdidos.getComentarios().add(comentario);
     }
 }

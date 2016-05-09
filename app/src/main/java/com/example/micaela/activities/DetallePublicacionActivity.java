@@ -16,7 +16,7 @@ public class DetallePublicacionActivity  extends BaseActivity {
         showUpButton();
 
         getmFloatingButton().setLayoutParams(new CoordinatorLayout.LayoutParams(0, 0));
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment, new DetallePublicacionFragment()).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment, DetallePublicacionFragment.getInstance()).commit();
     }
 
     @Override

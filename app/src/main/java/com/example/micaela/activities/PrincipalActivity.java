@@ -16,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.micaela.HuellasApplication;
-import com.example.micaela.utils.ZoomOutPageTransformer;
 import com.example.micaela.db.Controladores.IDenunciasImpl;
 import com.example.micaela.db.Controladores.IEstadosImpl;
 import com.example.micaela.db.Controladores.IGeneralImpl;
@@ -46,6 +46,7 @@ import com.example.micaela.fragments.PerdidosFragment;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.CircleImageTransform;
 import com.example.micaela.utils.Constants;
+import com.example.micaela.utils.ZoomOutPageTransformer;
 import com.software.shell.fab.ActionButton;
 import com.squareup.picasso.Picasso;
 
@@ -95,7 +96,6 @@ public class PrincipalActivity extends BaseActivity {
         mIGeneralImpl = new IGeneralImpl(this);
         mIEstadosImpl = new IEstadosImpl(this);
         mIDenunciasImpl = new IDenunciasImpl(this);
-
         showOverlay(getString(R.string.cargando_publicaciones_mensaje));
         mCountInfoLoaded = 0;
 
@@ -156,6 +156,9 @@ public class PrincipalActivity extends BaseActivity {
         mTextViewDialogMsg = (TextView) findViewById(R.id.textView_confirmar_mensaje);
         mItemsDenunciaContainer = (RadioGroup) findViewById(R.id.items_denuncia_container);
     }
+
+
+
 
 
     public void showLoadDialog() {
@@ -365,6 +368,11 @@ public class PrincipalActivity extends BaseActivity {
                 return true;
             case R.id.action_search:
                 return false;
+            case R.id.action_notifications:
+
+
+                // TODO CODIGO
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -453,6 +461,23 @@ public class PrincipalActivity extends BaseActivity {
             thereWasError = false;
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_dashboard, menu);
+            switch (getCurrentPage()) {
+                case 0:
+                    menu.findItem(R.id.action_search).setVisible(true);
+                    break;
+                case 1:
+                case 2:
+                    menu.findItem(R.id.action_search).setVisible(false);
+                    break;
+            }
+
+        return true;
+    }
+
 
     private class AsyncTaskPerdidosInfo extends AsyncTask<Void, Void, Void> {
 

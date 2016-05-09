@@ -699,7 +699,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            if (!perdido.getPersona().getEmail().equals(mailLogueado))
+           /* if (!perdido.getPersona().getEmail().equals(mailLogueado))*/
                 emails.add(perdido.getPersona().getEmail());
             for (Comentarios comentarioAux : perdido.getComentarios()) { //email de las personas que comentaron
                 if (!comentarioAux.getPersona().getEmail().equals(mailLogueado)) {
@@ -709,10 +709,6 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
 
             JSONObject object2 = new JSONObject();
             try {
-               /* Intent intent = new Intent(context, ComentariosActivity.class);
-                intent.putExtra(Constants.COMENTARIOS_LIST, perdido.getComentarios());
-                intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
-*/
 
                 // Create our Installation query
                 ParseQuery pushQuery = ParseInstallation.getQuery();

@@ -9,8 +9,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -98,7 +96,6 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
     }
 
 
-
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_perdidos, container, false);
@@ -182,7 +179,6 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
                 }
             }
         });
-        setHasOptionsMenu(true);
 
         setUpSpinners();
 
@@ -237,11 +233,6 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
         });
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_dashboard, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
 
     private void setUpSpinners() {
         mViewRazasContainer = mRootView.findViewById(R.id.layout_razas_container);
@@ -324,11 +315,11 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
     @Override
     public void onResume() {
         super.onResume();
+        setHasOptionsMenu(true);
         if (mAdapterAnimales == null) {
             mAdapterAnimales = new AnimalesAdapter(HuellasApplication.getInstance().getmPerdidos(), getBaseActivity(), PerdidosFragment.this);
             mRecyclerView.setAdapter(mAdapterAnimales);
-        }
-        else {
+        } else {
             mAdapterAnimales.notifyDataSetChanged();
         }
     }
@@ -390,7 +381,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
 
     private void notifyAdapter(List<Perdidos> perdidos) {
         if (mAdapterAnimales == null) {
-            mAdapterAnimales = new AnimalesAdapter(perdidos,getBaseActivity(), PerdidosFragment.this);
+            mAdapterAnimales = new AnimalesAdapter(perdidos, getBaseActivity(), PerdidosFragment.this);
 
         } else {
             mAdapterAnimales.notifyDataSetChanged();
@@ -561,7 +552,7 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
             } else {
                 mAdapterAnimales = new AnimalesAdapter(HuellasApplication.getInstance().getmPerdidos(), getBaseActivity(), PerdidosFragment.this);
                 mRecyclerView.setAdapter(mAdapterAnimales);
-                ((PrincipalActivity)getBaseActivity()).setCountInfoLoaded();
+                ((PrincipalActivity) getBaseActivity()).setCountInfoLoaded();
             }
 
         }

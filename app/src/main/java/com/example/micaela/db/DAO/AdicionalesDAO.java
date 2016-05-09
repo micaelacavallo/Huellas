@@ -25,6 +25,7 @@ import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.db.Modelo.Personas;
+import com.example.micaela.utils.Constants;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseInstallation;
@@ -406,6 +407,14 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDB {
 
                 pushQuery.whereContainedIn("email", emails);
                 object2.put("title", "Nuevo comentario");
+                object2.putOpt(Constants.COMENTARIOS_LIST, adicional);
+                if (adicional.isDonacion()) {
+                    object2.put(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
+                }
+                else  {
+                    object2.put(Constants.FROM_FRAGMENT, Constants.ADICIONALES_INFO);
+                }
+
                 ParsePush push = new ParsePush();
                 push.setQuery(pushQuery); // Set our Installation query
                 push.setData(object2);

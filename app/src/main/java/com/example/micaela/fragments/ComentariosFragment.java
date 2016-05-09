@@ -41,7 +41,7 @@ public class ComentariosFragment extends BaseFragment {
     private IPerdidosImpl mIPerdidosImpl;
     private IAdicionalesImpl mIAdicionalesImpl;
     private String mFromFragment = "";
-
+    private boolean mFromDetalle = false;
     private AdapterCallback mAdapterCallback;
 
     public interface AdapterCallback {
@@ -57,6 +57,7 @@ public class ComentariosFragment extends BaseFragment {
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.list_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        mFromDetalle = getBaseActivity().getIntent().getBooleanExtra(Constants.FROM_DETALLE, false);
         mFromFragment = getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT);
         if (Constants.PERDIDOS.equals(mFromFragment)) {
             mPerdido = getBaseActivity().getIntent().getParcelableExtra(Constants.COMENTARIOS_LIST);
@@ -192,12 +193,22 @@ public class ComentariosFragment extends BaseFragment {
             super.onPostExecute(comentarios);
             if (!error) {
                 mEditTextComentario.setText("");
+                AdapterCallback adapterCallbackDetalle;
+
                 if (Constants.PERDIDOS.equals(mFromFragment)) {
                     mPerdido.getComentarios().add(comentarios);
                     mAdapterCallback.updateDataSetAdapterComentarios(comentarios, mPerdido);
+                    if (mFromDetalle) {
+                        adapterCallbackDetalle  = DetallePublicacionFragment.getInstance();
+                        adapterCallbackDetalle.updateDataSetAdapterComentarios(comentarios, mPerdido);
+                    }
                 } else {
                     mAdicional.getComentarios().add(comentarios);
                     mAdapterCallback.updateDataSetAdapterComentarios(comentarios, mAdicional);
+                    if (mFromDetalle) {
+                        adapterCallbackDetalle  = DetallePublicacionFragment.getInstance();
+                        adapterCallbackDetalle.updateDataSetAdapterComentarios(comentarios, mAdicional);
+                    }
                 }
                 mAdapter.notifyDataSetChanged();
                 Toast.makeText(getBaseActivity(), "El comentario ha sido publicado.", Toast.LENGTH_SHORT).show();

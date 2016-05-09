@@ -16,6 +16,8 @@ public class Constants {
     public static final String DIRECCION = "DIRECCION";
     public static final String ADDRESS = "ADDRESS";
     public static final String COMENTARIOS_LIST = "COMENTARIOS_LIST";
+    public static final String COMENTARIO = "Comentario";
+    public static final String FROM_DETALLE = "fromDetalle";
 
     // PARSE
     public static String APPLICATION_ID = "3EEEv0tiZTfwvODGscyrSSgzJG5lg3gSrVwP51L7";

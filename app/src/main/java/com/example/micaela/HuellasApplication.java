@@ -159,10 +159,9 @@ public class HuellasApplication extends Application {
         Parse.initialize(getApplicationContext(), Constants.APPLICATION_ID, Constants.CLIENT_ID);
 
         //push notifications
-        // Associate the device with a user
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put("email", getProfileEmailFacebook());
-        installation.saveInBackground();
+        installation.saveEventually();
 
     }
 
@@ -236,5 +235,4 @@ public class HuellasApplication extends Application {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(Constants.PROFILE_EMAIL, "");
     }
-
 }

@@ -53,7 +53,6 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
         inicializarSwipeRefresh(mRootView);
         inicializarRecycler(mRootView);
 
-        setHasOptionsMenu(false);
         new AsyncTaskAdicionales().execute();
         return mRootView;
     }
@@ -111,6 +110,7 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
     @Override
     public void onResume() {
         super.onResume();
+        setHasOptionsMenu(true);
         if (mAdapterAdicionales == null) {
             List<Adicionales> adicionales = HuellasApplication.getInstance().getInfoUtil();
             mAdapterAdicionales = new AdicionalesAdapter(adicionales, getBaseActivity(), InformacionUtilFragment.this, Constants.ADICIONALES_INFO);

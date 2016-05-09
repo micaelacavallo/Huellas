@@ -45,6 +45,7 @@
     <string name="mis_publicaciones_title">Mis publicaciones</string>
     <string name="empty_publicaciones_msg">Todavía no realizaste ninguna publicación de este tipo.</string>
     <string name="empty_solucionados_msg">No tenés publicaciones solucionadas.</string>
+    <string name="notificaciones">Notificaciones</string>
     <string-array name="spinner_tipo_publicacion">
         <item>Perdidos</item>
         <item>Donaciones</item>
