@@ -11,11 +11,13 @@ public class ComentariosActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comentarios);
         getSupportActionBar().hide();
+
     }
 
     @Override
     public int getLayoutBase() {
         return R.layout.activity_base;
     }
+
 
 }

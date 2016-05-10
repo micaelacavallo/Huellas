@@ -1,5 +1,6 @@
 package com.example.micaela.fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,6 +20,8 @@ import com.example.micaela.HuellasApplication;
 import com.example.micaela.adapters.ComentariosAdapter;
 import com.example.micaela.db.Controladores.IAdicionalesImpl;
 import com.example.micaela.db.Controladores.IPerdidosImpl;
+import com.example.micaela.db.Interfaces.IAdicionales;
+import com.example.micaela.db.Interfaces.IPerdidos;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Perdidos;
@@ -38,11 +41,13 @@ public class ComentariosFragment extends BaseFragment {
     private ComentariosAdapter mAdapter;
     private Adicionales mAdicional;
     private Perdidos mPerdido;
-    private IPerdidosImpl mIPerdidosImpl;
-    private IAdicionalesImpl mIAdicionalesImpl;
+    private IPerdidos mIPerdidosImpl;
+    private IAdicionales mIAdicionalesImpl;
     private String mFromFragment = "";
     private boolean mFromDetalle = false;
     private AdapterCallback mAdapterCallback;
+
+    private boolean mFromPush;
 
     public interface AdapterCallback {
         void updateDataSetAdapterComentarios(Comentarios comentario, Object object);
@@ -57,25 +62,33 @@ public class ComentariosFragment extends BaseFragment {
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.list_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mFromDetalle = getBaseActivity().getIntent().getBooleanExtra(Constants.FROM_DETALLE, false);
-        mFromFragment = getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT);
-        if (Constants.PERDIDOS.equals(mFromFragment)) {
-            mPerdido = getBaseActivity().getIntent().getParcelableExtra(Constants.COMENTARIOS_LIST);
-            if (mPerdido.isSolucionado()) {
-                mRootView.findViewById(R.id.linear_escribir_comentario).setVisibility(View.GONE);
-            }
-            mIPerdidosImpl = new IPerdidosImpl(getBaseActivity());
-            mAdapter = new ComentariosAdapter(mPerdido.getComentarios(), getBaseActivity());
+        Intent intent = getBaseActivity().getIntent();
+        mFromPush = intent.getBooleanExtra(Constants.PUSH_OPEN, false);
+        mFromFragment = intent.getStringExtra(Constants.FROM_FRAGMENT);
 
-            mAdapterCallback = PerdidosFragment.getInstance();
+        if (mFromPush) {
+
+
         } else {
-            mAdicional = getBaseActivity().getIntent().getParcelableExtra(Constants.COMENTARIOS_LIST);
-            mIAdicionalesImpl = new IAdicionalesImpl(getBaseActivity());
-            mAdapter = new ComentariosAdapter(mAdicional.getComentarios(), getBaseActivity());
-            if (mFromFragment.equals(Constants.ADICIONALES_DONACIONES)) {
-                mAdapterCallback = DonacionesFragment.getInstance();
+            mFromDetalle = intent.getBooleanExtra(Constants.FROM_DETALLE, false);
+            if (Constants.PERDIDOS.equals(mFromFragment)) {
+                mPerdido = intent.getParcelableExtra(Constants.COMENTARIOS_LIST);
+                if (mPerdido.isSolucionado()) {
+                    mRootView.findViewById(R.id.linear_escribir_comentario).setVisibility(View.GONE);
+                }
+                mIPerdidosImpl = new IPerdidosImpl(getBaseActivity());
+                mAdapter = new ComentariosAdapter(mPerdido.getComentarios(), getBaseActivity());
+
+                mAdapterCallback = PerdidosFragment.getInstance();
             } else {
-                mAdapterCallback = InformacionUtilFragment.getInstance();
+                mAdicional = intent.getParcelableExtra(Constants.COMENTARIOS_LIST);
+                mIAdicionalesImpl = new IAdicionalesImpl(getBaseActivity());
+                mAdapter = new ComentariosAdapter(mAdicional.getComentarios(), getBaseActivity());
+                if (mFromFragment.equals(Constants.ADICIONALES_DONACIONES)) {
+                    mAdapterCallback = DonacionesFragment.getInstance();
+                } else {
+                    mAdapterCallback = InformacionUtilFragment.getInstance();
+                }
             }
         }
 
@@ -113,12 +126,16 @@ public class ComentariosFragment extends BaseFragment {
                 new AsyncTaskSaveComentario().execute(comentarios);
             }
         });
+
         return mRootView;
     }
 
     @Override
     public boolean onBackPressed() {
-        return false;
+        if (mFromPush) {
+            getBaseActivity().goToMainActivity();
+        }
+        return true;
     }
 
     private void inicializarSwipeRefresh() {
@@ -199,14 +216,14 @@ public class ComentariosFragment extends BaseFragment {
                     mPerdido.getComentarios().add(comentarios);
                     mAdapterCallback.updateDataSetAdapterComentarios(comentarios, mPerdido);
                     if (mFromDetalle) {
-                        adapterCallbackDetalle  = DetallePublicacionFragment.getInstance();
+                        adapterCallbackDetalle = DetallePublicacionFragment.getInstance();
                         adapterCallbackDetalle.updateDataSetAdapterComentarios(comentarios, mPerdido);
                     }
                 } else {
                     mAdicional.getComentarios().add(comentarios);
                     mAdapterCallback.updateDataSetAdapterComentarios(comentarios, mAdicional);
                     if (mFromDetalle) {
-                        adapterCallbackDetalle  = DetallePublicacionFragment.getInstance();
+                        adapterCallbackDetalle = DetallePublicacionFragment.getInstance();
                         adapterCallbackDetalle.updateDataSetAdapterComentarios(comentarios, mAdicional);
                     }
                 }

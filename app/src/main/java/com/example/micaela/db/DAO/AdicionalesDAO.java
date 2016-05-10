@@ -407,7 +407,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDB {
 
                 pushQuery.whereContainedIn("email", emails);
                 object2.put("title", "Nuevo comentario");
-                object2.putOpt(Constants.COMENTARIOS_LIST, adicional);
+                object2.putOpt(Constants.OBJETO_ID, adicional.getObjectId());
                 if (adicional.isDonacion()) {
                     object2.put(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
                 }

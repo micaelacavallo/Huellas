@@ -228,11 +228,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void logOut() {
         LoginManager.getInstance().logOut();
         HuellasApplication.getInstance().clearProfileFacebook();
+        goToMainActivity();
+    }
+
+    public void goToMainActivity() {
         Intent aIntent = new Intent(getBaseContext(), PrincipalActivity.class);
         aIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(aIntent);
     }
-
 
     public void loadMainScreen() {
         Intent aIntent = new Intent(getBaseContext(), PrincipalActivity.class);

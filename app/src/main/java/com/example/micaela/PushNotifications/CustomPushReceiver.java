@@ -10,8 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.example.micaela.activities.ComentariosActivity;
-import com.example.micaela.db.Modelo.Adicionales;
-import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
 import com.parse.ParsePushBroadcastReceiver;
@@ -20,7 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class CustomPushReceiver extends ParsePushBroadcastReceiver {
-
 
 
     public CustomPushReceiver() {
@@ -37,8 +34,7 @@ public class CustomPushReceiver extends ParsePushBroadcastReceiver {
     protected Bitmap getLargeIcon(Context context, Intent intent) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             return BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
-        }
-        else{
+        } else {
             return BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
         }
     }
@@ -60,15 +56,11 @@ public class CustomPushReceiver extends ParsePushBroadcastReceiver {
 
             Intent pushIntent = new Intent(context, ComentariosActivity.class);
 
-            String fromFragment =  pushData.getString(Constants.FROM_FRAGMENT);
+            String fromFragment = pushData.getString(Constants.FROM_FRAGMENT);
             pushIntent.putExtra(Constants.FROM_FRAGMENT, fromFragment);
+            pushIntent.putExtra(Constants.PUSH_OPEN, true);
+            pushIntent.putExtra(Constants.OBJETO_ID, pushData.getString(Constants.OBJETO_ID));
 
-            if (fromFragment.equals(Constants.PERDIDOS)) {
-                pushIntent.putExtra(Constants.COMENTARIOS_LIST, (Perdidos) pushData.get(Constants.COMENTARIOS_LIST));
-            }
-            else {
-                pushIntent.putExtra(Constants.COMENTARIOS_LIST, (Adicionales) pushData.get(Constants.COMENTARIOS_LIST));
-            }
             context.startActivity(pushIntent);
 
         } catch (JSONException e) {
@@ -76,4 +68,4 @@ public class CustomPushReceiver extends ParsePushBroadcastReceiver {
         }
     }
 
-    }
+}

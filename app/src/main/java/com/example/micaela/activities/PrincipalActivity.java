@@ -610,14 +610,7 @@ public class PrincipalActivity extends BaseActivity {
                 showMessageOverlay("Hubo un problema, por favor intente nuevamente", listener);
             } else {
                 if (mPersona.isBloqueado()) {
-                    CustomDialog.showDialog("Usuario bloqueado", "Lo sentimos pero tu cuenta fue bloqueada.", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            LoginManager.getInstance().logOut();
-                            HuellasApplication.getInstance().clearProfileFacebook();
-                            finishAffinity();
-                        }
-                    }, PrincipalActivity.this);
+                    showUserBlockedDialog();
 
                 } else {
                     updateFacebookData();
@@ -626,5 +619,16 @@ public class PrincipalActivity extends BaseActivity {
             }
 
         }
+    }
+
+    public void showUserBlockedDialog() {
+        CustomDialog.showDialog("Usuario bloqueado", "Lo sentimos pero tu cuenta fue bloqueada.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                LoginManager.getInstance().logOut();
+                HuellasApplication.getInstance().clearProfileFacebook();
+                finishAffinity();
+            }
+        }, PrincipalActivity.this);
     }
 }

@@ -714,7 +714,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
 
                 pushQuery.whereContainedIn("email", emails);
                 object2.put("title", "Nuevo comentario");
-                object2.put(Constants.COMENTARIOS_LIST, perdido);
+                object2.put(Constants.OBJETO_ID, perdido.getObjectId());
                 object2.put(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
                 ParsePush push = new ParsePush();
                 push.setQuery(pushQuery); // Set our Installation query
