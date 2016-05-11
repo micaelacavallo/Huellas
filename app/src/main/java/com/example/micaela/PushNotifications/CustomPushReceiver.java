@@ -18,7 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class CustomPushReceiver extends ParsePushBroadcastReceiver {
-
+    JSONObject pushData = null;
 
     public CustomPushReceiver() {
 
@@ -41,26 +41,16 @@ public class CustomPushReceiver extends ParsePushBroadcastReceiver {
 
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
-
-    }
-
-    @Override
     protected void onPushOpen(Context context, Intent intent) {
-
-        JSONObject pushData = null;
-
         try {
             pushData = new JSONObject(intent.getStringExtra(KEY_PUSH_DATA));
-
             Intent pushIntent = new Intent(context, ComentariosActivity.class);
 
             String fromFragment = pushData.getString(Constants.FROM_FRAGMENT);
             pushIntent.putExtra(Constants.FROM_FRAGMENT, fromFragment);
             pushIntent.putExtra(Constants.PUSH_OPEN, true);
             pushIntent.putExtra(Constants.OBJETO_ID, pushData.getString(Constants.OBJETO_ID));
-
+            pushIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(pushIntent);
 
         } catch (JSONException e) {

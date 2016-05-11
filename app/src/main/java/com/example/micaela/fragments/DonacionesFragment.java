@@ -164,7 +164,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
     @Override
     public void onResume() {
         super.onResume();
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
         if (mAdapterAdicionales == null) {
             List<Adicionales> adicionales = HuellasApplication.getInstance().getDonaciones();
             mAdapterAdicionales = new AdicionalesAdapter(adicionales, getBaseActivity(), DonacionesFragment.this, Constants.ADICIONALES_DONACIONES);

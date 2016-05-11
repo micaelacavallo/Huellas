@@ -374,11 +374,6 @@ public class PrincipalActivity extends BaseActivity {
                 return true;
             case R.id.action_search:
                 return false;
-            case R.id.action_notifications:
-
-
-                // TODO CODIGO
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

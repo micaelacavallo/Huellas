@@ -110,7 +110,7 @@ public class InformacionUtilFragment extends BaseFragment implements AltaAnimale
     @Override
     public void onResume() {
         super.onResume();
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
         if (mAdapterAdicionales == null) {
             List<Adicionales> adicionales = HuellasApplication.getInstance().getInfoUtil();
             mAdapterAdicionales = new AdicionalesAdapter(adicionales, getBaseActivity(), InformacionUtilFragment.this, Constants.ADICIONALES_INFO);

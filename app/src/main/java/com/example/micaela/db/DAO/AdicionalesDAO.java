@@ -407,13 +407,9 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDB {
 
                 pushQuery.whereContainedIn("email", emails);
                 object2.put("title", "Nuevo comentario");
-                object2.putOpt(Constants.OBJETO_ID, adicional.getObjectId());
-                if (adicional.isDonacion()) {
-                    object2.put(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
-                }
-                else  {
-                    object2.put(Constants.FROM_FRAGMENT, Constants.ADICIONALES_INFO);
-                }
+                object2.put("alert", HuellasApplication.getInstance().getProfileNameFacebook() + " comentó una publicación.");
+                object2.put(Constants.OBJETO_ID, adicional.getObjectId());
+                object2.put(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
 
                 ParsePush push = new ParsePush();
                 push.setQuery(pushQuery); // Set our Installation query

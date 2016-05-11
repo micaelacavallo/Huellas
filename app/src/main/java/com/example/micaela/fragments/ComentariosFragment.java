@@ -28,6 +28,7 @@ import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.db.Modelo.Personas;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
+import com.parse.ParseException;
 
 import java.util.Date;
 
@@ -57,7 +58,10 @@ public class ComentariosFragment extends BaseFragment {
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_comentarios, container, false);
+        mIPerdidosImpl = new IPerdidosImpl(getBaseActivity());
+        mIAdicionalesImpl = new IAdicionalesImpl(getBaseActivity());
         inicializarSwipeRefresh();
+
 
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.list_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -67,8 +71,7 @@ public class ComentariosFragment extends BaseFragment {
         mFromFragment = intent.getStringExtra(Constants.FROM_FRAGMENT);
 
         if (mFromPush) {
-
-
+            new AsyncTaskGetPerdidoById().execute(intent.getStringExtra(Constants.OBJETO_ID));
         } else {
             mFromDetalle = intent.getBooleanExtra(Constants.FROM_DETALLE, false);
             if (Constants.PERDIDOS.equals(mFromFragment)) {
@@ -76,19 +79,21 @@ public class ComentariosFragment extends BaseFragment {
                 if (mPerdido.isSolucionado()) {
                     mRootView.findViewById(R.id.linear_escribir_comentario).setVisibility(View.GONE);
                 }
-                mIPerdidosImpl = new IPerdidosImpl(getBaseActivity());
                 mAdapter = new ComentariosAdapter(mPerdido.getComentarios(), getBaseActivity());
 
-                mAdapterCallback = PerdidosFragment.getInstance();
             } else {
                 mAdicional = intent.getParcelableExtra(Constants.COMENTARIOS_LIST);
-                mIAdicionalesImpl = new IAdicionalesImpl(getBaseActivity());
                 mAdapter = new ComentariosAdapter(mAdicional.getComentarios(), getBaseActivity());
-                if (mFromFragment.equals(Constants.ADICIONALES_DONACIONES)) {
-                    mAdapterCallback = DonacionesFragment.getInstance();
-                } else {
-                    mAdapterCallback = InformacionUtilFragment.getInstance();
-                }
+            }
+        }
+
+        if (mFromFragment.equals(Constants.PERDIDOS)) {
+            mAdapterCallback = PerdidosFragment.getInstance();
+        } else {
+            if (mFromFragment.equals(Constants.ADICIONALES_DONACIONES)) {
+                mAdapterCallback = DonacionesFragment.getInstance();
+            } else {
+                mAdapterCallback = InformacionUtilFragment.getInstance();
             }
         }
 
@@ -132,10 +137,7 @@ public class ComentariosFragment extends BaseFragment {
 
     @Override
     public boolean onBackPressed() {
-        if (mFromPush) {
-            getBaseActivity().goToMainActivity();
-        }
-        return true;
+            return false;
     }
 
     private void inicializarSwipeRefresh() {
@@ -169,6 +171,59 @@ public class ComentariosFragment extends BaseFragment {
             super.onPostExecute(aVoid);
             mSwipeRefreshLayout.setRefreshing(false);
             mAdapter.notifyDataSetChanged();
+        }
+    }
+
+
+    private class AsyncTaskGetPerdidoById extends AsyncTask<String, Void, Void> {
+        private boolean error = false;
+
+        @Override
+        protected Void doInBackground(String... params) {
+            if (mFromFragment.equals(Constants.PERDIDOS)) {
+                try {
+                    mPerdido = mIPerdidosImpl.getPublicacionPerdidosById(params[0]);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    error = true;
+                }
+            } else {
+                mAdicional = mIAdicionalesImpl.getAdicionalById(params[0]);
+                if (mAdicional == null) {
+                    error = true;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            getBaseActivity().hideOverlay();
+            if (error) {
+                View.OnClickListener listener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getBaseActivity().loadMainScreen();
+                    }
+                };
+                getBaseActivity().showMessageOverlay("Hubo un problema, por favor intente nuevamente", listener);
+            }
+            else {
+                if (mFromFragment.equals(Constants.PERDIDOS)) {
+                    mAdapter = new ComentariosAdapter(mPerdido.getComentarios(), getBaseActivity());
+                }
+                else {
+                    mAdapter = new ComentariosAdapter(mAdicional.getComentarios(), getBaseActivity());
+                }
+                mRecyclerView.setAdapter(mAdapter);
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            getBaseActivity().showOverlay(getString(R.string.cargando_publicaciones_mensaje));
         }
     }
 

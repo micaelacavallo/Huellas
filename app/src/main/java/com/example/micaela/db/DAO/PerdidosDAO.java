@@ -689,8 +689,6 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
     }
 
     public void pushNotification(String perdidoObjectId, String mailLogueado) {
-
-
         if (!HuellasApplication.getInstance().getProfileEmailFacebook().equals("")) {
             List<String> emails = new ArrayList<String>();
             try {
@@ -714,6 +712,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
 
                 pushQuery.whereContainedIn("email", emails);
                 object2.put("title", "Nuevo comentario");
+                object2.put("alert", HuellasApplication.getInstance().getProfileNameFacebook() + " comentó una publicación.");
                 object2.put(Constants.OBJETO_ID, perdido.getObjectId());
                 object2.put(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
                 ParsePush push = new ParsePush();
