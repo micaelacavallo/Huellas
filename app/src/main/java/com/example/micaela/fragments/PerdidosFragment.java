@@ -9,6 +9,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -184,6 +186,13 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
 
         new AsyncTaskPerdidos().execute();
         return mRootView;
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_dashboard, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -479,7 +488,11 @@ public class PerdidosFragment extends BaseFragment implements AltaAnimalesFragme
                 for (int x = 0; x < perdidos.size(); x++) {
                     if (perdidoId.equals(perdidos.get(x).getObjectId())) {
                         perdidos.get(x).setSolucionado(true);
-                        HuellasApplication.getInstance().getmMisSolucionados().add(0, perdidos.get(x));
+                    List<Perdidos> solucionados = HuellasApplication.getInstance().getmMisSolucionados();
+                        if (solucionados == null) {
+                            solucionados = new ArrayList<>();
+                        }
+                        solucionados.add(0, perdidos.get(x));
                         perdidos.remove(x);
                     }
                 }

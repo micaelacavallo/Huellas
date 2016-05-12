@@ -7,7 +7,6 @@ import com.example.micaela.db.Constantes.CAdicionales;
 import com.example.micaela.db.Constantes.CColores;
 import com.example.micaela.db.Constantes.CComentarios;
 import com.example.micaela.db.Constantes.CEstados;
-import com.example.micaela.db.Constantes.CPerdidos;
 import com.example.micaela.db.Constantes.CPersonas;
 import com.example.micaela.db.Constantes.Clases;
 import com.example.micaela.db.Controladores.IComentariosImpl;
@@ -265,9 +264,12 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDB {
     }
 
 
-    public String getInsertedID(Date date) throws ParseException {
+    public String getInsertedID(String email) throws ParseException {
         query = ParseQuery.getQuery(Clases.ADICIONALES);
-        query.whereEqualTo(CPerdidos.FECHA, date);
+        persona = iPersona.getPersonabyEmail(email);
+        ParseObject obj = ParseObject.createWithoutData(Clases.PERSONAS, persona.getObjectId());
+        query.whereEqualTo(CAdicionales.ID_PERSONA, obj);
+        query.addDescendingOrder(CAdicionales.FECHA);
         checkInternetGet(query);
         if (query.count() != 0) {
             return query.getFirst().getObjectId();

@@ -601,7 +601,7 @@ public class AltaAnimalesFragment extends BaseFragment {
             if (!error) {
                 if (mAction.equals(Constants.ALTA)) {
                     try {
-                        mAdicionales.setObjectId(mIAdicionalesImpl.getInsertedID(adicional.getFecha()));
+                        mAdicionales.setObjectId(mIAdicionalesImpl.getInsertedID(HuellasApplication.getInstance().getProfileEmailFacebook()));
                         mAdapterCallback.addElementAdapterPublicaciones(adicional);
                         getBaseActivity().finish();
                         getBaseActivity().setResult(2);
@@ -653,7 +653,7 @@ public class AltaAnimalesFragment extends BaseFragment {
             if (!error) {
                 if (mAction.equals(Constants.ALTA)) {
                     try {
-                        mPerdidos.setObjectId(mIPerdidosImpl.getInsertedID(perdidos.getFecha()));
+                        mPerdidos.setObjectId(mIPerdidosImpl.getInsertedID(HuellasApplication.getInstance().getProfileEmailFacebook()));
                         mAdapterCallback.addElementAdapterPublicaciones(perdidos);
                         getBaseActivity().finish();
                         getBaseActivity().setResult(2);

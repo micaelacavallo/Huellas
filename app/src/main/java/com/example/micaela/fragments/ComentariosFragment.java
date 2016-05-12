@@ -62,7 +62,6 @@ public class ComentariosFragment extends BaseFragment {
         mIAdicionalesImpl = new IAdicionalesImpl(getBaseActivity());
         inicializarSwipeRefresh();
 
-
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.list_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -137,7 +136,16 @@ public class ComentariosFragment extends BaseFragment {
 
     @Override
     public boolean onBackPressed() {
+        if (mFromPush) {
+            if (mFromFragment.equals(Constants.PERDIDOS)) {
+                getBaseActivity().goToDetalleActivity(mPerdido, mFromFragment);
+            } else {
+                getBaseActivity().goToDetalleActivity(mAdicional, mFromFragment);
+            }
+            return true;
+        } else {
             return false;
+        }
     }
 
     private void inicializarSwipeRefresh() {
@@ -208,12 +216,10 @@ public class ComentariosFragment extends BaseFragment {
                     }
                 };
                 getBaseActivity().showMessageOverlay("Hubo un problema, por favor intente nuevamente", listener);
-            }
-            else {
+            } else {
                 if (mFromFragment.equals(Constants.PERDIDOS)) {
                     mAdapter = new ComentariosAdapter(mPerdido.getComentarios(), getBaseActivity());
-                }
-                else {
+                } else {
                     mAdapter = new ComentariosAdapter(mAdicional.getComentarios(), getBaseActivity());
                 }
                 mRecyclerView.setAdapter(mAdapter);
@@ -247,14 +253,8 @@ public class ComentariosFragment extends BaseFragment {
                     mIAdicionalesImpl.AgregarComentarioAdicional(mAdicional.getObjectId(), params[0].getComentario(), HuellasApplication.getInstance().getProfileEmailFacebook());
                 }
             } catch (Exception e) {
-                getBaseActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mButtonSend.setVisibility(View.VISIBLE);
-                        error = true;
-                        Toast.makeText(getBaseActivity(), "El comentario no ha sido publicado.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                error = true;
+
             }
 
             return params[0];
@@ -285,6 +285,9 @@ public class ComentariosFragment extends BaseFragment {
                 mAdapter.notifyDataSetChanged();
                 Toast.makeText(getBaseActivity(), "El comentario ha sido publicado.", Toast.LENGTH_SHORT).show();
 
+            } else {
+                Toast.makeText(getBaseActivity(), "El comentario no ha sido publicado.", Toast.LENGTH_SHORT).show();
+                mButtonSend.setVisibility(View.VISIBLE);
             }
         }
     }

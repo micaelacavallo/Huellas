@@ -27,6 +27,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.micaela.HuellasApplication;
+import com.example.micaela.db.Modelo.Adicionales;
+import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
 import com.facebook.login.LoginManager;
@@ -233,6 +235,21 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void goToMainActivity() {
         Intent aIntent = new Intent(getBaseContext(), PrincipalActivity.class);
+        aIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(aIntent);
+    }
+
+
+    public void goToDetalleActivity(Object object, String fromFragment) {
+        Intent aIntent = new Intent(getBaseContext(), DetallePublicacionActivity.class);
+        aIntent.putExtra(Constants.PUSH_OPEN, true);
+        aIntent.putExtra(Constants.FROM_FRAGMENT, fromFragment);
+        if (fromFragment.equals(Constants.PERDIDOS)) {
+            aIntent.putExtra(Constants.OBJETO_PERDIDO, (Perdidos)object);
+        }
+        else {
+            aIntent.putExtra(Constants.OBJETO_PERDIDO, (Adicionales)object);
+        }
         aIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(aIntent);
     }

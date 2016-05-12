@@ -12,7 +12,6 @@ import com.example.micaela.db.Modelo.Tamaños;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,7 +21,7 @@ public interface IPerdidos {
 
     public List<Perdidos> getPerdidos() throws ParseException;
     public void savePerdido(Perdidos perdido) throws ParseException;
-    public String getInsertedID(Date date) throws ParseException;
+    public String getInsertedID(String personaID) throws ParseException;
     public void editPerdido(Perdidos perdido) throws ParseException;
     public Razas getRaza(String raza) throws ParseException;
     public Colores getColor(String color) throws ParseException;

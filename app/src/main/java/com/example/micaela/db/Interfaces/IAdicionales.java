@@ -6,7 +6,6 @@ import com.example.micaela.db.Modelo.Adicionales;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
-import java.util.Date;
 import java.util.List;
 
 
@@ -19,7 +18,7 @@ public interface IAdicionales {
     public List<Adicionales> getInfoUtil() throws ParseException;
     public Adicionales getAdicionalById(String idAdicional);
     public void saveAdicional(Adicionales adicional) throws ParseException;
-    public String getInsertedID(Date date) throws ParseException;
+    public String getInsertedID(String personaID) throws ParseException;
     public void editAdicional(Adicionales adicional) throws ParseException;
     public void deleteAdicional(String objectId) throws  ParseException;
     public void AgregarComentarioAdicional(String adicionalObjectId, String comentario, String email) throws ParseException;

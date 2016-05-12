@@ -253,9 +253,13 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
         savePerdidoParseObject(perdido);
     }
 
-    public String getInsertedID(Date date) throws ParseException {
+    public String getInsertedID(String email) throws ParseException {
+
         query = ParseQuery.getQuery(Clases.PERDIDOS);
-        query.whereEqualTo(CPerdidos.FECHA, date);
+        persona = iPersona.getPersonabyEmail(email);
+        ParseObject obj = ParseObject.createWithoutData(Clases.PERSONAS, persona.getObjectId());
+        query.whereEqualTo(CPerdidos.ID_PERSONA, obj);
+        query.addDescendingOrder(CPerdidos.FECHA);
         checkInternetGet(query);
         if (query.count() != 0) {
             return query.getFirst().getObjectId();
@@ -696,7 +700,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-           /* if (!perdido.getPersona().getEmail().equals(mailLogueado))*/
+            if (!perdido.getPersona().getEmail().equals(mailLogueado))
             emails.add(perdido.getPersona().getEmail());
             for (Comentarios comentarioAux : perdido.getComentarios()) { //email de las personas que comentaron
                 if (!comentarioAux.getPersona().getEmail().equals(mailLogueado)) {

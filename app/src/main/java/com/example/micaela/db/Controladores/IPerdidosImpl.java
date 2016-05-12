@@ -14,7 +14,6 @@ import com.example.micaela.db.Modelo.Tamaños;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
-import java.util.Date;
 import java.util.List;
 
 public class IPerdidosImpl implements IPerdidos {
@@ -36,8 +35,8 @@ public class IPerdidosImpl implements IPerdidos {
     }
 
     @Override
-    public String getInsertedID(Date date) throws ParseException {
-      return  mPerdidosDAO.getInsertedID(date);
+    public String getInsertedID(String email) throws ParseException {
+      return  mPerdidosDAO.getInsertedID(email);
     }
 
 

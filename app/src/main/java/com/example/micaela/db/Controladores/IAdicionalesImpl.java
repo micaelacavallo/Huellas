@@ -8,7 +8,6 @@ import com.example.micaela.db.Modelo.Adicionales;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
-import java.util.Date;
 import java.util.List;
 
 
@@ -44,8 +43,8 @@ public class IAdicionalesImpl implements IAdicionales {
     }
 
     @Override
-    public String getInsertedID(Date date) throws ParseException {
-        return mAdicionalesDAO.getInsertedID(date);
+    public String getInsertedID(String email) throws ParseException {
+        return mAdicionalesDAO.getInsertedID(email);
     }
 
 

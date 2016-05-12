@@ -17,7 +17,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -182,6 +181,7 @@ public class PrincipalActivity extends BaseActivity {
         mDialogContainer.setVisibility(View.VISIBLE);
         isDialogOpen = true;
         mTextViewDialogMsg.setText(text);
+        mTextViewConfirmar.setEnabled(true);
         mItemsDenunciaContainer.setVisibility(View.GONE);
         findViewById(R.id.view_line).setVisibility(View.GONE);
         mTextViewCancelar.setVisibility(View.VISIBLE);
@@ -462,11 +462,6 @@ public class PrincipalActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_dashboard, menu);
-         return true;
-    }
 
 
     private class AsyncTaskPerdidosInfo extends AsyncTask<Void, Void, Void> {
