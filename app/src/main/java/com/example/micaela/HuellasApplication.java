@@ -166,7 +166,7 @@ public class HuellasApplication extends Application {
         //push notifications
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put("email", getProfileEmailFacebook());
-        installation.saveEventually();
+        installation.saveInBackground();
 
     }
 

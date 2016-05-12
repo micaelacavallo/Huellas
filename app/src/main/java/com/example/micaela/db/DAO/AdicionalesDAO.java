@@ -393,39 +393,42 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDB {
             List<String> emails = new ArrayList<String>();
             adicional = getAdicionalById(adicionalObjectId);
 
-            if (!adicional.getPersona().getEmail().equals(mailLogueado))
+            if (!adicional.getPersona().getEmail().equals(mailLogueado)) {
                 emails.add(adicional.getPersona().getEmail());
-            for (Comentarios comentarioAux : adicional.getComentarios()) { //email de las personas que comentaron
-                if (!comentarioAux.getPersona().getEmail().equals(mailLogueado)) {
-                    emails.add(comentarioAux.getPersona().getEmail());
-                }
-            }
-
-            JSONObject object2 = new JSONObject();
-            try {
-
-                // Create our Installation query
-                ParseQuery pushQuery = ParseInstallation.getQuery();
-
-                pushQuery.whereContainedIn("email", emails);
-                object2.put("title", "Nuevo comentario");
-                object2.put("alert", HuellasApplication.getInstance().getProfileNameFacebook() + " comentó una publicación.");
-                object2.put(Constants.OBJETO_ID, adicional.getObjectId());
-                object2.put(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
-
-                ParsePush push = new ParsePush();
-                push.setQuery(pushQuery); // Set our Installation query
-                push.setData(object2);
-                push.sendInBackground(new SendCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e != null) {
-                            e.printStackTrace();
+                for (Comentarios comentarioAux : adicional.getComentarios()) { //email de las personas que comentaron
+                    if (!comentarioAux.getPersona().getEmail().equals(mailLogueado)) {
+                        if(!comentarioAux.getPersona().isBloqueado()) {
+                            emails.add(comentarioAux.getPersona().getEmail());
                         }
                     }
-                });
-            } catch (JSONException e) {
-                e.printStackTrace();
+                }
+
+                JSONObject object2 = new JSONObject();
+                try {
+
+                    // Create our Installation query
+                    ParseQuery pushQuery = ParseInstallation.getQuery();
+
+                    pushQuery.whereContainedIn("email", emails);
+                    object2.put("title", "Nuevo comentario");
+                    object2.put("alert", HuellasApplication.getInstance().getProfileNameFacebook() + " comentó una publicación.");
+                    object2.put(Constants.OBJETO_ID, adicional.getObjectId());
+                    object2.put(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
+
+                    ParsePush push = new ParsePush();
+                    push.setQuery(pushQuery); // Set our Installation query
+                    push.setData(object2);
+                    push.sendInBackground(new SendCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e != null) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
