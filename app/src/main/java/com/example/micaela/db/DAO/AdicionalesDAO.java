@@ -395,7 +395,9 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDB {
                 emails.add(adicional.getPersona().getEmail());
                 for (Comentarios comentarioAux : adicional.getComentarios()) { //email de las personas que comentaron
                     if (!comentarioAux.getPersona().getEmail().equals(mailLogueado)) {
-                        emails.add(comentarioAux.getPersona().getEmail());
+                        if(!comentarioAux.getPersona().isBloqueado()) {
+                            emails.add(comentarioAux.getPersona().getEmail());
+                        }
                     }
                 }
 

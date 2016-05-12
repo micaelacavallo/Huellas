@@ -700,7 +700,9 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
                 emails.add(perdido.getPersona().getEmail());
                 for (Comentarios comentarioAux : perdido.getComentarios()) { //email de las personas que comentaron
                     if (!comentarioAux.getPersona().getEmail().equals(mailLogueado)) {
-                        emails.add(comentarioAux.getPersona().getEmail());
+                        if(!comentarioAux.getPersona().isBloqueado()) {
+                            emails.add(comentarioAux.getPersona().getEmail());
+                        }
                     }
                 }
 
