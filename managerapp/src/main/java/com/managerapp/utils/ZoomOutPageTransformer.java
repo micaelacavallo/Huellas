@@ -1,4 +1,4 @@
-package com.managerapp;
+package com.managerapp.utils;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;

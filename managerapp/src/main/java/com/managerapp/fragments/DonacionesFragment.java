@@ -16,12 +16,11 @@ import com.managerapp.adapters.AdicionalesAdapter;
 import com.managerapp.db.Controladores.IAdicionalesImpl;
 import com.managerapp.db.Interfaces.IAdicionales;
 import com.managerapp.db.Modelo.Adicionales;
-import com.managerapp.db.Modelo.Comentarios;
 import com.parse.ParseException;
 
 import java.util.List;
 
-public class DonacionesFragment extends BaseFragment implements  ComentariosFragment.AdapterCallback, AdicionalesAdapter.PopupMenuCallback {
+public class DonacionesFragment extends BaseFragment implements AdicionalesAdapter.PopupMenuCallback {
     private RecyclerView mRecyclerView;
     private IAdicionales mIAdicionalesImpl;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -134,15 +133,6 @@ public class DonacionesFragment extends BaseFragment implements  ComentariosFrag
         mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
     }
 
-    @Override
-    public void updateDataSetAdapterComentarios(Comentarios comentario, Object object) {
-        for (Adicionales adicional : adicionales) {
-            if (adicional.getObjectId().equals(((Adicionales) object).getObjectId())) {
-                adicional.getComentarios().add(comentario);
-            }
-        }
-        mAdapterAdicionales.notifyDataSetChanged();
-    }
 
     private void inicializarRecycler(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_recycler_view);

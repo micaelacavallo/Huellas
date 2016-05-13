@@ -1,1 +1,1 @@
-include ':app', ':managerapp'
+include ':app',':managerapp'

@@ -23,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.managerapp.HuellasApplication;
-import com.managerapp.ZoomOutPageTransformer;
+import com.managerapp.utils.ZoomOutPageTransformer;
 import com.managerapp.db.Controladores.IEstadosImpl;
 import com.managerapp.db.Controladores.IGeneralImpl;
 import com.managerapp.db.Controladores.IPerdidosImpl;

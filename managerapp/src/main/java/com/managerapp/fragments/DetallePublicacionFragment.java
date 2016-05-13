@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.managerapp.R;
 import com.managerapp.activities.BaseActivity;
 import com.managerapp.activities.ComentariosActivity;
 import com.managerapp.activities.MapActivity;
@@ -29,6 +30,8 @@ import com.managerapp.db.Modelo.Perdidos;
 import com.managerapp.utils.Constants;
 
 import java.util.Date;
+
+import static com.managerapp.utils.SpannableUtils.bold;
 
 
 public class DetallePublicacionFragment extends BaseFragment {

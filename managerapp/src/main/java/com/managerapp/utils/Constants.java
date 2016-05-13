@@ -4,7 +4,6 @@ package com.managerapp.utils;
  * Created by Horacio on 27/9/2015.
  */
 public class Constants {
-
     public static final String SHARED_PREFERENCES_HUELLAS = "HUELLAS";
     public static final String PUBLICATION_DETAILS_DATE_FORMAT = "dd MMM HH:mm";
 

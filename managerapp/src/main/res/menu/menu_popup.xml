@@ -2,16 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/item_reportar"
-        app:showAsAction="ifRoom|withText"
-        android:title="Reportar"
-        android:visible="true"/>
-    <item
-        android:id="@+id/item_editar"
-        app:showAsAction="ifRoom|withText"
-        android:title="Editar"
-        android:visible="true"/>
+
     <item
         android:id="@+id/item_eliminar"
         app:showAsAction="ifRoom|withText"
