@@ -65,7 +65,7 @@ public class IPersonasImpl implements IPersonas {
 
     @Override
     public void registar(Personas personas) {
-       mPersonasDAO.registar(personas);
+        mPersonasDAO.registar(personas);
     }
 
     @Override

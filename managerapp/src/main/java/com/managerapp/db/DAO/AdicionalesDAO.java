@@ -190,7 +190,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
         listParseObject = getDonacionesParseObject();
 
-      return getListAdicional(listParseObject);
+        return getListAdicional(listParseObject);
     }
 
     public ParseQuery<ParseObject> getQueryForDonaciones(){
@@ -322,12 +322,12 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     @Override
     public void AgregarComentarioAdicional(String adicionalObjectId, String comentarioText, String email) throws ParseException {
 
-            ParseObject parseObjectComentario = agregarComentario(comentarioText, email);
-            objectAux = getParseObjectById(adicionalObjectId);
-            objectRelation = objectAux.getRelation(CAdicionales.ID_COMENTARIOS);
-            objectRelation.add(parseObjectComentario);
-            save(objectAux);
-            pushNotification(adicionalObjectId, email);
+        ParseObject parseObjectComentario = agregarComentario(comentarioText, email);
+        objectAux = getParseObjectById(adicionalObjectId);
+        objectRelation = objectAux.getRelation(CAdicionales.ID_COMENTARIOS);
+        objectRelation.add(parseObjectComentario);
+        save(objectAux);
+        pushNotification(adicionalObjectId, email);
     }
 
     public ParseObject agregarComentario(String comentario, String email) throws ParseException {

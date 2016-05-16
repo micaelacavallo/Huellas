@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.managerapp.R;
 import com.managerapp.activities.BaseActivity;
-import com.managerapp.db.Controladores.IPersonasImpl;
 import com.managerapp.db.Modelo.Personas;
 
 /**
@@ -16,7 +16,7 @@ import com.managerapp.db.Modelo.Personas;
  */
 public class LoginFragment extends BaseFragment {
 
-    private IPersonasImpl mIPersonasImpl;
+    private EditText mEditTextUsuario;
 
     public LoginFragment() {
     }
@@ -34,7 +34,7 @@ public class LoginFragment extends BaseFragment {
         return false;
     }
 
-    private class AsyncTaskRegistrarUsuario extends AsyncTask<Personas, Void, Void> {
+    private class AsyncTaskExisteUsuario extends AsyncTask<Personas, Void, Void> {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -43,7 +43,7 @@ public class LoginFragment extends BaseFragment {
         @Override
         protected Void doInBackground(Personas... params) {
             try {
-                mIPersonasImpl.registar(params[0]);
+
             } catch (Exception e) {
                 View.OnClickListener listener = new View.OnClickListener() {
                     @Override

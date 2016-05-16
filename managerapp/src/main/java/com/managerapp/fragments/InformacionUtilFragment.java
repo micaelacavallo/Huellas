@@ -22,7 +22,7 @@ import com.parse.ParseException;
 
 import java.util.List;
 
-public class InformacionUtilFragment extends BaseFragment implements ComentariosFragment.AdapterCallback, AdicionalesAdapter.PopupMenuCallback {
+public class InformacionUtilFragment extends BaseFragment implements AdicionalesAdapter.PopupMenuCallback {
 
     private RecyclerView mRecyclerView;
     private IAdicionales mIAdicionalesImpl;
@@ -141,23 +141,10 @@ public class InformacionUtilFragment extends BaseFragment implements Comentarios
     }
 
 
-    @Override
-    public void updateDataSetAdapterComentarios(Comentarios comentario, Object object) {
-        for (Adicionales adicional : adicionales) {
-            if (adicional.getObjectId().equals(((Adicionales) object).getObjectId())) {
-                adicional.getComentarios().add(comentario);
-            }
-        }
-        mAdapterAdicionales.notifyDataSetChanged();
-    }
 
     @Override
     public void onClickItem(int idItem, final Adicionales adicional) {
         switch (idItem) {
-            case R.id.item_editar:
-                break;
-            case R.id.item_reportar:
-                break;
             case R.id.item_eliminar:
                 mDialogContainer.setVisibility(View.VISIBLE);
                 isDialogOpen = true;

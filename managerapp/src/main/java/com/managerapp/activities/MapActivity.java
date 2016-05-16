@@ -9,6 +9,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.managerapp.R;
 import com.managerapp.utils.Constants;
 
 public class MapActivity extends BaseActivity implements OnMapReadyCallback {

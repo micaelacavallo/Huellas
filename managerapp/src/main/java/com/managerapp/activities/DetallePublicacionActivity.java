@@ -1,7 +1,6 @@
 package com.managerapp.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.view.MenuItem;
 
 import com.managerapp.R;
@@ -16,7 +15,6 @@ public class DetallePublicacionActivity  extends BaseActivity {
         setContentView(R.layout.activity_detalle_publicacion);
         showUpButton();
 
-        getmFloatingButton().setLayoutParams(new CoordinatorLayout.LayoutParams(0, 0));
         getSupportFragmentManager().beginTransaction().add(R.id.fragment, new DetallePublicacionFragment()).commit();
     }
 

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.managerapp.R;
 import com.managerapp.activities.BaseActivity;
 import com.managerapp.db.Modelo.Comentarios;
 import com.managerapp.utils.CircleImageTransform;

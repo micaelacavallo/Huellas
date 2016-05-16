@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by quimey.arozarena on 5/2/2016.
  */
-public class IComentariosImpl implements IComentarios {
+public class IComentariosImpl implements IComentarios{
 
     private ComentariosDAO mComentarioDAO;
 

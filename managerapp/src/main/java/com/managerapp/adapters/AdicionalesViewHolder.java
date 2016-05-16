@@ -5,6 +5,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.managerapp.R;
+
 
 public class AdicionalesViewHolder extends RecyclerView.ViewHolder  {
 

@@ -21,3 +21,4 @@ public interface IDenuncias {
     public Denuncias getDenunciaById(String objectId);
     public List<Denuncias> getDenuncias() throws ParseException;
 }
+

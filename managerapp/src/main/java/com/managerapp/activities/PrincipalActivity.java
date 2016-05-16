@@ -2,7 +2,6 @@ package com.managerapp.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -22,8 +21,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.managerapp.HuellasApplication;
-import com.managerapp.utils.ZoomOutPageTransformer;
+import com.managerapp.R;
 import com.managerapp.db.Controladores.IEstadosImpl;
 import com.managerapp.db.Controladores.IGeneralImpl;
 import com.managerapp.db.Controladores.IPerdidosImpl;
@@ -35,9 +35,8 @@ import com.managerapp.fragments.BaseFragment;
 import com.managerapp.fragments.DonacionesFragment;
 import com.managerapp.fragments.InformacionUtilFragment;
 import com.managerapp.fragments.PerdidosFragment;
-import com.managerapp.utils.CircleImageTransform;
 import com.managerapp.utils.Constants;
-import com.squareup.picasso.Picasso;
+import com.managerapp.utils.ZoomOutPageTransformer;
 
 import java.util.List;
 
@@ -76,7 +75,6 @@ public class PrincipalActivity extends BaseActivity {
         mPager.setOffscreenPageLimit(3);
 
         setUpTabs();
-        setUpFAB();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -112,11 +110,10 @@ public class PrincipalActivity extends BaseActivity {
         mUserNameTextView = (TextView) header.findViewById(R.id.nav_drawer_nombre_cuenta);
         mUserPhotoImageView = (ImageView) header.findViewById(R.id.nav_drawer_foto_perfil);
         new AsyncTaskPerdidosInfo().execute();
-        if (HuellasApplication.getInstance().getAccessTokenFacebook().equals("")) {
+        if (true) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent, Constants.REQUEST_CODE_OK);
         } else {
-            updateFacebookData();
         }
     }
 
@@ -125,11 +122,6 @@ public class PrincipalActivity extends BaseActivity {
         return R.layout.activity_base;
     }
 
-    private void updateFacebookData() {
-        mUserNameTextView.setText(HuellasApplication.getInstance().getProfileNameFacebook());
-        String facebookImagen = HuellasApplication.getInstance().getProfileImageFacebook();
-        Picasso.with(getApplicationContext()).load(Uri.parse(facebookImagen)).transform(new CircleImageTransform()).into(mUserPhotoImageView);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -137,7 +129,6 @@ public class PrincipalActivity extends BaseActivity {
             switch (resultCode) {
                 case 0:
                     hideOverlay();
-                    updateFacebookData();
                     break;
                 case -10:
                     logOut();
@@ -209,11 +200,6 @@ public class PrincipalActivity extends BaseActivity {
                                 showOverlay("Cerrando sesión");
                                 logOut();
                                 hideOverlay();
-                                break;
-
-                            case R.id.nav_drawer_perfil:
-                                Intent intent = new Intent(PrincipalActivity.this, MisDatosActivity.class);
-                                startActivity(intent);
                                 break;
                         }
 

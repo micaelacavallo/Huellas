@@ -142,10 +142,6 @@ public class DonacionesFragment extends BaseFragment implements AdicionalesAdapt
     @Override
     public void onClickItem(int idItem, final Adicionales adicional) {
         switch (idItem) {
-            case R.id.item_editar:
-                break;
-            case R.id.item_reportar:
-                break;
             case R.id.item_eliminar:
                 mDialogContainer.setVisibility(View.VISIBLE);
                 isDialogOpen = true;

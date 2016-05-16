@@ -2,6 +2,8 @@ package com.managerapp.activities;
 
 import android.os.Bundle;
 
+import com.managerapp.R;
+
 
 public class ComentariosActivity extends BaseActivity {
 

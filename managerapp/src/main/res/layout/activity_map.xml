@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/map"
-    tools:context="com.example.micaela.activities.MapActivity"
+    tools:context="com.managerapp.activities.MapActivity"
     android:name="com.google.android.gms.maps.SupportMapFragment"
     map:uiCompass="true"
     map:cameraZoom="13" />

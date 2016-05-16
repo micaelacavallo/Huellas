@@ -1,5 +1,5 @@
 <fragment android:id="@+id/fragment"
-          android:name="com.example.micaela.fragments.LoginFragment"
+          android:name="com.managerapp.fragments.LoginFragment"
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           android:layout_width="match_parent"

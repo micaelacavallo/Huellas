@@ -13,7 +13,7 @@ import java.util.List;
 public interface IEstados {
 
     public Estados getEstado(String situacion) throws ParseException;
-    public List<Estados> getEstados();
+    public List<Estados> getEstados ();
     public void cambiarEstado(String idpublicacion, boolean estado);
 
 

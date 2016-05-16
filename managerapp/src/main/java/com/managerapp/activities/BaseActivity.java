@@ -12,7 +12,6 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -44,7 +43,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     ViewGroup containerLayout;
     CollapsingToolbarLayout mCollapsingToolbar;
     private boolean isOverlayOpen = false;
-    FloatingActionButton mFloatingButton;
     ImageView mImageViewPicture;
     View mViewDialogCamera;
 
@@ -68,7 +66,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             case R.layout.activity_base_collapsing:
                 mCollapsingToolbar = (CollapsingToolbarLayout) mainContainer.findViewById(R.id.collapsing_toolbar);
                 mViewDialogCamera = mainContainer.findViewById(R.id.dialog_take_picture);
-                mFloatingButton = (FloatingActionButton) mainContainer.findViewById(R.id.button_camera);
                 mImageViewPicture = (ImageView) mainContainer.findViewById(R.id.imageView_foto);
                 mCardEstado = mainContainer.findViewById(R.id.card_estado);
                 break;
@@ -97,11 +94,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     public ImageView getmImageViewPicture() {
         return mImageViewPicture;
     }
-
-    public FloatingActionButton getmFloatingButton() {
-        return mFloatingButton;
-    }
-
 
     public void setUpCollapsingToolbar(String title) {
         mCollapsingToolbar.setTitle(title);

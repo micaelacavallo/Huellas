@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PerdidosFragment extends BaseFragment implements ComentariosFragment.AdapterCallback, AnimalesAdapter.PopupMenuCallback {
+public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.PopupMenuCallback {
 
     private RecyclerView mRecyclerView;
     private IPerdidos mIperdidosImpl;
@@ -333,23 +333,8 @@ public class PerdidosFragment extends BaseFragment implements ComentariosFragmen
     }
 
     @Override
-    public void updateDataSetAdapterComentarios(Comentarios comentario, Object object) {
-        List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
-        for (Perdidos perdido : perdidos) {
-            if (perdido.getObjectId().equals(((Perdidos) object).getObjectId())) {
-                perdido.getComentarios().add(comentario);
-            }
-        }
-        mAdapterAnimales.notifyDataSetChanged();
-    }
-
-    @Override
     public void onClickItem(int idItem, final Perdidos perdido) {
         switch (idItem) {
-            case R.id.item_editar:
-                break;
-            case R.id.item_reportar:
-                break;
             case R.id.item_eliminar:
                 mDialogContainer.setVisibility(View.VISIBLE);
                 isDialogOpen = true;

@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.managerapp.HuellasApplication;
+import com.managerapp.R;
 import com.managerapp.activities.BaseActivity;
 import com.managerapp.activities.ComentariosActivity;
 import com.managerapp.activities.DetallePublicacionActivity;
@@ -123,13 +123,6 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
             }
         });
         mPopupMenu.inflate(R.menu.menu_popup);
-        if (!mAdicionales.get(position).getPersona().getEmail().equals(HuellasApplication.getInstance().getProfileEmailFacebook())) {
-            mPopupMenu.getMenu().removeItem(R.id.item_editar);
-            mPopupMenu.getMenu().removeItem(R.id.item_eliminar);
-        }
-        else {
-            mPopupMenu.getMenu().removeItem(R.id.item_reportar);
-        }
         mPopupMenu.show();
     }
 

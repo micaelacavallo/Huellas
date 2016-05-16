@@ -131,6 +131,12 @@
         <item name="android:textSize">52sp</item>
     </style>
 
+    <style name="condensed_normal_35">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textSize">35sp</item>
+    </style>
+
 
     <style name="condensed_light_19">
         <item name="android:fontFamily">sans-serif-condensed-light</item>

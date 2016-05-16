@@ -86,7 +86,7 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDBLocal {
             objectAux.put(CDenuncias.FECHA, new Date());
             objectAux.put(CDenuncias.ID_REFERENCIA, id);
             if(tabla.equals("Personas")){
-            objectAux.put(CDenuncias.IS_USER, true);
+                objectAux.put(CDenuncias.IS_USER, true);
             }else {
                 objectAux.put(CDenuncias.IS_USER, false);
             }

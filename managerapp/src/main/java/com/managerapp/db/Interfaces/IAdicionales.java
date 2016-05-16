@@ -26,3 +26,4 @@ public interface IAdicionales {
     public List<Adicionales> getPublicacionesAdicionalesPropias(String objectId);
     public ParseObject getParseObjectById(String objectId);
 }
+
