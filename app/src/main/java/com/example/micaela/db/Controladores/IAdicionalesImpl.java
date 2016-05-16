@@ -38,8 +38,13 @@ public class IAdicionalesImpl implements IAdicionales {
     }
 
     @Override
-    public Adicionales saveAdicional(Adicionales adicional) throws ParseException {
-        return mAdicionalesDAO.saveAdicional(adicional);
+    public void saveAdicional(Adicionales adicional) throws ParseException {
+        mAdicionalesDAO.saveAdicional(adicional);
+    }
+
+    @Override
+    public String getInsertedID(String email) throws ParseException {
+        return mAdicionalesDAO.getInsertedID(email);
     }
 
 
@@ -81,5 +86,10 @@ public class IAdicionalesImpl implements IAdicionales {
     @Override
     public ParseObject getParseObjectById(String objectId){
         return getParseObjectById(objectId);
+    }
+
+    @Override
+    public void bloquearAdicional(String objectId) {
+        mAdicionalesDAO.bloquearAdicional(objectId);
     }
 }

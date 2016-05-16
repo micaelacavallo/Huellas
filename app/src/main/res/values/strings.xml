@@ -36,6 +36,24 @@
     <string name="buscar">Buscar</string>
     <string name="title_activity_comentarios">ComentariosActivity</string>
     <string name="comentar">Comentar</string>
-    google_api_key
+    <string name="editar_publicacion">Editar publicación</string>
+    <string name="editando">Editando publicación</string>
+    <string name="dialog_solucionado_descripcion">¿Está seguro que desea cambiar el estado de la publicación a solucionado? Este cambio no se podrá revertir.</string>
+    <string name="dialog_eliminar_descripcion">¿Está seguro que desea eliminar la publicación?</string>
+    <string name="ver_solucionadas">Publicaciones solucionadas</string>
+    <string name="solucionados_title">Solucionados</string>
+    <string name="mis_publicaciones_title">Mis publicaciones</string>
+    <string name="empty_publicaciones_msg">Todavía no realizaste ninguna publicación de este tipo.</string>
+    <string name="empty_solucionados_msg">No tenés publicaciones solucionadas.</string>
+    <string name="notificaciones">Notificaciones</string>
+    <string-array name="spinner_tipo_publicacion">
+        <item>Perdidos</item>
+        <item>Donaciones</item>
+        <item>Información útil</item>
+    </string-array>
+
+    <string name="customactivityoncrash_error_activity_error_occurred_explanation">Error inesperado. Disculpa por el inconveniente.</string>
+    <string name="customactivityoncrash_error_activity_restart_app">Reiniciar aplicación</string>
+
 
 </resources>

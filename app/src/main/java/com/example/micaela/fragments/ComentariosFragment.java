@@ -1,5 +1,6 @@
 package com.example.micaela.fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,12 +20,15 @@ import com.example.micaela.HuellasApplication;
 import com.example.micaela.adapters.ComentariosAdapter;
 import com.example.micaela.db.Controladores.IAdicionalesImpl;
 import com.example.micaela.db.Controladores.IPerdidosImpl;
+import com.example.micaela.db.Interfaces.IAdicionales;
+import com.example.micaela.db.Interfaces.IPerdidos;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.db.Modelo.Personas;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
+import com.parse.ParseException;
 
 import java.util.Date;
 
@@ -38,11 +42,13 @@ public class ComentariosFragment extends BaseFragment {
     private ComentariosAdapter mAdapter;
     private Adicionales mAdicional;
     private Perdidos mPerdido;
-    private IPerdidosImpl mIPerdidosImpl;
-    private IAdicionalesImpl mIAdicionalesImpl;
+    private IPerdidos mIPerdidosImpl;
+    private IAdicionales mIAdicionalesImpl;
     private String mFromFragment = "";
-
+    private boolean mFromDetalle = false;
     private AdapterCallback mAdapterCallback;
+
+    private boolean mFromPush;
 
     public interface AdapterCallback {
         void updateDataSetAdapterComentarios(Comentarios comentario, Object object);
@@ -52,22 +58,37 @@ public class ComentariosFragment extends BaseFragment {
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_comentarios, container, false);
+        mIPerdidosImpl = new IPerdidosImpl(getBaseActivity());
+        mIAdicionalesImpl = new IAdicionalesImpl(getBaseActivity());
         inicializarSwipeRefresh();
 
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.list_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mFromFragment = getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT);
-        if (Constants.PERDIDOS.equals(mFromFragment)) {
-            mPerdido = getBaseActivity().getIntent().getParcelableExtra(Constants.COMENTARIOS_LIST);
-            mIPerdidosImpl = new IPerdidosImpl(getBaseActivity());
-            mAdapter = new ComentariosAdapter(mPerdido.getComentarios(), getBaseActivity());
+        Intent intent = getBaseActivity().getIntent();
+        mFromPush = intent.getBooleanExtra(Constants.PUSH_OPEN, false);
+        mFromFragment = intent.getStringExtra(Constants.FROM_FRAGMENT);
 
+        if (mFromPush) {
+            new AsyncTaskGetPerdidoById().execute(intent.getStringExtra(Constants.OBJETO_ID));
+        } else {
+            mFromDetalle = intent.getBooleanExtra(Constants.FROM_DETALLE, false);
+            if (Constants.PERDIDOS.equals(mFromFragment)) {
+                mPerdido = intent.getParcelableExtra(Constants.COMENTARIOS_LIST);
+                if (mPerdido.isSolucionado()) {
+                    mRootView.findViewById(R.id.linear_escribir_comentario).setVisibility(View.GONE);
+                }
+                mAdapter = new ComentariosAdapter(mPerdido.getComentarios(), getBaseActivity());
+
+            } else {
+                mAdicional = intent.getParcelableExtra(Constants.COMENTARIOS_LIST);
+                mAdapter = new ComentariosAdapter(mAdicional.getComentarios(), getBaseActivity());
+            }
+        }
+
+        if (mFromFragment.equals(Constants.PERDIDOS)) {
             mAdapterCallback = PerdidosFragment.getInstance();
         } else {
-            mAdicional = getBaseActivity().getIntent().getParcelableExtra(Constants.COMENTARIOS_LIST);
-            mIAdicionalesImpl = new IAdicionalesImpl(getBaseActivity());
-            mAdapter = new ComentariosAdapter(mAdicional.getComentarios(), getBaseActivity());
             if (mFromFragment.equals(Constants.ADICIONALES_DONACIONES)) {
                 mAdapterCallback = DonacionesFragment.getInstance();
             } else {
@@ -103,18 +124,28 @@ public class ComentariosFragment extends BaseFragment {
             public void onClick(View v) {
                 mButtonSend.setVisibility(View.GONE);
                 Comentarios comentarios = new Comentarios("", mEditTextComentario.getText().toString(),
-                        new Personas(HuellasApplication.getInstance().getProfileEmailFacebook()), new Date(), false);
+                        new Personas(HuellasApplication.getInstance().getProfileEmailFacebook()), new Date(), false, false);
                 comentarios.getPersona().setNombre(HuellasApplication.getInstance().getProfileNameFacebook());
                 comentarios.getPersona().setmFoto(HuellasApplication.getInstance().getProfileImageFacebook());
                 new AsyncTaskSaveComentario().execute(comentarios);
             }
         });
+
         return mRootView;
     }
 
     @Override
     public boolean onBackPressed() {
-        return false;
+        if (mFromPush) {
+            if (mFromFragment.equals(Constants.PERDIDOS)) {
+                getBaseActivity().goToDetalleActivity(mPerdido, mFromFragment);
+            } else {
+                getBaseActivity().goToDetalleActivity(mAdicional, mFromFragment);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void inicializarSwipeRefresh() {
@@ -152,6 +183,57 @@ public class ComentariosFragment extends BaseFragment {
     }
 
 
+    private class AsyncTaskGetPerdidoById extends AsyncTask<String, Void, Void> {
+        private boolean error = false;
+
+        @Override
+        protected Void doInBackground(String... params) {
+            if (mFromFragment.equals(Constants.PERDIDOS)) {
+                try {
+                    mPerdido = mIPerdidosImpl.getPublicacionPerdidosById(params[0]);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    error = true;
+                }
+            } else {
+                mAdicional = mIAdicionalesImpl.getAdicionalById(params[0]);
+                if (mAdicional == null) {
+                    error = true;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            getBaseActivity().hideOverlay();
+            if (error) {
+                View.OnClickListener listener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getBaseActivity().loadMainScreen();
+                    }
+                };
+                getBaseActivity().showMessageOverlay("Hubo un problema, por favor intente nuevamente", listener);
+            } else {
+                if (mFromFragment.equals(Constants.PERDIDOS)) {
+                    mAdapter = new ComentariosAdapter(mPerdido.getComentarios(), getBaseActivity());
+                } else {
+                    mAdapter = new ComentariosAdapter(mAdicional.getComentarios(), getBaseActivity());
+                }
+                mRecyclerView.setAdapter(mAdapter);
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            getBaseActivity().showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+        }
+    }
+
+
     private class AsyncTaskSaveComentario extends AsyncTask<Comentarios, Void, Comentarios> {
         private boolean error = false;
 
@@ -171,14 +253,8 @@ public class ComentariosFragment extends BaseFragment {
                     mIAdicionalesImpl.AgregarComentarioAdicional(mAdicional.getObjectId(), params[0].getComentario(), HuellasApplication.getInstance().getProfileEmailFacebook());
                 }
             } catch (Exception e) {
-                getBaseActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mButtonSend.setVisibility(View.VISIBLE);
-                        error = true;
-                        Toast.makeText(getBaseActivity(), "El comentario no ha sido publicado.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                error = true;
+
             }
 
             return params[0];
@@ -189,16 +265,29 @@ public class ComentariosFragment extends BaseFragment {
             super.onPostExecute(comentarios);
             if (!error) {
                 mEditTextComentario.setText("");
+                AdapterCallback adapterCallbackDetalle;
+
                 if (Constants.PERDIDOS.equals(mFromFragment)) {
                     mPerdido.getComentarios().add(comentarios);
                     mAdapterCallback.updateDataSetAdapterComentarios(comentarios, mPerdido);
+                    if (mFromDetalle) {
+                        adapterCallbackDetalle = DetallePublicacionFragment.getInstance();
+                        adapterCallbackDetalle.updateDataSetAdapterComentarios(comentarios, mPerdido);
+                    }
                 } else {
                     mAdicional.getComentarios().add(comentarios);
                     mAdapterCallback.updateDataSetAdapterComentarios(comentarios, mAdicional);
+                    if (mFromDetalle) {
+                        adapterCallbackDetalle = DetallePublicacionFragment.getInstance();
+                        adapterCallbackDetalle.updateDataSetAdapterComentarios(comentarios, mAdicional);
+                    }
                 }
                 mAdapter.notifyDataSetChanged();
                 Toast.makeText(getBaseActivity(), "El comentario ha sido publicado.", Toast.LENGTH_SHORT).show();
 
+            } else {
+                Toast.makeText(getBaseActivity(), "El comentario no ha sido publicado.", Toast.LENGTH_SHORT).show();
+                mButtonSend.setVisibility(View.VISIBLE);
             }
         }
     }

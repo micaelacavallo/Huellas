@@ -44,4 +44,9 @@ public class LoginActivity extends BaseActivity  {
     public int getLayoutBase() {
         return R.layout.activity_base;
     }
+
+    @Override
+    public void onBackPressed() {
+       finishAffinity();
+    }
 }

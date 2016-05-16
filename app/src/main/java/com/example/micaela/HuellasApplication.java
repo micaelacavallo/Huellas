@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+import com.example.micaela.activities.CustomErrorActivity;
+import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Edades;
 import com.example.micaela.db.Modelo.Especies;
 import com.example.micaela.db.Modelo.Estados;
+import com.example.micaela.db.Modelo.MotivoDenuncia;
 import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.db.Modelo.Razas;
 import com.example.micaela.db.Modelo.Sexos;
@@ -21,6 +24,8 @@ import com.parse.ParseInstallation;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 
 
 public class HuellasApplication extends Application {
@@ -35,6 +40,10 @@ public class HuellasApplication extends Application {
     private List<Estados> mEstados = new ArrayList<>();
     private List<Sexos> mSexos = new ArrayList<>();
     private List<Perdidos> mPerdidos = new ArrayList<>();
+    private List<Perdidos> mMisSolucionados = null;
+    private List<Adicionales> mDonaciones = new ArrayList<>();
+    private List<Adicionales> mInfoUtil = new ArrayList<>();
+    private List<MotivoDenuncia> mMotivosDenuncia = new ArrayList<>();
 
     public static HuellasApplication getInstance() {
         return instance;
@@ -46,12 +55,44 @@ public class HuellasApplication extends Application {
 
         instance = this;
         initParse();
+        CustomActivityOnCrash.install(this);
+        CustomActivityOnCrash.setErrorActivityClass(CustomErrorActivity.class);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
     }
 
+    public List<Adicionales> getInfoUtil() {
+        return mInfoUtil;
+    }
 
+    public List<Perdidos> getmMisSolucionados() {
+        return mMisSolucionados;
+    }
+
+    public void setmMisSolucionados(List<Perdidos> mMisSolucionados) {
+        this.mMisSolucionados = mMisSolucionados;
+    }
+
+    public void setInfoUtil(List<Adicionales> infoUtil) {
+        mInfoUtil = infoUtil;
+    }
+
+    public List<Adicionales> getDonaciones() {
+        return mDonaciones;
+    }
+
+    public void setDonaciones(List<Adicionales> donaciones) {
+        mDonaciones = donaciones;
+    }
+
+    public List<MotivoDenuncia> getmMotivosDenuncia() {
+        return mMotivosDenuncia;
+    }
+
+    public void setmMotivosDenuncia(List<MotivoDenuncia> mMotivosDenuncia) {
+        this.mMotivosDenuncia = mMotivosDenuncia;
+    }
 
     public List<Perdidos> getmPerdidos() {
         return mPerdidos;
@@ -123,7 +164,6 @@ public class HuellasApplication extends Application {
         Parse.initialize(getApplicationContext(), Constants.APPLICATION_ID, Constants.CLIENT_ID);
 
         //push notifications
-        // Associate the device with a user
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put("email", getProfileEmailFacebook());
         installation.saveInBackground();
@@ -200,5 +240,4 @@ public class HuellasApplication extends Application {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(Constants.PROFILE_EMAIL, "");
     }
-
 }

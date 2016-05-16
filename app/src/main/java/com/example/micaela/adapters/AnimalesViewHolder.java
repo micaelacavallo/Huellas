@@ -19,6 +19,7 @@ public class AnimalesViewHolder extends RecyclerView.ViewHolder {
     private View mCardContainer;
     private TextView mTextViewComentarios;
     private ImageView mImageViewOpciones;
+    private View mLineSeparator;
 
     public AnimalesViewHolder(View itemView) {
         super(itemView);
@@ -32,6 +33,11 @@ public class AnimalesViewHolder extends RecyclerView.ViewHolder {
         mCardContainer = itemView.findViewById(R.id.cardView_container);
         mTextViewComentarios = (TextView) itemView.findViewById(R.id.textView_comentarios);
         mImageViewOpciones = (ImageView) itemView.findViewById(R.id.imageView_options);
+        mLineSeparator= itemView.findViewById(R.id.view_separator);
+    }
+
+    public View getmLineSeparator() {
+        return mLineSeparator;
     }
 
     public ImageView getmImageViewOpciones() {

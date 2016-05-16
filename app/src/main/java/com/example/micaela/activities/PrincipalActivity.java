@@ -1,5 +1,6 @@
 package com.example.micaela.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -21,17 +22,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.micaela.HuellasApplication;
-import com.example.micaela.ZoomOutPageTransformer;
+import com.example.micaela.db.Controladores.IDenunciasImpl;
 import com.example.micaela.db.Controladores.IEstadosImpl;
-import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Controladores.IPerdidosImpl;
+import com.example.micaela.db.Controladores.IPersonasImpl;
+import com.example.micaela.db.Interfaces.IDenuncias;
 import com.example.micaela.db.Interfaces.IEstados;
-import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Interfaces.IPerdidos;
+import com.example.micaela.db.Interfaces.IPersonas;
 import com.example.micaela.db.Modelo.Estados;
+import com.example.micaela.db.Modelo.MotivoDenuncia;
+import com.example.micaela.db.Modelo.Personas;
 import com.example.micaela.fragments.BaseFragment;
 import com.example.micaela.fragments.DonacionesFragment;
 import com.example.micaela.fragments.InformacionUtilFragment;
@@ -39,6 +47,9 @@ import com.example.micaela.fragments.PerdidosFragment;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.CircleImageTransform;
 import com.example.micaela.utils.Constants;
+import com.example.micaela.utils.CustomDialog;
+import com.example.micaela.utils.ZoomOutPageTransformer;
+import com.facebook.login.LoginManager;
 import com.software.shell.fab.ActionButton;
 import com.squareup.picasso.Picasso;
 
@@ -55,12 +66,29 @@ public class PrincipalActivity extends BaseActivity {
     private ImageView mUserPhotoImageView;
 
     private IPerdidos mIPerdidosImpl;
-    private IGeneral mIGeneralImpl;
+    private IPersonas mIPersonasImpl;
     private IEstados mIEstadosImpl;
+    private IDenuncias mIDenunciasImpl;
 
+    private View mDialogContainer;
+    private TextView mTextViewDialogMsg;
+    private TextView mTextViewConfirmar;
+    private TextView mTextViewCancelar;
+    private RadioGroup mItemsDenunciaContainer;
 
     private boolean thereWasError = false;
+    private boolean isDialogOpen = false;
 
+    private String mDestinoDenuncia = "";
+
+    private int mCountInfoLoaded;
+
+    public void setCountInfoLoaded() {
+        mCountInfoLoaded++;
+        if (mCountInfoLoaded == 3) {
+            hideOverlay();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,19 +96,20 @@ public class PrincipalActivity extends BaseActivity {
         setContentView(R.layout.activity_principal);
 
         mIPerdidosImpl = new IPerdidosImpl(this);
-        mIGeneralImpl = new IGeneralImpl(this);
+        mIPersonasImpl = new IPersonasImpl(this);
         mIEstadosImpl = new IEstadosImpl(this);
-        showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+        mIDenunciasImpl = new IDenunciasImpl(this);
 
-        mPager = (ViewPager) findViewById(R.id.pager);
+        mCountInfoLoaded = 0;
 
-        PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-        mPager.setPageTransformer(false, new ZoomOutPageTransformer());
-        mPager.setOffscreenPageLimit(3);
+        new AsyncTaskPerdidosInfo().execute();
 
-        setUpTabs();
-        setUpFAB();
+        if (HuellasApplication.getInstance().getAccessTokenFacebook().equals("")) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, Constants.REQUEST_CODE_OK);
+        } else {
+            new AsyncGetUser().execute();
+        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -115,13 +144,82 @@ public class PrincipalActivity extends BaseActivity {
 
         mUserNameTextView = (TextView) header.findViewById(R.id.nav_drawer_nombre_cuenta);
         mUserPhotoImageView = (ImageView) header.findViewById(R.id.nav_drawer_foto_perfil);
-        new AsyncTaskPerdidosInfo().execute();
-        if (HuellasApplication.getInstance().getAccessTokenFacebook().equals("")) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivityForResult(intent, Constants.REQUEST_CODE_OK);
-        } else {
-            updateFacebookData();
-        }
+
+        mDialogContainer = findViewById(R.id.layout_dialog_container);
+        mTextViewCancelar = (TextView) findViewById(R.id.textView_cancelar);
+        mTextViewConfirmar = (TextView) findViewById(R.id.textView_confirmar);
+        mTextViewDialogMsg = (TextView) findViewById(R.id.textView_confirmar_mensaje);
+        mItemsDenunciaContainer = (RadioGroup) findViewById(R.id.items_denuncia_container);
+    }
+
+    private void setUpPager() {
+        mPager = (ViewPager) findViewById(R.id.pager);
+        PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setPageTransformer(false, new ZoomOutPageTransformer());
+        mPager.setOffscreenPageLimit(3);
+
+        setUpTabs();
+        setUpFAB();
+
+    }
+
+
+    public void showLoadDialog() {
+        findViewById(R.id.dialog_content).setVisibility(View.GONE);
+        findViewById(R.id.dialog_load).setVisibility(View.VISIBLE);
+        ((ProgressBar) findViewById(R.id.progress_bar_dialog)).getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.accent), android.graphics.PorterDuff.Mode.MULTIPLY);
+    }
+
+    public void hideLoadDialog() {
+        findViewById(R.id.dialog_content).setVisibility(View.VISIBLE);
+        findViewById(R.id.dialog_load).setVisibility(View.GONE);
+    }
+
+
+    public void showNormalDialog(String text, View.OnClickListener listener) {
+        mDialogContainer.setVisibility(View.VISIBLE);
+        isDialogOpen = true;
+        mTextViewDialogMsg.setText(text);
+        mTextViewConfirmar.setEnabled(true);
+        mItemsDenunciaContainer.setVisibility(View.GONE);
+        findViewById(R.id.view_line).setVisibility(View.GONE);
+        mTextViewCancelar.setVisibility(View.VISIBLE);
+        mTextViewCancelar.setOnClickListener(listener);
+        mTextViewConfirmar.setOnClickListener(listener);
+    }
+
+    public void showDenunciasDialog(String destinoDenuncia, final String objectId) {
+        mDestinoDenuncia = destinoDenuncia;
+        showNormalDialog("¿Cuál es el problema?", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.textView_cancelar:
+                        closeDialog();
+                        break;
+                    case R.id.textView_confirmar:
+                        showLoadDialog();
+                        new AsyncDenunciarPublicacion().execute(objectId);
+                        break;
+                }
+            }
+        });
+        mTextViewConfirmar.setEnabled(false);
+        mItemsDenunciaContainer.setVisibility(View.VISIBLE);
+        mItemsDenunciaContainer.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                mTextViewConfirmar.setEnabled(true);
+            }
+        });
+        findViewById(R.id.view_line).setVisibility(View.VISIBLE);
+    }
+
+    public void closeDialog() {
+        hideLoadDialog();
+        isDialogOpen = false;
+        mDialogContainer.setVisibility(View.GONE);
     }
 
     @Override
@@ -141,6 +239,7 @@ public class PrincipalActivity extends BaseActivity {
             switch (resultCode) {
                 case 0:
                     hideOverlay();
+                    setUpPager();
                     updateFacebookData();
                     break;
                 case -10:
@@ -157,14 +256,18 @@ public class PrincipalActivity extends BaseActivity {
         if (mIsDrawerOpen) {
             mDrawerLayout.closeDrawers();
         } else {
-            for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-                if (((BaseFragment) fragment).onBackPressed()) {
-                    backPressed =true;
+            if (isDialogOpen) {
+                closeDialog();
+            } else {
+                for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                    if (((BaseFragment) fragment).onBackPressed()) {
+                        backPressed = true;
+                    }
                 }
-            }
 
-            if (!backPressed) {
-                super.onBackPressed();
+                if (!backPressed) {
+                    super.onBackPressed();
+                }
             }
         }
     }
@@ -222,6 +325,7 @@ public class PrincipalActivity extends BaseActivity {
                         intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_INFO);
                         break;
                 }
+                intent.putExtra(Constants.ACTION, Constants.ALTA);
                 startActivity(intent);
             }
         });
@@ -242,8 +346,13 @@ public class PrincipalActivity extends BaseActivity {
                                 break;
 
                             case R.id.nav_drawer_perfil:
-                                Intent intent = new Intent(PrincipalActivity.this, MisDatosActivity.class);
-                                startActivity(intent);
+                                Intent intentPrincipal = new Intent(PrincipalActivity.this, MisDatosActivity.class);
+                                startActivity(intentPrincipal);
+                                break;
+
+                            case R.id.nav_drawer_historial:
+                                Intent intentHistorial = new Intent(PrincipalActivity.this, HistorialPublicacionesActivity.class);
+                                startActivity(intentHistorial);
                                 break;
                         }
 
@@ -338,7 +447,6 @@ public class PrincipalActivity extends BaseActivity {
         }
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -354,18 +462,22 @@ public class PrincipalActivity extends BaseActivity {
         }
     }
 
+
+
     private class AsyncTaskPerdidosInfo extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
 
             try {
+                mIPerdidosImpl.cargarDBLocalCaracteristicasPerdidos(PrincipalActivity.this);
                 HuellasApplication.getInstance().setmEspecies(mIPerdidosImpl.getEspecies());
                 HuellasApplication.getInstance().setmRazas(mIPerdidosImpl.getRazas());
                 HuellasApplication.getInstance().setmColores(mIPerdidosImpl.getColores());
                 HuellasApplication.getInstance().setmEdades(mIPerdidosImpl.getEdades());
                 HuellasApplication.getInstance().setmTamanios(mIPerdidosImpl.getTamaños());
                 HuellasApplication.getInstance().setmSexos(mIPerdidosImpl.getSexos());
+                HuellasApplication.getInstance().setmMotivosDenuncia(mIDenunciasImpl.getMotivoDenuncias());
 
                 List<Estados> estados = mIEstadosImpl.getEstados();
                 for (int x = 0; x < estados.size(); x++) {
@@ -396,7 +508,117 @@ public class PrincipalActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+
+            for (MotivoDenuncia motivoDenuncia : HuellasApplication.getInstance().getmMotivosDenuncia()) {
+                RadioButton radioButton = new RadioButton(PrincipalActivity.this);
+                radioButton.setTextAppearance(getBaseContext(), R.style.condensed_normal_18);
+                radioButton.setTextColor(getResources().getColor(R.color.primary_text));
+                radioButton.setPadding(0, 5, 0, 5);
+                radioButton.setText(motivoDenuncia.getmMotivo());
+                radioButton.setTag(motivoDenuncia.getmObjectId());
+                mItemsDenunciaContainer.addView(radioButton);
+            }
         }
     }
 
+    private class AsyncDenunciarPublicacion extends AsyncTask<String, Void, Void> {
+        private String mMotivoDenuncia = "";
+        private boolean error = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            int selectedId = mItemsDenunciaContainer.getCheckedRadioButtonId();
+            RadioButton radioButtonSelected = (RadioButton) findViewById(selectedId);
+            mMotivoDenuncia = radioButtonSelected.getText().toString();
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                mIDenunciasImpl.denunciar(params[0], mMotivoDenuncia, mDestinoDenuncia);
+            } catch (Exception e) {
+                error = true;
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            mItemsDenunciaContainer.clearCheck();
+            closeDialog();
+            if (!error) {
+                if (mDestinoDenuncia.equals(Constants.TABLA_PERSONAS)) {
+                    Toast.makeText(PrincipalActivity.this, "Usuario reportado con éxito!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(PrincipalActivity.this, "Publicación reportada con éxito!", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                if (mDestinoDenuncia.equals(Constants.TABLA_PERSONAS)) {
+                    Toast.makeText(PrincipalActivity.this, "No se pudo reportar al usuario. Intente de nuevo más tarde", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(PrincipalActivity.this, "No se pudo reportar la publicación. Intente de nuevo más tarde", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
+    }
+
+    private class AsyncGetUser extends AsyncTask<String, Void, Void> {
+        private boolean error = false;
+        private Personas mPersona;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                mPersona = mIPersonasImpl.getPersonabyEmail(HuellasApplication.getInstance().getProfileEmailFacebook());
+            } catch (Exception e) {
+                error = true;
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (error) {
+                View.OnClickListener listener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        loadMainScreen();
+                    }
+                };
+                showMessageOverlay("Hubo un problema, por favor intente nuevamente", listener);
+            } else {
+                if (mPersona.isBloqueado()) {
+                    showUserBlockedDialog();
+
+                } else {
+                    updateFacebookData();
+                    setUpPager();
+                }
+            }
+
+        }
+    }
+
+    public void showUserBlockedDialog() {
+        CustomDialog.showDialog("Usuario bloqueado", "Lo sentimos pero tu cuenta fue bloqueada.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                LoginManager.getInstance().logOut();
+                HuellasApplication.getInstance().clearProfileFacebook();
+                finishAffinity();
+            }
+        }, PrincipalActivity.this);
+    }
 }

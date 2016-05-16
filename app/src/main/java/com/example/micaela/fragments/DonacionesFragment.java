@@ -1,5 +1,6 @@
 package com.example.micaela.fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -7,11 +8,13 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.micaela.HuellasApplication;
+import com.example.micaela.activities.AltaAnimalesActivity;
 import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.adapters.AdicionalesAdapter;
 import com.example.micaela.db.Controladores.IAdicionalesImpl;
@@ -19,6 +22,7 @@ import com.example.micaela.db.Interfaces.IAdicionales;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.huellas.R;
+import com.example.micaela.utils.Constants;
 import com.parse.ParseException;
 
 import java.util.List;
@@ -28,17 +32,11 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
     private IAdicionales mIAdicionalesImpl;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private List<Adicionales> adicionales;
-
     private AdicionalesAdapter mAdapterAdicionales;
 
     private static DonacionesFragment mInstanceDonacion;
 
-    private View mDialogContainer;
-    private TextView mTextViewDialogMsg;
-    private TextView mTextViewConfirmar;
-    private TextView mTextViewCancelar;
-    private boolean isDialogOpen = false;
+    private boolean mFromSwipeRefresh = false;
 
     public static DonacionesFragment getInstance() {
         if (mInstanceDonacion == null) {
@@ -46,7 +44,6 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
         }
         return mInstanceDonacion;
     }
-
 
     @Override
     public void onDestroy() {
@@ -61,55 +58,39 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
 
         inicializarSwipeRefresh(mRootView);
         inicializarRecycler(mRootView);
-        mDialogContainer = mRootView.findViewById(R.id.layout_dialog_container);
-        mTextViewCancelar = (TextView)mRootView.findViewById(R.id.textView_cancelar);
-        mTextViewConfirmar = (TextView)mRootView.findViewById(R.id.textView_confirmar);
-        mTextViewDialogMsg = (TextView)mRootView.findViewById(R.id.textView_confirmar_mensaje);
 
-
-        setHasOptionsMenu(false);
         new AsyncTaskAdicionales().execute();
         return mRootView;
     }
 
     @Override
     public boolean onBackPressed() {
-        if (isDialogOpen) {
-            mDialogContainer.setVisibility(View.GONE);
-            isDialogOpen = false;
-            return  true;
-        }
-        else {
-            return false;
-        }
+        return false;
+
     }
 
-    private class AsyncTaskDeletePerdido extends AsyncTask<Adicionales, Adicionales, Adicionales> {
+    private class AsyncTaskDeleteDonacion extends AsyncTask<Adicionales, Void, Void> {
         private boolean error = false;
+        private Adicionales adicional = null;
 
         @Override
-        protected Adicionales doInBackground(Adicionales... params) {
+        protected Void doInBackground(Adicionales... params) {
+            adicional = params[0];
             IAdicionalesImpl iAdicionales = new IAdicionalesImpl(getBaseActivity());
             try {
-                iAdicionales.deleteAdicional(params[0].getObjectId());
+                iAdicionales.deleteAdicional(adicional.getObjectId());
             } catch (ParseException e) {
-                getBaseActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        error = true;
-                    }
-                });
-
+                error = true;
             }
-            return params[0];
+            return null;
         }
 
         @Override
-        protected void onPostExecute(Adicionales adicional) {
-            super.onPostExecute(adicional);
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            ((PrincipalActivity) getBaseActivity()).closeDialog();
             if (!error) {
-                mDialogContainer.setVisibility(View.GONE);
-                isDialogOpen = false;
+                List<Adicionales> adicionales = HuellasApplication.getInstance().getDonaciones();
                 for (int x = 0; x < adicionales.size(); x++) {
                     if (adicional.getObjectId().equals(adicionales.get(x).getObjectId())) {
                         adicionales.remove(x);
@@ -118,11 +99,10 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
                 mAdapterAdicionales.notifyDataSetChanged();
                 Toast.makeText(getBaseActivity(), "Publicación eliminada con éxito!", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getBaseActivity(), "No se pudo eliminar la publicación", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseActivity(), "No se pudo eliminar la publicación. Intente de nuevo más tarde", Toast.LENGTH_LONG).show();
             }
 
         }
-
     }
 
     private void inicializarSwipeRefresh(View view) {
@@ -130,6 +110,7 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mFromSwipeRefresh = true;
                 new AsyncTaskAdicionales().execute();
             }
         });
@@ -138,24 +119,70 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
 
 
     @Override
-    public void updateDataSetAdapterPublicaciones(Object objeto) {
+    public void addElementAdapterPublicaciones(Object objeto) {
+        List<Adicionales> adicionales = HuellasApplication.getInstance().getDonaciones();
         adicionales.add(0, (Adicionales) objeto);
-        mAdapterAdicionales.notifyDataSetChanged();
+        notifyAdapter(adicionales);
         Toast.makeText(getBaseActivity(), "Publicación realizada con éxito!", Toast.LENGTH_LONG).show();
+    }
+
+    private void notifyAdapter(List<Adicionales> adicionales) {
+        if (mAdapterAdicionales == null) {
+            mAdapterAdicionales = new AdicionalesAdapter(adicionales,getBaseActivity(), DonacionesFragment.this, Constants.ADICIONALES_DONACIONES);
+
+        } else {
+            mAdapterAdicionales.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void updateElementAdapterPublicacion(Object object) {
+        List<Adicionales> adicionales = HuellasApplication.getInstance().getDonaciones();
+        for (Adicionales adicional : adicionales) {
+            if (adicional.getObjectId().equals(((Adicionales) object).getObjectId())) {
+                adicional.setFoto(((Adicionales) object).getFoto());
+                adicional.setDescripcion(((Adicionales) object).getDescripcion());
+                adicional.setTitulo(((Adicionales) object).getTitulo());
+                Toast.makeText(getBaseActivity(), "Publicación editada con éxito!", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        notifyAdapter(adicionales);
     }
 
     @Override
     public void updateDataSetAdapterComentarios(Comentarios comentario, Object object) {
+        List<Adicionales> adicionales = HuellasApplication.getInstance().getDonaciones();
         for (Adicionales adicional : adicionales) {
             if (adicional.getObjectId().equals(((Adicionales) object).getObjectId())) {
                 adicional.getComentarios().add(comentario);
             }
         }
-        mAdapterAdicionales.notifyDataSetChanged();
+        notifyAdapter(adicionales);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setHasOptionsMenu(false);
+        if (mAdapterAdicionales == null) {
+            List<Adicionales> adicionales = HuellasApplication.getInstance().getDonaciones();
+            mAdapterAdicionales = new AdicionalesAdapter(adicionales, getBaseActivity(), DonacionesFragment.this, Constants.ADICIONALES_DONACIONES);
+            mRecyclerView.setAdapter(mAdapterAdicionales);
+        }
+        else {
+            mAdapterAdicionales.notifyDataSetChanged();
+        }
     }
 
     private void inicializarRecycler(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_recycler_view);
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return mSwipeRefreshLayout.isRefreshing();
+            }
+        });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -177,56 +204,59 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
     public void onClickItem(int idItem, final Adicionales adicional) {
         switch (idItem) {
             case R.id.item_editar:
+                Intent intent = new Intent(getBaseActivity(), AltaAnimalesActivity.class);
+                intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
+                intent.putExtra(Constants.ACTION, Constants.EDITAR);
+                intent.putExtra(Constants.OBJETO_PERDIDO, adicional);
+                getBaseActivity().startActivity(intent);
                 break;
-            case R.id.item_reportar:
+            case R.id.item_reportar_publicacion:
+                ((PrincipalActivity) getActivity()).showDenunciasDialog(Constants.TABLA_ADICIONALES, adicional.getObjectId());
+                break;
+            case R.id.item_reportar_usuario:
+                ((PrincipalActivity) getActivity()).showDenunciasDialog(Constants.TABLA_PERSONAS, adicional.getPersona().getObjectId());
                 break;
             case R.id.item_eliminar:
-                mDialogContainer.setVisibility(View.VISIBLE);
-                isDialogOpen = true;
-                mTextViewDialogMsg.setText("¿Está seguro que desea eliminar la publicación?");
-                mTextViewCancelar.setVisibility(View.VISIBLE);
+                View.OnClickListener onClickEliminarListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        switch (v.getId()) {
+                            case R.id.textView_cancelar:
+                                ((PrincipalActivity) getBaseActivity()).closeDialog();
+                                break;
+                            case R.id.textView_confirmar:
+                                ((PrincipalActivity) getBaseActivity()).showLoadDialog();
+                                new AsyncTaskDeleteDonacion().execute(adicional);
+                                break;
+                        }
+                    }
+                };
+                ((PrincipalActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_eliminar_descripcion), onClickEliminarListener);
+
                 break;
         }
-
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.textView_cancelar:
-                        isDialogOpen = false;
-                        mDialogContainer.setVisibility(View.GONE);
-                        break;
-                    case R.id.textView_confirmar:
-                        new AsyncTaskDeletePerdido().execute(adicional);
-
-
-                        break;
-                }
-            }
-        };
-        mTextViewCancelar.setOnClickListener(onClickListener);
-        mTextViewConfirmar.setOnClickListener(onClickListener);
     }
 
     private class AsyncTaskAdicionales extends AsyncTask<Void, Void, List<Adicionales>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            getBaseActivity().showOverlay(getString(R.string.cargando_publicaciones_mensaje));
         }
+
         @Override
         protected void onPostExecute(List<Adicionales> adicionalesList) {
             super.onPostExecute(adicionalesList);
-            adicionales = adicionalesList;
-            mAdapterAdicionales = new AdicionalesAdapter(adicionales, getContext(), DonacionesFragment.this);
-            mRecyclerView.setAdapter(mAdapterAdicionales);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    getBaseActivity().hideOverlay();
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            });
+            HuellasApplication.getInstance().setDonaciones(adicionalesList);
+            if (mFromSwipeRefresh) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                mAdapterAdicionales.notifyDataSetChanged();
+                mFromSwipeRefresh = false;
+            } else {
+                mAdapterAdicionales = new AdicionalesAdapter(HuellasApplication.getInstance().getDonaciones(), getContext(), DonacionesFragment.this, Constants.ADICIONALES_DONACIONES);
+                mRecyclerView.setAdapter(mAdapterAdicionales);
+                ((PrincipalActivity) getBaseActivity()).setCountInfoLoaded();
+            }
+
         }
 
         @Override
@@ -242,4 +272,4 @@ public class DonacionesFragment extends BaseFragment implements AltaAnimalesFrag
         }
     }
 
-    }
+}

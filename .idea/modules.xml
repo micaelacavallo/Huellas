@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Huellas.iml" filepath="$PROJECT_DIR$/Huellas.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Huellas.iml" filepath="$PROJECT_DIR$/Huellas.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/managerapp/managerapp.iml" filepath="$PROJECT_DIR$/managerapp/managerapp.iml" />
     </modules>

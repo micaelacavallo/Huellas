@@ -7,6 +7,4 @@
     <include
         layout="@layout/swipe_refresh_layout"/>
 
-    <include layout="@layout/dialog_confirmar_cancelar" />
-
 </FrameLayout>

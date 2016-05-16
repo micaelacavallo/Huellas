@@ -3,8 +3,8 @@ package com.example.micaela.db.Modelo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.parse.ParseClassName;
-import com.parse.ParseObject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Quimey on 13/09/2015.
@@ -93,5 +93,21 @@ public class Razas implements Parcelable{
 
     public void setmEspecie(Especies mEspecie) {
         this.mEspecie = mEspecie;
+    }
+
+    public static int returnPositionElement (List<Razas> razas, String raza, String especie) {
+        List<Razas> filterRazas = new ArrayList<>();
+        int position = -1;
+        for (int x = 0; x < razas.size(); x++) {
+            if (razas.get(x).getmEspecie() == null ||
+                    especie.equals(razas.get(x).getmEspecie().getEspecie()))
+                filterRazas.add(razas.get(x));
+        }
+        for (int x = 0; x<filterRazas.size(); x++) {
+            if (filterRazas.get(x).getRaza().equals(raza)) {
+                position = x;
+            }
+        }
+        return position;
     }
 }

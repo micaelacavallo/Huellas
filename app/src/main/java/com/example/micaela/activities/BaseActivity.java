@@ -9,6 +9,8 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -25,6 +27,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.micaela.HuellasApplication;
+import com.example.micaela.db.Modelo.Adicionales;
+import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
 import com.facebook.login.LoginManager;
@@ -57,7 +61,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
-    public abstract int getLayoutBase ();
+    public abstract int getLayoutBase();
 
     @Override
     public void setContentView(int layoutResID) {
@@ -158,6 +162,23 @@ public abstract class BaseActivity extends AppCompatActivity {
         return latLng;
     }
 
+    public boolean internet() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
+
     private void setupToolbar(ViewGroup mainContainer) {
         mToolbar = (Toolbar) mainContainer.findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -165,6 +186,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
+    public String getToolbarTitle() {
+        return mToolbarTitle.getText().toString();
+    }
 
     public void showUpButton() {
         ActionBar actionBar = getSupportActionBar();
@@ -206,11 +230,29 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void logOut() {
         LoginManager.getInstance().logOut();
         HuellasApplication.getInstance().clearProfileFacebook();
+        goToMainActivity();
+    }
+
+    public void goToMainActivity() {
         Intent aIntent = new Intent(getBaseContext(), PrincipalActivity.class);
         aIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(aIntent);
     }
 
+
+    public void goToDetalleActivity(Object object, String fromFragment) {
+        Intent aIntent = new Intent(getBaseContext(), DetallePublicacionActivity.class);
+        aIntent.putExtra(Constants.PUSH_OPEN, true);
+        aIntent.putExtra(Constants.FROM_FRAGMENT, fromFragment);
+        if (fromFragment.equals(Constants.PERDIDOS)) {
+            aIntent.putExtra(Constants.OBJETO_PERDIDO, (Perdidos)object);
+        }
+        else {
+            aIntent.putExtra(Constants.OBJETO_PERDIDO, (Adicionales)object);
+        }
+        aIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(aIntent);
+    }
 
     public void loadMainScreen() {
         Intent aIntent = new Intent(getBaseContext(), PrincipalActivity.class);
@@ -228,11 +270,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         return sdf.format(date) + " hs.";
     }
 
-    public void hideKeyboard () {
+    public void hideKeyboard() {
         // Check if no view has focus:
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }

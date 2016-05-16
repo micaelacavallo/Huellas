@@ -24,4 +24,6 @@
         fab:image_size="24dp"
         fab:type="DEFAULT" />
 
+    <include layout="@layout/dialog_confirmar_cancelar" />
+
 </FrameLayout>

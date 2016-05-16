@@ -24,7 +24,7 @@
     android:textColor="@color/primary_text"
     android:layout_gravity="center_vertical"
     android:layout_marginTop="10dp"
-    android:layout_marginLeft="40dp" />
+    android:layout_marginLeft="20dp" />
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"

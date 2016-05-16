@@ -15,7 +15,7 @@ import com.example.micaela.db.Controladores.IGeneralImpl;
 import com.example.micaela.db.Controladores.IPersonasImpl;
 import com.example.micaela.db.Interfaces.IAdicionales;
 import com.example.micaela.db.Interfaces.IComentarios;
-import com.example.micaela.db.Interfaces.IDBLocal;
+import com.example.micaela.db.Interfaces.IDB;
 import com.example.micaela.db.Interfaces.IEstados;
 import com.example.micaela.db.Interfaces.IGeneral;
 import com.example.micaela.db.Interfaces.IPersonas;
@@ -24,6 +24,7 @@ import com.example.micaela.db.Modelo.Colores;
 import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Estados;
 import com.example.micaela.db.Modelo.Personas;
+import com.example.micaela.utils.Constants;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseInstallation;
@@ -43,7 +44,7 @@ import java.util.List;
 /**
  * Created by quimey.arozarena on 12/22/2015.
  */
-public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLocal {
+public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDB {
 
 
     private ParseObject adicionalObject;
@@ -137,20 +138,24 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
                 objectAux = object.getParseObject(CAdicionales.ID_ESTADO);
                 estado = new Estados(objectAux.getObjectId(), objectAux.getString(CEstados.SITUACION));
 
+                if(internet(context)){
                 try {
                     objectRelation = object.getRelation(CAdicionales.ID_COMENTARIOS);
-                    comentarios = iComentarios.getComentarios(objectRelation.getQuery().find(), object);
+                    comentarios = iComentarios.getComentarios(objectRelation.getQuery().addAscendingOrder(CComentarios.FECHA).find(), object);
                 }catch (Exception e)
                 {
                     comentarios = null;
-                }
+                }}
+            else{
+                comentarios = null;
+            }
 
                 foto = object.getParseFile(CAdicionales.FOTOS);
 
 
                 byte[] image = null;
                 if (foto != null) {
-                    image = foto. getData();
+                    image = foto.getData();
                 }
                 adicional = new Adicionales(object.getObjectId(), persona, estado, object.getDate(CAdicionales.FECHA), object.getString(CAdicionales.TITULO), object.getString(CAdicionales.DESCRIPCION), image, object.getBoolean(CAdicionales.DONACION), comentarios, object.getBoolean(CAdicionales.BLOQUEADO));
                 adicionales.add(adicional);
@@ -172,6 +177,8 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     }
 
     public List<ParseObject> getInfoUtilParseObject() throws ParseException {
+
+        adicionales.clear();
 
         query = getQueryForInfoUtil();
         query.orderByDescending(CAdicionales.FECHA);
@@ -205,7 +212,10 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
 
     public List<ParseObject> getDonacionesParseObject() throws ParseException {
 
+        adicionales.clear();
         query = getQueryForDonaciones();
+        query.orderByDescending(CAdicionales.FECHA);
+        checkInternetGet(query);
 
         listParseObject = findQuery();
 
@@ -249,14 +259,31 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     }
 
     @Override
-    public Adicionales saveAdicional(Adicionales adicional) throws ParseException {
+    public void saveAdicional(Adicionales adicional) throws ParseException {
+        saveAdicionalParseObject(adicional);
+    }
 
-        //VALIDAR EN FE
+
+    public String getInsertedID(String email) throws ParseException {
+        query = ParseQuery.getQuery(Clases.ADICIONALES);
+        persona = iPersona.getPersonabyEmail(email);
+        ParseObject obj = ParseObject.createWithoutData(Clases.PERSONAS, persona.getObjectId());
+        query.whereEqualTo(CAdicionales.ID_PERSONA, obj);
+        query.addDescendingOrder(CAdicionales.FECHA);
+        checkInternetGet(query);
+        if (query.count() != 0) {
+            return query.getFirst().getObjectId();
+        } else {
+            return "";
+        }
+    }
+
+    public void saveAdicionalParseObject(Adicionales adicional) throws ParseException {
         adicionalObject.put(CAdicionales.TITULO, adicional.getTitulo());
         adicionalObject.put(CAdicionales.DESCRIPCION, adicional.getDescripcion());
         adicionalObject.put(CAdicionales.FECHA, adicional.getFecha());
+        adicionalObject.put(CAdicionales.BLOQUEADO, false);
         adicionalObject.put(CAdicionales.FOTOS, new ParseFile("picture.jpg", adicional.getFoto()));
-
 
         adicionalObject.put(CAdicionales.DONACION, adicional.isDonacion());
 
@@ -270,8 +297,6 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         adicionalObject.put(CAdicionales.ID_ESTADO, ParseObject.createWithoutData(Clases.ESTADOS, String.valueOf(estado.getObjectId())));
         adicionalObject.put(CAdicionales.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
         save(adicionalObject);
-
-        return getAdicionalById(getUltimoObjectId(Clases.ADICIONALES));
     }
 
 
@@ -289,11 +314,28 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     }
 
     @Override
-    public void editAdicional(Adicionales adicional) throws ParseException {
+    public void editAdicional(Adicionales adicionalAux) throws ParseException {
 
-        objectAux = cargarAdicional(adicional);
-        deleteAdicional(adicional.getObjectId());
-        saveAdicional(adicional);
+        query = ParseQuery.getQuery(Clases.ADICIONALES);
+        query.whereEqualTo(CAdicionales.OBJECT_ID, adicionalAux.getObjectId());
+
+        try {
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+                objectAux.put(CAdicionales.TITULO, adicionalAux.getTitulo());
+                objectAux.put(CAdicionales.DESCRIPCION, adicionalAux.getDescripcion());
+                objectAux.put(CAdicionales.FOTOS, new ParseFile("picture.jpg", adicionalAux.getFoto()));
+                objectAux.put(CAdicionales.OBJECT_ID, adicionalAux.getObjectId());
+
+                persona = iPersona.getPersonabyEmail(adicionalAux.getPersona().getEmail());
+                objectAux.put(CAdicionales.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
+
+                save(objectAux);
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
+
     }
 
     @Override
@@ -336,6 +378,7 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         object.put(CComentarios.COMENTARIO, comentario);
         object.put(CComentarios.LEIDO, false);
         object.put(CComentarios.FECHA, new Date());
+        object.put(CComentarios.BLOQUEADO, false);
         persona = iPersona.getPersonabyEmail(email);
         object.put(CComentarios.ID_PERSONA, ParseObject.createWithoutData(Clases.PERSONAS, String.valueOf(persona.getObjectId())));
         save(object);
@@ -350,35 +393,42 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
             List<String> emails = new ArrayList<String>();
             adicional = getAdicionalById(adicionalObjectId);
 
-            if (!adicional.getPersona().getEmail().equals(mailLogueado))
+            if (!adicional.getPersona().getEmail().equals(mailLogueado)) {
                 emails.add(adicional.getPersona().getEmail());
-            for (Comentarios comentarioAux : adicional.getComentarios()) { //email de las personas que comentaron
-                if (!comentarioAux.getPersona().getEmail().equals(mailLogueado)) {
-                    emails.add(comentarioAux.getPersona().getEmail());
-                }
-            }
-
-            JSONObject object2 = new JSONObject();
-            try {
-
-                // Create our Installation query
-                ParseQuery pushQuery = ParseInstallation.getQuery();
-
-                pushQuery.whereContainedIn("email", emails);
-                object2.put("title", "Nuevo comentario");
-                ParsePush push = new ParsePush();
-                push.setQuery(pushQuery); // Set our Installation query
-                push.setData(object2);
-                push.sendInBackground(new SendCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e != null) {
-                            e.printStackTrace();
+                for (Comentarios comentarioAux : adicional.getComentarios()) { //email de las personas que comentaron
+                    if (!comentarioAux.getPersona().getEmail().equals(mailLogueado)) {
+                        if(!comentarioAux.getPersona().isBloqueado()) {
+                            emails.add(comentarioAux.getPersona().getEmail());
                         }
                     }
-                });
-            } catch (JSONException e) {
-                e.printStackTrace();
+                }
+
+                JSONObject object2 = new JSONObject();
+                try {
+
+                    // Create our Installation query
+                    ParseQuery pushQuery = ParseInstallation.getQuery();
+
+                    pushQuery.whereContainedIn("email", emails);
+                    object2.put("title", "Nuevo comentario");
+                    object2.put("alert", HuellasApplication.getInstance().getProfileNameFacebook() + " comentó una publicación.");
+                    object2.put(Constants.OBJETO_ID, adicional.getObjectId());
+                    object2.put(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
+
+                    ParsePush push = new ParsePush();
+                    push.setQuery(pushQuery); // Set our Installation query
+                    push.setData(object2);
+                    push.sendInBackground(new SendCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e != null) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -403,6 +453,22 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         return objectAux;
     }
 
+    @Override
+    public void bloquearAdicional(String objectId) {
+        query = ParseQuery.getQuery(Clases.ADICIONALES);
+        query.whereEqualTo(CAdicionales.OBJECT_ID, objectId);
+
+        try {
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+                objectAux.put(CAdicionales.BLOQUEADO, true);
+                save(objectAux);
+            }
+        } catch (ParseException e) {
+            e.fillInStackTrace();
+        }
+    }
+
 
     @Override
     public void pinObjectInBackground(ParseObject object) {
@@ -415,24 +481,9 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
     }
 
     @Override
-    public void queryFromLocalDatastore(ParseQuery query) {
-        query.fromLocalDatastore();
-    }
-
-    @Override
-    public void saveEventually(ParseObject object) {
-        object.saveEventually();
-    }
-
-    @Override
     public void saveInBackground(ParseObject object) {
 
         object.saveInBackground();
-    }
-
-    @Override
-    public void deleteEventually(ParseObject object) {
-        object.deleteEventually();
     }
 
     @Override
@@ -440,10 +491,6 @@ public class AdicionalesDAO extends IGeneralImpl implements IAdicionales, IDBLoc
         object.deleteInBackground();
     }
 
-    @Override
-    public void cargarDBLocal(Context context) throws ParseException {
-
-    }
 
     @Override
     public void cargarDBLocalDonaciones(Context context) throws ParseException {

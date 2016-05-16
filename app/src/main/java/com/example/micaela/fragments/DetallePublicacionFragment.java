@@ -2,7 +2,6 @@ package com.example.micaela.fragments;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.Address;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -25,15 +24,17 @@ import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.activities.ComentariosActivity;
 import com.example.micaela.activities.MapActivity;
 import com.example.micaela.db.Modelo.Adicionales;
+import com.example.micaela.db.Modelo.Comentarios;
 import com.example.micaela.db.Modelo.Perdidos;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
+import com.example.micaela.utils.CustomDialog;
 
 import java.util.Date;
 
 import static com.example.micaela.utils.SpannableUtils.bold;
 
-public class DetallePublicacionFragment extends BaseFragment {
+public class DetallePublicacionFragment extends BaseFragment implements ComentariosFragment.AdapterCallback{
 
     TextView mTextViewEstado;
     TextView mTextViewDescripcion;
@@ -49,6 +50,8 @@ public class DetallePublicacionFragment extends BaseFragment {
     private View mRootView;
     private String mFromFragment;
 
+    private static DetallePublicacionFragment mInstanceFragment;
+
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_detalle_publicacion, container, false);
@@ -58,22 +61,35 @@ public class DetallePublicacionFragment extends BaseFragment {
         if (Constants.PERDIDOS.equals(mFromFragment)) {
             getBaseActivity().getCardEstado().setVisibility(View.VISIBLE);
             mPerdidos = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
+            if (mPerdidos.isSolucionado() && (mPerdidos.getComentarios() == null || mPerdidos.getComentarios().size() == 0)) {
+                setHasOptionsMenu(false);
+            }
+            else {
+                setHasOptionsMenu(true);
+            }
             fillViews(mPerdidos.getPersona().getNombre(), mPerdidos.getPersona().getTelefono(),
                     mPerdidos.getEstado().getSituacion(), mPerdidos.getFoto(), mPerdidos.getTitulo(),
                     mPerdidos.getDescripcion(), mPerdidos.getRaza().getmRaza(), mPerdidos.getEspecie().getEspecie(),
                     mPerdidos.getColor().getColor(), mPerdidos.getTamaño().getTamaño(), mPerdidos.getEdad().getEdad(),
-                    mPerdidos.getSexo().getSexo(), mPerdidos.getLatitud(), mPerdidos.getLongitud(), mPerdidos.getFecha());
+                    mPerdidos.getSexo().getSexo(), mPerdidos.getUbicacion(), mPerdidos.getFecha());
         } else {
             mAdicionales = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
             mTextViewDatos.setVisibility(View.GONE);
             mViewLocation.setVisibility(View.GONE);
             fillViews(mAdicionales.getPersona().getNombre(), mAdicionales.getPersona().getTelefono(), "", mAdicionales.getFoto(),
-                    mAdicionales.getTitulo(), mAdicionales.getDescripcion(), "", "", "", "", "", "", 0, 0, mAdicionales.getFecha());
+                    mAdicionales.getTitulo(), mAdicionales.getDescripcion(), "", "", "", "", "", "", "", mAdicionales.getFecha());
+            setHasOptionsMenu(true);
         }
 
-        setHasOptionsMenu(true);
-
         return mRootView;
+    }
+
+    public static DetallePublicacionFragment getInstance ()  {
+        if (mInstanceFragment == null) {
+            mInstanceFragment = new DetallePublicacionFragment();
+        }
+
+        return mInstanceFragment;
     }
 
     @Override
@@ -83,7 +99,7 @@ public class DetallePublicacionFragment extends BaseFragment {
 
     private void fillViews(String nombre, final String telefono, String situacion, byte[] foto,
                            String titulo, String descripcion, String raza, String especie, String color,
-                           String tamaño, String edad, String sexo, double latitud, double longitud, Date fecha) {
+                           String tamaño, String edad, String sexo, String ubicacion, Date fecha) {
 
         if (!situacion.equals("")) {
             if (situacion.equals(getString(R.string.buscado_minus))) {
@@ -113,24 +129,12 @@ public class DetallePublicacionFragment extends BaseFragment {
 
         mTextViewFecha.setText(TextUtils.concat(bold("Fecha de publicación: "), ((BaseActivity) getActivity()).getFormattedDate(fecha)));
 
-        if (latitud != 0 & longitud != 0) {
-            Address address = getBaseActivity().getLocation(latitud, longitud);
-
-            try {
-                String location = address.getThoroughfare() + " " + address.getSubThoroughfare();
-                if (!location.equals("")) {
-                    mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), location));
-                } else {
-                    mImageViewLocation.setVisibility(View.GONE);
-                    mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), "No especificada"));
-
-                }
-            } catch (NullPointerException e) {
-                mImageViewLocation.setVisibility(View.GONE);
-                mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), "No especificada"));
-            }
+        if (!ubicacion.equals("")) {
+            mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), ubicacion));
+        } else {
+            mImageViewLocation.setVisibility(View.GONE);
+            mTextViewDireccion.setText(TextUtils.concat(bold(getBaseActivity().getString(R.string.ubicacion)), "No especificada"));
         }
-
         String infoContacto = "Contacto: " + nombre + " (tel: " + telefono + ")";
 
         SpannableString ss = new SpannableString(TextUtils.concat(bold("Contacto: "), nombre + " (tel: " + telefono + ")"));
@@ -163,12 +167,15 @@ public class DetallePublicacionFragment extends BaseFragment {
         mViewLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mImageViewLocation.getVisibility() == View.VISIBLE) {
-                    Intent intent = new Intent(getBaseActivity(), MapActivity.class);
-                    intent.putExtra(Constants.LATITUD, mPerdidos.getLatitud());
-                    intent.putExtra(Constants.LONGITUD, mPerdidos.getLongitud());
-                    intent.putExtra(Constants.ADDRESS, mTextViewDireccion.getText().toString());
-                    startActivity(intent);
+                if (getBaseActivity().internet()) {
+                    if (mImageViewLocation.getVisibility() == View.VISIBLE) {
+                        Intent intent = new Intent(getBaseActivity(), MapActivity.class);
+                        intent.putExtra(Constants.DIRECCION, mPerdidos.getUbicacion());
+                        startActivity(intent);
+                    }
+                }
+                else {
+                    CustomDialog.showConnectionDialog(getBaseActivity());
                 }
             }
         });
@@ -191,19 +198,29 @@ public class DetallePublicacionFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_comment:
-                Intent intent = new Intent(getBaseActivity(), ComentariosActivity.class);
-                if (Constants.PERDIDOS.equals(getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT))) {
-                    intent.putExtra(Constants.COMENTARIOS_LIST, mPerdidos);
-                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
-                } else {
-                    intent.putExtra(Constants.COMENTARIOS_LIST, mAdicionales);
-                    intent.putExtra(Constants.FROM_FRAGMENT, mFromFragment);
-
+                if (getBaseActivity().internet()) {
+                    Intent intent = new Intent(getBaseActivity(), ComentariosActivity.class);
+                    if (Constants.PERDIDOS.equals(getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT))) {
+                        intent.putExtra(Constants.COMENTARIOS_LIST, mPerdidos);
+                        intent.putExtra(Constants.FROM_FRAGMENT, mFromFragment);
+                    } else {
+                        intent.putExtra(Constants.COMENTARIOS_LIST, mAdicionales);
+                        intent.putExtra(Constants.FROM_FRAGMENT, mFromFragment);
+                    }
+                    intent.putExtra(Constants.FROM_DETALLE, true);
+                    startActivity(intent);
                 }
-                startActivity(intent);
+                else {
+                    CustomDialog.showConnectionDialog(getBaseActivity());
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void updateDataSetAdapterComentarios(Comentarios comentario, Object object) {
+        mPerdidos.getComentarios().add(comentario);
     }
 }

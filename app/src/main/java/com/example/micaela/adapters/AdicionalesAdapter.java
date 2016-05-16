@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,10 @@ import com.example.micaela.HuellasApplication;
 import com.example.micaela.activities.BaseActivity;
 import com.example.micaela.activities.ComentariosActivity;
 import com.example.micaela.activities.DetallePublicacionActivity;
-import com.example.micaela.activities.PrincipalActivity;
 import com.example.micaela.db.Modelo.Adicionales;
 import com.example.micaela.huellas.R;
 import com.example.micaela.utils.Constants;
+import com.example.micaela.utils.CustomDialog;
 
 import java.util.List;
 
@@ -26,17 +27,19 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
     List<Adicionales> mAdicionales;
     private Context mContext;
     private PopupMenu mPopupMenu;
+    private String mTipoPublicacion;
     private Fragment mFragment;
     private PopupMenuCallback mPopupMenuCallback;
 
-    public AdicionalesAdapter(List<Adicionales> adicionales, Context context, Fragment fragment) {
+    public AdicionalesAdapter(List<Adicionales> adicionales, Context context, Fragment fragment, String tipoPublicacion) {
         mAdicionales = adicionales;
         mContext = context;
         mFragment = fragment;
+        mTipoPublicacion = tipoPublicacion;
     }
 
     public interface PopupMenuCallback {
-        void onClickItem (int idItem, Adicionales adicional);
+        void onClickItem(int idItem, Adicionales adicional);
     }
 
     @Override
@@ -57,31 +60,38 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
             holder.getImageViewFoto().setImageBitmap(((BaseActivity) mContext).convertFromByteToBitmap(foto));
         }
 
-        int cantidadComentarios = mAdicionales.get(position).getComentarios().size();
-        if (cantidadComentarios > 0) {
-            if (cantidadComentarios == 1) {
-                holder.getmTextViewComentarios().setText(mContext.getString(R.string.un_comentario));
+        try {
+            int cantidadComentarios = mAdicionales.get(position).getComentarios().size();
+            if (cantidadComentarios > 0) {
+                if (cantidadComentarios == 1) {
+                    holder.getmTextViewComentarios().setText(mContext.getString(R.string.un_comentario));
+                } else {
+                    holder.getmTextViewComentarios().setText(String.format(mContext.getString(R.string.comentarios_cantidad), cantidadComentarios));
+                }
+                holder.getmTextViewComentarios().setVisibility(View.VISIBLE);
             } else {
-                holder.getmTextViewComentarios().setText(String.format(mContext.getString(R.string.comentarios_cantidad), cantidadComentarios));
+                holder.getmTextViewComentarios().setVisibility(View.GONE);
             }
-            holder.getmTextViewComentarios().setVisibility(View.VISIBLE);
-        } else {
+        } catch (NullPointerException e) {
             holder.getmTextViewComentarios().setVisibility(View.GONE);
         }
 
         holder.getViewComentar().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (((BaseActivity) mContext).internet()) {
                 Intent intent = new Intent(mContext, ComentariosActivity.class);
                 intent.putExtra(Constants.COMENTARIOS_LIST, mAdicionales.get((int) holder.getCardContainer().getTag()));
 
-                int page = ((PrincipalActivity) mContext).getCurrentPage();
-                if (page == 1) {
+                if (mTipoPublicacion.equals(Constants.ADICIONALES_DONACIONES)) {
                     intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
                 } else {
-                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
+                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_INFO);
                 }
                 mContext.startActivity(intent);
+            } else {
+                CustomDialog.showConnectionDialog(mContext);
+            }
             }
         });
 
@@ -91,11 +101,10 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, DetallePublicacionActivity.class);
                 intent.putExtra(Constants.OBJETO_PERDIDO, mAdicionales.get((int) view.getTag()));
-                int page = ((PrincipalActivity) mContext).getCurrentPage();
-                if (page == 1) {
+                if (mTipoPublicacion.equals(Constants.ADICIONALES_DONACIONES)) {
                     intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
                 } else {
-                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
+                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_INFO);
                 }
                 mContext.startActivity(intent);
             }
@@ -119,17 +128,23 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
         mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                mPopupMenuCallback.onClickItem(item.getItemId(),mAdicionales.get((Integer) view.getTag()));
+                if (((BaseActivity) mContext).internet()) {
+                    mPopupMenuCallback.onClickItem(item.getItemId(), mAdicionales.get((Integer) view.getTag()));
+                } else {
+                    CustomDialog.showConnectionDialog(mContext);
+                }
                 return true;
             }
         });
         mPopupMenu.inflate(R.menu.menu_popup);
+        Menu menu = mPopupMenu.getMenu();
+        menu.removeItem(R.id.item_solucionado);
         if (!mAdicionales.get(position).getPersona().getEmail().equals(HuellasApplication.getInstance().getProfileEmailFacebook())) {
-            mPopupMenu.getMenu().removeItem(R.id.item_editar);
-            mPopupMenu.getMenu().removeItem(R.id.item_eliminar);
-        }
-        else {
-            mPopupMenu.getMenu().removeItem(R.id.item_reportar);
+            menu.removeItem(R.id.item_editar);
+            menu.removeItem(R.id.item_eliminar);
+        } else {
+            menu.removeItem(R.id.item_reportar_publicacion);
+            menu.removeItem(R.id.item_reportar_usuario);
         }
         mPopupMenu.show();
     }
