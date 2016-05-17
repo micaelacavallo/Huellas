@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:minHeight="?attr/actionBarSize"
+    android:background="@color/primary"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/ToolbarStyle"
+    android:popupTheme="@style/ToolbarStyle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <TextView
+        android:id="@+id/toolbar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/condensed_bold_25"
+        android:text="Huellas"
+        android:textColor="@color/icons"/>
+
+</android.support.v7.widget.Toolbar>
