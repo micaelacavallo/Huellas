@@ -14,16 +14,18 @@ public class Comentarios implements Parcelable {
     private Personas mPersona;
     private Date mFecha;
     private String mObjectId;
+    private boolean mBloqueado;
     private boolean mLeido;
 
     public Comentarios() {
     }
 
-    public Comentarios(String objectId, String comentario, Personas persona, Date fecha, boolean leido) {
+    public Comentarios(String objectId, String comentario, Personas persona, Date fecha, boolean leido, boolean bloqueado) {
         this.mComentario = comentario;
         this.mPersona = persona;
         this.mFecha = fecha;
         this.mObjectId = objectId;
+        this.mBloqueado = bloqueado;
         this.setmLeido(leido);
     }
 
@@ -60,6 +62,7 @@ public class Comentarios implements Parcelable {
     }
 
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -71,6 +74,7 @@ public class Comentarios implements Parcelable {
         dest.writeParcelable(this.mPersona, 0);
         dest.writeLong(mFecha != null ? mFecha.getTime() : -1);
         dest.writeString(this.mObjectId);
+        dest.writeByte(mBloqueado ? (byte) 1 : (byte) 0);
         dest.writeByte(mLeido ? (byte) 1 : (byte) 0);
     }
 
@@ -81,6 +85,7 @@ public class Comentarios implements Parcelable {
         this.mFecha = tmpMFecha == -1 ? null : new Date(tmpMFecha);
         this.mObjectId = in.readString();
         this.mLeido = in.readByte() != 0;
+        this.mBloqueado = in.readByte() != 0;
     }
 
     public static final Creator<Comentarios> CREATOR = new Creator<Comentarios>() {
@@ -99,5 +104,13 @@ public class Comentarios implements Parcelable {
 
     public void setmLeido(boolean mLeido) {
         this.mLeido = mLeido;
+    }
+
+    public boolean isBloqueado() {
+        return mBloqueado;
+    }
+
+    public void setBloqueado(boolean mBloqueado) {
+        this.mBloqueado = mBloqueado;
     }
 }

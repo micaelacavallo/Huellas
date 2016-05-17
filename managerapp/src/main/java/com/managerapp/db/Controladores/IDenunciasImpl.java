@@ -15,7 +15,6 @@ import java.util.List;
  */
 public class IDenunciasImpl implements IDenuncias {
 
-
     private DenunciasDAO mDenunciasDAO;
 
     public IDenunciasImpl(){}

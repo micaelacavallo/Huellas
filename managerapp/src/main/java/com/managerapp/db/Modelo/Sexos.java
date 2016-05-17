@@ -3,6 +3,8 @@ package com.managerapp.db.Modelo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * Created by Quimey on 13/09/2015.
  */
@@ -66,4 +68,15 @@ public class Sexos implements Parcelable {
             return new Sexos[size];
         }
     };
+
+
+    public static int returnPositionElement (List<Sexos> sexos, String sexo) {
+        int position = -1;
+        for (int x = 0; x<sexos.size(); x++) {
+            if (sexos.get(x).getSexo().equals(sexo)) {
+                position = x;
+            }
+        }
+        return position;
+    }
 }

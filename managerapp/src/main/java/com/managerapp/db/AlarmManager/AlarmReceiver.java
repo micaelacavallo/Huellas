@@ -28,7 +28,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         try {
             mAdicionales.cargarDBLocalDonaciones(context);
             mAdicionales.cargarDBLocalInfoUtil(context);
-            mPerdidos.cargarDBLocal(context);
+            mPerdidos.cargarDBLocalListaPerdidos(context);
         } catch (ParseException e) {
             e.printStackTrace();
         }

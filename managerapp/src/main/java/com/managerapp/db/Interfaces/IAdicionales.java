@@ -17,7 +17,8 @@ public interface IAdicionales {
     public List<Adicionales> getDonaciones() throws ParseException;
     public List<Adicionales> getInfoUtil() throws ParseException;
     public Adicionales getAdicionalById(String idAdicional);
-    public Adicionales saveAdicional(Adicionales adicional) throws ParseException;
+    public void saveAdicional(Adicionales adicional) throws ParseException;
+    public String getInsertedID(String personaID) throws ParseException;
     public void editAdicional(Adicionales adicional) throws ParseException;
     public void deleteAdicional(String objectId) throws  ParseException;
     public void AgregarComentarioAdicional(String adicionalObjectId, String comentario, String email) throws ParseException;
@@ -25,5 +26,5 @@ public interface IAdicionales {
     public void cargarDBLocalInfoUtil(Context context) throws ParseException;
     public List<Adicionales> getPublicacionesAdicionalesPropias(String objectId);
     public ParseObject getParseObjectById(String objectId);
+    public void bloquearAdicional(String objectId);
 }
-

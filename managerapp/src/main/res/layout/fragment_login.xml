@@ -82,6 +82,16 @@
             </android.support.design.widget.TextInputLayout>
 
 
+            <TextView
+                android:id="@+id/textView_error"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                style="@style/condensed_normal_17"
+                android:gravity="center"
+                android:textColor="@color/error"/>
+
             <Button
                 android:id="@+id/button_entrar"
                 android:layout_width="match_parent"

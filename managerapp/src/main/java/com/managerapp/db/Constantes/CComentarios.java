@@ -11,6 +11,7 @@ public class CComentarios {
     public static String ID_PERSONA= "Personas";
     public static String CREATEDAT= "createdAt";
     public static String LEIDO = "leido";
+    public static String BLOQUEADO = "bloqueado";
 
 
 }

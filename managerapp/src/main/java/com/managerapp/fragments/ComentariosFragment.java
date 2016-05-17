@@ -1,5 +1,6 @@
 package com.managerapp.fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,9 +14,12 @@ import com.managerapp.R;
 import com.managerapp.adapters.ComentariosAdapter;
 import com.managerapp.db.Controladores.IAdicionalesImpl;
 import com.managerapp.db.Controladores.IPerdidosImpl;
+import com.managerapp.db.Interfaces.IAdicionales;
+import com.managerapp.db.Interfaces.IPerdidos;
 import com.managerapp.db.Modelo.Adicionales;
 import com.managerapp.db.Modelo.Perdidos;
 import com.managerapp.utils.Constants;
+import com.parse.ParseException;
 
 
 public class ComentariosFragment extends BaseFragment {
@@ -25,8 +29,8 @@ public class ComentariosFragment extends BaseFragment {
     private ComentariosAdapter mAdapter;
     private Adicionales mAdicional;
     private Perdidos mPerdido;
-    private IPerdidosImpl mIPerdidosImpl;
-    private IAdicionalesImpl mIAdicionalesImpl;
+    private IPerdidos mIPerdidosImpl;
+    private IAdicionales mIAdicionalesImpl;
     private String mFromFragment = "";
 
 
@@ -34,30 +38,32 @@ public class ComentariosFragment extends BaseFragment {
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_comentarios, container, false);
+        mIPerdidosImpl = new IPerdidosImpl(getBaseActivity());
+        mIAdicionalesImpl = new IAdicionalesImpl(getBaseActivity());
         inicializarSwipeRefresh();
 
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.list_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mFromFragment = getBaseActivity().getIntent().getStringExtra(Constants.FROM_FRAGMENT);
+        Intent intent = getBaseActivity().getIntent();
+        mFromFragment = intent.getStringExtra(Constants.FROM_FRAGMENT);
+
         if (Constants.PERDIDOS.equals(mFromFragment)) {
-            mPerdido = getBaseActivity().getIntent().getParcelableExtra(Constants.COMENTARIOS_LIST);
-            mIPerdidosImpl = new IPerdidosImpl(getBaseActivity());
+            mPerdido = intent.getParcelableExtra(Constants.COMENTARIOS_LIST);
             mAdapter = new ComentariosAdapter(mPerdido.getComentarios(), getBaseActivity());
+
         } else {
-            mAdicional = getBaseActivity().getIntent().getParcelableExtra(Constants.COMENTARIOS_LIST);
-            mIAdicionalesImpl = new IAdicionalesImpl(getBaseActivity());
+            mAdicional = intent.getParcelableExtra(Constants.COMENTARIOS_LIST);
             mAdapter = new ComentariosAdapter(mAdicional.getComentarios(), getBaseActivity());
         }
 
         mRecyclerView.setAdapter(mAdapter);
-
         return mRootView;
     }
 
     @Override
     public boolean onBackPressed() {
-        return false;
+            return false;
     }
 
     private void inicializarSwipeRefresh() {
@@ -94,4 +100,54 @@ public class ComentariosFragment extends BaseFragment {
         }
     }
 
+
+    private class AsyncTaskGetPerdidoById extends AsyncTask<String, Void, Void> {
+        private boolean error = false;
+
+        @Override
+        protected Void doInBackground(String... params) {
+            if (mFromFragment.equals(Constants.PERDIDOS)) {
+                try {
+                    mPerdido = mIPerdidosImpl.getPublicacionPerdidosById(params[0]);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    error = true;
+                }
+            } else {
+                mAdicional = mIAdicionalesImpl.getAdicionalById(params[0]);
+                if (mAdicional == null) {
+                    error = true;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            getBaseActivity().hideOverlay();
+            if (error) {
+                View.OnClickListener listener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getBaseActivity().loadMainScreen();
+                    }
+                };
+                getBaseActivity().showMessageOverlay("Hubo un problema, por favor intente nuevamente", listener);
+            } else {
+                if (mFromFragment.equals(Constants.PERDIDOS)) {
+                    mAdapter = new ComentariosAdapter(mPerdido.getComentarios(), getBaseActivity());
+                } else {
+                    mAdapter = new ComentariosAdapter(mAdicional.getComentarios(), getBaseActivity());
+                }
+                mRecyclerView.setAdapter(mAdapter);
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            getBaseActivity().showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+        }
+    }
 }

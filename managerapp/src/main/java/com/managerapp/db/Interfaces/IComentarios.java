@@ -1,6 +1,5 @@
 package com.managerapp.db.Interfaces;
 
-
 import com.managerapp.db.Modelo.Comentarios;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -20,7 +19,7 @@ public interface IComentarios {
     public List<Comentarios> getComentariosNoLeidos(String userObjectId);
     public void cambiarLeidoComentario(String comentarioObjectId, boolean leido);
     public void borrarComentario(String objectId);
-
+    public List<Comentarios> getComentariosByPersonaObjectId(String objectId);
+    public void bloquearComentario(String objectId);
 
 }
-

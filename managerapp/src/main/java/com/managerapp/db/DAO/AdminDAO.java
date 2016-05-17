@@ -21,7 +21,6 @@ public class AdminDAO {
 
 
     public AdminDAO(Context context){
-
         this.context = context;
         mGeneralDAO = new GeneralDAO(context);
         objectAux = null;

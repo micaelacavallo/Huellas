@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by quimey.arozarena on 5/2/2016.
  */
-public class IComentariosImpl implements IComentarios{
+public class IComentariosImpl implements IComentarios {
 
     private ComentariosDAO mComentarioDAO;
 
@@ -53,5 +53,15 @@ public class IComentariosImpl implements IComentarios{
     @Override
     public void borrarComentario(String objectId) {
         mComentarioDAO.borrarComentario(objectId);
+    }
+
+    @Override
+    public List<Comentarios> getComentariosByPersonaObjectId(String objectId) {
+        return mComentarioDAO.getComentariosByPersonaObjectId(objectId);
+    }
+
+    @Override
+    public void bloquearComentario(String objectId) {
+        mComentarioDAO.bloquearComentario(objectId);
     }
 }

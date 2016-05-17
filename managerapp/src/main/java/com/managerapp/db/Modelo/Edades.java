@@ -3,6 +3,8 @@ package com.managerapp.db.Modelo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * Created by Quimey on 13/09/2015.
  */
@@ -66,4 +68,14 @@ public class Edades implements Parcelable{
             return new Edades[size];
         }
     };
+
+    public static int returnPositionElement (List<Edades> edades, String edad) {
+        int position = -1;
+        for (int x = 0; x<edades.size(); x++) {
+            if (edades.get(x).getEdad().equals(edad)) {
+                position = x;
+            }
+        }
+        return position;
+    }
 }

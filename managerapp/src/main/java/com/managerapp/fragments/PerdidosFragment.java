@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,12 +22,13 @@ import android.widget.Toast;
 
 import com.managerapp.HuellasApplication;
 import com.managerapp.R;
+import com.managerapp.activities.PrincipalActivity;
 import com.managerapp.adapters.AnimalesAdapter;
 import com.managerapp.adapters.CustomSpinnerHintAdapter;
+import com.managerapp.db.Controladores.IEstadosImpl;
 import com.managerapp.db.Controladores.IPerdidosImpl;
 import com.managerapp.db.Interfaces.IPerdidos;
 import com.managerapp.db.Modelo.Colores;
-import com.managerapp.db.Modelo.Comentarios;
 import com.managerapp.db.Modelo.Especies;
 import com.managerapp.db.Modelo.Estados;
 import com.managerapp.db.Modelo.Perdidos;
@@ -40,6 +42,7 @@ import java.util.List;
 public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.PopupMenuCallback {
 
     private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLinearLayoutManager;
     private IPerdidos mIperdidosImpl;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Spinner mSpinnerRazas;
@@ -61,7 +64,7 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
     private boolean isFilterApplied = false;
     private boolean isItemSelected = false;
     private boolean isFilterCardVisible = false;
-    private boolean isDialogOpen = false;
+
     private TextView mTextViewEmpty;
 
     private ImageView mImageViewClear;
@@ -76,11 +79,6 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
     private boolean mFromSwipeRefresh = false;
     private static PerdidosFragment mInstancePerdidos;
 
-    private View mDialogContainer;
-    private TextView mTextViewDialogMsg;
-    private TextView mTextViewConfirmar;
-    private TextView mTextViewCancelar;
-
     public static PerdidosFragment getInstance() {
         if (mInstancePerdidos == null) {
             mInstancePerdidos = new PerdidosFragment();
@@ -88,20 +86,20 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
         return mInstancePerdidos;
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         mInstancePerdidos = null;
     }
 
+
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_perdidos, container, false);
         mIperdidosImpl = new IPerdidosImpl(getActivity().getApplicationContext());
 
-        inicializarSwipeRefresh(mRootView);
-        inicializarRecycler(mRootView);
+        inicializarSwipeRefresh();
+        inicializarRecycler();
         mTextViewEmpty = (TextView) mRootView.findViewById(R.id.empty_publicaciones);
         mViewCardFilter = mRootView.findViewById(R.id.cardView_filter);
         mViewFilerContainer = mRootView.findViewById(R.id.layout_filter_container);
@@ -178,32 +176,27 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
                 }
             }
         });
-        setHasOptionsMenu(true);
 
         setUpSpinners();
-
-        mDialogContainer = mRootView.findViewById(R.id.layout_dialog_container);
-        mTextViewCancelar = (TextView) mRootView.findViewById(R.id.textView_cancelar);
-        mTextViewConfirmar = (TextView) mRootView.findViewById(R.id.textView_confirmar);
-        mTextViewDialogMsg = (TextView) mRootView.findViewById(R.id.textView_confirmar_mensaje);
 
         new AsyncTaskPerdidos().execute();
         return mRootView;
     }
 
+
     @Override
-    public boolean onBackPressed() {
-        if (isDialogOpen) {
-            mDialogContainer.setVisibility(View.GONE);
-            isDialogOpen = false;
-            return true;
-        } else {
-            return false;
-        }
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_dashboard, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void inicializarSwipeRefresh(View view) {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+    @Override
+    public boolean onBackPressed() {
+        return false;
+    }
+
+    private void inicializarSwipeRefresh() {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -218,16 +211,18 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
         mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
     }
 
-    private void inicializarRecycler(View view) {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.list_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    private void inicializarRecycler() {
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.list_recycler_view);
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return mSwipeRefreshLayout.isRefreshing();
+            }
+        });
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_dashboard, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
 
     private void setUpSpinners() {
         mViewRazasContainer = mRootView.findViewById(R.id.layout_razas_container);
@@ -307,6 +302,17 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
         mSpinnerColores.setAdapter(mAdapterColores);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setHasOptionsMenu(true);
+        if (mAdapterAnimales == null) {
+            mAdapterAnimales = new AnimalesAdapter(HuellasApplication.getInstance().getmPerdidos(), getBaseActivity(), PerdidosFragment.this);
+            mRecyclerView.setAdapter(mAdapterAnimales);
+        } else {
+            mAdapterAnimales.notifyDataSetChanged();
+        }
+    }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -332,64 +338,107 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
         }
     }
 
+
     @Override
     public void onClickItem(int idItem, final Perdidos perdido) {
         switch (idItem) {
-            case R.id.item_eliminar:
-                mDialogContainer.setVisibility(View.VISIBLE);
-                isDialogOpen = true;
-                mTextViewDialogMsg.setText("¿Está seguro que desea eliminar la publicación?");
-                mTextViewCancelar.setVisibility(View.VISIBLE);
-                break;
-        }
-
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.textView_cancelar:
-                        isDialogOpen = false;
-                        mDialogContainer.setVisibility(View.GONE);
-                        break;
-                    case R.id.textView_confirmar:
-                        new AsyncTaskDeletePerdido().execute(perdido);
-
-
-                        break;
-                }
-            }
-        };
-        mTextViewCancelar.setOnClickListener(onClickListener);
-        mTextViewConfirmar.setOnClickListener(onClickListener);
-
-    }
-
-    private class AsyncTaskDeletePerdido extends AsyncTask<Perdidos, Perdidos, Perdidos> {
-        private boolean error = false;
-
-        @Override
-        protected Perdidos doInBackground(Perdidos... params) {
-            IPerdidosImpl iPerdidos = new IPerdidosImpl(getBaseActivity());
-            try {
-                iPerdidos.deletePerdido(params[0].getObjectId());
-            } catch (ParseException e) {
-                getBaseActivity().runOnUiThread(new Runnable() {
+            case R.id.item_solucionado:
+                ((PrincipalActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_solucionado_descripcion), new View.OnClickListener() {
                     @Override
-                    public void run() {
-                        error = true;
+                    public void onClick(View v) {
+                        switch (v.getId()) {
+                            case R.id.textView_cancelar:
+                                ((PrincipalActivity) getBaseActivity()).closeDialog();
+                                break;
+                            case R.id.textView_confirmar:
+                                ((PrincipalActivity) getBaseActivity()).showLoadDialog();
+                                new AsyncPublicacionSolucionada().execute(perdido.getObjectId());
+                                break;
+                        }
                     }
                 });
 
+                break;
+            case R.id.item_eliminar:
+                ((PrincipalActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_eliminar_descripcion), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        switch (v.getId()) {
+                            case R.id.textView_cancelar:
+                                ((PrincipalActivity) getBaseActivity()).closeDialog();
+                                break;
+                            case R.id.textView_confirmar:
+                                ((PrincipalActivity) getBaseActivity()).showLoadDialog();
+                                new AsyncTaskDeletePerdido().execute(perdido);
+                                break;
+                        }
+                    }
+                });
+                break;
+        }
+
+    }
+
+
+    private class AsyncPublicacionSolucionada extends AsyncTask<String, Void, Void> {
+        private boolean error = false;
+        private String perdidoId = "";
+
+        @Override
+        protected Void doInBackground(String... params) {
+            perdidoId = params[0];
+            IEstadosImpl iEstados = new IEstadosImpl(getBaseActivity());
+            try {
+                iEstados.cambiarEstado(perdidoId, true);
+            } catch (Exception e) {
+                error = true;
             }
-            return params[0];
+            return null;
         }
 
         @Override
-        protected void onPostExecute(Perdidos perdido) {
-            super.onPostExecute(perdido);
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            ((PrincipalActivity) getBaseActivity()).closeDialog();
             if (!error) {
-                mDialogContainer.setVisibility(View.GONE);
-                isDialogOpen = false;
+                List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
+                for (int x = 0; x < perdidos.size(); x++) {
+                    if (perdidoId.equals(perdidos.get(x).getObjectId())) {
+                        perdidos.get(x).setSolucionado(true);
+                        perdidos.remove(x);
+                    }
+                }
+                mAdapterAnimales.notifyDataSetChanged();
+                Toast.makeText(getBaseActivity(), "Estado modificado con éxito!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getBaseActivity(), "No se pudo modificar el estado de la publicación. Intente de nuevo más tarde", Toast.LENGTH_LONG).show();
+            }
+
+        }
+
+    }
+
+    private class AsyncTaskDeletePerdido extends AsyncTask<Perdidos, Void, Void> {
+        private boolean error = false;
+        private Perdidos perdido = null;
+
+        @Override
+        protected Void doInBackground(Perdidos... params) {
+            perdido = params[0];
+            IPerdidosImpl iPerdidos = new IPerdidosImpl(getBaseActivity());
+            try {
+                iPerdidos.deletePerdido(perdido.getObjectId());
+            } catch (ParseException e) {
+                error = true;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            ((PrincipalActivity) getBaseActivity()).closeDialog();
+            if (!error) {
                 List<Perdidos> perdidos = HuellasApplication.getInstance().getmPerdidos();
                 for (int x = 0; x < perdidos.size(); x++) {
                     if (perdido.getObjectId().equals(perdidos.get(x).getObjectId())) {
@@ -399,7 +448,7 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
                 mAdapterAnimales.notifyDataSetChanged();
                 Toast.makeText(getBaseActivity(), "Publicación eliminada con éxito!", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getBaseActivity(), "No se pudo eliminar la publicación", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseActivity(), "No se pudo eliminar la publicación. Intente de nuevo más tarde", Toast.LENGTH_LONG).show();
             }
 
         }
@@ -411,32 +460,32 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            getBaseActivity().showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+            if (!mFromSwipeRefresh) {
+                getBaseActivity().showOverlay(getString(R.string.cargando_publicaciones_mensaje));
+            }
         }
 
         @Override
         protected void onPostExecute(final List<Perdidos> perdidosList) {
             super.onPostExecute(perdidosList);
             HuellasApplication.getInstance().setmPerdidos(perdidosList);
-            mAdapterAnimales = new AnimalesAdapter(HuellasApplication.getInstance().getmPerdidos(), getBaseActivity(), PerdidosFragment.this);
-            mRecyclerView.setAdapter(mAdapterAnimales);
-
             if (mFromSwipeRefresh) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                        getBaseActivity().hideOverlay();
-                        mFromSwipeRefresh = false;
-                    }
-                });
+                mSwipeRefreshLayout.setRefreshing(false);
+                mAdapterAnimales.notifyDataSetChanged();
+                mFromSwipeRefresh = false;
+
+            } else {
+                mAdapterAnimales = new AnimalesAdapter(HuellasApplication.getInstance().getmPerdidos(), getBaseActivity(), PerdidosFragment.this);
+                mRecyclerView.setAdapter(mAdapterAnimales);
+                ((PrincipalActivity) getBaseActivity()).setCountInfoLoaded();
             }
+
         }
 
         @Override
         protected List<Perdidos> doInBackground(Void... voids) {
             try {
-                mIperdidosImpl.cargarDBLocal(getBaseActivity());
+                mIperdidosImpl.cargarDBLocalListaPerdidos(getBaseActivity());
                 return mIperdidosImpl.getPerdidos();
             } catch (ParseException e) {
                 e.printStackTrace();

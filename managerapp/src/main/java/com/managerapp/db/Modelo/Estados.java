@@ -3,6 +3,8 @@ package com.managerapp.db.Modelo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * Created by Quimey on 13/09/2015.
  */
@@ -65,4 +67,15 @@ public class Estados implements Parcelable {
             return new Estados[size];
         }
     };
+
+
+    public static int returnPositionElement (List<Estados> estados, String estado) {
+        int position = -1;
+        for (int x = 0; x<estados.size(); x++) {
+            if (estados.get(x).getSituacion().equals(estado)) {
+                position = x;
+            }
+        }
+        return position;
+    }
 }

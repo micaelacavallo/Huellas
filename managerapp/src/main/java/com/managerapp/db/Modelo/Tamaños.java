@@ -3,6 +3,8 @@ package com.managerapp.db.Modelo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * Created by Quimey on 13/09/2015.
  */
@@ -66,4 +68,15 @@ public class Tamaños implements Parcelable{
             return new Tamaños[size];
         }
     };
+
+
+    public static int returnPositionElement (List<Tamaños> tamaños, String tamaño) {
+        int position = -1;
+        for (int x = 0; x<tamaños.size(); x++) {
+            if (tamaños.get(x).getTamaño().equals(tamaño)) {
+                position = x;
+            }
+        }
+        return position;
+    }
 }

@@ -28,6 +28,7 @@ public class EstadosDAO extends IGeneralImpl implements IEstados {
     }
 
     public EstadosDAO(Context context) {
+        super(context);
         this.context = context;
         query = null;
     }

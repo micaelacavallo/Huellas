@@ -1,8 +1,10 @@
 package com.managerapp.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import com.managerapp.R;
+import com.managerapp.fragments.BaseFragment;
 
 
 public class ComentariosActivity extends BaseActivity {
@@ -19,4 +21,13 @@ public class ComentariosActivity extends BaseActivity {
         return R.layout.activity_base;
     }
 
+
+    @Override
+    public void onBackPressed() {
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (!((BaseFragment)fragment).onBackPressed()) {
+                super.onBackPressed();
+            }
+        }
+    }
 }

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.managerapp.db.Modelo.Adicionales;
 import com.managerapp.db.Modelo.Colores;
 import com.managerapp.db.Modelo.Edades;
 import com.managerapp.db.Modelo.Especies;
@@ -14,7 +15,6 @@ import com.managerapp.db.Modelo.Sexos;
 import com.managerapp.db.Modelo.Tamaños;
 import com.managerapp.utils.Constants;
 import com.parse.Parse;
-import com.parse.ParseInstallation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +32,8 @@ public class HuellasApplication extends Application {
     private List<Estados> mEstados = new ArrayList<>();
     private List<Sexos> mSexos = new ArrayList<>();
     private List<Perdidos> mPerdidos = new ArrayList<>();
+    private List<Adicionales> mDonaciones = new ArrayList<>();
+    private List<Adicionales> mInfoUtil = new ArrayList<>();
 
     public static HuellasApplication getInstance() {
         return instance;
@@ -45,7 +47,21 @@ public class HuellasApplication extends Application {
         initParse();
     }
 
+    public List<Adicionales> getDonaciones() {
+        return mDonaciones;
+    }
 
+    public void setDonaciones(List<Adicionales> mDonaciones) {
+        this.mDonaciones = mDonaciones;
+    }
+
+    public List<Adicionales> getInfoUtil() {
+        return mInfoUtil;
+    }
+
+    public void setInfoUtil(List<Adicionales> mInfoUtil) {
+        this.mInfoUtil = mInfoUtil;
+    }
 
     public List<Perdidos> getmPerdidos() {
         return mPerdidos;
@@ -116,23 +132,32 @@ public class HuellasApplication extends Application {
         Parse.enableLocalDatastore(getApplicationContext());
         Parse.initialize(getApplicationContext(), Constants.APPLICATION_ID, Constants.CLIENT_ID);
 
-        //push notifications
-        // Associate the device with a user
-        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        installation.put("email", getProfileEmailFacebook());
-        installation.saveInBackground();
-
     }
 
-    public String getProfileNameFacebook() {
+    public void clearProfile() {
+        SharedPreferences.Editor editor = HuellasApplication.getInstance().getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE).edit();
+        editor.putString(Constants.USER, "");
+        editor.putString(Constants.PASS, "");
+        editor.apply();
+    }
+
+    public boolean isLoggedIn () {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(Constants.PROFILE_NAME, "");
+        String user = sharedPreferences.getString(Constants.USER, "");
+        if (user.equals("")) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
-
-    public String getProfileEmailFacebook() {
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(Constants.PROFILE_EMAIL, "");
+    public void saveProfile (String user, String pass) {
+        SharedPreferences.Editor editor = HuellasApplication.getInstance().getSharedPreferences(Constants.SHARED_PREFERENCES_HUELLAS, Context.MODE_PRIVATE).edit();
+        editor.putString(Constants.USER, user);
+        editor.putString(Constants.PASS, pass);
+        editor.apply();
     }
+
 
 }

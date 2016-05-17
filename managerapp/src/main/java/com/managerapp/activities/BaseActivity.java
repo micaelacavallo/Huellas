@@ -9,6 +9,8 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -24,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.managerapp.HuellasApplication;
 import com.managerapp.R;
 import com.managerapp.utils.Constants;
 import com.squareup.picasso.Picasso;
@@ -53,7 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
-    public abstract int getLayoutBase ();
+    public abstract int getLayoutBase();
 
     @Override
     public void setContentView(int layoutResID) {
@@ -94,6 +97,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public ImageView getmImageViewPicture() {
         return mImageViewPicture;
     }
+
 
     public void setUpCollapsingToolbar(String title) {
         mCollapsingToolbar.setTitle(title);
@@ -148,6 +152,23 @@ public abstract class BaseActivity extends AppCompatActivity {
         return latLng;
     }
 
+    public boolean internet() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
+
     private void setupToolbar(ViewGroup mainContainer) {
         mToolbar = (Toolbar) mainContainer.findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -155,6 +176,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
+    public String getToolbarTitle() {
+        return mToolbarTitle.getText().toString();
+    }
 
     public void showUpButton() {
         ActionBar actionBar = getSupportActionBar();
@@ -194,7 +218,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void logOut() {
+        HuellasApplication.getInstance().clearProfile();
+        goToMainActivity();
+    }
 
+    public void goToMainActivity() {
         Intent aIntent = new Intent(getBaseContext(), PrincipalActivity.class);
         aIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(aIntent);
@@ -217,11 +245,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         return sdf.format(date) + " hs.";
     }
 
-    public void hideKeyboard () {
+    public void hideKeyboard() {
         // Check if no view has focus:
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }

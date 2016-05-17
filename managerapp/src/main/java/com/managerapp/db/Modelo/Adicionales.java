@@ -163,4 +163,6 @@ public class Adicionales implements Parcelable {
             return new Adicionales[size];
         }
     };
+
+
 }

@@ -30,8 +30,13 @@ public class IPerdidosImpl implements IPerdidos {
     }
 
     @Override
-    public Perdidos savePerdido(Perdidos perdido) throws ParseException {
-        return mPerdidosDAO.savePerdido(perdido);
+    public void savePerdido(Perdidos perdido) throws ParseException {
+     mPerdidosDAO.savePerdido(perdido);
+    }
+
+    @Override
+    public String getInsertedID(String email) throws ParseException {
+      return  mPerdidosDAO.getInsertedID(email);
     }
 
 
@@ -111,13 +116,23 @@ public class IPerdidosImpl implements IPerdidos {
     }
 
     @Override
-    public void cargarDBLocal(Context context) throws ParseException {
-        mPerdidosDAO.cargarDBLocal(context);
+    public void cargarDBLocalListaPerdidos(Context context) throws ParseException {
+        mPerdidosDAO.cargarDBLocalListaPerdidos(context);
     }
 
     @Override
-    public List<Perdidos> getPublicacionesPerdidosPropias(String objectId) throws ParseException {
-        return mPerdidosDAO.getPublicacionesPerdidosPropias(objectId);
+    public void cargarDBLocalCaracteristicasPerdidos(Context context) {
+        mPerdidosDAO.cargarDBLocalCaracteristicasPerdidos(context);
+    }
+
+    @Override
+    public List<Perdidos> getPublicacionPerdidosByEmail(String email) throws ParseException {
+        return mPerdidosDAO.getPublicacionPerdidosByEmail(email);
+    }
+
+    @Override
+    public List<Perdidos> getPublicacionPerdidosPropiasById(String personaObjectId) throws ParseException {
+        return  mPerdidosDAO.getPublicacionPerdidosPropiasById(personaObjectId);
     }
 
     @Override
@@ -128,5 +143,10 @@ public class IPerdidosImpl implements IPerdidos {
     @Override
     public ParseObject getParseObjectById(String objectId){
         return mPerdidosDAO.getParseObjectById(objectId);
+    }
+
+    @Override
+    public void bloquearPerdido(String objectId) {
+        mPerdidosDAO.bloquearPerdido(objectId);
     }
 }

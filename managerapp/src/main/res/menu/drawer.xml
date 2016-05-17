@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/group_drawer_1">
         <item
-            android:id="@+id/nav_drawer_perfil"
+            android:id="@+id/nav_drawer_personas_reportadas"
             android:icon="@mipmap/ic_personal_account"
-            android:title="@string/mis_datos" />
+            android:title="@string/personas_reportadas" />
         <item
-            android:id="@+id/nav_drawer_historial"
+            android:id="@+id/nav_drawer_publicaciones_reportadas"
             android:icon="@mipmap/ic_historial"
-            android:title="@string/historial" />
+            android:title="@string/publicaciones_reportadas" />
     </group>
 
     <group android:id="@+id/group_drawer_2">

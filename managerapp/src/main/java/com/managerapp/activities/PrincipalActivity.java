@@ -18,17 +18,15 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.managerapp.HuellasApplication;
 import com.managerapp.R;
 import com.managerapp.db.Controladores.IEstadosImpl;
-import com.managerapp.db.Controladores.IGeneralImpl;
 import com.managerapp.db.Controladores.IPerdidosImpl;
 import com.managerapp.db.Interfaces.IEstados;
-import com.managerapp.db.Interfaces.IGeneral;
 import com.managerapp.db.Interfaces.IPerdidos;
 import com.managerapp.db.Modelo.Estados;
 import com.managerapp.fragments.BaseFragment;
@@ -46,16 +44,26 @@ public class PrincipalActivity extends BaseActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private boolean mIsDrawerOpen = false;
-    private TextView mUserNameTextView;
-    private ImageView mUserPhotoImageView;
 
     private IPerdidos mIPerdidosImpl;
-    private IGeneral mIGeneralImpl;
     private IEstados mIEstadosImpl;
 
+    private View mDialogContainer;
+    private TextView mTextViewDialogMsg;
+    private TextView mTextViewConfirmar;
+    private TextView mTextViewCancelar;
 
     private boolean thereWasError = false;
+    private boolean isDialogOpen = false;
 
+    private int mCountInfoLoaded;
+
+    public void setCountInfoLoaded() {
+        mCountInfoLoaded++;
+        if (mCountInfoLoaded == 3) {
+            hideOverlay();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,18 +71,18 @@ public class PrincipalActivity extends BaseActivity {
         setContentView(R.layout.activity_principal);
 
         mIPerdidosImpl = new IPerdidosImpl(this);
-        mIGeneralImpl = new IGeneralImpl(this);
         mIEstadosImpl = new IEstadosImpl(this);
-        showOverlay(getString(R.string.cargando_publicaciones_mensaje));
 
-        mPager = (ViewPager) findViewById(R.id.pager);
+        mCountInfoLoaded = 0;
 
-        PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-        mPager.setPageTransformer(false, new ZoomOutPageTransformer());
-        mPager.setOffscreenPageLimit(3);
+        new AsyncTaskPerdidosInfo().execute();
 
-        setUpTabs();
+        if (HuellasApplication.getInstance().isLoggedIn()) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, Constants.REQUEST_CODE_OK);
+        } else {
+            setUpPager();
+        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -107,14 +115,52 @@ public class PrincipalActivity extends BaseActivity {
 
         View header = navigationView.inflateHeaderView(R.layout.drawer_header);
 
-        mUserNameTextView = (TextView) header.findViewById(R.id.nav_drawer_nombre_cuenta);
-        mUserPhotoImageView = (ImageView) header.findViewById(R.id.nav_drawer_foto_perfil);
-        new AsyncTaskPerdidosInfo().execute();
-        if (true) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivityForResult(intent, Constants.REQUEST_CODE_OK);
-        } else {
-        }
+        mDialogContainer = findViewById(R.id.layout_dialog_container);
+        mTextViewCancelar = (TextView) findViewById(R.id.textView_cancelar);
+        mTextViewConfirmar = (TextView) findViewById(R.id.textView_confirmar);
+        mTextViewDialogMsg = (TextView) findViewById(R.id.textView_confirmar_mensaje);
+    }
+
+    private void setUpPager() {
+        mPager = (ViewPager) findViewById(R.id.pager);
+        PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setPageTransformer(false, new ZoomOutPageTransformer());
+        mPager.setOffscreenPageLimit(3);
+
+        setUpTabs();
+
+    }
+
+
+    public void showLoadDialog() {
+        findViewById(R.id.dialog_content).setVisibility(View.GONE);
+        findViewById(R.id.dialog_load).setVisibility(View.VISIBLE);
+        ((ProgressBar) findViewById(R.id.progress_bar_dialog)).getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.accent), android.graphics.PorterDuff.Mode.MULTIPLY);
+    }
+
+    public void hideLoadDialog() {
+        findViewById(R.id.dialog_content).setVisibility(View.VISIBLE);
+        findViewById(R.id.dialog_load).setVisibility(View.GONE);
+    }
+
+
+    public void showNormalDialog(String text, View.OnClickListener listener) {
+        mDialogContainer.setVisibility(View.VISIBLE);
+        isDialogOpen = true;
+        mTextViewDialogMsg.setText(text);
+        mTextViewConfirmar.setEnabled(true);
+        findViewById(R.id.view_line).setVisibility(View.GONE);
+        mTextViewCancelar.setVisibility(View.VISIBLE);
+        mTextViewCancelar.setOnClickListener(listener);
+        mTextViewConfirmar.setOnClickListener(listener);
+    }
+
+
+    public void closeDialog() {
+        hideLoadDialog();
+        isDialogOpen = false;
+        mDialogContainer.setVisibility(View.GONE);
     }
 
     @Override
@@ -129,6 +175,7 @@ public class PrincipalActivity extends BaseActivity {
             switch (resultCode) {
                 case 0:
                     hideOverlay();
+                    setUpPager();
                     break;
                 case -10:
                     logOut();
@@ -144,14 +191,18 @@ public class PrincipalActivity extends BaseActivity {
         if (mIsDrawerOpen) {
             mDrawerLayout.closeDrawers();
         } else {
-            for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-                if (((BaseFragment) fragment).onBackPressed()) {
-                    backPressed =true;
+            if (isDialogOpen) {
+                closeDialog();
+            } else {
+                for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                    if (((BaseFragment) fragment).onBackPressed()) {
+                        backPressed = true;
+                    }
                 }
-            }
 
-            if (!backPressed) {
-                super.onBackPressed();
+                if (!backPressed) {
+                    super.onBackPressed();
+                }
             }
         }
     }
@@ -188,7 +239,6 @@ public class PrincipalActivity extends BaseActivity {
         setTabsTextStyle(tabLayout);
     }
 
-
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -201,13 +251,13 @@ public class PrincipalActivity extends BaseActivity {
                                 logOut();
                                 hideOverlay();
                                 break;
+
                         }
 
                         return true;
                     }
                 });
     }
-
 
 
     @Override
@@ -291,7 +341,6 @@ public class PrincipalActivity extends BaseActivity {
         }
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -307,12 +356,14 @@ public class PrincipalActivity extends BaseActivity {
         }
     }
 
+
     private class AsyncTaskPerdidosInfo extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
 
             try {
+                mIPerdidosImpl.cargarDBLocalCaracteristicasPerdidos(PrincipalActivity.this);
                 HuellasApplication.getInstance().setmEspecies(mIPerdidosImpl.getEspecies());
                 HuellasApplication.getInstance().setmRazas(mIPerdidosImpl.getRazas());
                 HuellasApplication.getInstance().setmColores(mIPerdidosImpl.getColores());
@@ -344,12 +395,5 @@ public class PrincipalActivity extends BaseActivity {
             }
             return null;
         }
-
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
     }
-
 }

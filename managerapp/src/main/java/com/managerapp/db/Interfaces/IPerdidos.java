@@ -20,7 +20,8 @@ import java.util.List;
 public interface IPerdidos {
 
     public List<Perdidos> getPerdidos() throws ParseException;
-    public Perdidos savePerdido(Perdidos perdido) throws ParseException;
+    public void savePerdido(Perdidos perdido) throws ParseException;
+    public String getInsertedID(String personaID) throws ParseException;
     public void editPerdido(Perdidos perdido) throws ParseException;
     public Razas getRaza(String raza) throws ParseException;
     public Colores getColor(String color) throws ParseException;
@@ -36,8 +37,11 @@ public interface IPerdidos {
     public List<Especies> getEspecies();
     public void deletePerdido(String objectId) throws ParseException;
     public void AgregarComentarioPerdido(String perdidoObjectId, String comentario, String email) throws ParseException;
-    public void cargarDBLocal(Context context) throws ParseException;
-    public List<Perdidos> getPublicacionesPerdidosPropias(String objectId) throws ParseException;
+    public void cargarDBLocalListaPerdidos(Context context) throws ParseException;
+    public void cargarDBLocalCaracteristicasPerdidos(Context context);
+    public List<Perdidos> getPublicacionPerdidosByEmail(String email) throws ParseException;
+    public List<Perdidos> getPublicacionPerdidosPropiasById(String personaObjectId) throws ParseException;
     public Perdidos getPublicacionPerdidosById(String objectId) throws ParseException;
     public ParseObject getParseObjectById(String objectId);
+    public void bloquearPerdido(String objectId);
 }

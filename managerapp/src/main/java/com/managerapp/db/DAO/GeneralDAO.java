@@ -8,7 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.managerapp.db.AlarmManager.AlarmReceiver;
-import com.managerapp.db.Interfaces.IDBLocal;
+import com.managerapp.db.Interfaces.IDB;
 import com.managerapp.db.Interfaces.IGeneral;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by quimey.arozarena on 12/22/2015.
  */
-public class GeneralDAO implements IGeneral, IDBLocal {
+public class GeneralDAO implements IGeneral, IDB {
 
     private Context context;
     private ParseQuery<ParseObject> query;
@@ -52,12 +52,10 @@ public class GeneralDAO implements IGeneral, IDBLocal {
     }
 
     @Override
-    public void save(ParseObject object) {
+    public void save(final ParseObject object) {
 
         if (internet(context)) {
             saveInBackground(object);
-        } else {
-            saveEventually(object);
         }
 
         pinObjectInBackground(object);
@@ -69,9 +67,6 @@ public class GeneralDAO implements IGeneral, IDBLocal {
 
         if(internet(context)) {
             deleteInBackground(object);
-        }
-        else {
-            deleteEventually(object);
         }
 
         unpinObjectInBackground(object);
@@ -127,24 +122,9 @@ public class GeneralDAO implements IGeneral, IDBLocal {
     }
 
     @Override
-    public void queryFromLocalDatastore(ParseQuery query) {
-        query.fromLocalDatastore();
-    }
-
-    @Override
-    public void saveEventually(ParseObject object) {
-        object.saveEventually();
-    }
-
-    @Override
     public void saveInBackground(ParseObject object) {
 
         object.saveInBackground();
-    }
-
-    @Override
-    public void deleteEventually(ParseObject object) {
-        object.deleteEventually();
     }
 
     @Override
@@ -152,10 +132,6 @@ public class GeneralDAO implements IGeneral, IDBLocal {
         object.deleteInBackground();
     }
 
-    @Override
-    public void cargarDBLocal(Context context) throws ParseException {
-
-    }
 
 
 }

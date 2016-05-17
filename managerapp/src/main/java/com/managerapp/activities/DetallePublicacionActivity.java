@@ -7,7 +7,8 @@ import com.managerapp.R;
 import com.managerapp.fragments.DetallePublicacionFragment;
 
 
-public class DetallePublicacionActivity  extends BaseActivity {
+public class DetallePublicacionActivity extends BaseActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,7 +16,7 @@ public class DetallePublicacionActivity  extends BaseActivity {
         setContentView(R.layout.activity_detalle_publicacion);
         showUpButton();
 
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment, new DetallePublicacionFragment()).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment, DetallePublicacionFragment.getInstance()).commit();
     }
 
     @Override
@@ -27,8 +28,10 @@ public class DetallePublicacionActivity  extends BaseActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
     @Override
     public int getLayoutBase() {
         return R.layout.activity_base_collapsing;
     }
+
 }

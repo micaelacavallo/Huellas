@@ -20,8 +20,7 @@ public class Perdidos implements Parcelable {
     private Estados mEstado;
     private Personas mPersona; //persona que publica
     private Date mFecha;
-    private double mLatitud;
-    private double mLongitud;
+    private String mUbicacion;
     private String mTitulo;
     private String mDescripcion;
     private byte[] mFoto;
@@ -44,7 +43,7 @@ public class Perdidos implements Parcelable {
         mComentarios = new ArrayList<>();
     }
 
-    public Perdidos(String objectId, Edades edad, Razas raza, Especies especie, Tamaños tamaño, Colores color, Sexos sexo, Estados estado, Personas persona, Date fecha, double latitud, double logitud, String titulo, String descripcion, byte[] foto, ArrayList<Comentarios> comentarios, boolean mSolucionado, boolean mBloqueado) {
+    public Perdidos(String objectId, Edades edad, Razas raza, Especies especie, Tamaños tamaño, Colores color, Sexos sexo, Estados estado, Personas persona, Date fecha, String ubicacion, String titulo, String descripcion, byte[] foto, ArrayList<Comentarios> comentarios, boolean mSolucionado, boolean mBloqueado) {
 
         this.mObjectId = objectId;
         this.mEdad = edad;
@@ -56,8 +55,7 @@ public class Perdidos implements Parcelable {
         this.mEstado = estado;
         this.mPersona = persona;
         this.mFecha = fecha;
-        this.mLatitud = latitud;
-        this.mLongitud = logitud;
+        this.mUbicacion = ubicacion;
         this.mTitulo = titulo;
         this.mDescripcion = descripcion;
         this.mFoto = foto;
@@ -66,20 +64,12 @@ public class Perdidos implements Parcelable {
         this.mBloqueado = mBloqueado;
     }
 
-    public double getLongitud() {
-        return mLongitud;
+    public String getUbicacion() {
+        return mUbicacion;
     }
 
-    public void setLongitud(double longitud) {
-        mLongitud = longitud;
-    }
-
-    public double getLatitud() {
-        return mLatitud;
-    }
-
-    public void setLatitud(double latitud) {
-        mLatitud = latitud;
+    public void setUbicacion(String ubicacion) {
+        mUbicacion = ubicacion;
     }
 
     public Edades getEdad() {
@@ -221,8 +211,7 @@ public class Perdidos implements Parcelable {
         dest.writeParcelable(this.mEstado, 0);
         dest.writeParcelable(this.mPersona, 0);
         dest.writeLong(mFecha != null ? mFecha.getTime() : -1);
-        dest.writeDouble(this.mLatitud);
-        dest.writeDouble(this.mLongitud);
+        dest.writeString(this.mUbicacion);
         dest.writeString(this.mTitulo);
         dest.writeString(this.mDescripcion);
         dest.writeByteArray(this.mFoto);
@@ -242,8 +231,7 @@ public class Perdidos implements Parcelable {
         this.mPersona = in.readParcelable(Personas.class.getClassLoader());
         long tmpMFecha = in.readLong();
         this.mFecha = tmpMFecha == -1 ? null : new Date(tmpMFecha);
-        this.mLatitud = in.readDouble();
-        this.mLongitud = in.readDouble();
+        this.mUbicacion = in.readString();
         this.mTitulo = in.readString();
         this.mDescripcion = in.readString();
         this.mFoto = in.createByteArray();
