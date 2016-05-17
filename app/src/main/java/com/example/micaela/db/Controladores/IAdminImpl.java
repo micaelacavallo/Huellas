@@ -22,7 +22,7 @@ public class IAdminImpl implements IAdmin {
         mAdminDAO = new AdminDAO(context);
     }
     @Override
-    public boolean login(String nombre, String contraseña) {
+    public int login(String nombre, String contraseña) {
         return mAdminDAO.login(nombre, contraseña);
     }
 

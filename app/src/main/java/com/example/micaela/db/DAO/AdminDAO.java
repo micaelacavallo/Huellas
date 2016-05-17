@@ -28,24 +28,33 @@ public class AdminDAO {
 
 
     }
-    public boolean login(String nombre, String contraseña){
+    public int login(String nombre, String contraseña){
 
-        boolean exist = false;
+        int result = 0;
         query = ParseQuery.getQuery(Clases.PERSONAS);
         query.whereEqualTo(CPersonas.NOMBRE, nombre);
         query.whereEqualTo(CPersonas.CONTRASEÑA, contraseña);
         checkInternetGet(query);
 
         try {
-            if(query.count() != 0) {
+            if(query.count() == 0) {
                 objectAux = query.getFirst();
-                exist = true;
+                result = -1;
+            }
+            else{
+                query = ParseQuery.getQuery(Clases.PERSONAS);
+                query.whereEqualTo(CPersonas.NOMBRE, nombre);
+                query.whereNotEqualTo(CPersonas.CONTRASEÑA, contraseña);
+                checkInternetGet(query);
+                if(query.count() != 0) {
+                    result = -2;
+                }
             }
         } catch (com.parse.ParseException e) {
             e.printStackTrace();
         }
 
-        return exist;
+        return result;
     }
 
 
