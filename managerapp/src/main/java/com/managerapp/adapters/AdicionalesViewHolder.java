@@ -19,6 +19,7 @@ public class AdicionalesViewHolder extends RecyclerView.ViewHolder  {
     private TextView mTextViewComentarios;
     private View mCardContainer;
     private ImageView mImageViewOpciones;
+    private View mLineSeparator;
 
 
     public AdicionalesViewHolder(View itemView) {
@@ -32,6 +33,11 @@ public class AdicionalesViewHolder extends RecyclerView.ViewHolder  {
         mCardContainer = itemView.findViewById(R.id.cardView_container);
         mTextViewComentarios = (TextView) itemView.findViewById(R.id.textView_comentarios);
         mImageViewOpciones = (ImageView) itemView.findViewById(R.id.imageView_options);
+        mLineSeparator= itemView.findViewById(R.id.view_separator);
+    }
+
+    public View getLineSeparator() {
+        return mLineSeparator;
     }
 
     public ImageView getmImageViewOpciones() {

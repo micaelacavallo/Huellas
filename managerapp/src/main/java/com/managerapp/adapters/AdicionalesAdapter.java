@@ -67,10 +67,13 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
                     holder.getmTextViewComentarios().setText(String.format(mContext.getString(R.string.comentarios_cantidad), cantidadComentarios));
                 }
                 holder.getmTextViewComentarios().setVisibility(View.VISIBLE);
+                holder.getLineSeparator().setVisibility(View.VISIBLE);
             } else {
+                holder.getLineSeparator().setVisibility(View.GONE);
                 holder.getmTextViewComentarios().setVisibility(View.GONE);
             }
         } catch (NullPointerException e) {
+            holder.getLineSeparator().setVisibility(View.GONE);
             holder.getmTextViewComentarios().setVisibility(View.GONE);
         }
 

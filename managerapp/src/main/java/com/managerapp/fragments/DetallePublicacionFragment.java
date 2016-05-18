@@ -61,7 +61,7 @@ public class DetallePublicacionFragment extends BaseFragment{
         if (Constants.PERDIDOS.equals(mFromFragment)) {
             getBaseActivity().getCardEstado().setVisibility(View.VISIBLE);
             mPerdidos = getBaseActivity().getIntent().getParcelableExtra(Constants.OBJETO_PERDIDO);
-            if (mPerdidos.isSolucionado() && (mPerdidos.getComentarios() == null || mPerdidos.getComentarios().size() == 0)) {
+            if (mPerdidos.getComentarios() == null || mPerdidos.getComentarios().size() == 0) {
                 setHasOptionsMenu(false);
             }
             else {

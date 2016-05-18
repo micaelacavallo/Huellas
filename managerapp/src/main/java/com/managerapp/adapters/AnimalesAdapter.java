@@ -89,10 +89,13 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
                     holder.getmTextViewComentarios().setText(String.format(mContext.getString(R.string.comentarios_cantidad), cantidadComentarios));
                 }
                 holder.getmTextViewComentarios().setVisibility(View.VISIBLE);
+                holder.getmLineSeparator().setVisibility(View.VISIBLE);
             } else {
+                holder.getmLineSeparator().setVisibility(View.GONE);
                 holder.getmTextViewComentarios().setVisibility(View.GONE);
             }
         } catch (NullPointerException e) {
+            holder.getmLineSeparator().setVisibility(View.GONE);
             holder.getmTextViewComentarios().setVisibility(View.GONE);
         }
 
@@ -109,24 +112,15 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
         });
 
 
-        if (mPerdidos.get(position).isSolucionado()) {
-            holder.getmImageViewOpciones().setVisibility(View.GONE);
-
-            if (mPerdidos.get(position).getComentarios() == null || mPerdidos.get(position).getComentarios().size() == 0) {
-                holder.getmLineSeparator().setVisibility(View.GONE);
-            } else {
-                holder.getmLineSeparator().setVisibility(View.VISIBLE);
+        holder.getmImageViewOpciones().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setTag(position);
+                setUpPopupMenu(v, position);
             }
-        } else {
-            holder.getmImageViewOpciones().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    v.setTag(position);
-                    setUpPopupMenu(v, position);
-                }
-            });
-        }
+        });
     }
+
 
     private void setUpPopupMenu(final View view, int position) {
         mPopupMenu = new PopupMenu(mContext, view);
