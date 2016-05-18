@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+import com.managerapp.HuellasApplication;
 import com.managerapp.R;
 import com.managerapp.db.Controladores.IAdminImpl;
 import com.managerapp.db.Interfaces.IAdmin;
@@ -40,7 +43,16 @@ public class LoginFragment extends BaseFragment {
         mButtonLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AsyncTaskLoginAdmin().execute();
+                if (mEditTextUser.getText().toString().equals("") || mEditTextPass.getText().toString().equals("")) {
+                    showError("Todos los campos son requeridos.");
+                } else {
+                    if (mEditTextPass.length() < 4) {
+                        showError("La contraseña debe tener mínimo 4 caracteres.");
+                    }
+                    else {
+                        new AsyncTaskLoginAdmin().execute();
+                    }
+                }
             }
         });
 
@@ -57,12 +69,13 @@ public class LoginFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                mTextViewError.setVisibility(View.INVISIBLE);
             }
         };
 
-        mEditTextUser.addTextChangedListener(textWatcher);
         mEditTextPass.addTextChangedListener(textWatcher);
+        mEditTextUser.addTextChangedListener(textWatcher);
+
         return rootView;
     }
 
@@ -72,13 +85,14 @@ public class LoginFragment extends BaseFragment {
     }
 
     private class AsyncTaskLoginAdmin extends AsyncTask<Void, Void, Void> {
-        private boolean exists = false;
+        private int status;
         String mUser = "";
         String mPass = "";
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            getBaseActivity().showOverlay("Cargando...");
             mUser = mEditTextUser.getText().toString();
             mPass = mEditTextPass.getText().toString();
         }
@@ -86,7 +100,7 @@ public class LoginFragment extends BaseFragment {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                exists = mIAdminImpl.login(mUser, mPass);
+                status = mIAdminImpl.login(mUser, mPass);
 
             } catch (Exception e) {
                 View.OnClickListener listener = new View.OnClickListener() {
@@ -103,14 +117,30 @@ public class LoginFragment extends BaseFragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (exists) {
-                getActivity().setResult(0);
-                getActivity().finish();
-            } else {
-                mTextViewError.setVisibility(View.VISIBLE);
-                mTextViewError.setText("El usuario ingresado no existe");
+            switch (status) {
+                case 0:
+                    HuellasApplication.getInstance().saveProfile(mUser, mPass);
+                    getActivity().setResult(0);
+                    getActivity().finish();
+                    break;
+                case -1:
+                    showError("El usuario ingresado no existe.");
+                    getBaseActivity().hideOverlay();
+                    break;
+                case -2:
+                    showError("La contraseña ingresada es incorrecta.");
+                    getBaseActivity().hideOverlay();
+                    break;
             }
         }
+    }
+
+    private void showError(String text) {
+        mTextViewError.setVisibility(View.VISIBLE);
+        mTextViewError.setText(text);
+        YoYo.with(Techniques.Tada)
+                .duration(700)
+                .playOn(mTextViewError);
     }
 
 }

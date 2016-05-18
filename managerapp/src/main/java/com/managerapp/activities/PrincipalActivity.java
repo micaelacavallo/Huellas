@@ -77,7 +77,7 @@ public class PrincipalActivity extends BaseActivity {
 
         new AsyncTaskPerdidosInfo().execute();
 
-        if (HuellasApplication.getInstance().isLoggedIn()) {
+        if (!HuellasApplication.getInstance().isLoggedIn()) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent, Constants.REQUEST_CODE_OK);
         } else {
