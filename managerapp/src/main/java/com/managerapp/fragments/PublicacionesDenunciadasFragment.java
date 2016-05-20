@@ -340,8 +340,6 @@ public class PublicacionesDenunciadasFragment extends BaseFragment implements An
                         mDenunciasPerdidos.remove(x);
                     }
                 }
-
-                setUpAdapters(Constants.TABLA_PERDIDOS);
                 break;
             case Constants.ADICIONALES_DONACIONES:
                 for (int x = 0; x < mAdicionales.size(); x++) {
@@ -349,7 +347,6 @@ public class PublicacionesDenunciadasFragment extends BaseFragment implements An
                         if (mAdicionales.get(x).isDonacion()) {
                             mDenunciasDonaciones.remove(x);
                             mDonaciones.remove(x);
-                            setUpAdapters(Constants.ADICIONALES_DONACIONES);
                         }
                         mAdicionales.remove(x);
                     }
@@ -362,13 +359,13 @@ public class PublicacionesDenunciadasFragment extends BaseFragment implements An
                         if (!mAdicionales.get(x).isDonacion()) {
                             mDenunciasInfoUtil.remove(x);
                             mInfoUtil.remove(x);
-                            setUpAdapters(Constants.ADICIONALES_INFO);
                         }
                         mAdicionales.remove(x);
                     }
                 }
                 break;
         }
+        setUpAdapters(mSpinnerTipoPublicacion.getSelectedItem().toString());
     }
 
     private class AsyncTaskGetDenunciados extends AsyncTask<Void, Void, Void> {
