@@ -359,8 +359,8 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
                 });
 
                 break;
-            case R.id.item_eliminar:
-                ((PrincipalActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_eliminar_descripcion), new View.OnClickListener() {
+            case R.id.item_bloquear:
+                ((PrincipalActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_bloquear_descripcion), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         switch (v.getId()) {
@@ -369,7 +369,7 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
                                 break;
                             case R.id.textView_confirmar:
                                 ((PrincipalActivity) getBaseActivity()).showLoadDialog();
-                                new AsyncTaskDeletePerdido().execute(perdido);
+                                new AsyncTaskBloquearPerdido().execute(perdido);
                                 break;
                         }
                     }
@@ -418,7 +418,7 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
 
     }
 
-    private class AsyncTaskDeletePerdido extends AsyncTask<Perdidos, Void, Void> {
+    private class AsyncTaskBloquearPerdido extends AsyncTask<Perdidos, Void, Void> {
         private boolean error = false;
         private Perdidos perdido = null;
 
@@ -427,7 +427,7 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
             perdido = params[0];
             IPerdidosImpl iPerdidos = new IPerdidosImpl(getBaseActivity());
             try {
-                iPerdidos.deletePerdido(perdido.getObjectId());
+                iPerdidos.bloquearPerdido(perdido.getObjectId());
             } catch (ParseException e) {
                 error = true;
             }
@@ -446,9 +446,9 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
                     }
                 }
                 mAdapterAnimales.notifyDataSetChanged();
-                Toast.makeText(getBaseActivity(), "Publicación eliminada con éxito!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseActivity(), "Publicación bloqueada con éxito!", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getBaseActivity(), "No se pudo eliminar la publicación. Intente de nuevo más tarde", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseActivity(), "No se pudo bloquear la publicación. Intente de nuevo más tarde", Toast.LENGTH_LONG).show();
             }
 
         }

@@ -1,5 +1,6 @@
 package com.managerapp.db.Interfaces;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
 
 /**
@@ -8,7 +9,7 @@ import com.parse.ParseObject;
 public interface IAdmin {
 
     public int login(String nombre, String contraseña);
-    public void bloquearPersona(String objectId) throws java.text.ParseException;
+    public void bloquearPersona(String objectId) throws ParseException, java.text.ParseException;
     public void save(ParseObject object);
 
 }

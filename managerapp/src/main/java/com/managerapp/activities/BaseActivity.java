@@ -14,6 +14,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -48,7 +49,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private boolean isOverlayOpen = false;
     ImageView mImageViewPicture;
     View mViewDialogCamera;
-
+    DrawerLayout mDrawer;
     private View mCardEstado;
 
     @Override
@@ -64,7 +65,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         switch (getLayoutBase()) {
             case R.layout.activity_base:
                 mToolbarTitle = (TextView) mainContainer.findViewById(R.id.toolbar_title);
-
+                if (!(this instanceof PrincipalActivity)) {
+                    mDrawer = (DrawerLayout) mainContainer.findViewById(R.id.drawer_layout);
+                    mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                }
                 break;
             case R.layout.activity_base_collapsing:
                 mCollapsingToolbar = (CollapsingToolbarLayout) mainContainer.findViewById(R.id.collapsing_toolbar);

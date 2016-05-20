@@ -107,7 +107,7 @@ public class InformacionUtilFragment extends BaseFragment implements  Adicionale
     @Override
     public void onClickItem(int idItem, final Adicionales adicional) {
         switch (idItem) {
-            case R.id.item_eliminar:
+            case R.id.item_bloquear:
                 View.OnClickListener onClickEliminarListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -117,18 +117,18 @@ public class InformacionUtilFragment extends BaseFragment implements  Adicionale
                                 break;
                             case R.id.textView_confirmar:
                                 ((PrincipalActivity) getBaseActivity()).showLoadDialog();
-                                new AsyncTaskDeleteInfoUtil().execute(adicional);
+                                new AsyncTaskBloquearInfoUtil().execute(adicional);
                                 break;
                         }
                     }
                 };
-                ((PrincipalActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_eliminar_descripcion), onClickEliminarListener);
+                ((PrincipalActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_bloquear_descripcion), onClickEliminarListener);
 
                 break;
         }
     }
 
-    private class AsyncTaskDeleteInfoUtil extends AsyncTask<Adicionales, Void, Void> {
+    private class AsyncTaskBloquearInfoUtil extends AsyncTask<Adicionales, Void, Void> {
         private boolean error = false;
         private Adicionales adicional = null;
 
@@ -137,7 +137,7 @@ public class InformacionUtilFragment extends BaseFragment implements  Adicionale
             adicional = params[0];
             IAdicionalesImpl iAdicionales = new IAdicionalesImpl(getBaseActivity());
             try {
-                iAdicionales.deleteAdicional(adicional.getObjectId());
+                iAdicionales.bloquearAdicional(adicional.getObjectId());
             } catch (ParseException e) {
                 error = true;
 
@@ -157,9 +157,9 @@ public class InformacionUtilFragment extends BaseFragment implements  Adicionale
                     }
                 }
                 mAdapterAdicionales.notifyDataSetChanged();
-                Toast.makeText(getBaseActivity(), "Publicación eliminada con éxito!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseActivity(), "Publicación bloqueada con éxito!", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getBaseActivity(), "No se pudo eliminar la publicación. Intente de nuevo más tarde", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseActivity(), "No se pudo bloquear la publicación. Intente de nuevo más tarde", Toast.LENGTH_LONG).show();
             }
 
         }

@@ -69,7 +69,7 @@ public class IPersonasImpl implements IPersonas {
     }
 
     @Override
-    public List<Personas> getPersonas() {
+    public List<Personas> getPersonas() throws ParseException {
         return mPersonasDAO.getPersonas();
     }
 

@@ -642,19 +642,15 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
     }
 
     @Override
-    public void bloquearPerdido(String objectId) {
+    public void bloquearPerdido(String objectId) throws ParseException {
         query = ParseQuery.getQuery(Clases.PERDIDOS);
         query.whereEqualTo(CPerdidos.OBJECT_ID, objectId);
 
-        try {
             if (query.count() != 0) {
                 objectAux = query.getFirst();
                 objectAux.put(CPerdidos.BLOQUEADO, true);
                 save(objectAux);
             }
-        } catch (ParseException e) {
-            e.fillInStackTrace();
-        }
     }
 
     @Override

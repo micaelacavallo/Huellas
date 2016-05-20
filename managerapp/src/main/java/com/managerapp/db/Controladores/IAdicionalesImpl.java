@@ -89,7 +89,7 @@ public class IAdicionalesImpl implements IAdicionales {
     }
 
     @Override
-    public void bloquearAdicional(String objectId) {
+    public void bloquearAdicional(String objectId) throws ParseException {
         mAdicionalesDAO.bloquearAdicional(objectId);
     }
 }

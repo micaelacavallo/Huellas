@@ -46,13 +46,13 @@ public class PersonasDAO implements IPersonas {
 
 
     @Override
-    public void denunciar(String id, String motivo) throws ParseException{
+    public void denunciar(String id, String motivo) throws ParseException {
 
 
         query = ParseQuery.getQuery(Clases.DENUNCIAS);
         query.whereEqualTo(CDenuncias.ID_REFERENCIA, id);
 
-        if(query.count() == 0) {
+        if (query.count() == 0) {
 
             MotivoDenuncia motivoDenuncia = this.getMotivoDenuncia(motivo);
 
@@ -80,7 +80,7 @@ public class PersonasDAO implements IPersonas {
         query.whereEqualTo(CMotivo_denuncia.MOTIVO, motivo);
         MotivoDenuncia motivoDenuncia = null;
         try {
-            if(query.count() != 0) {
+            if (query.count() != 0) {
                 ParseObject object = query.getFirst();
                 motivoDenuncia = new MotivoDenuncia(object.getObjectId(), object.getString(CMotivo_denuncia.MOTIVO));
             }
@@ -121,9 +121,9 @@ public class PersonasDAO implements IPersonas {
         query.whereEqualTo(CPersonas.EMAIL, email);
         Personas persona = null;
         try {
-            if(query.count() != 0) {
+            if (query.count() != 0) {
                 ParseObject object = query.getFirst();
-                persona = new Personas(object.getObjectId(), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR), object.getBoolean(CPersonas.BLOQUEADO),  object.getString(CPersonas.CONTRASEÑA), object.getString(CPersonas.FOTO));
+                persona = new Personas(object.getObjectId(), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR), object.getBoolean(CPersonas.BLOQUEADO), object.getString(CPersonas.CONTRASEÑA), object.getString(CPersonas.FOTO));
             }
         } catch (ParseException e) {
             e.fillInStackTrace();
@@ -138,9 +138,9 @@ public class PersonasDAO implements IPersonas {
         query.whereEqualTo(CPersonas.OBJECT_ID, objectId);
         Personas persona = null;
         try {
-            if(query.count() != 0) {
+            if (query.count() != 0) {
                 ParseObject object = query.getFirst();
-                persona = new Personas(object.getObjectId(), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR), object.getBoolean(CPersonas.BLOQUEADO),  object.getString(CPersonas.CONTRASEÑA), object.getString(CPersonas.FOTO));
+                persona = new Personas(object.getObjectId(), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR), object.getBoolean(CPersonas.BLOQUEADO), object.getString(CPersonas.CONTRASEÑA), object.getString(CPersonas.FOTO));
             }
         } catch (ParseException e) {
             e.fillInStackTrace();
@@ -155,13 +155,11 @@ public class PersonasDAO implements IPersonas {
         query.whereEqualTo(CPersonas.OBJECT_ID, objectId);
         checkInternetGet(query);
 
-        try{
-            if(query.count() != 0) {
+        try {
+            if (query.count() != 0) {
                 objectAux = query.getFirst();
             }
-        }
-        catch(ParseException e)
-        {
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 
@@ -175,7 +173,7 @@ public class PersonasDAO implements IPersonas {
         query.whereEqualTo(CPersonas.EMAIL, email);
 
         try {
-            if(query.count() != 0) {
+            if (query.count() != 0) {
                 objectAux = query.getFirst();
                 objectAux.put(CPersonas.TELEFONO, telefono);
                 save(objectAux);
@@ -217,7 +215,7 @@ public class PersonasDAO implements IPersonas {
         boolean flag = false;
         personas = this.getPersonas();
         Personas personaAux = null;
-        for (int x = 0; x<personas.size();x++) {
+        for (int x = 0; x < personas.size(); x++) {
             if (persona.getEmail().equals(personas.get(x).getEmail())) {
                 personaAux = this.getPersonabyEmail(persona.getEmail());
                 bloqueado = personaAux.isBloqueado();
@@ -225,8 +223,7 @@ public class PersonasDAO implements IPersonas {
             }
         }
 
-        if(!flag)
-        {
+        if (!flag) {
             parseObject.put(CPersonas.NOMBRE, persona.getNombre());
             parseObject.put(CPersonas.EMAIL, persona.getEmail());
             parseObject.put(CPersonas.TELEFONO, persona.getTelefono());
@@ -242,18 +239,14 @@ public class PersonasDAO implements IPersonas {
     }
 
     @Override
-    public List<Personas> getPersonas() {
+    public List<Personas> getPersonas() throws ParseException {
 
         query = ParseQuery.getQuery(Clases.PERSONAS);
+        query.whereNotEqualTo(CPersonas.ADMINISTRADOR, true);
         checkInternetGet(query);
 
-        try{
-            listParseObject = query.find();
-        }
-        catch(ParseException e)
-        {
-            e.printStackTrace();
-        }
+        listParseObject = query.find();
+
         for (ParseObject object : listParseObject) {
             persona = new Personas(object.getObjectId(), object.getString(CPersonas.EMAIL), object.getString(CPersonas.NOMBRE), object.getString(CPersonas.TELEFONO), object.getBoolean(CPersonas.ADMINISTRADOR), object.getBoolean(CPersonas.BLOQUEADO), object.getString(CPersonas.CONTRASEÑA), object.getString(CPersonas.FOTO));
             personas.add(persona);
@@ -264,11 +257,9 @@ public class PersonasDAO implements IPersonas {
 
     public void save(ParseObject object) {
 
-        if(internet(context)) {
+        if (internet(context)) {
             object.saveInBackground();
-        }
-        else
-        {
+        } else {
             object.saveEventually();
         }
 

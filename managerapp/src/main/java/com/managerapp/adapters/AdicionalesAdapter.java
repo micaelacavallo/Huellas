@@ -121,6 +121,7 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
         mPopupMenu.inflate(R.menu.menu_popup);
         Menu menu = mPopupMenu.getMenu();
         menu.findItem(R.id.item_solucionado).setVisible(false);
+        menu.findItem(R.id.item_cancelar_denuncia).setVisible(false);
         mPopupMenu.show();
     }
 

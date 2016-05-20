@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <include layout="@layout/swipe_refresh_layout" />
+
+    <TextView
+        android:id="@+id/empty_personas_denunciadas"
+        style="@style/condensed_bold_22"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:gravity="center"
+        android:text="No hay personas denunciadas."
+        android:visibility="gone" />
+
+    <include layout="@layout/dialog_confirmar_cancelar" />
+</FrameLayout>

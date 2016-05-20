@@ -137,6 +137,7 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
         });
         mPopupMenu.inflate(R.menu.menu_popup);
         Menu menu = mPopupMenu.getMenu();
+        menu.findItem(R.id.item_cancelar_denuncia).setVisible(false);
         mPopupMenu.show();
     }
 

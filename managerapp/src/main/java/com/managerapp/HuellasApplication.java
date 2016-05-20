@@ -4,12 +4,15 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.managerapp.activities.CustomErrorActivity;
 import com.managerapp.db.Modelo.Adicionales;
 import com.managerapp.db.Modelo.Colores;
+import com.managerapp.db.Modelo.Denuncias;
 import com.managerapp.db.Modelo.Edades;
 import com.managerapp.db.Modelo.Especies;
 import com.managerapp.db.Modelo.Estados;
 import com.managerapp.db.Modelo.Perdidos;
+import com.managerapp.db.Modelo.Personas;
 import com.managerapp.db.Modelo.Razas;
 import com.managerapp.db.Modelo.Sexos;
 import com.managerapp.db.Modelo.Tamaños;
@@ -18,6 +21,8 @@ import com.parse.Parse;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 
 
 public class HuellasApplication extends Application {
@@ -34,6 +39,8 @@ public class HuellasApplication extends Application {
     private List<Perdidos> mPerdidos = new ArrayList<>();
     private List<Adicionales> mDonaciones = new ArrayList<>();
     private List<Adicionales> mInfoUtil = new ArrayList<>();
+    private List<Denuncias> mDenuncias = new ArrayList<>();
+    private List<Personas> mPersonas = new ArrayList<>();
 
     public static HuellasApplication getInstance() {
         return instance;
@@ -43,8 +50,29 @@ public class HuellasApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        CustomActivityOnCrash.install(this);
+        CustomActivityOnCrash.setErrorActivityClass(CustomErrorActivity.class);
+
         instance = this;
         initParse();
+
+
+    }
+
+    public List<Personas> getmPersonas() {
+        return mPersonas;
+    }
+
+    public void setmPersonas(List<Personas> mPersonas) {
+        this.mPersonas = mPersonas;
+    }
+
+    public List<Denuncias> getmDenuncias() {
+        return mDenuncias;
+    }
+
+    public void setmDenuncias(List<Denuncias> mDenuncias) {
+        this.mDenuncias = mDenuncias;
     }
 
     public List<Adicionales> getDonaciones() {

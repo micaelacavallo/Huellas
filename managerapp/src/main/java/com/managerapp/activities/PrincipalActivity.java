@@ -26,8 +26,10 @@ import com.managerapp.HuellasApplication;
 import com.managerapp.R;
 import com.managerapp.db.Controladores.IEstadosImpl;
 import com.managerapp.db.Controladores.IPerdidosImpl;
+import com.managerapp.db.Controladores.IPersonasImpl;
 import com.managerapp.db.Interfaces.IEstados;
 import com.managerapp.db.Interfaces.IPerdidos;
+import com.managerapp.db.Interfaces.IPersonas;
 import com.managerapp.db.Modelo.Estados;
 import com.managerapp.fragments.BaseFragment;
 import com.managerapp.fragments.DonacionesFragment;
@@ -47,6 +49,7 @@ public class PrincipalActivity extends BaseActivity {
 
     private IPerdidos mIPerdidosImpl;
     private IEstados mIEstadosImpl;
+    private IPersonas mIPersonasImpl;
 
     private View mDialogContainer;
     private TextView mTextViewDialogMsg;
@@ -72,6 +75,7 @@ public class PrincipalActivity extends BaseActivity {
 
         mIPerdidosImpl = new IPerdidosImpl(this);
         mIEstadosImpl = new IEstadosImpl(this);
+        mIPersonasImpl = new IPersonasImpl(this);
 
         mCountInfoLoaded = 0;
 
@@ -251,7 +255,10 @@ public class PrincipalActivity extends BaseActivity {
                                 logOut();
                                 hideOverlay();
                                 break;
-
+                            case R.id.nav_drawer_personas_reportadas:
+                                Intent intent = new Intent(PrincipalActivity.this, PersonasDenunciadasActivity.class);
+                                startActivity(intent);
+                                break;
                         }
 
                         return true;
@@ -370,6 +377,9 @@ public class PrincipalActivity extends BaseActivity {
                 HuellasApplication.getInstance().setmEdades(mIPerdidosImpl.getEdades());
                 HuellasApplication.getInstance().setmTamanios(mIPerdidosImpl.getTamaños());
                 HuellasApplication.getInstance().setmSexos(mIPerdidosImpl.getSexos());
+
+                HuellasApplication.getInstance().setmPersonas(mIPersonasImpl.getPersonas());
+
 
                 List<Estados> estados = mIEstadosImpl.getEstados();
                 for (int x = 0; x < estados.size(); x++) {

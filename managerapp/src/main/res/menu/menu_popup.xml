@@ -9,9 +9,14 @@
         android:visible="true"/>
 
     <item
-        android:id="@+id/item_eliminar"
+        android:id="@+id/item_bloquear"
         app:showAsAction="ifRoom|withText"
-        android:title="Eliminar"
+        android:title="Bloquear"
+        android:visible="true"/>
+    <item
+        android:id="@+id/item_cancelar_denuncia"
+        app:showAsAction="ifRoom|withText"
+        android:title="Cancelar denuncia"
         android:visible="true"/>
 
 </menu>

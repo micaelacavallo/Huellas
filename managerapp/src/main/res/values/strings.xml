@@ -40,6 +40,8 @@
     <string name="editando">Editando publicación</string>
     <string name="dialog_solucionado_descripcion">¿Está seguro que desea cambiar el estado de la publicación a solucionado? Este cambio no se podrá revertir.</string>
     <string name="dialog_eliminar_descripcion">¿Está seguro que desea eliminar la publicación?</string>
+    <string name="dialog_bloquear_descripcion">¿Está seguro que desea bloquear esta publicación de forma permanente? Ésta operación no se puede revertir.</string>
+    <string name="dialog_bloquear_persona_descripcion">¿Está seguro que desea bloquear a esta persona de forma permanente? Ésta operación no se puede revertir.</string>
     <string name="ver_solucionadas">Publicaciones solucionadas</string>
     <string name="solucionados_title">Solucionados</string>
     <string name="mis_publicaciones_title">Mis publicaciones</string>
@@ -56,6 +58,7 @@
     <string name="customactivityoncrash_error_activity_restart_app">Reiniciar aplicación</string>
     <string name="publicaciones_reportadas">Publicaciones Reportadas</string>
     <string name="personas_reportadas">Personas Reportadas</string>
+    <string name="dialog_cancelar_denuncia_descripcion">¿Está seguro que desea cancelar la denuncia?</string>
 
 
 </resources>

@@ -64,6 +64,7 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
     }
 
     public DenunciasDAO(Context context) {
+        super(context);
         this.context = context;
         query = null;
         objectAux = null;
@@ -160,19 +161,15 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
     }
 
     @Override
-    public void borrarDenuncia(String denunciaObjectId) {
+    public void borrarDenuncia(String denunciaObjectId) throws ParseException {
 
         query = ParseQuery.getQuery(Clases.DENUNCIAS);
         query.whereEqualTo(CDenuncias.OBJECT_ID, denunciaObjectId);
         checkInternetGet(query);
-        try {
             if(query.count() != 0) {
                 objectAux = query.getFirst();
                 delete(objectAux);
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

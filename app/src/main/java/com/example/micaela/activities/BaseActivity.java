@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -53,6 +54,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     FloatingActionButton mFloatingButton;
     ImageView mImageViewPicture;
     View mViewDialogCamera;
+    DrawerLayout mDrawer;
 
     private View mCardEstado;
 
@@ -69,7 +71,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         switch (getLayoutBase()) {
             case R.layout.activity_base:
                 mToolbarTitle = (TextView) mainContainer.findViewById(R.id.toolbar_title);
-
+                if (!(this instanceof PrincipalActivity)) {
+                    mDrawer = (DrawerLayout) mainContainer.findViewById(R.id.drawer_layout);
+                    mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                }
                 break;
             case R.layout.activity_base_collapsing:
                 mCollapsingToolbar = (CollapsingToolbarLayout) mainContainer.findViewById(R.id.collapsing_toolbar);
@@ -245,10 +250,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         aIntent.putExtra(Constants.PUSH_OPEN, true);
         aIntent.putExtra(Constants.FROM_FRAGMENT, fromFragment);
         if (fromFragment.equals(Constants.PERDIDOS)) {
-            aIntent.putExtra(Constants.OBJETO_PERDIDO, (Perdidos)object);
-        }
-        else {
-            aIntent.putExtra(Constants.OBJETO_PERDIDO, (Adicionales)object);
+            aIntent.putExtra(Constants.OBJETO_PERDIDO, (Perdidos) object);
+        } else {
+            aIntent.putExtra(Constants.OBJETO_PERDIDO, (Adicionales) object);
         }
         aIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(aIntent);

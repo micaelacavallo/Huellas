@@ -22,7 +22,7 @@ public interface IPersonas {
     public void checkInternetGet(ParseQuery<ParseObject> query);
     public boolean internet(Context context);
     public boolean registar(Personas personas) throws ParseException;
-    public List<Personas> getPersonas();
+    public List<Personas> getPersonas() throws ParseException;
     public Personas getPersonabyEmail(String email) throws ParseException;
     public Personas getPersonabyId(String objectId) throws ParseException;
     public void editTelefono(String objectId, String telefono);

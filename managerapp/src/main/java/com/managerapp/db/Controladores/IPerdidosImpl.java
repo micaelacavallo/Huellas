@@ -146,7 +146,7 @@ public class IPerdidosImpl implements IPerdidos {
     }
 
     @Override
-    public void bloquearPerdido(String objectId) {
+    public void bloquearPerdido(String objectId) throws ParseException {
         mPerdidosDAO.bloquearPerdido(objectId);
     }
 }

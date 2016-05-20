@@ -42,7 +42,7 @@ public class IDenunciasImpl implements IDenuncias {
     }
 
     @Override
-    public void borrarDenuncia(String denunciaObjectId) {
+    public void borrarDenuncia(String denunciaObjectId) throws ParseException {
         mDenunciasDAO.borrarDenuncia(denunciaObjectId);
     }
 
