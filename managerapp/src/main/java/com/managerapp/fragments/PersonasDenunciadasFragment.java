@@ -112,7 +112,7 @@ public class PersonasDenunciadasFragment extends BaseFragment implements Persona
                                 break;
                             case R.id.textView_confirmar:
                                 ((PersonasDenunciadasActivity) getBaseActivity()).showLoadDialog();
-                                new AsyncTaskCancelarDenuncia().execute(denuncia.getmObjectId(),denuncia.getmId());
+                                new AsyncTaskCancelarDenuncia().execute(denuncia.getmObjectId(), denuncia.getmId());
                                 break;
                         }
                     }
@@ -142,7 +142,7 @@ public class PersonasDenunciadasFragment extends BaseFragment implements Persona
     }
 
 
-    public void adapterNotify () {
+    public void adapterNotify() {
         mAdapter.notifyDataSetChanged();
         if (mAdapter.getItemCount() == 0) {
             mEmptyLayout.setVisibility(View.VISIBLE);
@@ -175,9 +175,9 @@ public class PersonasDenunciadasFragment extends BaseFragment implements Persona
             ((PersonasDenunciadasActivity) getBaseActivity()).closeDialog();
             if (!error) {
                 cleanLists(objectIDTabla);
-                Toast.makeText(getBaseActivity(), "Persona bloqueada con éxito!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseActivity(), "Denuncia cancelada con éxito!", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getBaseActivity(), "No se pudo bloquear esta persona. Intente de nuevo más tarde", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseActivity(), "No se pudo cancelar la denuncia. Intente de nuevo más tarde", Toast.LENGTH_LONG).show();
             }
 
         }
@@ -218,7 +218,7 @@ public class PersonasDenunciadasFragment extends BaseFragment implements Persona
 
     private class AsyncTaskGetDenuncias extends AsyncTask<Void, Void, Void> {
         private boolean error = false;
-        private List<Denuncias> denunciasList;
+        private List<Denuncias> denunciasList = new ArrayList<>();
 
         @Override
         protected void onPreExecute() {

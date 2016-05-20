@@ -31,6 +31,7 @@ import com.managerapp.db.Controladores.IPerdidosImpl;
 import com.managerapp.db.Interfaces.IAdmin;
 import com.managerapp.db.Interfaces.IPerdidos;
 import com.managerapp.db.Modelo.Colores;
+import com.managerapp.db.Modelo.Denuncias;
 import com.managerapp.db.Modelo.Especies;
 import com.managerapp.db.Modelo.Estados;
 import com.managerapp.db.Modelo.Perdidos;
@@ -345,7 +346,7 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
 
 
     @Override
-    public void onClickItem(int idItem, final Perdidos perdido, String tabla) {
+    public void onClickItem(int idItem, final Perdidos perdido, Denuncias denuncia) {
         switch (idItem) {
             case R.id.item_solucionado:
                 ((PrincipalActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_solucionado_descripcion), new View.OnClickListener() {

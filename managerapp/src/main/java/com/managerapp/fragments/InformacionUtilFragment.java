@@ -20,6 +20,7 @@ import com.managerapp.db.Controladores.IAdminImpl;
 import com.managerapp.db.Interfaces.IAdicionales;
 import com.managerapp.db.Interfaces.IAdmin;
 import com.managerapp.db.Modelo.Adicionales;
+import com.managerapp.db.Modelo.Denuncias;
 import com.managerapp.utils.Constants;
 import com.parse.ParseException;
 
@@ -107,7 +108,7 @@ public class InformacionUtilFragment extends BaseFragment implements Adicionales
 
 
     @Override
-    public void onClickItem(int idItem, final Adicionales adicional, String tabla) {
+    public void onClickItem(int idItem, final Adicionales adicional, Denuncias denuncia) {
         switch (idItem) {
             case R.id.item_bloquear:
                 View.OnClickListener onClickEliminarListener = new View.OnClickListener() {

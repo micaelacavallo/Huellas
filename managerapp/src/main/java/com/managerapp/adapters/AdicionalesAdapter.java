@@ -15,6 +15,8 @@ import com.managerapp.R;
 import com.managerapp.activities.BaseActivity;
 import com.managerapp.activities.DetallePublicacionActivity;
 import com.managerapp.db.Modelo.Adicionales;
+import com.managerapp.db.Modelo.Denuncias;
+import com.managerapp.fragments.PublicacionesDenunciadasFragment;
 import com.managerapp.utils.Constants;
 import com.managerapp.utils.CustomDialog;
 
@@ -27,6 +29,7 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
     private PopupMenu mPopupMenu;
     private String mTipoPublicacion;
     private Fragment mFragment;
+    private List<Denuncias> mDenuncias;
     private PopupMenuCallback mPopupMenuCallback;
 
     public AdicionalesAdapter(List<Adicionales> adicionales, Context context, Fragment fragment, String tipoPublicacion) {
@@ -36,8 +39,19 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
         mTipoPublicacion = tipoPublicacion;
     }
 
+
+    public AdicionalesAdapter(List<Adicionales> adicionales, List<Denuncias> denuncias, Context context, Fragment fragment, String tipoPublicacion) {
+        mAdicionales = adicionales;
+        mAdicionales = adicionales;
+        mContext = context;
+        mFragment = fragment;
+        mTipoPublicacion = tipoPublicacion;
+        mDenuncias = denuncias;
+    }
+
+
     public interface PopupMenuCallback {
-        void onClickItem (int idItem, Adicionales adicional, String tabla);
+        void onClickItem(int idItem, Adicionales adicional, Denuncias denuncia);
     }
 
     @Override
@@ -103,6 +117,11 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
 
         holder.getTextViewHora().setText(((BaseActivity) mContext).getPublicationTime(mAdicionales.get(position).getFecha()));
 
+        if (mFragment instanceof PublicacionesDenunciadasFragment) {
+            holder.getDenunciasContainer().setVisibility(View.VISIBLE);
+            holder.getDenunciasCount().setText(String.valueOf(mDenuncias.get(position).getContador()));
+            holder.getDenunciasMotivo().setText(mDenuncias.get(position).getMmotivoDenuncia().getmMotivo());
+        }
     }
 
     private void setUpPopupMenu(final View view, final int position) {
@@ -111,7 +130,11 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (((BaseActivity) mContext).internet()) {
-                    mPopupMenuCallback.onClickItem(item.getItemId(), mAdicionales.get((Integer) view.getTag()), "Adicionales");
+                    if (mDenuncias != null) {
+                        mPopupMenuCallback.onClickItem(item.getItemId(), mAdicionales.get((Integer) view.getTag()), mDenuncias.get((Integer) view.getTag()));
+                    } else {
+                        mPopupMenuCallback.onClickItem(item.getItemId(), mAdicionales.get((Integer) view.getTag()), null);
+                    }
                 } else {
                     CustomDialog.showConnectionDialog(mContext);
                 }
@@ -121,7 +144,11 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
         mPopupMenu.inflate(R.menu.menu_popup);
         Menu menu = mPopupMenu.getMenu();
         menu.findItem(R.id.item_solucionado).setVisible(false);
-        menu.findItem(R.id.item_cancelar_denuncia).setVisible(false);
+        if (mFragment instanceof PublicacionesDenunciadasFragment) {
+            menu.findItem(R.id.item_cancelar_denuncia).setVisible(true);
+        } else {
+            menu.findItem(R.id.item_cancelar_denuncia).setVisible(false);
+        }
         mPopupMenu.show();
     }
 

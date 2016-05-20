@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import com.managerapp.R;
 import com.managerapp.activities.BaseActivity;
 import com.managerapp.activities.DetallePublicacionActivity;
+import com.managerapp.db.Modelo.Denuncias;
 import com.managerapp.db.Modelo.Perdidos;
+import com.managerapp.fragments.PublicacionesDenunciadasFragment;
 import com.managerapp.utils.Constants;
 import com.managerapp.utils.CustomDialog;
 
@@ -28,6 +30,7 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
     private PopupMenu mPopupMenu;
     private Fragment mFragment;
     private PopupMenuCallback mPopupMenuCallback;
+    private List<Denuncias> mDenuncias;
 
 
     public AnimalesAdapter(List<Perdidos> perdidos, Context context, Fragment fragment) {
@@ -36,8 +39,15 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
         mFragment = fragment;
     }
 
+    public AnimalesAdapter(List<Perdidos> perdidos, List<Denuncias> denuncias, Context context, Fragment fragment) {
+        mPerdidos = perdidos;
+        mContext = context;
+        mFragment = fragment;
+        mDenuncias = denuncias;
+    }
+
     public interface PopupMenuCallback {
-        void onClickItem (int idItem, Perdidos perdido, String tabla);
+        void onClickItem (int idItem, Perdidos perdido, Denuncias denuncia);
     }
 
     @Override
@@ -119,6 +129,13 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
                 setUpPopupMenu(v, position);
             }
         });
+
+
+        if (mFragment instanceof PublicacionesDenunciadasFragment) {
+            holder.getDenunciasContainer().setVisibility(View.VISIBLE);
+            holder.getDenunciasCount().setText(String.valueOf(mDenuncias.get(position).getContador()));
+            holder.getDenunciasMotivo().setText(mDenuncias.get(position).getMmotivoDenuncia().getmMotivo());
+        }
     }
 
 
@@ -128,7 +145,13 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (((BaseActivity) mContext).internet()) {
-                    mPopupMenuCallback.onClickItem(item.getItemId(), mPerdidos.get((Integer) view.getTag()), "Perdidos");
+                    if (mDenuncias != null) {
+                        mPopupMenuCallback.onClickItem(item.getItemId(), mPerdidos.get((Integer) view.getTag()), mDenuncias.get((Integer) view.getTag()));
+                    }
+                    else {
+                        mPopupMenuCallback.onClickItem(item.getItemId(), mPerdidos.get((Integer) view.getTag()), null);
+
+                    }
                 } else {
                     CustomDialog.showConnectionDialog(mContext);
                 }
@@ -137,7 +160,12 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
         });
         mPopupMenu.inflate(R.menu.menu_popup);
         Menu menu = mPopupMenu.getMenu();
-        menu.findItem(R.id.item_cancelar_denuncia).setVisible(false);
+        if (mFragment instanceof PublicacionesDenunciadasFragment) {
+            menu.findItem(R.id.item_cancelar_denuncia).setVisible(true);
+            menu.findItem(R.id.item_solucionado).setVisible(false);
+        } else {
+            menu.findItem(R.id.item_cancelar_denuncia).setVisible(false);
+        }
         mPopupMenu.show();
     }
 

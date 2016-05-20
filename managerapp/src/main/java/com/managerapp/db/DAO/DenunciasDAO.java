@@ -286,6 +286,7 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
 
     public List<Denuncias> getListDenuncias(List<ParseObject> listParseObject) throws ParseException {
 
+        denuncias.clear();
         if (listParseObject.size() > 0) {
             for (ParseObject object : listParseObject) {
 
