@@ -130,9 +130,9 @@ public class AdminDAO implements IAdmin {
     }
 
     @Override
-    public void confirmarDenunciaPublicacion(String publicacionObjectId, String tabla) {
+    public void confirmarDenunciaPublicacion(String publicacionObjectId, String tabla) throws com.parse.ParseException {
 
-        try {
+
         denuncia = iDenuncias.getDenunciaByIdRef(publicacionObjectId);
         if(denuncia != null) {
             iDenuncias.confirmarDenuncia(denuncia.getmObjectId());
@@ -148,9 +148,7 @@ public class AdminDAO implements IAdmin {
             }
             save(objectAux);
         }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+
     }
 
     public void checkInternetGet(ParseQuery<ParseObject> query) {

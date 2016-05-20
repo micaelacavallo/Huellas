@@ -96,7 +96,7 @@ public class PersonasDenunciadasFragment extends BaseFragment implements Persona
                                 break;
                             case R.id.textView_confirmar:
                                 ((PersonasDenunciadasActivity) getBaseActivity()).showLoadDialog();
-                                new AsyncTaskBloquearPersona().execute(denuncia.getmId());
+                                new AsyncTaskBloquearPersona().execute(denuncia.getmObjectId(), denuncia.getmId());
                                 break;
                         }
                     }
@@ -112,7 +112,7 @@ public class PersonasDenunciadasFragment extends BaseFragment implements Persona
                                 break;
                             case R.id.textView_confirmar:
                                 ((PersonasDenunciadasActivity) getBaseActivity()).showLoadDialog();
-                                new AsyncTaskCancelarDenuncia().execute(denuncia.getmId());
+                                new AsyncTaskCancelarDenuncia().execute(denuncia.getmObjectId(),denuncia.getmId());
                                 break;
                         }
                     }
@@ -153,13 +153,15 @@ public class PersonasDenunciadasFragment extends BaseFragment implements Persona
 
     private class AsyncTaskCancelarDenuncia extends AsyncTask<String, Void, Void> {
         private boolean error = false;
-        private String objectID;
+        private String objectIDDenuncia;
+        private String objectIDTabla;
 
         @Override
         protected Void doInBackground(String... params) {
-            objectID = params[0];
+            objectIDDenuncia = params[0];
+            objectIDTabla = params[1];
             try {
-                iDenuncias.borrarDenuncia(objectID);
+                iDenuncias.borrarDenuncia(objectIDDenuncia);
             } catch (ParseException e) {
                 error = true;
                 e.printStackTrace();
@@ -172,7 +174,7 @@ public class PersonasDenunciadasFragment extends BaseFragment implements Persona
             super.onPostExecute(aVoid);
             ((PersonasDenunciadasActivity) getBaseActivity()).closeDialog();
             if (!error) {
-                cleanLists(objectID);
+                cleanLists(objectIDTabla);
                 Toast.makeText(getBaseActivity(), "Persona bloqueada con éxito!", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(getBaseActivity(), "No se pudo bloquear esta persona. Intente de nuevo más tarde", Toast.LENGTH_LONG).show();
@@ -184,13 +186,15 @@ public class PersonasDenunciadasFragment extends BaseFragment implements Persona
 
     private class AsyncTaskBloquearPersona extends AsyncTask<String, Void, Void> {
         private boolean error = false;
-        private String objectID;
+        private String objectIDDenuncia;
+        private String objectIDTabla;
 
         @Override
         protected Void doInBackground(String... params) {
-            objectID = params[0];
+            objectIDDenuncia = params[0];
+            objectIDTabla = params[1];
             try {
-                iDenuncias.confirmarDenuncia(objectID);
+                iDenuncias.confirmarDenuncia(objectIDDenuncia);
             } catch (ParseException e) {
                 error = true;
                 e.printStackTrace();
@@ -203,7 +207,7 @@ public class PersonasDenunciadasFragment extends BaseFragment implements Persona
             super.onPostExecute(aVoid);
             ((PersonasDenunciadasActivity) getBaseActivity()).closeDialog();
             if (!error) {
-                cleanLists(objectID);
+                cleanLists(objectIDTabla);
                 Toast.makeText(getBaseActivity(), "Persona bloqueada con éxito!", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(getBaseActivity(), "No se pudo bloquear esta persona. Intente de nuevo más tarde", Toast.LENGTH_LONG).show();

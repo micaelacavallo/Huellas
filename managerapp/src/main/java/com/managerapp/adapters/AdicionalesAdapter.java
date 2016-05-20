@@ -37,7 +37,7 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
     }
 
     public interface PopupMenuCallback {
-        void onClickItem(int idItem, Adicionales adicional);
+        void onClickItem (int idItem, Adicionales adicional, String tabla);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (((BaseActivity) mContext).internet()) {
-                    mPopupMenuCallback.onClickItem(item.getItemId(), mAdicionales.get((Integer) view.getTag()));
+                    mPopupMenuCallback.onClickItem(item.getItemId(), mAdicionales.get((Integer) view.getTag()), "Adicionales");
                 } else {
                     CustomDialog.showConnectionDialog(mContext);
                 }

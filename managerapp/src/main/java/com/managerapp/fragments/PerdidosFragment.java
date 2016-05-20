@@ -25,16 +25,17 @@ import com.managerapp.R;
 import com.managerapp.activities.PrincipalActivity;
 import com.managerapp.adapters.AnimalesAdapter;
 import com.managerapp.adapters.CustomSpinnerHintAdapter;
-import com.managerapp.db.Controladores.IDenunciasImpl;
+import com.managerapp.db.Controladores.IAdminImpl;
 import com.managerapp.db.Controladores.IEstadosImpl;
 import com.managerapp.db.Controladores.IPerdidosImpl;
-import com.managerapp.db.Interfaces.IDenuncias;
+import com.managerapp.db.Interfaces.IAdmin;
 import com.managerapp.db.Interfaces.IPerdidos;
 import com.managerapp.db.Modelo.Colores;
 import com.managerapp.db.Modelo.Especies;
 import com.managerapp.db.Modelo.Estados;
 import com.managerapp.db.Modelo.Perdidos;
 import com.managerapp.db.Modelo.Razas;
+import com.managerapp.utils.Constants;
 import com.parse.ParseException;
 
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
     private boolean mFromSwipeRefresh = false;
     private static PerdidosFragment mInstancePerdidos;
 
-    private IDenuncias mIDenuncias;
+    private IAdmin mIDenuncias;
 
     public static PerdidosFragment getInstance() {
         if (mInstancePerdidos == null) {
@@ -101,7 +102,7 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_perdidos, container, false);
         mIperdidosImpl = new IPerdidosImpl(getActivity().getApplicationContext());
-        mIDenuncias = new IDenunciasImpl(getBaseActivity());
+        mIDenuncias = new IAdminImpl(getBaseActivity());
         inicializarSwipeRefresh();
         inicializarRecycler();
         mTextViewEmpty = (TextView) mRootView.findViewById(R.id.empty_publicaciones);
@@ -344,7 +345,7 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
 
 
     @Override
-    public void onClickItem(int idItem, final Perdidos perdido) {
+    public void onClickItem(int idItem, final Perdidos perdido, String tabla) {
         switch (idItem) {
             case R.id.item_solucionado:
                 ((PrincipalActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_solucionado_descripcion), new View.OnClickListener() {
@@ -430,7 +431,7 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
         protected Void doInBackground(Perdidos... params) {
             perdido = params[0];
             try {
-                mIDenuncias.confirmarDenuncia(perdido.getObjectId());
+                mIDenuncias.confirmarDenunciaPublicacion(perdido.getObjectId(), Constants.TABLA_PERDIDOS);
             } catch (ParseException e) {
                 error = true;
             }

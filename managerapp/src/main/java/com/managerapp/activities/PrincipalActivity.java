@@ -259,6 +259,10 @@ public class PrincipalActivity extends BaseActivity {
                                 Intent intent = new Intent(PrincipalActivity.this, PersonasDenunciadasActivity.class);
                                 startActivity(intent);
                                 break;
+                            case R.id.nav_drawer_publicaciones_reportadas:
+                                Intent intentPublicaciones = new Intent(PrincipalActivity.this, PublicacionesDenunciadasActivity.class);
+                                startActivity(intentPublicaciones);
+                                break;
                         }
 
                         return true;

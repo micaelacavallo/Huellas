@@ -37,7 +37,7 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
     }
 
     public interface PopupMenuCallback {
-        void onClickItem(int idItem, Perdidos perdido);
+        void onClickItem (int idItem, Perdidos perdido, String tabla);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (((BaseActivity) mContext).internet()) {
-                    mPopupMenuCallback.onClickItem(item.getItemId(), mPerdidos.get((Integer) view.getTag()));
+                    mPopupMenuCallback.onClickItem(item.getItemId(), mPerdidos.get((Integer) view.getTag()), "Perdidos");
                 } else {
                     CustomDialog.showConnectionDialog(mContext);
                 }

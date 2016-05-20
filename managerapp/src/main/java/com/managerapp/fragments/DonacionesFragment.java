@@ -16,9 +16,9 @@ import com.managerapp.R;
 import com.managerapp.activities.PrincipalActivity;
 import com.managerapp.adapters.AdicionalesAdapter;
 import com.managerapp.db.Controladores.IAdicionalesImpl;
-import com.managerapp.db.Controladores.IDenunciasImpl;
+import com.managerapp.db.Controladores.IAdminImpl;
 import com.managerapp.db.Interfaces.IAdicionales;
-import com.managerapp.db.Interfaces.IDenuncias;
+import com.managerapp.db.Interfaces.IAdmin;
 import com.managerapp.db.Modelo.Adicionales;
 import com.managerapp.utils.Constants;
 import com.parse.ParseException;
@@ -35,7 +35,7 @@ public class DonacionesFragment extends BaseFragment implements AdicionalesAdapt
     private static DonacionesFragment mInstanceDonacion;
 
     private boolean mFromSwipeRefresh = false;
-    private IDenuncias mIDenuncias;
+    private IAdmin mIDenuncias;
 
     public static DonacionesFragment getInstance() {
         if (mInstanceDonacion == null) {
@@ -54,7 +54,7 @@ public class DonacionesFragment extends BaseFragment implements AdicionalesAdapt
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View mRootView = inflater.inflate(R.layout.fragment_donaciones, container, false);
         mIAdicionalesImpl = new IAdicionalesImpl(getActivity().getApplicationContext());
-        mIDenuncias = new IDenunciasImpl(getBaseActivity());
+        mIDenuncias = new IAdminImpl(getBaseActivity());
         inicializarSwipeRefresh(mRootView);
         inicializarRecycler(mRootView);
 
@@ -76,7 +76,7 @@ public class DonacionesFragment extends BaseFragment implements AdicionalesAdapt
         protected Void doInBackground(Adicionales... params) {
             adicional = params[0];
             try {
-                mIDenuncias.confirmarDenuncia(adicional.getObjectId());
+                mIDenuncias.confirmarDenunciaPublicacion(adicional.getObjectId(), Constants.TABLA_ADICIONALES);
             } catch (ParseException e) {
                 error = true;
             }
@@ -150,7 +150,7 @@ public class DonacionesFragment extends BaseFragment implements AdicionalesAdapt
     }
 
     @Override
-    public void onClickItem(int idItem, final Adicionales adicional) {
+    public void onClickItem(int idItem, final Adicionales adicional, String tabla) {
         switch (idItem) {
             case R.id.item_bloquear:
                 View.OnClickListener onClickEliminarListener = new View.OnClickListener() {

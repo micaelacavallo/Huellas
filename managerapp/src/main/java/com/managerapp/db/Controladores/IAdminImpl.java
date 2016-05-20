@@ -37,7 +37,7 @@ public class IAdminImpl implements IAdmin {
     }
 
     @Override
-    public void confirmarDenunciaPublicacion(String publicacionObjectId, String tabla) {
+    public void confirmarDenunciaPublicacion(String publicacionObjectId, String tabla) throws com.parse.ParseException {
         mAdminDAO.confirmarDenunciaPublicacion(publicacionObjectId, tabla);
     }
 }
