@@ -16,14 +16,16 @@ import com.managerapp.R;
 import com.managerapp.activities.PrincipalActivity;
 import com.managerapp.adapters.AdicionalesAdapter;
 import com.managerapp.db.Controladores.IAdicionalesImpl;
+import com.managerapp.db.Controladores.IDenunciasImpl;
 import com.managerapp.db.Interfaces.IAdicionales;
+import com.managerapp.db.Interfaces.IDenuncias;
 import com.managerapp.db.Modelo.Adicionales;
 import com.managerapp.utils.Constants;
 import com.parse.ParseException;
 
 import java.util.List;
 
-public class InformacionUtilFragment extends BaseFragment implements  AdicionalesAdapter.PopupMenuCallback {
+public class InformacionUtilFragment extends BaseFragment implements AdicionalesAdapter.PopupMenuCallback {
 
     private RecyclerView mRecyclerView;
     private IAdicionales mIAdicionalesImpl;
@@ -33,6 +35,7 @@ public class InformacionUtilFragment extends BaseFragment implements  Adicionale
     private static InformacionUtilFragment mInstanceInfo;
 
     private boolean mFromSwipeRefresh = false;
+    private IDenuncias mIDenuncias;
 
     public static InformacionUtilFragment getInstance() {
         if (mInstanceInfo == null) {
@@ -45,7 +48,7 @@ public class InformacionUtilFragment extends BaseFragment implements  Adicionale
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View mRootView = inflater.inflate(R.layout.fragment_info_util, container, false);
         mIAdicionalesImpl = new IAdicionalesImpl(getActivity().getApplicationContext());
-
+        mIDenuncias = new IDenunciasImpl(getBaseActivity());
         inicializarSwipeRefresh(mRootView);
         inicializarRecycler(mRootView);
 
@@ -55,7 +58,7 @@ public class InformacionUtilFragment extends BaseFragment implements  Adicionale
 
     @Override
     public boolean onBackPressed() {
-            return false;
+        return false;
     }
 
 
@@ -86,7 +89,7 @@ public class InformacionUtilFragment extends BaseFragment implements  Adicionale
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mInstanceInfo =null;
+        mInstanceInfo = null;
     }
 
     @Override
@@ -97,8 +100,7 @@ public class InformacionUtilFragment extends BaseFragment implements  Adicionale
             List<Adicionales> adicionales = HuellasApplication.getInstance().getInfoUtil();
             mAdapterAdicionales = new AdicionalesAdapter(adicionales, getBaseActivity(), InformacionUtilFragment.this, Constants.ADICIONALES_INFO);
             mRecyclerView.setAdapter(mAdapterAdicionales);
-        }
-        else {
+        } else {
             mAdapterAdicionales.notifyDataSetChanged();
         }
     }
@@ -113,7 +115,7 @@ public class InformacionUtilFragment extends BaseFragment implements  Adicionale
                     public void onClick(View v) {
                         switch (v.getId()) {
                             case R.id.textView_cancelar:
-                                ((PrincipalActivity)getBaseActivity()).closeDialog();
+                                ((PrincipalActivity) getBaseActivity()).closeDialog();
                                 break;
                             case R.id.textView_confirmar:
                                 ((PrincipalActivity) getBaseActivity()).showLoadDialog();
@@ -135,9 +137,8 @@ public class InformacionUtilFragment extends BaseFragment implements  Adicionale
         @Override
         protected Void doInBackground(Adicionales... params) {
             adicional = params[0];
-            IAdicionalesImpl iAdicionales = new IAdicionalesImpl(getBaseActivity());
             try {
-                iAdicionales.bloquearAdicional(adicional.getObjectId());
+                mIDenuncias.confirmarDenuncia(adicional.getObjectId());
             } catch (ParseException e) {
                 error = true;
 
@@ -180,11 +181,10 @@ public class InformacionUtilFragment extends BaseFragment implements  Adicionale
                 mSwipeRefreshLayout.setRefreshing(false);
                 mAdapterAdicionales.notifyDataSetChanged();
                 mFromSwipeRefresh = false;
-            }
-            else {
+            } else {
                 mAdapterAdicionales = new AdicionalesAdapter(HuellasApplication.getInstance().getInfoUtil(), getContext(), InformacionUtilFragment.this, Constants.ADICIONALES_INFO);
                 mRecyclerView.setAdapter(mAdapterAdicionales);
-                ((PrincipalActivity)getBaseActivity()).setCountInfoLoaded();
+                ((PrincipalActivity) getBaseActivity()).setCountInfoLoaded();
             }
         }
 

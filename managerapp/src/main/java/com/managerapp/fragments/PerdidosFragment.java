@@ -25,8 +25,10 @@ import com.managerapp.R;
 import com.managerapp.activities.PrincipalActivity;
 import com.managerapp.adapters.AnimalesAdapter;
 import com.managerapp.adapters.CustomSpinnerHintAdapter;
+import com.managerapp.db.Controladores.IDenunciasImpl;
 import com.managerapp.db.Controladores.IEstadosImpl;
 import com.managerapp.db.Controladores.IPerdidosImpl;
+import com.managerapp.db.Interfaces.IDenuncias;
 import com.managerapp.db.Interfaces.IPerdidos;
 import com.managerapp.db.Modelo.Colores;
 import com.managerapp.db.Modelo.Especies;
@@ -79,6 +81,8 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
     private boolean mFromSwipeRefresh = false;
     private static PerdidosFragment mInstancePerdidos;
 
+    private IDenuncias mIDenuncias;
+
     public static PerdidosFragment getInstance() {
         if (mInstancePerdidos == null) {
             mInstancePerdidos = new PerdidosFragment();
@@ -97,7 +101,7 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_perdidos, container, false);
         mIperdidosImpl = new IPerdidosImpl(getActivity().getApplicationContext());
-
+        mIDenuncias = new IDenunciasImpl(getBaseActivity());
         inicializarSwipeRefresh();
         inicializarRecycler();
         mTextViewEmpty = (TextView) mRootView.findViewById(R.id.empty_publicaciones);
@@ -425,9 +429,8 @@ public class PerdidosFragment extends BaseFragment implements AnimalesAdapter.Po
         @Override
         protected Void doInBackground(Perdidos... params) {
             perdido = params[0];
-            IPerdidosImpl iPerdidos = new IPerdidosImpl(getBaseActivity());
             try {
-                iPerdidos.bloquearPerdido(perdido.getObjectId());
+                mIDenuncias.confirmarDenuncia(perdido.getObjectId());
             } catch (ParseException e) {
                 error = true;
             }

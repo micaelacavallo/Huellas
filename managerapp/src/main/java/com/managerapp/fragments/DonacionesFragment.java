@@ -16,7 +16,9 @@ import com.managerapp.R;
 import com.managerapp.activities.PrincipalActivity;
 import com.managerapp.adapters.AdicionalesAdapter;
 import com.managerapp.db.Controladores.IAdicionalesImpl;
+import com.managerapp.db.Controladores.IDenunciasImpl;
 import com.managerapp.db.Interfaces.IAdicionales;
+import com.managerapp.db.Interfaces.IDenuncias;
 import com.managerapp.db.Modelo.Adicionales;
 import com.managerapp.utils.Constants;
 import com.parse.ParseException;
@@ -33,6 +35,7 @@ public class DonacionesFragment extends BaseFragment implements AdicionalesAdapt
     private static DonacionesFragment mInstanceDonacion;
 
     private boolean mFromSwipeRefresh = false;
+    private IDenuncias mIDenuncias;
 
     public static DonacionesFragment getInstance() {
         if (mInstanceDonacion == null) {
@@ -51,7 +54,7 @@ public class DonacionesFragment extends BaseFragment implements AdicionalesAdapt
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View mRootView = inflater.inflate(R.layout.fragment_donaciones, container, false);
         mIAdicionalesImpl = new IAdicionalesImpl(getActivity().getApplicationContext());
-
+        mIDenuncias = new IDenunciasImpl(getBaseActivity());
         inicializarSwipeRefresh(mRootView);
         inicializarRecycler(mRootView);
 
@@ -72,9 +75,8 @@ public class DonacionesFragment extends BaseFragment implements AdicionalesAdapt
         @Override
         protected Void doInBackground(Adicionales... params) {
             adicional = params[0];
-            IAdicionalesImpl iAdicionales = new IAdicionalesImpl(getBaseActivity());
             try {
-                iAdicionales.bloquearAdicional(adicional.getObjectId());
+                mIDenuncias.confirmarDenuncia(adicional.getObjectId());
             } catch (ParseException e) {
                 error = true;
             }
@@ -131,8 +133,7 @@ public class DonacionesFragment extends BaseFragment implements AdicionalesAdapt
             List<Adicionales> adicionales = HuellasApplication.getInstance().getDonaciones();
             mAdapterAdicionales = new AdicionalesAdapter(adicionales, getBaseActivity(), DonacionesFragment.this, Constants.ADICIONALES_DONACIONES);
             mRecyclerView.setAdapter(mAdapterAdicionales);
-        }
-        else {
+        } else {
             mAdapterAdicionales.notifyDataSetChanged();
         }
     }

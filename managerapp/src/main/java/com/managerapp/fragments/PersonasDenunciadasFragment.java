@@ -15,9 +15,7 @@ import com.managerapp.HuellasApplication;
 import com.managerapp.R;
 import com.managerapp.activities.PersonasDenunciadasActivity;
 import com.managerapp.adapters.PersonasAdapter;
-import com.managerapp.db.Controladores.IAdminImpl;
 import com.managerapp.db.Controladores.IDenunciasImpl;
-import com.managerapp.db.Interfaces.IAdmin;
 import com.managerapp.db.Interfaces.IDenuncias;
 import com.managerapp.db.Modelo.Denuncias;
 import com.managerapp.db.Modelo.Personas;
@@ -39,6 +37,7 @@ public class PersonasDenunciadasFragment extends BaseFragment implements Persona
     private List<Personas> mPersonas;
     private PersonasAdapter mAdapter;
     private boolean mFromSwipeRefresh = false;
+    private IDenuncias iDenuncias;
 
     @Override
     protected View onCreateEventView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +47,7 @@ public class PersonasDenunciadasFragment extends BaseFragment implements Persona
         inicializarSwipeRefresh();
         mDenuncias = new ArrayList<>();
         mPersonas = new ArrayList<>();
+        iDenuncias = new IDenunciasImpl(getBaseActivity());
         mAdapter = new PersonasAdapter(mDenuncias, mPersonas, getBaseActivity(), this);
         mRecyclerView.setAdapter(mAdapter);
         new AsyncTaskGetDenuncias().execute();
@@ -158,7 +158,6 @@ public class PersonasDenunciadasFragment extends BaseFragment implements Persona
         @Override
         protected Void doInBackground(String... params) {
             objectID = params[0];
-            IDenuncias iDenuncias = new IDenunciasImpl(getBaseActivity());
             try {
                 iDenuncias.borrarDenuncia(objectID);
             } catch (ParseException e) {
@@ -190,10 +189,9 @@ public class PersonasDenunciadasFragment extends BaseFragment implements Persona
         @Override
         protected Void doInBackground(String... params) {
             objectID = params[0];
-            IAdmin iAdmin = new IAdminImpl(getBaseActivity());
             try {
-                iAdmin.bloquearPersona(objectID);
-            } catch (ParseException | java.text.ParseException e) {
+                iDenuncias.confirmarDenuncia(objectID);
+            } catch (ParseException e) {
                 error = true;
                 e.printStackTrace();
             }
@@ -228,7 +226,6 @@ public class PersonasDenunciadasFragment extends BaseFragment implements Persona
 
         @Override
         protected Void doInBackground(Void... params) {
-            IDenuncias iDenuncias = new IDenunciasImpl(getBaseActivity());
             try {
                 denunciasList = iDenuncias.getDenuncias();
             } catch (ParseException e) {
