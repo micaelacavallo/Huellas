@@ -178,49 +178,51 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
     @Override
     public void confirmarDenuncia(String denunciaObjectId) throws ParseException {
 
-        denuncia = getDenunciaById(denunciaObjectId);
-        if(denuncia.ismUser()){
-            objectAux = iPersonas.getParseObjectById(denuncia.getmId());
-            objectAux.put(CPersonas.BLOQUEADO, true);
+        try {
+            denuncia = getDenunciaById(denunciaObjectId);
+            if (denuncia.ismUser()) {
+                objectAux = iPersonas.getParseObjectById(denuncia.getmId());
+                objectAux.put(CPersonas.BLOQUEADO, true);
 
-            perdidos = iPerdidos.getPublicacionPerdidosPropiasById(objectAux.getString(CPersonas.OBJECT_ID));
-            if(perdidos!= null) {
-                for (Perdidos perdidoAux : perdidos) {
-                    iPerdidos.bloquearPerdido(perdidoAux.getObjectId());
+                perdidos = iPerdidos.getPublicacionPerdidosPropiasById(objectAux.getString(CPersonas.OBJECT_ID));
+                if (perdidos != null) {
+                    for (Perdidos perdidoAux : perdidos) {
+                        iPerdidos.bloquearPerdido(perdidoAux.getObjectId());
+                    }
                 }
-            }
-
-            adicionales = iAdicionales.getPublicacionesAdicionalesPropias(objectAux.getString(CPersonas.OBJECT_ID));
-            if(adicionales!= null) {
-                for (Adicionales adicionalAux : adicionales) {
-                    iAdicionales.bloquearAdicional(adicionalAux.getObjectId());
-
-                }
-            }
-
-            comentarios = iComentarios.getComentariosByPersonaObjectId(objectAux.getString(CPerdidos.OBJECT_ID));
-            if(comentarios!= null){
-                for(Comentarios comentario : comentarios){
-                    iComentarios.bloquearComentario(comentario.getObjectId());
-                }
-            }
-        }
-        else
-        {
-            if(denuncia.getmTabla().equals("Perdidos")){
-                objectAux = iPerdidos.getParseObjectById(denuncia.getmId());
-                objectAux.put(CPerdidos.BLOQUEADO, true);
-
-            }else{ //adicional
-                objectAux = iAdicionales.getParseObjectById(denuncia.getmId());
-                objectAux.put(CAdicionales.BLOQUEADO, true);
 
                 adicionales = iAdicionales.getPublicacionesAdicionalesPropias(objectAux.getString(CPersonas.OBJECT_ID));
-            }
-        }
+                if (adicionales != null) {
+                    for (Adicionales adicionalAux : adicionales) {
+                        iAdicionales.bloquearAdicional(adicionalAux.getObjectId());
 
-        save(objectAux);
-        borrarDenuncia(denunciaObjectId);
+                    }
+                }
+
+                comentarios = iComentarios.getComentariosByPersonaObjectId(objectAux.getString(CPerdidos.OBJECT_ID));
+                if (comentarios != null) {
+                    for (Comentarios comentario : comentarios) {
+                        iComentarios.bloquearComentario(comentario.getObjectId());
+                    }
+                }
+            } else {
+                if (denuncia.getmTabla().equals("Perdidos")) {
+                    objectAux = iPerdidos.getParseObjectById(denuncia.getmId());
+                    objectAux.put(CPerdidos.BLOQUEADO, true);
+
+                } else { //adicional
+                    objectAux = iAdicionales.getParseObjectById(denuncia.getmId());
+                    objectAux.put(CAdicionales.BLOQUEADO, true);
+
+                    adicionales = iAdicionales.getPublicacionesAdicionalesPropias(objectAux.getString(CPersonas.OBJECT_ID));
+                }
+            }
+
+            save(objectAux);
+            borrarDenuncia(denunciaObjectId);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

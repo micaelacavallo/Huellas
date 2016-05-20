@@ -57,6 +57,11 @@ public class IDenunciasImpl implements IDenuncias {
     }
 
     @Override
+    public Denuncias getDenunciaByIdRef(String refObjectId) {
+        return mDenunciasDAO.getDenunciaByIdRef(refObjectId);
+    }
+
+    @Override
     public List<Denuncias> getDenuncias() throws ParseException {
         return mDenunciasDAO.getDenuncias();
     }

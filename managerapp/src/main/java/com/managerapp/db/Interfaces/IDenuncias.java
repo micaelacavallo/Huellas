@@ -18,5 +18,6 @@ public interface IDenuncias {
     public void borrarDenuncia(String denunciaObjectId) throws ParseException; //admin
     public void confirmarDenuncia(String denunciaObjectId) throws ParseException; //admin
     public Denuncias getDenunciaById(String objectId); //admin
+    public Denuncias getDenunciaByIdRef(String refObjectId);
     public List<Denuncias> getDenuncias() throws ParseException; //admin
 }

@@ -35,4 +35,9 @@ public class IAdminImpl implements IAdmin {
     public void save(ParseObject object) {
         mAdminDAO.save(object);
     }
+
+    @Override
+    public void confirmarDenunciaPublicacion(String publicacionObjectId, String tabla) {
+        mAdminDAO.confirmarDenunciaPublicacion(publicacionObjectId, tabla);
+    }
 }

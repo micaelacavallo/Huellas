@@ -175,49 +175,51 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
     @Override
     public void confirmarDenuncia(String denunciaObjectId) throws ParseException {
 
-        denuncia = getDenunciaById(denunciaObjectId);
-        if(denuncia.ismUser()){
-            objectAux = iPersonas.getParseObjectById(denuncia.getmId());
-            objectAux.put(CPersonas.BLOQUEADO, true);
+        try {
+            denuncia = getDenunciaById(denunciaObjectId);
+            if (denuncia.ismUser()) {
+                objectAux = iPersonas.getParseObjectById(denuncia.getmId());
+                objectAux.put(CPersonas.BLOQUEADO, true);
 
-            perdidos = iPerdidos.getPublicacionPerdidosPropiasById(objectAux.getString(CPersonas.OBJECT_ID));
-            if(perdidos!= null) {
-                for (Perdidos perdidoAux : perdidos) {
-                    iPerdidos.bloquearPerdido(perdidoAux.getObjectId());
+                perdidos = iPerdidos.getPublicacionPerdidosPropiasById(objectAux.getString(CPersonas.OBJECT_ID));
+                if (perdidos != null) {
+                    for (Perdidos perdidoAux : perdidos) {
+                        iPerdidos.bloquearPerdido(perdidoAux.getObjectId());
+                    }
                 }
-            }
-
-            adicionales = iAdicionales.getPublicacionesAdicionalesPropias(objectAux.getString(CPersonas.OBJECT_ID));
-            if(adicionales!= null) {
-                for (Adicionales adicionalAux : adicionales) {
-                    iAdicionales.bloquearAdicional(adicionalAux.getObjectId());
-
-                }
-            }
-
-            comentarios = iComentarios.getComentariosByPersonaObjectId(objectAux.getString(CPerdidos.OBJECT_ID));
-            if(comentarios!= null){
-                for(Comentarios comentario : comentarios){
-                    iComentarios.bloquearComentario(comentario.getObjectId());
-                }
-            }
-        }
-        else
-        {
-            if(denuncia.getmTabla().equals("Perdidos")){
-                objectAux = iPerdidos.getParseObjectById(denuncia.getmId());
-                objectAux.put(CPerdidos.BLOQUEADO, true);
-
-            }else{ //adicional
-                objectAux = iAdicionales.getParseObjectById(denuncia.getmId());
-                objectAux.put(CAdicionales.BLOQUEADO, true);
 
                 adicionales = iAdicionales.getPublicacionesAdicionalesPropias(objectAux.getString(CPersonas.OBJECT_ID));
+                if (adicionales != null) {
+                    for (Adicionales adicionalAux : adicionales) {
+                        iAdicionales.bloquearAdicional(adicionalAux.getObjectId());
+
+                    }
+                }
+
+                comentarios = iComentarios.getComentariosByPersonaObjectId(objectAux.getString(CPerdidos.OBJECT_ID));
+                if (comentarios != null) {
+                    for (Comentarios comentario : comentarios) {
+                        iComentarios.bloquearComentario(comentario.getObjectId());
+                    }
+                }
+            } else {
+                if (denuncia.getmTabla().equals("Perdidos")) {
+                    objectAux = iPerdidos.getParseObjectById(denuncia.getmId());
+                    objectAux.put(CPerdidos.BLOQUEADO, true);
+
+                } else { //adicional
+                    objectAux = iAdicionales.getParseObjectById(denuncia.getmId());
+                    objectAux.put(CAdicionales.BLOQUEADO, true);
+
+                   // adicionales = iAdicionales.getPublicacionesAdicionalesPropias(objectAux.getString(CPersonas.OBJECT_ID));
+                }
             }
+
+            save(objectAux);
+            borrarDenuncia(denunciaObjectId);
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-
-        save(objectAux);
 
     }
 
@@ -226,6 +228,7 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
 
         query = ParseQuery.getQuery(Clases.DENUNCIAS);
         query.include(CDenuncias.MOTIVO_DENUNCIA);
+        query.whereEqualTo(CDenuncias.OBJECT_ID, objectId);
         query.orderByDescending(CDenuncias.FECHA);
         checkInternetGet(query);
 
@@ -240,6 +243,28 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
 
         return denuncia;
 
+    }
+
+    @Override
+    public Denuncias getDenunciaByIdRef(String refObjectId) {
+
+        denuncia = null;
+        query = ParseQuery.getQuery(Clases.DENUNCIAS);
+        query.include(CDenuncias.MOTIVO_DENUNCIA);
+        query.whereEqualTo(CDenuncias.ID_REFERENCIA, refObjectId);
+        query.orderByDescending(CDenuncias.FECHA);
+        checkInternetGet(query);
+
+        try {
+            if(query.count() != 0) {
+                objectAux = query.getFirst();
+                denuncia = getDenuncia(objectAux);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return denuncia;
     }
 
     @Override
