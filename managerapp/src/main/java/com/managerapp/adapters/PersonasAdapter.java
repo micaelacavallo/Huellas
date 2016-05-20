@@ -69,6 +69,8 @@ public class PersonasAdapter extends RecyclerView.Adapter<PersonasViewHolder> {
                 setUpPopupMenu(v);
             }
         });
+        holder.getmTextViewCountDenuncias().setText(String.valueOf(mDenuncias.get(position).getContador()));
+        holder.getmTextViewMotivoDenuncia().setText(mDenuncias.get(position).getMmotivoDenuncia().getmMotivo());
     }
 
     private void setUpPopupMenu(final View view) {

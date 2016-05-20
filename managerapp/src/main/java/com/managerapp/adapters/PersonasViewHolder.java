@@ -27,6 +27,8 @@ public class PersonasViewHolder extends RecyclerView.ViewHolder {
         mTextViewTelefono = (TextView) itemView.findViewById(R.id.textView_telefono_persona);
         mImageViewFoto = (ImageView) itemView.findViewById(R.id.imageView_foto_persona);
         mImageViewMoreOptions = (ImageView) itemView.findViewById(R.id.imageView_options);
+        mTextViewCountDenuncias = (TextView) itemView.findViewById(R.id.textView_count_denuncias);
+        mTextViewMotivoDenuncia = (TextView) itemView.findViewById(R.id.textView_motivo_denuncia);
     }
 
     public ImageView getmImageViewMoreOptions() {

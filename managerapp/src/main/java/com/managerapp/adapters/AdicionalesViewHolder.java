@@ -20,7 +20,9 @@ public class AdicionalesViewHolder extends RecyclerView.ViewHolder  {
     private View mCardContainer;
     private ImageView mImageViewOpciones;
     private View mLineSeparator;
-
+    private View mDenunciasContainer;
+    private TextView mDenunciasCount;
+    private TextView mDenunciasMotivo;
 
     public AdicionalesViewHolder(View itemView) {
         super(itemView);
@@ -34,6 +36,21 @@ public class AdicionalesViewHolder extends RecyclerView.ViewHolder  {
         mTextViewComentarios = (TextView) itemView.findViewById(R.id.textView_comentarios);
         mImageViewOpciones = (ImageView) itemView.findViewById(R.id.imageView_options);
         mLineSeparator= itemView.findViewById(R.id.view_separator);
+        mDenunciasContainer = itemView.findViewById(R.id.linear_denuncias_container);
+        mDenunciasCount = (TextView) itemView.findViewById(R.id.textView_count_denuncias);
+        mDenunciasMotivo = (TextView) itemView.findViewById(R.id.textView_motivo_denuncia);
+    }
+
+    public View getDenunciasContainer() {
+        return mDenunciasContainer;
+    }
+
+    public TextView getDenunciasCount() {
+        return mDenunciasCount;
+    }
+
+    public TextView getDenunciasMotivo() {
+        return mDenunciasMotivo;
     }
 
     public View getLineSeparator() {
