@@ -12,7 +12,6 @@ import java.util.List;
  */
 public interface IDenuncias {
 
-    public void denunciar(String id, String motivo, String tabla) throws ParseException;
     public MotivoDenuncia getMotivoDenuncia(String motivo); //admin
     public List<MotivoDenuncia> getMotivoDenuncias(); //admin
     public void borrarDenuncia(String denunciaObjectId) throws ParseException; //admin

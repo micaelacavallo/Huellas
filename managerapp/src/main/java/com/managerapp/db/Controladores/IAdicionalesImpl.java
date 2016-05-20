@@ -85,7 +85,7 @@ public class IAdicionalesImpl implements IAdicionales {
 
     @Override
     public ParseObject getParseObjectById(String objectId){
-        return getParseObjectById(objectId);
+        return mAdicionalesDAO.getParseObjectById(objectId);
     }
 
     @Override

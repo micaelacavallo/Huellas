@@ -25,12 +25,6 @@ public class IDenunciasImpl implements IDenuncias {
     }
 
     @Override
-    public void denunciar(String id, String motivo, String tabla) throws ParseException {
-
-        mDenunciasDAO.denunciar(id, motivo, tabla);
-    }
-
-    @Override
     public MotivoDenuncia getMotivoDenuncia(String motivo) {
         return mDenunciasDAO.getMotivoDenuncia(motivo);
     }
