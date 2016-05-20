@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.managerapp.HuellasApplication;
 import com.managerapp.R;
-import com.managerapp.activities.PersonasDenunciadasActivity;
 import com.managerapp.activities.PrincipalActivity;
 import com.managerapp.activities.PublicacionesDenunciadasActivity;
 import com.managerapp.adapters.AdicionalesAdapter;
@@ -194,15 +193,15 @@ public class PublicacionesDenunciadasFragment extends BaseFragment implements An
     public void onClickItem(int idItem, final Perdidos perdido, final Denuncias denuncia) {
         switch (idItem) {
             case R.id.item_bloquear:
-                ((PrincipalActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_bloquear_descripcion), new View.OnClickListener() {
+                ((PublicacionesDenunciadasActivity) getBaseActivity()).showNormalDialog(getBaseActivity().getString(R.string.dialog_bloquear_descripcion), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         switch (v.getId()) {
                             case R.id.textView_cancelar:
-                                ((PrincipalActivity) getBaseActivity()).closeDialog();
+                                ((PublicacionesDenunciadasActivity) getBaseActivity()).closeDialog();
                                 break;
                             case R.id.textView_confirmar:
-                                ((PrincipalActivity) getBaseActivity()).showLoadDialog();
+                                ((PublicacionesDenunciadasActivity) getBaseActivity()).showLoadDialog();
                                 new AsyncTaskBloquear().execute(denuncia.getmObjectId(), denuncia.getmTabla());
                                 break;
                         }
@@ -248,7 +247,7 @@ public class PublicacionesDenunciadasFragment extends BaseFragment implements An
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            ((PrincipalActivity) getBaseActivity()).closeDialog();
+            ((PublicacionesDenunciadasActivity) getBaseActivity()).closeDialog();
             if (!error) {
                 cleanLists(mSpinnerTipoPublicacion.getSelectedItem().toString(), objectID);
 
@@ -282,7 +281,7 @@ public class PublicacionesDenunciadasFragment extends BaseFragment implements An
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            ((PersonasDenunciadasActivity) getBaseActivity()).closeDialog();
+            ((PublicacionesDenunciadasActivity) getBaseActivity()).closeDialog();
             if (!error) {
                 cleanLists(mSpinnerTipoPublicacion.getSelectedItem().toString(), objectIDTabla);
                 Toast.makeText(getBaseActivity(), "Denuncia cancelada con éxito!", Toast.LENGTH_LONG).show();
