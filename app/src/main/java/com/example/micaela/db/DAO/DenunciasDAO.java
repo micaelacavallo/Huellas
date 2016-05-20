@@ -219,9 +219,8 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
             }
         }
 
-
         save(objectAux);
-
+        borrarDenuncia(denunciaObjectId);
     }
 
     @Override
