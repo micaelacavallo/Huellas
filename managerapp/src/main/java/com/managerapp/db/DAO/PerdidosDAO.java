@@ -717,7 +717,7 @@ public class PerdidosDAO extends IGeneralImpl implements IPerdidos, IDB {
         ParseObject obj = ParseObject.createWithoutData(Clases.PERSONAS, personaObjectId);
 
         query = getQueryPerdidos();
-        query.whereEqualTo(CPerdidos.OBJECT_ID, obj);
+        query.whereEqualTo(CPerdidos.ID_PERSONA, obj);
         query.orderByDescending(CPerdidos.FECHA);
         checkInternetGet(query);
 

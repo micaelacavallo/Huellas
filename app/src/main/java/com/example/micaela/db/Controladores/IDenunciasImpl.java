@@ -41,24 +41,4 @@ public class IDenunciasImpl implements IDenuncias {
         return mDenunciasDAO.getMotivoDenuncias();
     }
 
-    @Override
-    public void borrarDenuncia(String denunciaObjectId) {
-        mDenunciasDAO.borrarDenuncia(denunciaObjectId);
-    }
-
-    @Override
-    public void confirmarDenuncia(String denunciaObjectId) throws ParseException {
-        mDenunciasDAO.confirmarDenuncia(denunciaObjectId);
-    }
-
-    @Override
-    public Denuncias getDenunciaById(String objectId) {
-        return  mDenunciasDAO.getDenunciaById(objectId);
-    }
-
-    @Override
-    public List<Denuncias> getDenuncias() throws ParseException {
-        return mDenunciasDAO.getDenuncias();
-    }
-
 }

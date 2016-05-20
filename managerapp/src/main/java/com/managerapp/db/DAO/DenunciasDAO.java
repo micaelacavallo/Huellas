@@ -43,10 +43,8 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
     private Context context;
     private ParseQuery<ParseObject> query;
     private ParseObject objectAux;
-    private ParseRelation objectRelation;
     private List<ParseObject> listParseObject;
     private Denuncias denuncia;
-    private Personas persona;
     private List<Denuncias> denuncias;
     private MotivoDenuncia motivoDenuncia;
     private IPerdidos iPerdidos;
@@ -54,11 +52,8 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
     private IPersonas iPersonas;
     private IComentarios iComentarios;
     private List<Perdidos> perdidos;
-    private Perdidos perdido;
-    private Adicionales adicional;
     private List<Adicionales> adicionales;
     private List<Comentarios> comentarios;
-    private Comentarios comentario;
 
     public DenunciasDAO() {
     }
@@ -68,13 +63,8 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
         this.context = context;
         query = null;
         objectAux = null;
-        objectRelation = null;
         listParseObject = null;
         denuncia = null;
-        perdido = null;
-        persona = null;
-        adicional = null;
-        comentario = null;
         comentarios = null;
         perdidos = null;
         adicionales = null;
@@ -84,40 +74,6 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
         iAdicionales = new IAdicionalesImpl(context);
         iPersonas = new IPersonasImpl(context);
         iComentarios = new IComentariosImpl(context);
-    }
-
-    @Override
-    public void denunciar(String id, String motivo, String tabla) throws ParseException {
-
-        query = ParseQuery.getQuery(Clases.DENUNCIAS);
-        query.whereEqualTo(CDenuncias.ID_REFERENCIA, id);
-
-        if(query.count() == 0) {
-
-            MotivoDenuncia motivoDenuncia = this.getMotivoDenuncia(motivo);
-
-            ParseObject objectAux = new ParseObject(Clases.DENUNCIAS);
-            objectAux.put(CDenuncias.FECHA, new Date());
-            objectAux.put(CDenuncias.ID_REFERENCIA, id);
-            objectAux.put(CDenuncias.CONTADOR, 1);
-            if(tabla.equals("Personas")){
-            objectAux.put(CDenuncias.IS_USER, true);
-            }else {
-                objectAux.put(CDenuncias.IS_USER, false);
-            }
-
-            objectAux.put(CDenuncias.TABLA, tabla);
-            objectAux.put(CDenuncias.MOTIVO_DENUNCIA, ParseObject.createWithoutData(Clases.MOTIVODENUNCIA, String.valueOf(motivoDenuncia.getmObjectId())));
-
-            save(objectAux);
-        }
-        else{
-            objectAux = query.getFirst();
-            int contador = objectAux.getInt(CDenuncias.CONTADOR) + 1;
-            objectAux.put(CDenuncias.CONTADOR, contador);
-            save(objectAux);
-        }
-
     }
 
     @Override
@@ -181,14 +137,14 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
                 objectAux = iPersonas.getParseObjectById(denuncia.getmId());
                 objectAux.put(CPersonas.BLOQUEADO, true);
 
-                perdidos = iPerdidos.getPublicacionPerdidosPropiasById(objectAux.getString(CPersonas.OBJECT_ID));
+                perdidos = iPerdidos.getPublicacionPerdidosPropiasById(denuncia.getmId());
                 if (perdidos != null) {
                     for (Perdidos perdidoAux : perdidos) {
                         iPerdidos.bloquearPerdido(perdidoAux.getObjectId());
                     }
                 }
 
-                adicionales = iAdicionales.getPublicacionesAdicionalesPropias(objectAux.getString(CPersonas.OBJECT_ID));
+                adicionales = iAdicionales.getPublicacionesAdicionalesPropias(denuncia.getmId());
                 if (adicionales != null) {
                     for (Adicionales adicionalAux : adicionales) {
                         iAdicionales.bloquearAdicional(adicionalAux.getObjectId());
@@ -196,7 +152,7 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
                     }
                 }
 
-                comentarios = iComentarios.getComentariosByPersonaObjectId(objectAux.getString(CPerdidos.OBJECT_ID));
+                comentarios = iComentarios.getComentariosByPersonaObjectId(denuncia.getmId());
                 if (comentarios != null) {
                     for (Comentarios comentario : comentarios) {
                         iComentarios.bloquearComentario(comentario.getObjectId());
@@ -210,8 +166,6 @@ public class DenunciasDAO extends IGeneralImpl implements IDenuncias, IDB {
                 } else { //adicional
                     objectAux = iAdicionales.getParseObjectById(denuncia.getmId());
                     objectAux.put(CAdicionales.BLOQUEADO, true);
-
-                   // adicionales = iAdicionales.getPublicacionesAdicionalesPropias(objectAux.getString(CPersonas.OBJECT_ID));
                 }
             }
 
