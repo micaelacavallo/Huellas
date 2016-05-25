@@ -57,7 +57,7 @@ public class ComentariosDAO extends IGeneralImpl implements IComentarios, IGener
         if (listComentarios != null) {
             comentarios = new ArrayList<>();
             for (ParseObject objectComentario : listComentarios) {
-                if(object.getBoolean(CComentarios.BLOQUEADO) == false) {
+                if(objectComentario.getBoolean(CComentarios.BLOQUEADO) == false) {
                     comentario = getComentario(objectComentario);
                     comentarios.add(comentario);
                 }
