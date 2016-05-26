@@ -50,7 +50,12 @@ public class LoginFragment extends BaseFragment {
                         showError("La contraseña debe tener mínimo 4 caracteres.");
                     }
                     else {
-                        new AsyncTaskLoginAdmin().execute();
+                        if (getBaseActivity().internet()) {
+                            new AsyncTaskLoginAdmin().execute();
+                        }
+                        else {
+                            showError("No hay conexión. Vuelva a intentarlo.");
+                        }
                     }
                 }
             }

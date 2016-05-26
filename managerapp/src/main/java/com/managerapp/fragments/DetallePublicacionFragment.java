@@ -117,7 +117,12 @@ public class DetallePublicacionFragment extends BaseFragment{
                 }
             }
         }
-        getBaseActivity().setUpCollapsingToolbar(titulo, getBaseActivity().convertFromByteToBitmap(foto));
+        try {
+            getBaseActivity().setUpCollapsingToolbar(titulo, getBaseActivity().convertFromByteToBitmap(foto));
+        }
+        catch (NullPointerException e) {
+            getBaseActivity().setUpCollapsingToolbar(titulo, R.mipmap.placeholder);
+        }
         mTextViewDescripcion.setText(descripcion);
 
         if (raza.equals("Otra")) {

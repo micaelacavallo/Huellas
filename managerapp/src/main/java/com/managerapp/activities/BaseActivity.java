@@ -11,7 +11,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.DrawerLayout;
@@ -116,12 +115,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public void setUpCollapsingToolbar(String title, String uriImage) {
+    public void setUpCollapsingToolbar(String title, int resImage) {
         mCollapsingToolbar.setTitle(title);
         mCollapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-        if (uriImage != null) {
-            Picasso.with(this).load(Uri.parse(uriImage)).placeholder(R.mipmap.placeholder).into(((ImageView) mCollapsingToolbar.findViewById(R.id.imageView_foto)));
-        }
+        Picasso.with(this).load(resImage).into(((ImageView) mCollapsingToolbar.findViewById(R.id.imageView_foto)));
+
     }
 
 

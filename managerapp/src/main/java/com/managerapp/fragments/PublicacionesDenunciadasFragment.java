@@ -333,10 +333,6 @@ public class PublicacionesDenunciadasFragment extends BaseFragment implements An
                 for (int x = 0; x < mPerdidos.size(); x++) {
                     if (objectID.equals(mPerdidos.get(x).getObjectId())) {
                         mPerdidos.remove(x);
-                    }
-                }
-                for (int x = 0; x < mDenunciasPerdidos.size(); x++) {
-                    if (objectID.equals(mDenunciasPerdidos.get(x).getmId())) {
                         mDenunciasPerdidos.remove(x);
                     }
                 }
