@@ -338,25 +338,19 @@ public class PublicacionesDenunciadasFragment extends BaseFragment implements An
                 }
                 break;
             case Constants.ADICIONALES_DONACIONES:
-                for (int x = 0; x < mAdicionales.size(); x++) {
-                    if (objectID.equals(mAdicionales.get(x).getObjectId())) {
-                        if (mAdicionales.get(x).isDonacion()) {
-                            mDenunciasDonaciones.remove(x);
-                            mDonaciones.remove(x);
-                        }
-                        mAdicionales.remove(x);
+                for (int x = 0; x < mDonaciones.size(); x++) {
+                    if (objectID.equals(mDonaciones.get(x).getObjectId())) {
+                        mDenunciasDonaciones.remove(x);
+                        mDonaciones.remove(x);
                     }
                 }
                 break;
 
             case Constants.ADICIONALES_INFO:
-                for (int x = 0; x < mAdicionales.size(); x++) {
-                    if (objectID.equals(mAdicionales.get(x).getObjectId())) {
-                        if (!mAdicionales.get(x).isDonacion()) {
-                            mDenunciasInfoUtil.remove(x);
-                            mInfoUtil.remove(x);
-                        }
-                        mAdicionales.remove(x);
+                for (int x = 0; x < mInfoUtil.size(); x++) {
+                    if (objectID.equals(mInfoUtil.get(x).getObjectId())) {
+                        mDenunciasInfoUtil.remove(x);
+                        mInfoUtil.remove(x);
                     }
                 }
                 break;
