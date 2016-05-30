@@ -95,14 +95,19 @@ public class AdicionalesAdapter extends RecyclerView.Adapter<AdicionalesViewHold
         holder.getCardContainer().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, DetallePublicacionActivity.class);
-                intent.putExtra(Constants.OBJETO_PERDIDO, mAdicionales.get((int) view.getTag()));
-                if (mTipoPublicacion.equals(Constants.ADICIONALES_DONACIONES)) {
-                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
-                } else {
-                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_INFO);
+                try {
+                    Intent intent = new Intent(mContext, DetallePublicacionActivity.class);
+                    intent.putExtra(Constants.OBJETO_PERDIDO, mAdicionales.get((int) view.getTag()));
+                    if (mTipoPublicacion.equals(Constants.ADICIONALES_DONACIONES)) {
+                        intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_DONACIONES);
+                    } else {
+                        intent.putExtra(Constants.FROM_FRAGMENT, Constants.ADICIONALES_INFO);
+                    }
+                    mContext.startActivity(intent);
                 }
-                mContext.startActivity(intent);
+                catch (IndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

@@ -111,10 +111,15 @@ public class AnimalesAdapter extends RecyclerView.Adapter<AnimalesViewHolder> {
         holder.getCardContainer().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, DetallePublicacionActivity.class);
-                intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
-                intent.putExtra(Constants.OBJETO_PERDIDO, mPerdidos.get((int) view.getTag()));
-                mContext.startActivity(intent);
+                try {
+                    Intent intent = new Intent(mContext, DetallePublicacionActivity.class);
+                    intent.putExtra(Constants.FROM_FRAGMENT, Constants.PERDIDOS);
+                    intent.putExtra(Constants.OBJETO_PERDIDO, mPerdidos.get((int) view.getTag()));
+                    mContext.startActivity(intent);
+                }
+                catch (IndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
